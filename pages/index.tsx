@@ -45,12 +45,12 @@ const LoginButton = () => {
 
 
     const validateSignatureReponse = await fetch("/api/auth/validateSignature", {
-			body: JSON.stringify({ publicAddress, signature }),
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			method: 'POST',
-		})
+      body: JSON.stringify({ publicAddress, signature }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    })
 
     const data = await validateSignatureReponse.json();
     console.log('did it work?>', {data});
