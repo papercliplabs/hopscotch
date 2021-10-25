@@ -1,7 +1,8 @@
 import { recoverPersonalSignature } from 'eth-sig-util';
 import { bufferToHex } from 'ethereumjs-util';
+import jwt from 'jsonwebtoken';
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(404)
   }
@@ -22,7 +23,19 @@ export default function handler(req, res) {
 
   const proofOfSignature = address.toLowerCase() === publicAddress.toLowerCase();
   if (proofOfSignature) {
-    res.status(200).json({data: "YOUIN"})
+    const token = await jwt.sign(
+      {
+        payload: {
+          id: "USERID",
+          publicAddress,
+        },
+      },
+      "JWTSECRET", // TODO generate a real secret and put it in config
+      {
+        algorithm: "HS256", // TODO see which algo is best
+      }
+    )
+    res.status(200).json({data: "YOUIN", token})
   } else {
     res.status(401).json({data: "YOUOUT"})
   }

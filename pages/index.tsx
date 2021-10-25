@@ -52,7 +52,7 @@ const LoginButton = () => {
 			method: 'POST',
 		})
 
-    const {data} = await validateSignatureReponse.json();
+    const data = await validateSignatureReponse.json();
     console.log('did it work?>', {data});
   }
   return (<button onClick={login}>Login with Metamask</button>);
