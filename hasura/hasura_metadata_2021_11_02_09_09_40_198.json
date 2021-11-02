@@ -1,0 +1,175 @@
+{
+  "resource_version": 15,
+  "metadata": {
+    "version": 3,
+    "sources": [
+      {
+        "name": "default",
+        "kind": "postgres",
+        "tables": [
+          {
+            "table": {
+              "schema": "public",
+              "name": "client"
+            },
+            "object_relationships": [
+              {
+                "name": "organization",
+                "using": {
+                  "foreign_key_constraint_on": "organization_id"
+                }
+              }
+            ],
+            "array_relationships": [
+              {
+                "name": "invoices",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "client_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "invoice"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "invoice"
+            },
+            "object_relationships": [
+              {
+                "name": "client",
+                "using": {
+                  "foreign_key_constraint_on": "client_id"
+                }
+              },
+              {
+                "name": "organization",
+                "using": {
+                  "foreign_key_constraint_on": "organization_id"
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "organization"
+            },
+            "array_relationships": [
+              {
+                "name": "clients",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "organization_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "client"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "invoices",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "organization_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "invoice"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "organization_users",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "organization_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "organization_user"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "organization_user"
+            },
+            "object_relationships": [
+              {
+                "name": "organization",
+                "using": {
+                  "foreign_key_constraint_on": "organization_id"
+                }
+              },
+              {
+                "name": "user",
+                "using": {
+                  "foreign_key_constraint_on": "user_id"
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "user"
+            },
+            "array_relationships": [
+              {
+                "name": "organization_users",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "user_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "organization_user"
+                    }
+                  }
+                }
+              }
+            ],
+            "select_permissions": [
+              {
+                "role": "global",
+                "permission": {
+                  "columns": [
+                    "name",
+                    "id"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              }
+            ]
+          }
+        ],
+        "configuration": {
+          "connection_info": {
+            "use_prepared_statements": false,
+            "database_url": {
+              "from_env": "PG_DATABASE_URL"
+            },
+            "isolation_level": "read-committed"
+          }
+        }
+      }
+    ],
+    "api_limits": {
+      "disabled": false,
+      "node_limit": {
+        "per_role": {},
+        "global": 10000
+      }
+    }
+  }
+}
