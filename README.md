@@ -33,7 +33,7 @@ docker-compose up
 ### Editing the API server
 **⚠️ Always use the hasura console instead of going to the server directly. This is so changes are saved as commitable migrations**
 ```sh
-hasura console
+hasura console --admin-secret=squidsquidsquid
 ```
 
 ## Running the frontend

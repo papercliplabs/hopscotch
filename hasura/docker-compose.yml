@@ -28,7 +28,8 @@ services:
       # This calls the api running via nextjs
       ACTION_BASE_URL: "http://host.docker.internal:3000/api"
       ## uncomment next line to set an admin secret
-      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      HASURA_GRAPHQL_ADMIN_SECRET: squidsquidsquid
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anon
 volumes:
   db_data:
 
