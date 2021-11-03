@@ -1,6 +1,11 @@
-actions: []
+actions:
+- name: getNonce
+  definition:
+    kind: ""
+    handler: '{{ACTION_BASE_URL}}/auth/getNonce'
 custom_types:
   enums: []
   input_objects: []
-  objects: []
+  objects:
+  - name: GetNonceResponse
   scalars: []

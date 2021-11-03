@@ -1,0 +1,8 @@
+type Query {
+  getNonce: GetNonceResponse
+}
+
+type GetNonceResponse {
+  nonce: String!
+}
+

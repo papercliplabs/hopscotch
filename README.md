@@ -20,13 +20,13 @@ docker-compose up
 *The next steps are based on https://hasura.io/docs/latest/graphql/core/migrations/migrations-setup.html#step-7-apply-the-migrations-and-metadata-on-another-instance-of-the-graphql-engine*
 ```sh
 cd hasura/
-hasura metadata apply --endpoint http://localhost:8080
-hasura migrate apply --all-databases --endpoint http://localhost:8080
-hasura metadata reload --endpoint http://localhost:8080
+./applyMetadataMigrations.sh
 ```
 
 ### Starting the API server
 ```sh
+cd hasura/
+./applyMetadataMigrations.sh
 docker-compose up
 ```
 
