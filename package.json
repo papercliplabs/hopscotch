@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "codegen": "graphql-let",
+
     "dev": "yarn codegen && next",
     "build": "yarn codegen && next build",
     "test": "yarn codegen && jest",
