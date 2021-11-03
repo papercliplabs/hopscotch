@@ -16,22 +16,7 @@ cd hasura/
 docker-compose up
 ```
 
-**2. Create your database**
-
-We need to manually tell your local docker instance to use the postgres database running in docker-compose.
-
-*The next steps are based on https://hasura.io/docs/latest/graphql/core/getting-started/docker-simple.html*
-1. Open the console
-```sh
-cd hasura/
-hasura console
-```
-2. Go to the `Data` tab
-3. Under connect database set the name to `default`
-4. Select `Environment Variable`
-5. Paste `PG_DATABASE_URL`
-
-**3. Apply Metadata and Migrations**
+**2. Apply Metadata and Migrations**
 *The next steps are based on https://hasura.io/docs/latest/graphql/core/migrations/migrations-setup.html#step-7-apply-the-migrations-and-metadata-on-another-instance-of-the-graphql-engine*
 ```sh
 cd hasura/
