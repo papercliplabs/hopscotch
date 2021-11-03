@@ -1,0 +1,10 @@
+table:
+  name: invoices
+  schema: public
+object_relationships:
+- name: client
+  using:
+    foreign_key_constraint_on: client_id
+- name: organization
+  using:
+    foreign_key_constraint_on: organization_id

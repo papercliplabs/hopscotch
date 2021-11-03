@@ -1,5 +1,5 @@
 table:
-  name: client
+  name: clients
   schema: public
 object_relationships:
 - name: organization
