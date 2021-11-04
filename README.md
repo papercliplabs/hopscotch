@@ -38,6 +38,7 @@ hasura console --admin-secret=squidsquidsquid
 
 ## Running the frontend
 ```sh
+cp .env.template .env
 yarn dev
 ```
 
