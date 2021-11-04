@@ -1,0 +1,8 @@
+mutation validateSignature($publicKey: String!, $signature: String!) {
+  validate_signature(args: {
+    public_address: $publicKey,
+    signature: $signature,
+  }) {
+    accessToken
+  }
+}

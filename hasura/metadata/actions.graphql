@@ -1,8 +1,19 @@
-type Query {
-  getNonce: GetNonceResponse
+type Mutation {
+  validate_signature(
+    args: ValidateSignatureInput!
+  ): ValidateSignatureOutput
+}
+
+input ValidateSignatureInput {
+  public_address: String!
+  signature: String!
 }
 
 type GetNonceResponse {
   nonce: String!
+}
+
+type ValidateSignatureOutput {
+  accessToken: String!
 }
 

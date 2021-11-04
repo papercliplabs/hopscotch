@@ -1,32 +1,64 @@
 import { recoverPersonalSignature } from 'eth-sig-util';
 import { bufferToHex } from 'ethereumjs-util';
 import jwt from 'jsonwebtoken';
+import { initializeApollo } from '../../../graphql/apollo';
+import { GetUserByPublicKeyDocument, RefreshNonceDocument } from '../../../graphql/generated/graphql';
+import get from 'lodash/fp/get';
+import getOr from 'lodash/fp/getOr';
+
+const adminContext = {
+  headers: {
+    "x-hasura-admin-secret": process.env.GRAPHQL_ADMIN_API_KEY,
+    }
+};
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(404)
-  }
+  // TODO move some of this to middle ware
+  const {body, headers, method} = req;
+  console.log("got the body", {body, headers});
 
-  const { signature, publicAddress } = req.body;
+  if (method !== 'POST') return res.status(404);
+  if (headers['x-hasura-action-secret'] !== process.env.ACTION_SECRET) return res.status(401);
 
-  if (!signature || !publicAddress) {
-    return res.status(400)
-  }
+  const { signature, public_address: publicAddress } = getOr({}, 'input.args', body);
+  console.log("got the body", {body, headers});
 
-  const msg = "TODONONCEDYNAMIC"
+  if (!signature || !publicAddress) return res.status(400);
 
-  const msgBufferHex = bufferToHex(Buffer.from(msg, 'utf8'));
+  const apolloClient = initializeApollo();
+  const { data } = await apolloClient.query({
+    query: GetUserByPublicKeyDocument,
+    variables: {
+      publicKey: publicAddress,
+    }
+  });
+
+  console.log('we here', data);
+  const nonce = get('users[0].nonce', data)
+  const userId = get('users[0].id', data)
+
+  const msgBufferHex = bufferToHex(Buffer.from(nonce, 'utf8'));
   const address = recoverPersonalSignature({
     data: msgBufferHex,
     sig: signature,
   });
 
+  console.log('refreshing for', {publicAddress, address, nonce, adminContext});
   const proofOfSignature = address.toLowerCase() === publicAddress.toLowerCase();
   if (proofOfSignature) {
-    const token = await jwt.sign(
+    // refresh the nonce so it cannot be used again
+    const refreshResponse = await apolloClient.mutate({
+      mutation: RefreshNonceDocument,
+      variables: {
+        publicKey: publicAddress,
+      },
+      context: adminContext,
+    });
+    console.log('refreshResponse', refreshResponse);
+    const accessToken = await jwt.sign(
       {
         payload: {
-          id: "USERID",
+          id: userId,
           publicAddress,
         },
       },
@@ -35,8 +67,8 @@ export default async function handler(req, res) {
         algorithm: "HS256", // TODO see which algo is best
       }
     )
-    res.status(200).json({data: "YOUIN", token})
+    res.status(200).json({accessToken})
   } else {
-    res.status(401).json({data: "YOUOUT"})
+    res.status(401).json({accessToken: ""})
   }
 }

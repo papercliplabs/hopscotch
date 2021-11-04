@@ -1,0 +1,13 @@
+mutation upsertPublicUser($publicKey: String!) {
+  insert_users_one(
+    object: {public_key: $publicKey},
+    on_conflict: {constraint: user_public_key_key,
+    update_columns: [client_last_requested]}
+  ) {
+    id
+    public_key
+    name
+    nonce
+    client_last_requested
+  }
+}

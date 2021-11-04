@@ -30,6 +30,7 @@ services:
       ## uncomment next line to set an admin secret
       HASURA_GRAPHQL_ADMIN_SECRET: squidsquidsquid
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anon
+      ACTION_SECRET: "secret"
 volumes:
   db_data:
 
