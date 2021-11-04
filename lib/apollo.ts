@@ -14,16 +14,11 @@ export type ResolverContext = {
 }
 
 function createIsomorphLink(context: ResolverContext = {}) {
-  if (typeof window === 'undefined') {
-    const { SchemaLink } = require('@apollo/client/link/schema')
-    const { schema } = require('./schema')
-    return new SchemaLink({ schema, context })
-  } else {
-    const { HttpLink } = require('@apollo/client')
-    return new HttpLink({
-      uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
-    })
-  }
+  // TODO refactor as we deleted the SchemaLink
+  const { HttpLink } = require('@apollo/client')
+  return new HttpLink({
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
+  })
 }
 
 function createApolloClient(context?: ResolverContext) {
