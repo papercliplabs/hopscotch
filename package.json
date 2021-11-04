@@ -1,12 +1,11 @@
 {
   "private": true,
   "scripts": {
-    "codegen": "graphql-let",
-    "dev": "yarn codegen && next",
-    "build": "yarn codegen && next build",
-    "test": "yarn codegen && jest",
-    "start": "next start",
-    "generate": "graphql-codegen --config codegen.js"
+    "generate": "graphql-codegen --config codegen.js",
+    "dev": "yarn generate && next",
+    "build": "yarn generate && next build",
+    "test": "yarn generate && jest",
+    "start": "next start"
   },
   "dependencies": {
     "@apollo/client": "^3.1.3",
@@ -45,7 +44,6 @@
     "@types/react-test-renderer": "^17.0.1",
     "@types/styled-components": "^5.1.15",
     "babel-jest": "26.3.0",
-    "graphql-let": "0.x",
     "graphql-tag": "2.11.0",
     "jest": "26.4.0",
     "react-test-renderer": "^17.0.1",

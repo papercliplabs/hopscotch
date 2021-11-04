@@ -1,11 +1,5 @@
 import Link from "next/link";
 import { useState } from "react";
-import {
-    ViewerQuery,
-    useViewerQuery,
-    useUpdateNameMutation,
-    ViewerDocument,
-} from "../lib/viewer.graphql";
 import { initializeApollo } from "../lib/apollo";
 import Web3 from "web3";
 
@@ -120,16 +114,6 @@ const Index = () => {
 
 export async function getStaticProps() {
     const apolloClient = initializeApollo();
-
-    await apolloClient.query({
-        query: ViewerDocument,
-    });
-
-    return {
-        props: {
-            initialApolloState: apolloClient.cache.extract(),
-        },
-    };
 }
 
 export default Index;
