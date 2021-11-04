@@ -3,6 +3,7 @@ module.exports = {
     {
       "http://localhost:8080/v1/graphql": {
         headers: {
+          // todo, move these to env vars
           "x-hasura-admin-secret": "squidsquidsquid",
         },
       },

@@ -1,0 +1,9 @@
+mutation refreshNonce($publicKey: String!) {
+  refresh_nonce(args: {
+    pkey: $publicKey,
+  }) {
+    id
+    nonce
+    public_key
+  }
+}

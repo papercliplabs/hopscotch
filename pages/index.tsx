@@ -12,10 +12,6 @@ const providerOptions = {
     /* See Provider Options Section */
 };
 
-const DisplayPublicUsers = () => {
-  return (<div>todo</div>);
-}
-
 const LoginButton = () => {
     const [upsertPublicUser] = useUpsertPublicUserMutation();
     const login = async () => {

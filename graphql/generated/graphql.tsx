@@ -1872,6 +1872,13 @@ export type Uuid_Comparison_Exp = {
   _nin?: Maybe<Array<Scalars['uuid']>>;
 };
 
+export type RefreshNonceMutationVariables = Exact<{
+  publicKey: Scalars['String'];
+}>;
+
+
+export type RefreshNonceMutation = { __typename?: 'mutation_root', refresh_nonce: Array<{ __typename?: 'users', id: any, nonce: any, public_key: string }> };
+
 export type UpsertPublicUserMutationVariables = Exact<{
   publicKey: Scalars['String'];
 }>;
@@ -1879,12 +1886,54 @@ export type UpsertPublicUserMutationVariables = Exact<{
 
 export type UpsertPublicUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: any, public_key: string, name?: string | null | undefined, nonce: any, client_last_requested: any } | null | undefined };
 
+export type GetUserByPublicKeyQueryVariables = Exact<{
+  publicKey: Scalars['String'];
+}>;
+
+
+export type GetUserByPublicKeyQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any, nonce: any }> };
+
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetUsersQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any, name?: string | null | undefined }> };
 
 
+export const RefreshNonceDocument = gql`
+    mutation refreshNonce($publicKey: String!) {
+  refresh_nonce(args: {pkey: $publicKey}) {
+    id
+    nonce
+    public_key
+  }
+}
+    `;
+export type RefreshNonceMutationFn = Apollo.MutationFunction<RefreshNonceMutation, RefreshNonceMutationVariables>;
+
+/**
+ * __useRefreshNonceMutation__
+ *
+ * To run a mutation, you first call `useRefreshNonceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRefreshNonceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [refreshNonceMutation, { data, loading, error }] = useRefreshNonceMutation({
+ *   variables: {
+ *      publicKey: // value for 'publicKey'
+ *   },
+ * });
+ */
+export function useRefreshNonceMutation(baseOptions?: Apollo.MutationHookOptions<RefreshNonceMutation, RefreshNonceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RefreshNonceMutation, RefreshNonceMutationVariables>(RefreshNonceDocument, options);
+      }
+export type RefreshNonceMutationHookResult = ReturnType<typeof useRefreshNonceMutation>;
+export type RefreshNonceMutationResult = Apollo.MutationResult<RefreshNonceMutation>;
+export type RefreshNonceMutationOptions = Apollo.BaseMutationOptions<RefreshNonceMutation, RefreshNonceMutationVariables>;
 export const UpsertPublicUserDocument = gql`
     mutation upsertPublicUser($publicKey: String!) {
   insert_users_one(object: {public_key: $publicKey}, on_conflict: {constraint: user_public_key_key, update_columns: [client_last_requested]}) {
@@ -1922,6 +1971,42 @@ export function useUpsertPublicUserMutation(baseOptions?: Apollo.MutationHookOpt
 export type UpsertPublicUserMutationHookResult = ReturnType<typeof useUpsertPublicUserMutation>;
 export type UpsertPublicUserMutationResult = Apollo.MutationResult<UpsertPublicUserMutation>;
 export type UpsertPublicUserMutationOptions = Apollo.BaseMutationOptions<UpsertPublicUserMutation, UpsertPublicUserMutationVariables>;
+export const GetUserByPublicKeyDocument = gql`
+    query getUserByPublicKey($publicKey: String!) {
+  users(limit: 1, where: {public_key: {_eq: $publicKey}}) {
+    id
+    nonce
+  }
+}
+    `;
+
+/**
+ * __useGetUserByPublicKeyQuery__
+ *
+ * To run a query within a React component, call `useGetUserByPublicKeyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserByPublicKeyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserByPublicKeyQuery({
+ *   variables: {
+ *      publicKey: // value for 'publicKey'
+ *   },
+ * });
+ */
+export function useGetUserByPublicKeyQuery(baseOptions: Apollo.QueryHookOptions<GetUserByPublicKeyQuery, GetUserByPublicKeyQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserByPublicKeyQuery, GetUserByPublicKeyQueryVariables>(GetUserByPublicKeyDocument, options);
+      }
+export function useGetUserByPublicKeyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserByPublicKeyQuery, GetUserByPublicKeyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserByPublicKeyQuery, GetUserByPublicKeyQueryVariables>(GetUserByPublicKeyDocument, options);
+        }
+export type GetUserByPublicKeyQueryHookResult = ReturnType<typeof useGetUserByPublicKeyQuery>;
+export type GetUserByPublicKeyLazyQueryHookResult = ReturnType<typeof useGetUserByPublicKeyLazyQuery>;
+export type GetUserByPublicKeyQueryResult = Apollo.QueryResult<GetUserByPublicKeyQuery, GetUserByPublicKeyQueryVariables>;
 export const GetUsersDocument = gql`
     query getUsers {
   users {
