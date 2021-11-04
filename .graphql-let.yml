@@ -1,5 +1,9 @@
-schema: '**/*.graphqls'
-documents: '**/*.graphql'
+schema:
+  - http://localhost:8080/v1/graphql:
+      headers:
+          x-hasura-admin-secret: squidsquidsquid
+# documents: '**/*.graphql'
+
 plugins:
   - typescript-operations
   - typescript-react-apollo
