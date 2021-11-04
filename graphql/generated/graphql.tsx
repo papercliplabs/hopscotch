@@ -235,11 +235,6 @@ export enum Clients_Update_Column {
   OrganizationId = 'organization_id'
 }
 
-export type GetNonceResponse = {
-  __typename?: 'GetNonceResponse';
-  nonce: Scalars['String'];
-};
-
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: Maybe<Scalars['Int']>;
@@ -697,6 +692,7 @@ export type Mutation_Root = {
   update_users?: Maybe<Users_Mutation_Response>;
   /** update single row of the table: "users" */
   update_users_by_pk?: Maybe<Users>;
+  validate_signature?: Maybe<ValidateSignatureOutput>;
 };
 
 
@@ -911,6 +907,12 @@ export type Mutation_RootUpdate_UsersArgs = {
 export type Mutation_RootUpdate_Users_By_PkArgs = {
   _set?: Maybe<Users_Set_Input>;
   pk_columns: Users_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootValidate_SignatureArgs = {
+  args: ValidateSignatureInput;
 };
 
 /** column ordering options */
@@ -1299,7 +1301,6 @@ export type Query_Root = {
   clients_aggregate: Clients_Aggregate;
   /** fetch data from the table: "clients" using primary key columns */
   clients_by_pk?: Maybe<Clients>;
-  getNonce?: Maybe<GetNonceResponse>;
   /** An array relationship */
   invoices: Array<Invoices>;
   /** An aggregate relationship */
@@ -1872,6 +1873,16 @@ export type Uuid_Comparison_Exp = {
   _nin?: Maybe<Array<Scalars['uuid']>>;
 };
 
+export type ValidateSignatureInput = {
+  public_address: Scalars['String'];
+  signature: Scalars['String'];
+};
+
+export type ValidateSignatureOutput = {
+  __typename?: 'ValidateSignatureOutput';
+  accessToken: Scalars['String'];
+};
+
 export type RefreshNonceMutationVariables = Exact<{
   publicKey: Scalars['String'];
 }>;
@@ -1885,6 +1896,14 @@ export type UpsertPublicUserMutationVariables = Exact<{
 
 
 export type UpsertPublicUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: any, public_key: string, name?: string | null | undefined, nonce: any, client_last_requested: any } | null | undefined };
+
+export type ValidateSignatureMutationVariables = Exact<{
+  publicKey: Scalars['String'];
+  signature: Scalars['String'];
+}>;
+
+
+export type ValidateSignatureMutation = { __typename?: 'mutation_root', validate_signature?: { __typename?: 'ValidateSignatureOutput', accessToken: string } | null | undefined };
 
 export type GetUserByPublicKeyQueryVariables = Exact<{
   publicKey: Scalars['String'];
@@ -1971,6 +1990,40 @@ export function useUpsertPublicUserMutation(baseOptions?: Apollo.MutationHookOpt
 export type UpsertPublicUserMutationHookResult = ReturnType<typeof useUpsertPublicUserMutation>;
 export type UpsertPublicUserMutationResult = Apollo.MutationResult<UpsertPublicUserMutation>;
 export type UpsertPublicUserMutationOptions = Apollo.BaseMutationOptions<UpsertPublicUserMutation, UpsertPublicUserMutationVariables>;
+export const ValidateSignatureDocument = gql`
+    mutation validateSignature($publicKey: String!, $signature: String!) {
+  validate_signature(args: {public_address: $publicKey, signature: $signature}) {
+    accessToken
+  }
+}
+    `;
+export type ValidateSignatureMutationFn = Apollo.MutationFunction<ValidateSignatureMutation, ValidateSignatureMutationVariables>;
+
+/**
+ * __useValidateSignatureMutation__
+ *
+ * To run a mutation, you first call `useValidateSignatureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useValidateSignatureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [validateSignatureMutation, { data, loading, error }] = useValidateSignatureMutation({
+ *   variables: {
+ *      publicKey: // value for 'publicKey'
+ *      signature: // value for 'signature'
+ *   },
+ * });
+ */
+export function useValidateSignatureMutation(baseOptions?: Apollo.MutationHookOptions<ValidateSignatureMutation, ValidateSignatureMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ValidateSignatureMutation, ValidateSignatureMutationVariables>(ValidateSignatureDocument, options);
+      }
+export type ValidateSignatureMutationHookResult = ReturnType<typeof useValidateSignatureMutation>;
+export type ValidateSignatureMutationResult = Apollo.MutationResult<ValidateSignatureMutation>;
+export type ValidateSignatureMutationOptions = Apollo.BaseMutationOptions<ValidateSignatureMutation, ValidateSignatureMutationVariables>;
 export const GetUserByPublicKeyDocument = gql`
     query getUserByPublicKey($publicKey: String!) {
   users(limit: 1, where: {public_key: {_eq: $publicKey}}) {

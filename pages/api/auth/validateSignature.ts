@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { initializeApollo } from '../../../graphql/apollo';
 import { GetUserByPublicKeyDocument, RefreshNonceDocument } from '../../../graphql/generated/graphql';
 import get from 'lodash/fp/get';
+import getOr from 'lodash/fp/getOr';
 
 const adminContext = {
   headers: {
@@ -12,15 +13,17 @@ const adminContext = {
 };
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(404)
-  }
+  // TODO move some of this to middle ware
+  const {body, headers, method} = req;
+  console.log("got the body", {body, headers});
 
-  const { signature, publicAddress } = req.body;
+  if (method !== 'POST') return res.status(404);
+  if (headers['x-hasura-action-secret'] !== process.env.ACTION_SECRET) return res.status(401);
 
-  if (!signature || !publicAddress) {
-    return res.status(400)
-  }
+  const { signature, public_address: publicAddress } = getOr({}, 'input.args', body);
+  console.log("got the body", {body, headers});
+
+  if (!signature || !publicAddress) return res.status(400);
 
   const apolloClient = initializeApollo();
   const { data } = await apolloClient.query({
@@ -52,7 +55,7 @@ export default async function handler(req, res) {
       context: adminContext,
     });
     console.log('refreshResponse', refreshResponse);
-    const token = await jwt.sign(
+    const accessToken = await jwt.sign(
       {
         payload: {
           id: userId,
@@ -64,8 +67,8 @@ export default async function handler(req, res) {
         algorithm: "HS256", // TODO see which algo is best
       }
     )
-    res.status(200).json({data: "YOUIN", token})
+    res.status(200).json({accessToken})
   } else {
-    res.status(401).json({data: "YOUOUT"})
+    res.status(401).json({accessToken: ""})
   }
 }

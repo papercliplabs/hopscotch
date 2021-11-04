@@ -1,11 +1,18 @@
 actions:
-- name: getNonce
+- name: validate_signature
   definition:
-    kind: ""
-    handler: '{{ACTION_BASE_URL}}/auth/getNonce'
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/auth/validateSignature'
+    headers:
+    - name: x-hasura-action-secret
+      value_from_env: ACTION_SECRET
+  permissions:
+  - role: anon
 custom_types:
   enums: []
-  input_objects: []
+  input_objects:
+  - name: ValidateSignatureInput
   objects:
   - name: GetNonceResponse
+  - name: ValidateSignatureOutput
   scalars: []

@@ -5,7 +5,7 @@ import Web3 from "web3";
 
 import Web3Modal from "web3modal";
 import { responsePathAsArray } from "graphql";
-import { GetUsersDocument, useGetUsersQuery, useUpsertPublicUserMutation } from "../graphql/generated/graphql";
+import { GetUsersDocument, useGetUsersQuery, useUpsertPublicUserMutation, useValidateSignatureMutation } from "../graphql/generated/graphql";
 import { JsonRpcBatchProvider } from "@ethersproject/providers";
 import get from 'lodash/fp/get';
 const providerOptions = {
@@ -14,6 +14,7 @@ const providerOptions = {
 
 const LoginButton = () => {
     const [upsertPublicUser] = useUpsertPublicUserMutation();
+    const [validateSignature] = useValidateSignatureMutation();
     const login = async () => {
         const web3Modal = new Web3Modal({
             network: "polygon", // optional
@@ -44,19 +45,9 @@ const LoginButton = () => {
         );
         console.log(signature);
 
-        const validateSignatureReponse = await fetch(
-            "/api/auth/validateSignature",
-            {
-                body: JSON.stringify({ publicAddress, signature }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                method: "POST",
-            }
-        );
+        const signatureResponse = await validateSignature({variables: {signature, publicKey: publicAddress}});
 
-        const data = await validateSignatureReponse.json();
-        console.log("did it work?>", { data });
+        console.log("did it work?>", { signatureResponse });
     };
     return <button onClick={login}>Login with Metamask</button>;
 };
