@@ -24,7 +24,7 @@ module.exports = {
             withComponent: false,
         },
     },
-    './graphql.schema.json': {
+    './graphql/generated/graphql.schema.json': {
         plugins: ['introspection'],
     },
   },

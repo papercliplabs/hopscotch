@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { useState } from "react";
-import { initializeApollo } from "../lib/apollo";
+import { addApolloState, initializeApollo } from "../graphql/apollo";
 import Web3 from "web3";
 
 import Web3Modal from "web3modal";
 import { responsePathAsArray } from "graphql";
+import { GetUsersDocument, useGetUsersQuery } from "../graphql/generated/graphql";
+import { JsonRpcBatchProvider } from "@ethersproject/providers";
 const providerOptions = {
     /* See Provider Options Section */
 };
@@ -61,7 +63,7 @@ const LoginButton = () => {
 };
 
 const Index = () => {
-
+    const {data} = useGetUsersQuery();
 
     return (
         <div>
@@ -71,13 +73,22 @@ const Index = () => {
             </Link>{" "}
             page.
             <LoginButton />
+            <div>{JSON.stringify(data)}</div>
         </div>
     );
 };
 
 export async function getStaticProps() {
+    // Prefetch query to improve performance
+    // not nessesary just a demo
     const apolloClient = initializeApollo();
-    return {props: {}};
+    await apolloClient.query({
+      query: GetUsersDocument,
+    })
+
+    return addApolloState(apolloClient, {
+      props: {},
+    })
 }
 
 export default Index;
