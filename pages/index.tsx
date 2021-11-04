@@ -5,8 +5,9 @@ import Web3 from "web3";
 
 import Web3Modal from "web3modal";
 import { responsePathAsArray } from "graphql";
-import { GetUsersDocument, useGetUsersQuery } from "../graphql/generated/graphql";
+import { GetUsersDocument, useGetUsersQuery, useUpsertPublicUserMutation } from "../graphql/generated/graphql";
 import { JsonRpcBatchProvider } from "@ethersproject/providers";
+import get from 'lodash/fp/get';
 const providerOptions = {
     /* See Provider Options Section */
 };
@@ -16,6 +17,7 @@ const DisplayPublicUsers = () => {
 }
 
 const LoginButton = () => {
+    const [upsertPublicUser] = useUpsertPublicUserMutation();
     const login = async () => {
         const web3Modal = new Web3Modal({
             network: "polygon", // optional
@@ -33,8 +35,9 @@ const LoginButton = () => {
         console.log(accounts);
 
         // get nonce
-        const nonceReponse = await fetch("/api/auth/getNonce");
-        const { nonce } = await nonceReponse.json();
+        const nonceReponse = await upsertPublicUser({variables: {publicKey: publicAddress}});
+        console.log("Got noncer", { nonceReponse });
+        const nonce = get('data.insert_users_one.nonce', nonceReponse)
         console.log("Got nonce", { nonce });
 
         // sign nonce

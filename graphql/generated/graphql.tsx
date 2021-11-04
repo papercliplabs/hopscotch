@@ -1872,12 +1872,56 @@ export type Uuid_Comparison_Exp = {
   _nin?: Maybe<Array<Scalars['uuid']>>;
 };
 
+export type UpsertPublicUserMutationVariables = Exact<{
+  publicKey: Scalars['String'];
+}>;
+
+
+export type UpsertPublicUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: any, public_key: string, name?: string | null | undefined, nonce: any, client_last_requested: any } | null | undefined };
+
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetUsersQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any, name?: string | null | undefined }> };
 
 
+export const UpsertPublicUserDocument = gql`
+    mutation upsertPublicUser($publicKey: String!) {
+  insert_users_one(object: {public_key: $publicKey}, on_conflict: {constraint: user_public_key_key, update_columns: [client_last_requested]}) {
+    id
+    public_key
+    name
+    nonce
+    client_last_requested
+  }
+}
+    `;
+export type UpsertPublicUserMutationFn = Apollo.MutationFunction<UpsertPublicUserMutation, UpsertPublicUserMutationVariables>;
+
+/**
+ * __useUpsertPublicUserMutation__
+ *
+ * To run a mutation, you first call `useUpsertPublicUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertPublicUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertPublicUserMutation, { data, loading, error }] = useUpsertPublicUserMutation({
+ *   variables: {
+ *      publicKey: // value for 'publicKey'
+ *   },
+ * });
+ */
+export function useUpsertPublicUserMutation(baseOptions?: Apollo.MutationHookOptions<UpsertPublicUserMutation, UpsertPublicUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpsertPublicUserMutation, UpsertPublicUserMutationVariables>(UpsertPublicUserDocument, options);
+      }
+export type UpsertPublicUserMutationHookResult = ReturnType<typeof useUpsertPublicUserMutation>;
+export type UpsertPublicUserMutationResult = Apollo.MutationResult<UpsertPublicUserMutation>;
+export type UpsertPublicUserMutationOptions = Apollo.BaseMutationOptions<UpsertPublicUserMutation, UpsertPublicUserMutationVariables>;
 export const GetUsersDocument = gql`
     query getUsers {
   users {
