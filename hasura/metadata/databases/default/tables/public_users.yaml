@@ -30,6 +30,7 @@ insert_permissions:
 select_permissions:
 - permission:
     columns:
+    - client_last_requested
     - id
     - nonce
     - public_key
@@ -37,6 +38,7 @@ select_permissions:
   role: anon
 - permission:
     columns:
+    - client_last_requested
     - id
     - nonce
     - public_key
