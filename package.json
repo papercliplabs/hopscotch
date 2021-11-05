@@ -5,7 +5,8 @@
     "dev": "yarn generate && next",
     "build": "yarn generate && next build",
     "test": "yarn generate && jest",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@apollo/client": "^3.1.3",
@@ -47,6 +48,8 @@
     "@types/react-test-renderer": "^17.0.1",
     "@types/styled-components": "^5.1.15",
     "babel-jest": "26.3.0",
+    "eslint": "7.32.0",
+    "eslint-config-next": "12.0.3",
     "graphql-tag": "2.11.0",
     "jest": "26.4.0",
     "react-test-renderer": "^17.0.1",
