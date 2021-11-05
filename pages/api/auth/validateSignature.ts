@@ -5,6 +5,7 @@ import { initializeApollo } from '../../../graphql/apollo';
 import { GetUserByPublicKeyDocument, RefreshNonceDocument } from '../../../graphql/generated/graphql';
 import get from 'lodash/fp/get';
 import getOr from 'lodash/fp/getOr';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 const adminContext = {
   headers: {
@@ -44,7 +45,7 @@ const createHasuraJWT = async (userId: string) => {
   return accessToken;
 };
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res:NextApiResponse) {
   // TODO move some of this to middleware
   const {body, headers, method} = req;
 

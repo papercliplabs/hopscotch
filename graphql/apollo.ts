@@ -2,8 +2,6 @@ import { useMemo } from 'react'
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context';
 
-let apolloClient;
-
 const httpLink = createHttpLink({ uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT });
 
 const authLink = setContext((_, { headers }) => {
@@ -33,6 +31,9 @@ const createApolloClient = () => {
     cache: new InMemoryCache()
   })
 }
+
+let apolloClient = createApolloClient();
+
 
 export const initializeApollo = () => {
   const _apolloClient = apolloClient ?? createApolloClient()
