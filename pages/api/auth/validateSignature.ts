@@ -36,6 +36,7 @@ export default async function handler(req, res) {
   console.log('we here', data);
   const nonce = get('users[0].nonce', data)
   const userId = get('users[0].id', data)
+  const name = get('users[0].name', data)
 
   const msgBufferHex = bufferToHex(Buffer.from(nonce, 'utf8'));
   const address = recoverPersonalSignature({
@@ -55,16 +56,21 @@ export default async function handler(req, res) {
       context: adminContext,
     });
     console.log('refreshResponse', refreshResponse);
+    const jwtContent = {
+      sub: userId,
+      name: name,
+      "https://hasura.io/jwt/claims": {
+        "x-hasura-allowed-roles": ["user"],
+        "x-hasura-default-role": "user",
+        "x-hasura-user-id": userId,
+      }
+    }
     const accessToken = await jwt.sign(
+      jwtContent,
+      process.env.JWT_SECRET, // TODO generate a real secret and put it in config
       {
-        payload: {
-          id: userId,
-          publicAddress,
-        },
-      },
-      "JWTSECRET", // TODO generate a real secret and put it in config
-      {
-        algorithm: "HS256", // TODO see which algo is best
+        algorithm: "HS256",
+        expiresIn: "30d",
       }
     )
     res.status(200).json({accessToken})

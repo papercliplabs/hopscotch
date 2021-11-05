@@ -1,6 +1,16 @@
 table:
   name: users
   schema: public
+object_relationships:
+- name: user_info
+  using:
+    manual_configuration:
+      column_mapping:
+        id: user_id
+      insertion_order: null
+      remote_table:
+        name: user_info
+        schema: public
 array_relationships:
 - name: organization_users
   using:
@@ -15,21 +25,23 @@ insert_permissions:
     check: {}
     columns:
     - client_last_requested
-    - name
     - public_key
   role: anon
 select_permissions:
 - permission:
     columns:
-    - name
     - id
-    - public_key
     - nonce
-    - created_at
-    - updated_at
-    - client_last_requested
+    - public_key
     filter: {}
   role: anon
+- permission:
+    columns:
+    - id
+    - nonce
+    - public_key
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: null
