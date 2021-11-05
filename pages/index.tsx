@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { useState } from "react";
 import { addApolloState, initializeApollo } from "../graphql/apollo";
 import Web3 from "web3";
 
 import Web3Modal from "web3modal";
-import { responsePathAsArray } from "graphql";
-import { GetUsersDocument, useGetUsersQuery, useUpsertPublicUserMutation, useValidateSignatureMutation } from "../graphql/generated/graphql";
-import { JsonRpcBatchProvider } from "@ethersproject/providers";
+import { GetUsersDocument, useGetCurrentUserInfoLazyQuery, useGetUsersQuery, useUpsertPublicUserMutation, useValidateSignatureMutation } from "../graphql/generated/graphql";
 import get from 'lodash/fp/get';
+
+
 const providerOptions = {
     /* See Provider Options Section */
 };
@@ -46,15 +45,16 @@ const LoginButton = () => {
         console.log(signature);
 
         const signatureResponse = await validateSignature({variables: {signature, publicKey: publicAddress}});
-
-        console.log("did it work?>", { signatureResponse });
+        const accessToken = get('data.validate_signature.accessToken', signatureResponse);
+        localStorage.setItem('accessToken', accessToken);
+        console.log("did it work?>", { accessToken });
     };
     return <button onClick={login}>Login with Metamask</button>;
 };
 
 const Index = () => {
-    const {data} = useGetUsersQuery();
-
+    const {data: allUsersData} = useGetUsersQuery();
+    const [getCurrentUserInfo, {data: userInfoData}] = useGetCurrentUserInfoLazyQuery();
     return (
         <div>
             Go to the{" "}
@@ -63,7 +63,11 @@ const Index = () => {
             </Link>{" "}
             page.
             <LoginButton />
-            <div>{JSON.stringify(data)}</div>
+            <h2>Below is public user data</h2>
+            <div>{JSON.stringify(allUsersData)}</div>
+            <h2>Below is specifc user info</h2>
+            <div>{JSON.stringify(userInfoData)}</div>
+            <button onClick={() => getCurrentUserInfo()}>Fetch</button>
         </div>
     );
 };

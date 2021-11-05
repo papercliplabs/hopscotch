@@ -9,7 +9,7 @@ import getOr from 'lodash/fp/getOr';
 const adminContext = {
   headers: {
     "x-hasura-admin-secret": process.env.GRAPHQL_ADMIN_API_KEY,
-    }
+  }
 };
 
 const nonceSignedByAddress = (publicAddress: string, nonce: string, signature: string) => {

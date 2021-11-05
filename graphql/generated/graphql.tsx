@@ -2140,6 +2140,11 @@ export type ValidateSignatureMutationVariables = Exact<{
 
 export type ValidateSignatureMutation = { __typename?: 'mutation_root', validate_signature?: { __typename?: 'ValidateSignatureOutput', accessToken: string } | null | undefined };
 
+export type GetCurrentUserInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCurrentUserInfoQuery = { __typename?: 'query_root', user_info: Array<{ __typename?: 'user_info', user_id: any, name?: string | null | undefined, email?: string | null | undefined }> };
+
 export type GetUserByPublicKeyQueryVariables = Exact<{
   publicKey: Scalars['String'];
 }>;
@@ -2258,6 +2263,42 @@ export function useValidateSignatureMutation(baseOptions?: Apollo.MutationHookOp
 export type ValidateSignatureMutationHookResult = ReturnType<typeof useValidateSignatureMutation>;
 export type ValidateSignatureMutationResult = Apollo.MutationResult<ValidateSignatureMutation>;
 export type ValidateSignatureMutationOptions = Apollo.BaseMutationOptions<ValidateSignatureMutation, ValidateSignatureMutationVariables>;
+export const GetCurrentUserInfoDocument = gql`
+    query getCurrentUserInfo {
+  user_info {
+    user_id
+    name
+    email
+  }
+}
+    `;
+
+/**
+ * __useGetCurrentUserInfoQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentUserInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentUserInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentUserInfoQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCurrentUserInfoQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>(GetCurrentUserInfoDocument, options);
+      }
+export function useGetCurrentUserInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>(GetCurrentUserInfoDocument, options);
+        }
+export type GetCurrentUserInfoQueryHookResult = ReturnType<typeof useGetCurrentUserInfoQuery>;
+export type GetCurrentUserInfoLazyQueryHookResult = ReturnType<typeof useGetCurrentUserInfoLazyQuery>;
+export type GetCurrentUserInfoQueryResult = Apollo.QueryResult<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>;
 export const GetUserByPublicKeyDocument = gql`
     query getUserByPublicKey($publicKey: String!) {
   users(limit: 1, where: {public_key: {_eq: $publicKey}}) {
