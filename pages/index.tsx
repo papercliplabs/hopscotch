@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { addApolloState, initializeApollo } from "../graphql/apollo";
 import Web3 from "web3";
+import { clearCache } from "../graphql/apollo";
 
 import Web3Modal from "web3modal";
-import { GetUsersDocument, useGetCurrentUserInfoLazyQuery, useGetUsersQuery, useUpsertPublicUserMutation, useValidateSignatureMutation } from "../graphql/generated/graphql";
+import { useGetCurrentUserInfoLazyQuery, useGetUsersQuery, useUpsertPublicUserMutation, useValidateSignatureMutation } from "../graphql/generated/graphql";
 import get from 'lodash/fp/get';
-
 
 const providerOptions = {
     /* See Provider Options Section */
@@ -52,6 +51,11 @@ const LoginButton = () => {
     return <button onClick={login}>Login with Metamask</button>;
 };
 
+const logout = () => {
+    clearCache();
+    localStorage.removeItem('accessToken')
+}
+
 const Index = () => {
     const {data: allUsersData} = useGetUsersQuery();
     const [getCurrentUserInfo, {data: userInfoData}] = useGetCurrentUserInfoLazyQuery();
@@ -68,21 +72,9 @@ const Index = () => {
             <h2>Below is specifc user info</h2>
             <div>{JSON.stringify(userInfoData)}</div>
             <button onClick={() => getCurrentUserInfo()}>Fetch</button>
+            <button onClick={logout}>Logout</button>
         </div>
     );
 };
-
-export async function getStaticProps() {
-    // Prefetch query to improve performance
-    // not nessesary just a demo
-    const apolloClient = initializeApollo();
-    await apolloClient.query({
-      query: GetUsersDocument,
-    })
-
-    return addApolloState(apolloClient, {
-      props: {},
-    })
-}
 
 export default Index;

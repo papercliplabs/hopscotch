@@ -9,7 +9,7 @@ function getLibrary(provider) {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
-    const apolloClient = useApollo(pageProps)
+    const apolloClient = useApollo();
 
     return (
         <ApolloProvider client={apolloClient}>
