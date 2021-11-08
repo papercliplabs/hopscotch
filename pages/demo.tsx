@@ -114,6 +114,7 @@ export default function Demo() {
         }
 
         async function getIsTokenApproved() {
+            if (!fromTokenContract) return;
             const response = await fromTokenContract.allowance(
                 account,
                 spenderAddress
@@ -161,7 +162,7 @@ export default function Demo() {
     }, [fromToken, toToken, fromTokenAmount]);
 
     async function approve() {
-        if (!signedIn || fromTokenApproved) {
+        if (!signedIn || fromTokenApproved || !fromTokenContract) {
             return;
         }
 

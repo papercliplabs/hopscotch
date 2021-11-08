@@ -6,7 +6,6 @@ mutation upsertPublicUser($publicKey: String!) {
   ) {
     id
     public_key
-    name
     nonce
     client_last_requested
   }

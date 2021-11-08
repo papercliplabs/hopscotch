@@ -2,14 +2,14 @@ import { AppProps } from "next/app";
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "../graphql/apollo";
 import { Web3ReactProvider } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
+import { ExternalProvider, JsonRpcFetchFunc, Web3Provider } from "@ethersproject/providers";
 
-function getLibrary(provider) {
+function getLibrary(provider: ExternalProvider | JsonRpcFetchFunc) {
     return new Web3Provider(provider);
 }
 
 export default function App({ Component, pageProps }: AppProps) {
-    const apolloClient = useApollo(pageProps)
+    const apolloClient = useApollo();
 
     return (
         <ApolloProvider client={apolloClient}>
