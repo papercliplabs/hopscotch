@@ -12,12 +12,19 @@ object_relationships:
         name: user_info
         schema: public
 array_relationships:
-- name: organization_users
+- name: clients
   using:
     foreign_key_constraint_on:
       column: user_id
       table:
-        name: organization_users
+        name: clients
+        schema: public
+- name: invoices
+  using:
+    foreign_key_constraint_on:
+      column: user_id
+      table:
+        name: invoices
         schema: public
 insert_permissions:
 - permission:

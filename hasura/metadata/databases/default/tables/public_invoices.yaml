@@ -5,6 +5,6 @@ object_relationships:
 - name: client
   using:
     foreign_key_constraint_on: client_id
-- name: organization
+- name: owner
   using:
-    foreign_key_constraint_on: organization_id
+    foreign_key_constraint_on: user_id
