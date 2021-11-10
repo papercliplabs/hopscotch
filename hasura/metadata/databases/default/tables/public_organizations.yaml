@@ -1,25 +1,3 @@
 table:
   name: organizations
   schema: public
-array_relationships:
-- name: clients
-  using:
-    foreign_key_constraint_on:
-      column: organization_id
-      table:
-        name: clients
-        schema: public
-- name: invoices
-  using:
-    foreign_key_constraint_on:
-      column: organization_id
-      table:
-        name: invoices
-        schema: public
-- name: organization_users
-  using:
-    foreign_key_constraint_on:
-      column: organization_id
-      table:
-        name: organization_users
-        schema: public

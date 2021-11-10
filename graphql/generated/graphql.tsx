@@ -42,8 +42,8 @@ export type Clients = {
   invoices_aggregate: Invoices_Aggregate;
   name: Scalars['String'];
   /** An object relationship */
-  organization: Organizations;
-  organization_id: Scalars['uuid'];
+  owner: Users;
+  user_id: Scalars['uuid'];
 };
 
 
@@ -111,8 +111,8 @@ export type Clients_Bool_Exp = {
   id?: Maybe<Uuid_Comparison_Exp>;
   invoices?: Maybe<Invoices_Bool_Exp>;
   name?: Maybe<String_Comparison_Exp>;
-  organization?: Maybe<Organizations_Bool_Exp>;
-  organization_id?: Maybe<Uuid_Comparison_Exp>;
+  owner?: Maybe<Users_Bool_Exp>;
+  user_id?: Maybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "clients" */
@@ -127,8 +127,8 @@ export type Clients_Insert_Input = {
   id?: Maybe<Scalars['uuid']>;
   invoices?: Maybe<Invoices_Arr_Rel_Insert_Input>;
   name?: Maybe<Scalars['String']>;
-  organization?: Maybe<Organizations_Obj_Rel_Insert_Input>;
-  organization_id?: Maybe<Scalars['uuid']>;
+  owner?: Maybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: Maybe<Scalars['uuid']>;
 };
 
 /** aggregate max on columns */
@@ -137,7 +137,7 @@ export type Clients_Max_Fields = {
   color?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
-  organization_id?: Maybe<Scalars['uuid']>;
+  user_id?: Maybe<Scalars['uuid']>;
 };
 
 /** order by max() on columns of table "clients" */
@@ -145,7 +145,7 @@ export type Clients_Max_Order_By = {
   color?: Maybe<Order_By>;
   id?: Maybe<Order_By>;
   name?: Maybe<Order_By>;
-  organization_id?: Maybe<Order_By>;
+  user_id?: Maybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -154,7 +154,7 @@ export type Clients_Min_Fields = {
   color?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
-  organization_id?: Maybe<Scalars['uuid']>;
+  user_id?: Maybe<Scalars['uuid']>;
 };
 
 /** order by min() on columns of table "clients" */
@@ -162,7 +162,7 @@ export type Clients_Min_Order_By = {
   color?: Maybe<Order_By>;
   id?: Maybe<Order_By>;
   name?: Maybe<Order_By>;
-  organization_id?: Maybe<Order_By>;
+  user_id?: Maybe<Order_By>;
 };
 
 /** response of any mutation on the table "clients" */
@@ -194,8 +194,8 @@ export type Clients_Order_By = {
   id?: Maybe<Order_By>;
   invoices_aggregate?: Maybe<Invoices_Aggregate_Order_By>;
   name?: Maybe<Order_By>;
-  organization?: Maybe<Organizations_Order_By>;
-  organization_id?: Maybe<Order_By>;
+  owner?: Maybe<Users_Order_By>;
+  user_id?: Maybe<Order_By>;
 };
 
 /** primary key columns input for table: clients */
@@ -212,7 +212,7 @@ export enum Clients_Select_Column {
   /** column name */
   Name = 'name',
   /** column name */
-  OrganizationId = 'organization_id'
+  UserId = 'user_id'
 }
 
 /** input type for updating data in table "clients" */
@@ -220,7 +220,7 @@ export type Clients_Set_Input = {
   color?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
-  organization_id?: Maybe<Scalars['uuid']>;
+  user_id?: Maybe<Scalars['uuid']>;
 };
 
 /** update columns of table "clients" */
@@ -232,7 +232,7 @@ export enum Clients_Update_Column {
   /** column name */
   Name = 'name',
   /** column name */
-  OrganizationId = 'organization_id'
+  UserId = 'user_id'
 }
 
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
@@ -260,11 +260,11 @@ export type Invoices = {
   invoice_identifier: Scalars['String'];
   note: Scalars['String'];
   /** An object relationship */
-  organization: Organizations;
-  organization_id: Scalars['uuid'];
+  owner: Users;
   status: Scalars['String'];
   token_address: Scalars['String'];
   transaction_id: Scalars['String'];
+  user_id: Scalars['uuid'];
 };
 
 /** aggregated selection of "invoices" */
@@ -344,11 +344,11 @@ export type Invoices_Bool_Exp = {
   id?: Maybe<Uuid_Comparison_Exp>;
   invoice_identifier?: Maybe<String_Comparison_Exp>;
   note?: Maybe<String_Comparison_Exp>;
-  organization?: Maybe<Organizations_Bool_Exp>;
-  organization_id?: Maybe<Uuid_Comparison_Exp>;
+  owner?: Maybe<Users_Bool_Exp>;
   status?: Maybe<String_Comparison_Exp>;
   token_address?: Maybe<String_Comparison_Exp>;
   transaction_id?: Maybe<String_Comparison_Exp>;
+  user_id?: Maybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "invoices" */
@@ -372,11 +372,11 @@ export type Invoices_Insert_Input = {
   id?: Maybe<Scalars['uuid']>;
   invoice_identifier?: Maybe<Scalars['String']>;
   note?: Maybe<Scalars['String']>;
-  organization?: Maybe<Organizations_Obj_Rel_Insert_Input>;
-  organization_id?: Maybe<Scalars['uuid']>;
+  owner?: Maybe<Users_Obj_Rel_Insert_Input>;
   status?: Maybe<Scalars['String']>;
   token_address?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
+  user_id?: Maybe<Scalars['uuid']>;
 };
 
 /** aggregate max on columns */
@@ -388,10 +388,10 @@ export type Invoices_Max_Fields = {
   id?: Maybe<Scalars['uuid']>;
   invoice_identifier?: Maybe<Scalars['String']>;
   note?: Maybe<Scalars['String']>;
-  organization_id?: Maybe<Scalars['uuid']>;
   status?: Maybe<Scalars['String']>;
   token_address?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
+  user_id?: Maybe<Scalars['uuid']>;
 };
 
 /** order by max() on columns of table "invoices" */
@@ -402,10 +402,10 @@ export type Invoices_Max_Order_By = {
   id?: Maybe<Order_By>;
   invoice_identifier?: Maybe<Order_By>;
   note?: Maybe<Order_By>;
-  organization_id?: Maybe<Order_By>;
   status?: Maybe<Order_By>;
   token_address?: Maybe<Order_By>;
   transaction_id?: Maybe<Order_By>;
+  user_id?: Maybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -417,10 +417,10 @@ export type Invoices_Min_Fields = {
   id?: Maybe<Scalars['uuid']>;
   invoice_identifier?: Maybe<Scalars['String']>;
   note?: Maybe<Scalars['String']>;
-  organization_id?: Maybe<Scalars['uuid']>;
   status?: Maybe<Scalars['String']>;
   token_address?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
+  user_id?: Maybe<Scalars['uuid']>;
 };
 
 /** order by min() on columns of table "invoices" */
@@ -431,10 +431,10 @@ export type Invoices_Min_Order_By = {
   id?: Maybe<Order_By>;
   invoice_identifier?: Maybe<Order_By>;
   note?: Maybe<Order_By>;
-  organization_id?: Maybe<Order_By>;
   status?: Maybe<Order_By>;
   token_address?: Maybe<Order_By>;
   transaction_id?: Maybe<Order_By>;
+  user_id?: Maybe<Order_By>;
 };
 
 /** response of any mutation on the table "invoices" */
@@ -462,11 +462,11 @@ export type Invoices_Order_By = {
   id?: Maybe<Order_By>;
   invoice_identifier?: Maybe<Order_By>;
   note?: Maybe<Order_By>;
-  organization?: Maybe<Organizations_Order_By>;
-  organization_id?: Maybe<Order_By>;
+  owner?: Maybe<Users_Order_By>;
   status?: Maybe<Order_By>;
   token_address?: Maybe<Order_By>;
   transaction_id?: Maybe<Order_By>;
+  user_id?: Maybe<Order_By>;
 };
 
 /** primary key columns input for table: invoices */
@@ -489,13 +489,13 @@ export enum Invoices_Select_Column {
   /** column name */
   Note = 'note',
   /** column name */
-  OrganizationId = 'organization_id',
-  /** column name */
   Status = 'status',
   /** column name */
   TokenAddress = 'token_address',
   /** column name */
-  TransactionId = 'transaction_id'
+  TransactionId = 'transaction_id',
+  /** column name */
+  UserId = 'user_id'
 }
 
 /** input type for updating data in table "invoices" */
@@ -506,10 +506,10 @@ export type Invoices_Set_Input = {
   id?: Maybe<Scalars['uuid']>;
   invoice_identifier?: Maybe<Scalars['String']>;
   note?: Maybe<Scalars['String']>;
-  organization_id?: Maybe<Scalars['uuid']>;
   status?: Maybe<Scalars['String']>;
   token_address?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
+  user_id?: Maybe<Scalars['uuid']>;
 };
 
 /** aggregate stddev on columns */
@@ -579,13 +579,13 @@ export enum Invoices_Update_Column {
   /** column name */
   Note = 'note',
   /** column name */
-  OrganizationId = 'organization_id',
-  /** column name */
   Status = 'status',
   /** column name */
   TokenAddress = 'token_address',
   /** column name */
-  TransactionId = 'transaction_id'
+  TransactionId = 'transaction_id',
+  /** column name */
+  UserId = 'user_id'
 }
 
 /** aggregate var_pop on columns */
@@ -638,14 +638,6 @@ export type Mutation_Root = {
   delete_invoices?: Maybe<Invoices_Mutation_Response>;
   /** delete single row from the table: "invoices" */
   delete_invoices_by_pk?: Maybe<Invoices>;
-  /** delete data from the table: "organization_users" */
-  delete_organization_users?: Maybe<Organization_Users_Mutation_Response>;
-  /** delete single row from the table: "organization_users" */
-  delete_organization_users_by_pk?: Maybe<Organization_Users>;
-  /** delete data from the table: "organizations" */
-  delete_organizations?: Maybe<Organizations_Mutation_Response>;
-  /** delete single row from the table: "organizations" */
-  delete_organizations_by_pk?: Maybe<Organizations>;
   /** delete data from the table: "user_info" */
   delete_user_info?: Maybe<User_Info_Mutation_Response>;
   /** delete single row from the table: "user_info" */
@@ -662,14 +654,6 @@ export type Mutation_Root = {
   insert_invoices?: Maybe<Invoices_Mutation_Response>;
   /** insert a single row into the table: "invoices" */
   insert_invoices_one?: Maybe<Invoices>;
-  /** insert data into the table: "organization_users" */
-  insert_organization_users?: Maybe<Organization_Users_Mutation_Response>;
-  /** insert a single row into the table: "organization_users" */
-  insert_organization_users_one?: Maybe<Organization_Users>;
-  /** insert data into the table: "organizations" */
-  insert_organizations?: Maybe<Organizations_Mutation_Response>;
-  /** insert a single row into the table: "organizations" */
-  insert_organizations_one?: Maybe<Organizations>;
   /** insert data into the table: "user_info" */
   insert_user_info?: Maybe<User_Info_Mutation_Response>;
   /** insert a single row into the table: "user_info" */
@@ -688,14 +672,6 @@ export type Mutation_Root = {
   update_invoices?: Maybe<Invoices_Mutation_Response>;
   /** update single row of the table: "invoices" */
   update_invoices_by_pk?: Maybe<Invoices>;
-  /** update data of the table: "organization_users" */
-  update_organization_users?: Maybe<Organization_Users_Mutation_Response>;
-  /** update single row of the table: "organization_users" */
-  update_organization_users_by_pk?: Maybe<Organization_Users>;
-  /** update data of the table: "organizations" */
-  update_organizations?: Maybe<Organizations_Mutation_Response>;
-  /** update single row of the table: "organizations" */
-  update_organizations_by_pk?: Maybe<Organizations>;
   /** update data of the table: "user_info" */
   update_user_info?: Maybe<User_Info_Mutation_Response>;
   /** update single row of the table: "user_info" */
@@ -728,31 +704,6 @@ export type Mutation_RootDelete_InvoicesArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Invoices_By_PkArgs = {
-  id: Scalars['uuid'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Organization_UsersArgs = {
-  where: Organization_Users_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Organization_Users_By_PkArgs = {
-  organization_id: Scalars['uuid'];
-  user_id: Scalars['uuid'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_OrganizationsArgs = {
-  where: Organizations_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Organizations_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -806,34 +757,6 @@ export type Mutation_RootInsert_InvoicesArgs = {
 export type Mutation_RootInsert_Invoices_OneArgs = {
   object: Invoices_Insert_Input;
   on_conflict?: Maybe<Invoices_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Organization_UsersArgs = {
-  objects: Array<Organization_Users_Insert_Input>;
-  on_conflict?: Maybe<Organization_Users_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Organization_Users_OneArgs = {
-  object: Organization_Users_Insert_Input;
-  on_conflict?: Maybe<Organization_Users_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_OrganizationsArgs = {
-  objects: Array<Organizations_Insert_Input>;
-  on_conflict?: Maybe<Organizations_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Organizations_OneArgs = {
-  object: Organizations_Insert_Input;
-  on_conflict?: Maybe<Organizations_On_Conflict>;
 };
 
 
@@ -907,34 +830,6 @@ export type Mutation_RootUpdate_Invoices_By_PkArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Organization_UsersArgs = {
-  _set?: Maybe<Organization_Users_Set_Input>;
-  where: Organization_Users_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Organization_Users_By_PkArgs = {
-  _set?: Maybe<Organization_Users_Set_Input>;
-  pk_columns: Organization_Users_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_OrganizationsArgs = {
-  _set?: Maybe<Organizations_Set_Input>;
-  where: Organizations_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Organizations_By_PkArgs = {
-  _set?: Maybe<Organizations_Set_Input>;
-  pk_columns: Organizations_Pk_Columns_Input;
-};
-
-
-/** mutation root */
 export type Mutation_RootUpdate_User_InfoArgs = {
   _set?: Maybe<User_Info_Set_Input>;
   where: User_Info_Bool_Exp;
@@ -983,368 +878,6 @@ export enum Order_By {
   DescNullsLast = 'desc_nulls_last'
 }
 
-/** columns and relationships of "organization_users" */
-export type Organization_Users = {
-  __typename?: 'organization_users';
-  /** An object relationship */
-  organization: Organizations;
-  organization_id: Scalars['uuid'];
-  /** An object relationship */
-  user: Users;
-  user_id: Scalars['uuid'];
-};
-
-/** aggregated selection of "organization_users" */
-export type Organization_Users_Aggregate = {
-  __typename?: 'organization_users_aggregate';
-  aggregate?: Maybe<Organization_Users_Aggregate_Fields>;
-  nodes: Array<Organization_Users>;
-};
-
-/** aggregate fields of "organization_users" */
-export type Organization_Users_Aggregate_Fields = {
-  __typename?: 'organization_users_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<Organization_Users_Max_Fields>;
-  min?: Maybe<Organization_Users_Min_Fields>;
-};
-
-
-/** aggregate fields of "organization_users" */
-export type Organization_Users_Aggregate_FieldsCountArgs = {
-  columns?: Maybe<Array<Organization_Users_Select_Column>>;
-  distinct?: Maybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "organization_users" */
-export type Organization_Users_Aggregate_Order_By = {
-  count?: Maybe<Order_By>;
-  max?: Maybe<Organization_Users_Max_Order_By>;
-  min?: Maybe<Organization_Users_Min_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "organization_users" */
-export type Organization_Users_Arr_Rel_Insert_Input = {
-  data: Array<Organization_Users_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: Maybe<Organization_Users_On_Conflict>;
-};
-
-/** Boolean expression to filter rows from the table "organization_users". All fields are combined with a logical 'AND'. */
-export type Organization_Users_Bool_Exp = {
-  _and?: Maybe<Array<Organization_Users_Bool_Exp>>;
-  _not?: Maybe<Organization_Users_Bool_Exp>;
-  _or?: Maybe<Array<Organization_Users_Bool_Exp>>;
-  organization?: Maybe<Organizations_Bool_Exp>;
-  organization_id?: Maybe<Uuid_Comparison_Exp>;
-  user?: Maybe<Users_Bool_Exp>;
-  user_id?: Maybe<Uuid_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "organization_users" */
-export enum Organization_Users_Constraint {
-  /** unique or primary key constraint */
-  OrganizationUserPkey = 'organization_user_pkey'
-}
-
-/** input type for inserting data into table "organization_users" */
-export type Organization_Users_Insert_Input = {
-  organization?: Maybe<Organizations_Obj_Rel_Insert_Input>;
-  organization_id?: Maybe<Scalars['uuid']>;
-  user?: Maybe<Users_Obj_Rel_Insert_Input>;
-  user_id?: Maybe<Scalars['uuid']>;
-};
-
-/** aggregate max on columns */
-export type Organization_Users_Max_Fields = {
-  __typename?: 'organization_users_max_fields';
-  organization_id?: Maybe<Scalars['uuid']>;
-  user_id?: Maybe<Scalars['uuid']>;
-};
-
-/** order by max() on columns of table "organization_users" */
-export type Organization_Users_Max_Order_By = {
-  organization_id?: Maybe<Order_By>;
-  user_id?: Maybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Organization_Users_Min_Fields = {
-  __typename?: 'organization_users_min_fields';
-  organization_id?: Maybe<Scalars['uuid']>;
-  user_id?: Maybe<Scalars['uuid']>;
-};
-
-/** order by min() on columns of table "organization_users" */
-export type Organization_Users_Min_Order_By = {
-  organization_id?: Maybe<Order_By>;
-  user_id?: Maybe<Order_By>;
-};
-
-/** response of any mutation on the table "organization_users" */
-export type Organization_Users_Mutation_Response = {
-  __typename?: 'organization_users_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Organization_Users>;
-};
-
-/** on conflict condition type for table "organization_users" */
-export type Organization_Users_On_Conflict = {
-  constraint: Organization_Users_Constraint;
-  update_columns?: Array<Organization_Users_Update_Column>;
-  where?: Maybe<Organization_Users_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "organization_users". */
-export type Organization_Users_Order_By = {
-  organization?: Maybe<Organizations_Order_By>;
-  organization_id?: Maybe<Order_By>;
-  user?: Maybe<Users_Order_By>;
-  user_id?: Maybe<Order_By>;
-};
-
-/** primary key columns input for table: organization_users */
-export type Organization_Users_Pk_Columns_Input = {
-  organization_id: Scalars['uuid'];
-  user_id: Scalars['uuid'];
-};
-
-/** select columns of table "organization_users" */
-export enum Organization_Users_Select_Column {
-  /** column name */
-  OrganizationId = 'organization_id',
-  /** column name */
-  UserId = 'user_id'
-}
-
-/** input type for updating data in table "organization_users" */
-export type Organization_Users_Set_Input = {
-  organization_id?: Maybe<Scalars['uuid']>;
-  user_id?: Maybe<Scalars['uuid']>;
-};
-
-/** update columns of table "organization_users" */
-export enum Organization_Users_Update_Column {
-  /** column name */
-  OrganizationId = 'organization_id',
-  /** column name */
-  UserId = 'user_id'
-}
-
-/** columns and relationships of "organizations" */
-export type Organizations = {
-  __typename?: 'organizations';
-  /** An array relationship */
-  clients: Array<Clients>;
-  /** An aggregate relationship */
-  clients_aggregate: Clients_Aggregate;
-  id: Scalars['uuid'];
-  /** An array relationship */
-  invoices: Array<Invoices>;
-  /** An aggregate relationship */
-  invoices_aggregate: Invoices_Aggregate;
-  name: Scalars['String'];
-  /** fetch data from the table: "organization_users" */
-  organization_users: Array<Organization_Users>;
-  /** An aggregate relationship */
-  organization_users_aggregate: Organization_Users_Aggregate;
-  wallet_address: Scalars['String'];
-};
-
-
-/** columns and relationships of "organizations" */
-export type OrganizationsClientsArgs = {
-  distinct_on?: Maybe<Array<Clients_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Clients_Order_By>>;
-  where?: Maybe<Clients_Bool_Exp>;
-};
-
-
-/** columns and relationships of "organizations" */
-export type OrganizationsClients_AggregateArgs = {
-  distinct_on?: Maybe<Array<Clients_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Clients_Order_By>>;
-  where?: Maybe<Clients_Bool_Exp>;
-};
-
-
-/** columns and relationships of "organizations" */
-export type OrganizationsInvoicesArgs = {
-  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Invoices_Order_By>>;
-  where?: Maybe<Invoices_Bool_Exp>;
-};
-
-
-/** columns and relationships of "organizations" */
-export type OrganizationsInvoices_AggregateArgs = {
-  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Invoices_Order_By>>;
-  where?: Maybe<Invoices_Bool_Exp>;
-};
-
-
-/** columns and relationships of "organizations" */
-export type OrganizationsOrganization_UsersArgs = {
-  distinct_on?: Maybe<Array<Organization_Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organization_Users_Order_By>>;
-  where?: Maybe<Organization_Users_Bool_Exp>;
-};
-
-
-/** columns and relationships of "organizations" */
-export type OrganizationsOrganization_Users_AggregateArgs = {
-  distinct_on?: Maybe<Array<Organization_Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organization_Users_Order_By>>;
-  where?: Maybe<Organization_Users_Bool_Exp>;
-};
-
-/** aggregated selection of "organizations" */
-export type Organizations_Aggregate = {
-  __typename?: 'organizations_aggregate';
-  aggregate?: Maybe<Organizations_Aggregate_Fields>;
-  nodes: Array<Organizations>;
-};
-
-/** aggregate fields of "organizations" */
-export type Organizations_Aggregate_Fields = {
-  __typename?: 'organizations_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<Organizations_Max_Fields>;
-  min?: Maybe<Organizations_Min_Fields>;
-};
-
-
-/** aggregate fields of "organizations" */
-export type Organizations_Aggregate_FieldsCountArgs = {
-  columns?: Maybe<Array<Organizations_Select_Column>>;
-  distinct?: Maybe<Scalars['Boolean']>;
-};
-
-/** Boolean expression to filter rows from the table "organizations". All fields are combined with a logical 'AND'. */
-export type Organizations_Bool_Exp = {
-  _and?: Maybe<Array<Organizations_Bool_Exp>>;
-  _not?: Maybe<Organizations_Bool_Exp>;
-  _or?: Maybe<Array<Organizations_Bool_Exp>>;
-  clients?: Maybe<Clients_Bool_Exp>;
-  id?: Maybe<Uuid_Comparison_Exp>;
-  invoices?: Maybe<Invoices_Bool_Exp>;
-  name?: Maybe<String_Comparison_Exp>;
-  organization_users?: Maybe<Organization_Users_Bool_Exp>;
-  wallet_address?: Maybe<String_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "organizations" */
-export enum Organizations_Constraint {
-  /** unique or primary key constraint */
-  OrganizationPkey = 'organization_pkey'
-}
-
-/** input type for inserting data into table "organizations" */
-export type Organizations_Insert_Input = {
-  clients?: Maybe<Clients_Arr_Rel_Insert_Input>;
-  id?: Maybe<Scalars['uuid']>;
-  invoices?: Maybe<Invoices_Arr_Rel_Insert_Input>;
-  name?: Maybe<Scalars['String']>;
-  organization_users?: Maybe<Organization_Users_Arr_Rel_Insert_Input>;
-  wallet_address?: Maybe<Scalars['String']>;
-};
-
-/** aggregate max on columns */
-export type Organizations_Max_Fields = {
-  __typename?: 'organizations_max_fields';
-  id?: Maybe<Scalars['uuid']>;
-  name?: Maybe<Scalars['String']>;
-  wallet_address?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Organizations_Min_Fields = {
-  __typename?: 'organizations_min_fields';
-  id?: Maybe<Scalars['uuid']>;
-  name?: Maybe<Scalars['String']>;
-  wallet_address?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "organizations" */
-export type Organizations_Mutation_Response = {
-  __typename?: 'organizations_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Organizations>;
-};
-
-/** input type for inserting object relation for remote table "organizations" */
-export type Organizations_Obj_Rel_Insert_Input = {
-  data: Organizations_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: Maybe<Organizations_On_Conflict>;
-};
-
-/** on conflict condition type for table "organizations" */
-export type Organizations_On_Conflict = {
-  constraint: Organizations_Constraint;
-  update_columns?: Array<Organizations_Update_Column>;
-  where?: Maybe<Organizations_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "organizations". */
-export type Organizations_Order_By = {
-  clients_aggregate?: Maybe<Clients_Aggregate_Order_By>;
-  id?: Maybe<Order_By>;
-  invoices_aggregate?: Maybe<Invoices_Aggregate_Order_By>;
-  name?: Maybe<Order_By>;
-  organization_users_aggregate?: Maybe<Organization_Users_Aggregate_Order_By>;
-  wallet_address?: Maybe<Order_By>;
-};
-
-/** primary key columns input for table: organizations */
-export type Organizations_Pk_Columns_Input = {
-  id: Scalars['uuid'];
-};
-
-/** select columns of table "organizations" */
-export enum Organizations_Select_Column {
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  WalletAddress = 'wallet_address'
-}
-
-/** input type for updating data in table "organizations" */
-export type Organizations_Set_Input = {
-  id?: Maybe<Scalars['uuid']>;
-  name?: Maybe<Scalars['String']>;
-  wallet_address?: Maybe<Scalars['String']>;
-};
-
-/** update columns of table "organizations" */
-export enum Organizations_Update_Column {
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  WalletAddress = 'wallet_address'
-}
-
 export type Query_Root = {
   __typename?: 'query_root';
   /** An array relationship */
@@ -1359,18 +892,6 @@ export type Query_Root = {
   invoices_aggregate: Invoices_Aggregate;
   /** fetch data from the table: "invoices" using primary key columns */
   invoices_by_pk?: Maybe<Invoices>;
-  /** fetch data from the table: "organization_users" */
-  organization_users: Array<Organization_Users>;
-  /** An aggregate relationship */
-  organization_users_aggregate: Organization_Users_Aggregate;
-  /** fetch data from the table: "organization_users" using primary key columns */
-  organization_users_by_pk?: Maybe<Organization_Users>;
-  /** fetch data from the table: "organizations" */
-  organizations: Array<Organizations>;
-  /** fetch aggregated fields from the table: "organizations" */
-  organizations_aggregate: Organizations_Aggregate;
-  /** fetch data from the table: "organizations" using primary key columns */
-  organizations_by_pk?: Maybe<Organizations>;
   /** fetch data from the table: "user_info" */
   user_info: Array<User_Info>;
   /** fetch aggregated fields from the table: "user_info" */
@@ -1428,53 +949,6 @@ export type Query_RootInvoices_AggregateArgs = {
 
 
 export type Query_RootInvoices_By_PkArgs = {
-  id: Scalars['uuid'];
-};
-
-
-export type Query_RootOrganization_UsersArgs = {
-  distinct_on?: Maybe<Array<Organization_Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organization_Users_Order_By>>;
-  where?: Maybe<Organization_Users_Bool_Exp>;
-};
-
-
-export type Query_RootOrganization_Users_AggregateArgs = {
-  distinct_on?: Maybe<Array<Organization_Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organization_Users_Order_By>>;
-  where?: Maybe<Organization_Users_Bool_Exp>;
-};
-
-
-export type Query_RootOrganization_Users_By_PkArgs = {
-  organization_id: Scalars['uuid'];
-  user_id: Scalars['uuid'];
-};
-
-
-export type Query_RootOrganizationsArgs = {
-  distinct_on?: Maybe<Array<Organizations_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organizations_Order_By>>;
-  where?: Maybe<Organizations_Bool_Exp>;
-};
-
-
-export type Query_RootOrganizations_AggregateArgs = {
-  distinct_on?: Maybe<Array<Organizations_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organizations_Order_By>>;
-  where?: Maybe<Organizations_Bool_Exp>;
-};
-
-
-export type Query_RootOrganizations_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -1575,18 +1049,6 @@ export type Subscription_Root = {
   invoices_aggregate: Invoices_Aggregate;
   /** fetch data from the table: "invoices" using primary key columns */
   invoices_by_pk?: Maybe<Invoices>;
-  /** fetch data from the table: "organization_users" */
-  organization_users: Array<Organization_Users>;
-  /** An aggregate relationship */
-  organization_users_aggregate: Organization_Users_Aggregate;
-  /** fetch data from the table: "organization_users" using primary key columns */
-  organization_users_by_pk?: Maybe<Organization_Users>;
-  /** fetch data from the table: "organizations" */
-  organizations: Array<Organizations>;
-  /** fetch aggregated fields from the table: "organizations" */
-  organizations_aggregate: Organizations_Aggregate;
-  /** fetch data from the table: "organizations" using primary key columns */
-  organizations_by_pk?: Maybe<Organizations>;
   /** fetch data from the table: "user_info" */
   user_info: Array<User_Info>;
   /** fetch aggregated fields from the table: "user_info" */
@@ -1644,53 +1106,6 @@ export type Subscription_RootInvoices_AggregateArgs = {
 
 
 export type Subscription_RootInvoices_By_PkArgs = {
-  id: Scalars['uuid'];
-};
-
-
-export type Subscription_RootOrganization_UsersArgs = {
-  distinct_on?: Maybe<Array<Organization_Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organization_Users_Order_By>>;
-  where?: Maybe<Organization_Users_Bool_Exp>;
-};
-
-
-export type Subscription_RootOrganization_Users_AggregateArgs = {
-  distinct_on?: Maybe<Array<Organization_Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organization_Users_Order_By>>;
-  where?: Maybe<Organization_Users_Bool_Exp>;
-};
-
-
-export type Subscription_RootOrganization_Users_By_PkArgs = {
-  organization_id: Scalars['uuid'];
-  user_id: Scalars['uuid'];
-};
-
-
-export type Subscription_RootOrganizationsArgs = {
-  distinct_on?: Maybe<Array<Organizations_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organizations_Order_By>>;
-  where?: Maybe<Organizations_Bool_Exp>;
-};
-
-
-export type Subscription_RootOrganizations_AggregateArgs = {
-  distinct_on?: Maybe<Array<Organizations_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organizations_Order_By>>;
-  where?: Maybe<Organizations_Bool_Exp>;
-};
-
-
-export type Subscription_RootOrganizations_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -1901,13 +1316,17 @@ export enum User_Info_Update_Column {
 export type Users = {
   __typename?: 'users';
   client_last_requested: Scalars['timestamp'];
+  /** An array relationship */
+  clients: Array<Clients>;
+  /** An aggregate relationship */
+  clients_aggregate: Clients_Aggregate;
   created_at?: Maybe<Scalars['timestamptz']>;
   id: Scalars['uuid'];
-  nonce: Scalars['uuid'];
-  /** fetch data from the table: "organization_users" */
-  organization_users: Array<Organization_Users>;
+  /** An array relationship */
+  invoices: Array<Invoices>;
   /** An aggregate relationship */
-  organization_users_aggregate: Organization_Users_Aggregate;
+  invoices_aggregate: Invoices_Aggregate;
+  nonce: Scalars['uuid'];
   public_key: Scalars['String'];
   updated_at?: Maybe<Scalars['timestamptz']>;
   /** An object relationship */
@@ -1916,22 +1335,42 @@ export type Users = {
 
 
 /** columns and relationships of "users" */
-export type UsersOrganization_UsersArgs = {
-  distinct_on?: Maybe<Array<Organization_Users_Select_Column>>;
+export type UsersClientsArgs = {
+  distinct_on?: Maybe<Array<Clients_Select_Column>>;
   limit?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organization_Users_Order_By>>;
-  where?: Maybe<Organization_Users_Bool_Exp>;
+  order_by?: Maybe<Array<Clients_Order_By>>;
+  where?: Maybe<Clients_Bool_Exp>;
 };
 
 
 /** columns and relationships of "users" */
-export type UsersOrganization_Users_AggregateArgs = {
-  distinct_on?: Maybe<Array<Organization_Users_Select_Column>>;
+export type UsersClients_AggregateArgs = {
+  distinct_on?: Maybe<Array<Clients_Select_Column>>;
   limit?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Organization_Users_Order_By>>;
-  where?: Maybe<Organization_Users_Bool_Exp>;
+  order_by?: Maybe<Array<Clients_Order_By>>;
+  where?: Maybe<Clients_Bool_Exp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersInvoicesArgs = {
+  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Invoices_Order_By>>;
+  where?: Maybe<Invoices_Bool_Exp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersInvoices_AggregateArgs = {
+  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Invoices_Order_By>>;
+  where?: Maybe<Invoices_Bool_Exp>;
 };
 
 /** aggregated selection of "users" */
@@ -1962,10 +1401,11 @@ export type Users_Bool_Exp = {
   _not?: Maybe<Users_Bool_Exp>;
   _or?: Maybe<Array<Users_Bool_Exp>>;
   client_last_requested?: Maybe<Timestamp_Comparison_Exp>;
+  clients?: Maybe<Clients_Bool_Exp>;
   created_at?: Maybe<Timestamptz_Comparison_Exp>;
   id?: Maybe<Uuid_Comparison_Exp>;
+  invoices?: Maybe<Invoices_Bool_Exp>;
   nonce?: Maybe<Uuid_Comparison_Exp>;
-  organization_users?: Maybe<Organization_Users_Bool_Exp>;
   public_key?: Maybe<String_Comparison_Exp>;
   updated_at?: Maybe<Timestamptz_Comparison_Exp>;
   user_info?: Maybe<User_Info_Bool_Exp>;
@@ -1982,10 +1422,11 @@ export enum Users_Constraint {
 /** input type for inserting data into table "users" */
 export type Users_Insert_Input = {
   client_last_requested?: Maybe<Scalars['timestamp']>;
+  clients?: Maybe<Clients_Arr_Rel_Insert_Input>;
   created_at?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
+  invoices?: Maybe<Invoices_Arr_Rel_Insert_Input>;
   nonce?: Maybe<Scalars['uuid']>;
-  organization_users?: Maybe<Organization_Users_Arr_Rel_Insert_Input>;
   public_key?: Maybe<Scalars['String']>;
   updated_at?: Maybe<Scalars['timestamptz']>;
   user_info?: Maybe<User_Info_Obj_Rel_Insert_Input>;
@@ -2039,10 +1480,11 @@ export type Users_On_Conflict = {
 /** Ordering options when selecting data from "users". */
 export type Users_Order_By = {
   client_last_requested?: Maybe<Order_By>;
+  clients_aggregate?: Maybe<Clients_Aggregate_Order_By>;
   created_at?: Maybe<Order_By>;
   id?: Maybe<Order_By>;
+  invoices_aggregate?: Maybe<Invoices_Aggregate_Order_By>;
   nonce?: Maybe<Order_By>;
-  organization_users_aggregate?: Maybe<Organization_Users_Aggregate_Order_By>;
   public_key?: Maybe<Order_By>;
   updated_at?: Maybe<Order_By>;
   user_info?: Maybe<User_Info_Order_By>;

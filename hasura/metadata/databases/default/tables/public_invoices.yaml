@@ -5,6 +5,42 @@ object_relationships:
 - name: client
   using:
     foreign_key_constraint_on: client_id
-- name: organization
+- name: owner
   using:
-    foreign_key_constraint_on: organization_id
+    foreign_key_constraint_on: user_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      user_id:
+        _eq: X-Hasura-User-Id
+    columns:
+    - id
+    - status
+    - invoice_identifier
+    - note
+    - amount
+    - token_address
+    - transaction_id
+    - client_id
+    - chain_id
+    - user_id
+  role: user
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - amount
+    - chain_id
+    - invoice_identifier
+    - note
+    - status
+    - token_address
+    - transaction_id
+    - client_id
+    - id
+    - user_id
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: user
