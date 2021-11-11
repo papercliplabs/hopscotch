@@ -3,7 +3,7 @@
   "scripts": {
     "generate": "graphql-codegen --config codegen.js",
     "dev": "yarn generate && next",
-    "build": "yarn generate && next build",
+    "build": "next build",
     "test": "yarn generate && jest",
     "start": "next start",
     "lint": "next lint"
