@@ -37,9 +37,16 @@ hasura console --admin-secret=squidsquidsquid
 ```
 
 ## Running the frontend
+### For the first time
 ```sh
 cp .env.template .env
 yarn dev
+```
+
+### If youve changed the graphql schema
+This project uses codegen to create the hooks and functions for calling our backend. After you've made a change to the Graphql (hasura) schema make sure to run the following to re-generate these functions
+```sh
+yarn generate
 ```
 
 ## Other Notes
