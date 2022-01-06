@@ -42,6 +42,15 @@ cp .env.template .env
 yarn dev
 ```
 
+## Other Notes
+### Modifying Hasuras metadata file
+It may in rare cases be nessesary to edit hasuras yaml files directly. If you do this make sure to run
+```sh
+hasura metadata apply --admin-secret=squidsquidsquid
+```
+
+Afterwards to see the changes apply in the console
+
 ### TypeScript and GraphQL Example
 
 One of the strengths of GraphQL is [enforcing data types on runtime](https://graphql.github.io/graphql-spec/June2018/#sec-Value-Completion). Further, TypeScript and [GraphQL Code Generator](https://graphql-code-generator.com/) (graphql-codegen) make it safer by typing data statically, so you can write truly type-protected code with rich IDE assists.
