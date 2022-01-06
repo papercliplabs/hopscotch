@@ -34,7 +34,6 @@ export type Bigint_Comparison_Exp = {
 /** columns and relationships of "clients" */
 export type Clients = {
   __typename?: 'clients';
-  color: Scalars['String'];
   id: Scalars['uuid'];
   /** An array relationship */
   invoices: Array<Invoices>;
@@ -107,7 +106,6 @@ export type Clients_Bool_Exp = {
   _and?: Maybe<Array<Clients_Bool_Exp>>;
   _not?: Maybe<Clients_Bool_Exp>;
   _or?: Maybe<Array<Clients_Bool_Exp>>;
-  color?: Maybe<String_Comparison_Exp>;
   id?: Maybe<Uuid_Comparison_Exp>;
   invoices?: Maybe<Invoices_Bool_Exp>;
   name?: Maybe<String_Comparison_Exp>;
@@ -123,7 +121,6 @@ export enum Clients_Constraint {
 
 /** input type for inserting data into table "clients" */
 export type Clients_Insert_Input = {
-  color?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   invoices?: Maybe<Invoices_Arr_Rel_Insert_Input>;
   name?: Maybe<Scalars['String']>;
@@ -134,7 +131,6 @@ export type Clients_Insert_Input = {
 /** aggregate max on columns */
 export type Clients_Max_Fields = {
   __typename?: 'clients_max_fields';
-  color?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
   user_id?: Maybe<Scalars['uuid']>;
@@ -142,7 +138,6 @@ export type Clients_Max_Fields = {
 
 /** order by max() on columns of table "clients" */
 export type Clients_Max_Order_By = {
-  color?: Maybe<Order_By>;
   id?: Maybe<Order_By>;
   name?: Maybe<Order_By>;
   user_id?: Maybe<Order_By>;
@@ -151,7 +146,6 @@ export type Clients_Max_Order_By = {
 /** aggregate min on columns */
 export type Clients_Min_Fields = {
   __typename?: 'clients_min_fields';
-  color?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
   user_id?: Maybe<Scalars['uuid']>;
@@ -159,7 +153,6 @@ export type Clients_Min_Fields = {
 
 /** order by min() on columns of table "clients" */
 export type Clients_Min_Order_By = {
-  color?: Maybe<Order_By>;
   id?: Maybe<Order_By>;
   name?: Maybe<Order_By>;
   user_id?: Maybe<Order_By>;
@@ -190,7 +183,6 @@ export type Clients_On_Conflict = {
 
 /** Ordering options when selecting data from "clients". */
 export type Clients_Order_By = {
-  color?: Maybe<Order_By>;
   id?: Maybe<Order_By>;
   invoices_aggregate?: Maybe<Invoices_Aggregate_Order_By>;
   name?: Maybe<Order_By>;
@@ -206,8 +198,6 @@ export type Clients_Pk_Columns_Input = {
 /** select columns of table "clients" */
 export enum Clients_Select_Column {
   /** column name */
-  Color = 'color',
-  /** column name */
   Id = 'id',
   /** column name */
   Name = 'name',
@@ -217,7 +207,6 @@ export enum Clients_Select_Column {
 
 /** input type for updating data in table "clients" */
 export type Clients_Set_Input = {
-  color?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
   user_id?: Maybe<Scalars['uuid']>;
@@ -225,8 +214,6 @@ export type Clients_Set_Input = {
 
 /** update columns of table "clients" */
 export enum Clients_Update_Column {
-  /** column name */
-  Color = 'color',
   /** column name */
   Id = 'id',
   /** column name */
@@ -257,8 +244,6 @@ export type Invoices = {
   client: Clients;
   client_id: Scalars['uuid'];
   id: Scalars['uuid'];
-  invoice_identifier: Scalars['String'];
-  note: Scalars['String'];
   /** An object relationship */
   owner: Users;
   status: Scalars['String'];
@@ -342,8 +327,6 @@ export type Invoices_Bool_Exp = {
   client?: Maybe<Clients_Bool_Exp>;
   client_id?: Maybe<Uuid_Comparison_Exp>;
   id?: Maybe<Uuid_Comparison_Exp>;
-  invoice_identifier?: Maybe<String_Comparison_Exp>;
-  note?: Maybe<String_Comparison_Exp>;
   owner?: Maybe<Users_Bool_Exp>;
   status?: Maybe<String_Comparison_Exp>;
   token_address?: Maybe<String_Comparison_Exp>;
@@ -370,8 +353,6 @@ export type Invoices_Insert_Input = {
   client?: Maybe<Clients_Obj_Rel_Insert_Input>;
   client_id?: Maybe<Scalars['uuid']>;
   id?: Maybe<Scalars['uuid']>;
-  invoice_identifier?: Maybe<Scalars['String']>;
-  note?: Maybe<Scalars['String']>;
   owner?: Maybe<Users_Obj_Rel_Insert_Input>;
   status?: Maybe<Scalars['String']>;
   token_address?: Maybe<Scalars['String']>;
@@ -386,8 +367,6 @@ export type Invoices_Max_Fields = {
   chain_id?: Maybe<Scalars['Int']>;
   client_id?: Maybe<Scalars['uuid']>;
   id?: Maybe<Scalars['uuid']>;
-  invoice_identifier?: Maybe<Scalars['String']>;
-  note?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   token_address?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
@@ -400,8 +379,6 @@ export type Invoices_Max_Order_By = {
   chain_id?: Maybe<Order_By>;
   client_id?: Maybe<Order_By>;
   id?: Maybe<Order_By>;
-  invoice_identifier?: Maybe<Order_By>;
-  note?: Maybe<Order_By>;
   status?: Maybe<Order_By>;
   token_address?: Maybe<Order_By>;
   transaction_id?: Maybe<Order_By>;
@@ -415,8 +392,6 @@ export type Invoices_Min_Fields = {
   chain_id?: Maybe<Scalars['Int']>;
   client_id?: Maybe<Scalars['uuid']>;
   id?: Maybe<Scalars['uuid']>;
-  invoice_identifier?: Maybe<Scalars['String']>;
-  note?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   token_address?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
@@ -429,8 +404,6 @@ export type Invoices_Min_Order_By = {
   chain_id?: Maybe<Order_By>;
   client_id?: Maybe<Order_By>;
   id?: Maybe<Order_By>;
-  invoice_identifier?: Maybe<Order_By>;
-  note?: Maybe<Order_By>;
   status?: Maybe<Order_By>;
   token_address?: Maybe<Order_By>;
   transaction_id?: Maybe<Order_By>;
@@ -460,8 +433,6 @@ export type Invoices_Order_By = {
   client?: Maybe<Clients_Order_By>;
   client_id?: Maybe<Order_By>;
   id?: Maybe<Order_By>;
-  invoice_identifier?: Maybe<Order_By>;
-  note?: Maybe<Order_By>;
   owner?: Maybe<Users_Order_By>;
   status?: Maybe<Order_By>;
   token_address?: Maybe<Order_By>;
@@ -485,10 +456,6 @@ export enum Invoices_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
-  InvoiceIdentifier = 'invoice_identifier',
-  /** column name */
-  Note = 'note',
-  /** column name */
   Status = 'status',
   /** column name */
   TokenAddress = 'token_address',
@@ -504,8 +471,6 @@ export type Invoices_Set_Input = {
   chain_id?: Maybe<Scalars['Int']>;
   client_id?: Maybe<Scalars['uuid']>;
   id?: Maybe<Scalars['uuid']>;
-  invoice_identifier?: Maybe<Scalars['String']>;
-  note?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   token_address?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
@@ -574,10 +539,6 @@ export enum Invoices_Update_Column {
   ClientId = 'client_id',
   /** column name */
   Id = 'id',
-  /** column name */
-  InvoiceIdentifier = 'invoice_identifier',
-  /** column name */
-  Note = 'note',
   /** column name */
   Status = 'status',
   /** column name */
