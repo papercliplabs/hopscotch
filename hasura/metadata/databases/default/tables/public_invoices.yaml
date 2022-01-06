@@ -17,8 +17,6 @@ insert_permissions:
     columns:
     - id
     - status
-    - invoice_identifier
-    - note
     - amount
     - token_address
     - transaction_id
@@ -32,8 +30,6 @@ update_permissions:
     columns:
     - amount
     - chain_id
-    - invoice_identifier
-    - note
     - status
     - token_address
     - transaction_id
