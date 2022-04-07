@@ -16,7 +16,7 @@ tell application "iTerm"
   tell second session of current tab of current window
     set name to "CLIENT"
     delay 3
-    write text "yarn start"
+    write text "yarn dev"
   end tell
 
   tell third session of current tab of current window
