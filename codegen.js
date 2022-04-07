@@ -9,24 +9,24 @@ module.exports = {
       },
     },
   ],
-  documents: ['./graphql/**/*.graphql'],
+  documents: ["./graphql/**/*.graphql"],
   overwrite: true,
   generates: {
-    './graphql/generated/graphql.tsx': {
-        plugins: [
-            'typescript',
-            'typescript-operations',
-            'typescript-react-apollo',
-        ],
-        config: {
-            skipTypename: false,
-            withHooks: true,
-            withHOC: false,
-            withComponent: false,
-        },
+    "./graphql/generated/graphql.tsx": {
+      plugins: [
+        "typescript",
+        "typescript-operations",
+        "typescript-react-apollo",
+      ],
+      config: {
+        skipTypename: false,
+        withHooks: true,
+        withHOC: false,
+        withComponent: false,
+      },
     },
-    './graphql/generated/graphql.schema.json': {
-        plugins: ['introspection'],
+    "./graphql/generated/graphql.schema.json": {
+      plugins: ["introspection"],
     },
   },
 };

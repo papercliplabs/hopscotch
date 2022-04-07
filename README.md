@@ -3,6 +3,7 @@
 ## Running the backend (Hasura)
 
 ### For the first time
+
 **0. Prerequisites**
 
 1. Install [hasura-cli](https://hasura.io/docs/latest/graphql/core/hasura-cli/install-hasura-cli.html#install-hasura-cli)
@@ -11,19 +12,22 @@
 **1. Start the server**
 
 In one terminal window start the hasura server
+
 ```sh
 cd hasura/
 docker-compose up
 ```
 
 **2. Apply Metadata and Migrations**
-*The next steps are based on https://hasura.io/docs/latest/graphql/core/migrations/migrations-setup.html#step-7-apply-the-migrations-and-metadata-on-another-instance-of-the-graphql-engine*
+_The next steps are based on https://hasura.io/docs/latest/graphql/core/migrations/migrations-setup.html#step-7-apply-the-migrations-and-metadata-on-another-instance-of-the-graphql-engine_
+
 ```sh
 cd hasura/
 ./applyMetadataMigrations.sh
 ```
 
 ### Starting the API server
+
 ```sh
 cd hasura/
 ./applyMetadataMigrations.sh
@@ -31,27 +35,36 @@ docker-compose up
 ```
 
 ### Editing the API server
+
 **⚠️ Always use the hasura console instead of going to the server directly. This is so changes are saved as commitable migrations**
+
 ```sh
 hasura console --admin-secret=squidsquidsquid
 ```
 
 ## Running the frontend
+
 ### For the first time
+
 ```sh
 cp .env.template .env
 yarn dev
 ```
 
 ### If youve changed the graphql schema
+
 This project uses codegen to create the hooks and functions for calling our backend. After you've made a change to the Graphql (hasura) schema make sure to run the following to re-generate these functions
+
 ```sh
 yarn generate
 ```
 
 ## Other Notes
+
 ### Modifying Hasuras metadata file
+
 It may in rare cases be nessesary to edit hasuras yaml files directly. If you do this make sure to run
+
 ```sh
 hasura metadata apply --admin-secret=squidsquidsquid
 ```
@@ -76,5 +89,3 @@ const News = () => {
 ```
 
 By default `**/*.graphqls` is recognized as GraphQL schema and `**/*.graphql` as GraphQL documents. If you prefer the other extensions, make sure the settings of the webpack loader in `next.config.js` and `.graphql-let.yml` are consistent.
-
-

@@ -1,9 +1,9 @@
 export enum SupportedChainId {
-    MATIC = 137,
+  MATIC = 137,
 }
 
 export enum SupportedToken {
-    DAI = "DAI",
-    USDC = "USDC",
-    AAVE = "AAVE",
+  DAI = "DAI",
+  USDC = "USDC",
+  AAVE = "AAVE",
 }
