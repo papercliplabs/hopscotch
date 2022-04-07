@@ -16,7 +16,6 @@ export default function App({ Component, pageProps }: AppProps) {
         <ApolloProvider client={apolloClient}>
             <Web3ReactProvider getLibrary={getLibrary}>
                 <ChakraProvider theme={theme}>
-
                     <Component {...pageProps} />
         </ChakraProvider>
 
