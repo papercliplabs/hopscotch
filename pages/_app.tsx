@@ -8,7 +8,7 @@ import {
 } from "@ethersproject/providers";
 import { ChakraProvider } from "@chakra-ui/react";
 
-import theme from "@/theme";
+import { theme } from "@/theme";
 import { useApollo } from "@/graphql/apollo";
 
 import '@fontsource/inter'

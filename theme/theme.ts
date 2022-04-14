@@ -40,4 +40,4 @@ const fonts = {
 
 const theme = extendTheme({fonts, radii, colors });
 
-export default theme;
+export { theme };
