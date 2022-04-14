@@ -34,7 +34,6 @@ const OnNetwork = () => {
 
 const Card = ({ children }) => {
   const theme = useTheme()
-  console.log('THEM', {theme});
   return (
     <Flex
       direction="column"

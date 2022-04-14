@@ -6,17 +6,18 @@ const colors = {
     800: "#153e75",
     700: "#2a69ac",
   },
+  black: "#17181A",
   blackWhite: {
     50: "rgba(1, 1, 1, 1)",
     100: "rgba(0, 0, 0, 0.06)",
     200: "rgba(0, 0, 0, 0.08)",
     300: "rgba(0, 0, 0, 0.16)",
     400: "rgba(0, 0, 0, 0.24)",
-    500: "rgba(0, 0, 0, 1)",
+    500: "#17181A",
     600: "rgba(0, 0, 0, 0.5)", // button hover
-    700: "rgba(0, 0, 0, 1)",
-    800: "rgba(0, 0, 0, 1)",
-    900: "rgba(0, 0, 0, 1)",
+    700: "#17181A",
+    800: "#17181A",
+    900: "#17181A",
   },
 };
 
@@ -39,4 +40,4 @@ const fonts = {
 
 const theme = extendTheme({fonts, radii, colors });
 
-export { theme };
+export default theme;
