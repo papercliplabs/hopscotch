@@ -1,19 +1,15 @@
 import {
-  ChakraProvider,
-  extendTheme,
   Container,
   Heading,
   Text,
   Button,
-  Box,
   Flex,
   Avatar,
   Tag,
-  TagLabel,
   Center,
+  useTheme,
 } from "@chakra-ui/react";
 
-// 2. Extend the theme to include custom colors, fonts, etc
 
 const SiteContainer = ({ children }) => {
   return (
@@ -37,14 +33,16 @@ const OnNetwork = () => {
 };
 
 const Card = ({ children }) => {
+  const theme = useTheme()
+  console.log('THEM', {theme});
   return (
     <Flex
       direction="column"
       alignItems="center"
       justifyContent="center"
       boxShadow="lg"
-      borderRadius="xl"
       padding={6}
+      borderRadius="md"
       backgroundColor="white"
       minWidth="335px"
     >
@@ -68,8 +66,7 @@ const PayCardDemo = () => {
       </Heading>
       <OnNetwork />
       <Button
-        colorScheme="dark"
-        borderRadius="xl"
+        colorScheme="blackWhite"
         size="lg"
         width="100%"
         mt={10}
