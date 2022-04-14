@@ -1,6 +1,5 @@
 import { AppProps } from "next/app";
 import { ApolloProvider } from "@apollo/client";
-import { useApollo } from "../graphql/apollo";
 import { Web3ReactProvider } from "@web3-react/core";
 import {
   ExternalProvider,
@@ -8,7 +7,13 @@ import {
   Web3Provider,
 } from "@ethersproject/providers";
 import { ChakraProvider } from "@chakra-ui/react";
+
 import { theme } from "@/theme";
+import { useApollo } from "@/graphql/apollo";
+
+import '@fontsource/inter'
+
+
 function getLibrary(provider: ExternalProvider | JsonRpcFetchFunc) {
   return new Web3Provider(provider);
 }

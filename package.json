@@ -16,6 +16,7 @@
     "@ethersproject/constants": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
+    "@fontsource/inter": "^4.5.7",
     "@graphql-codegen/introspection": "^2.1.0",
     "@graphql-tools/load-files": "6.0.18",
     "@graphql-tools/merge": "6.0.18",

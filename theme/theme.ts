@@ -32,6 +32,11 @@ const radii = {
     full: '9999px',
 }
 
-const theme = extendTheme({radii, colors });
+const fonts = {
+  heading: 'Inter, sans-serif',
+  body: 'Inter, sans-serif',
+};
+
+const theme = extendTheme({fonts, radii, colors });
 
 export { theme };
