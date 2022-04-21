@@ -12,7 +12,14 @@ import {
 } from "@/graphql/generated/graphql";
 import { clearCache } from "@/graphql/apollo";
 
-export const AuthContext = createContext(null);
+const defaultContextValues = {
+  user: null,
+  token: null,
+  login: () => {},
+  logout: () => {},
+}
+
+export const AuthContext = createContext(defaultContextValues);
 export const useAuth = () => useContext(AuthContext);
 
 const providerOptions = {
