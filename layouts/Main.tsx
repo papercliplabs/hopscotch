@@ -1,4 +1,4 @@
-import { Avatar, Center, Container, Flex, Heading, Tag, TagLabel } from "@chakra-ui/react"
+import { Avatar, Button, Center, Container, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, Tag, TagLabel } from "@chakra-ui/react"
 import { ConnectWalletButton } from "@/components/ConnectWalletButton";
 import { useAuth } from "@/providers/auth";
 
@@ -10,13 +10,22 @@ const AccountMenu = (props) => {
     : "";
 
   return (
-    <Tag size="lg" colorScheme="gray" borderRadius="full" p={1}>
-      <TagLabel fontWeight="bold" ml={3}>
-        {truncatedAddress}
-      </TagLabel>
-      <Avatar size="sm" name="?" my={2} mx={3} />
-    </Tag>
+
+    <Menu>
+      <MenuButton>
+        <Tag size="lg" colorScheme="gray" borderRadius="full" p={1} as={Button}>
+          <TagLabel fontWeight="bold" ml={3}>
+            {truncatedAddress}
+          </TagLabel>
+          <Avatar size="sm" name="?" my={2} mx={3} />
+        </Tag>
+      </MenuButton>
+      <MenuList>
+        <MenuItem onClick={() => logout()}>Logout</MenuItem>
+      </MenuList>
+    </Menu>
   );
+
 }
 
 export const MainLayout = (props) => {
