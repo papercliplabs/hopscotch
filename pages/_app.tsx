@@ -10,6 +10,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import { theme } from "@/theme";
 import { useApollo } from "@/graphql/apollo";
+import { MainLayout } from "@/layouts/Main";
 
 import '@fontsource/inter'
 
@@ -25,7 +26,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <ApolloProvider client={apolloClient}>
       <Web3ReactProvider getLibrary={getLibrary}>
         <ChakraProvider theme={theme}>
-          <Component {...pageProps} />
+          <MainLayout>
+            <Component {...pageProps} />
+          </MainLayout>
         </ChakraProvider>
       </Web3ReactProvider>
     </ApolloProvider>

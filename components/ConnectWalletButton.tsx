@@ -1,21 +1,18 @@
-import Link from "next/link";
-import Web3 from "web3";
-import { clearCache } from "@/graphql/apollo";
-
+import { Button} from "@chakra-ui/react"
 import Web3Modal from "web3modal";
+import Web3 from "web3";
+import get from "lodash/fp/get";
+
 import {
-  useGetCurrentUserInfoLazyQuery,
-  useGetUsersQuery,
   useUpsertPublicUserMutation,
   useValidateSignatureMutation,
 } from "@/graphql/generated/graphql";
-import get from "lodash/fp/get";
 
 const providerOptions = {
   /* See Provider Options Section */
 };
 
-const LoginButton = () => {
+export const ConnectWalletButton = () => {
   const [upsertPublicUser] = useUpsertPublicUserMutation();
   const [validateSignature] = useValidateSignatureMutation();
   const login = async () => {
@@ -60,34 +57,14 @@ const LoginButton = () => {
     localStorage.setItem("accessToken", accessToken);
     console.log("did it work?>", { accessToken });
   };
-  return <button onClick={login}>Login with Metamask</button>;
-};
 
-const logout = () => {
-  clearCache();
-  localStorage.removeItem("accessToken");
-};
-
-const Index = () => {
-  const { data: allUsersData } = useGetUsersQuery();
-  const [getCurrentUserInfo, { data: userInfoData }] =
-    useGetCurrentUserInfoLazyQuery();
   return (
-    <div>
-      Go to the{" "}
-      <Link href="/demo">
-        <a>demo</a>
-      </Link>{" "}
-      page.
-      <LoginButton />
-      <h2>Below is public user data</h2>
-      <div>{JSON.stringify(allUsersData)}</div>
-      <h2>Below is specifc user info</h2>
-      <div>{JSON.stringify(userInfoData)}</div>
-      <button onClick={() => getCurrentUserInfo()}>Fetch</button>
-      <button onClick={logout}>Logout</button>
-    </div>
-  );
-};
-
-export default Index;
+    <Button
+      colorScheme="gray"
+      borderRadius="full"
+      onClick={login}
+    >
+      Connect Wallet
+    </Button>
+    );
+}
