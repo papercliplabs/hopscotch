@@ -1,8 +1,14 @@
 import { Avatar, Button, Center, Container, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, Tag, TagLabel } from "@chakra-ui/react"
 import { ConnectWalletButton } from "@/components/ConnectWalletButton";
 import { useAuth } from "@/providers/auth";
+import { FC, ReactNode } from "react";
 
-const AccountMenu = (props) => {
+export interface AccountMenuProps {
+  user: {public_key: string, id: string};
+  logout: () => void;
+}
+
+const AccountMenu: FC<AccountMenuProps> = (props) => {
   const {user, logout} = props;
   const address = user?.public_key;
   const truncatedAddress = address
@@ -28,7 +34,11 @@ const AccountMenu = (props) => {
 
 }
 
-export const MainLayout = (props) => {
+export interface MainLayoutProps {
+  children: ReactNode;
+}
+
+export const MainLayout: FC<MainLayoutProps> = (props) => {
   const {children} = props;
   const { user, logout } = useAuth();
   return (

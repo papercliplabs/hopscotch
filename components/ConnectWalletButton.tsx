@@ -1,7 +1,8 @@
 import { Button} from "@chakra-ui/react"
 import { useAuth } from "@/providers/auth";
+import { FC } from "react";
 
-export const ConnectWalletButton = () => {
+export const ConnectWalletButton: FC = () => {
   const { login } = useAuth();
 
   return (

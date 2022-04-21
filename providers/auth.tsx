@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, createContext } from 'react';
+import { useContext, createContext, FC, ReactNode } from 'react';
 import { useLocalStorage, deleteFromStorage, writeStorage } from '@rehooks/local-storage';
 
 import Web3Modal from "web3modal";
@@ -19,7 +19,11 @@ const providerOptions = {
   /* See Provider Options Section */
 };
 
-export const AuthProvider = (props) => {
+export interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const {children} = props;
 
   const [token] = useLocalStorage('token');
