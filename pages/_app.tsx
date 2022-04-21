@@ -11,6 +11,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "@/theme";
 import { useApollo } from "@/graphql/apollo";
 import { MainLayout } from "@/layouts/Main";
+import { AuthProvider } from "@/providers/auth";
 
 import '@fontsource/inter'
 
@@ -25,11 +26,13 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={apolloClient}>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <ChakraProvider theme={theme}>
-          <MainLayout>
-            <Component {...pageProps} />
-          </MainLayout>
-        </ChakraProvider>
+        <AuthProvider>
+          <ChakraProvider theme={theme}>
+            <MainLayout>
+              <Component {...pageProps} />
+            </MainLayout>
+          </ChakraProvider>
+        </AuthProvider>
       </Web3ReactProvider>
     </ApolloProvider>
   );
