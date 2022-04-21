@@ -14,21 +14,33 @@ import { MainLayout } from "@/layouts/Main";
 import { AuthProvider } from "@/providers/auth";
 
 import '@fontsource/inter'
+import { NextPage } from "next";
+import { ReactNode } from "react";
 
 
 function getLibrary(provider: ExternalProvider | JsonRpcFetchFunc) {
   return new Web3Provider(provider);
 }
 
-export default function App({ Component, pageProps }: AppProps) {
+type NextPageWithLayout = NextPage & {
+  NavElement?: () => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const apolloClient = useApollo();
+  const NavElement = Component?.NavElement;
 
   return (
     <ApolloProvider client={apolloClient}>
       <Web3ReactProvider getLibrary={getLibrary}>
         <AuthProvider>
           <ChakraProvider theme={theme}>
-            <MainLayout>
+            <MainLayout NavElement={NavElement}>
               <Component {...pageProps} />
             </MainLayout>
           </ChakraProvider>

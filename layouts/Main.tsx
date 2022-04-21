@@ -1,7 +1,7 @@
-import { Avatar, Button, Center, Container, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, Tag, TagLabel } from "@chakra-ui/react"
+import { Avatar, Box, Button, Center, Container, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, Tag, TagLabel } from "@chakra-ui/react"
 import { ConnectWalletButton } from "@/components/ConnectWalletButton";
 import { useAuth } from "@/providers/auth";
-import { FC, ReactNode } from "react";
+import { ElementType, FC, ReactComponentElement, ReactElement, ReactNode } from "react";
 
 export interface AccountMenuProps {
   user: {public_key: string, id: string};
@@ -36,11 +36,13 @@ const AccountMenu: FC<AccountMenuProps> = (props) => {
 
 export interface MainLayoutProps {
   children: ReactNode;
+  NavElement?: () => ReactNode;
 }
 
 export const MainLayout: FC<MainLayoutProps> = (props) => {
-  const {children} = props;
+  const {children, NavElement = Box} = props;
   const { user, logout } = useAuth();
+
   return (
     <>
       <Flex
@@ -48,8 +50,11 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
         w="100%"
         py={5}
         px={7}
-        justifyContent="flex-end"
+        alignItems="center"
+        justifyContent="space-between"
       >
+        <Box w={10}/>
+        {<NavElement/>}
         {
           !!user
             ? <AccountMenu logout={logout} user={user}/>
@@ -57,7 +62,7 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
         }
 
       </Flex>
-      <Container as="main" mt="20">
+      <Container as="main" m={0} p={14} mt={3} maxW="100vw" display="flex" justifyContent="center" alignItems="center">
         {children}
       </Container>
       </>
