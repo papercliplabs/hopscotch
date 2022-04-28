@@ -241,14 +241,14 @@ export type Invoices = {
   amount: Scalars['bigint'];
   chain_id: Scalars['Int'];
   /** An object relationship */
-  client: Clients;
-  client_id: Scalars['uuid'];
+  client?: Maybe<Clients>;
+  client_id?: Maybe<Scalars['uuid']>;
   id: Scalars['uuid'];
   /** An object relationship */
   owner: Users;
   status: Scalars['String'];
   token_address: Scalars['String'];
-  transaction_id: Scalars['String'];
+  transaction_id?: Maybe<Scalars['String']>;
   user_id: Scalars['uuid'];
 };
 
@@ -1521,6 +1521,13 @@ export type ValidateSignatureOutput = {
   accessToken: Scalars['String'];
 };
 
+export type InsertInvoiceMutationVariables = Exact<{
+  object: Invoices_Insert_Input;
+}>;
+
+
+export type InsertInvoiceMutation = { __typename?: 'mutation_root', insert_invoices_one?: { __typename?: 'invoices', id: any } | null | undefined };
+
 export type RefreshNonceMutationVariables = Exact<{
   publicKey: Scalars['String'];
 }>;
@@ -1561,6 +1568,39 @@ export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetUsersQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any, public_key: string }> };
 
 
+export const InsertInvoiceDocument = gql`
+    mutation insertInvoice($object: invoices_insert_input!) {
+  insert_invoices_one(object: $object) {
+    id
+  }
+}
+    `;
+export type InsertInvoiceMutationFn = Apollo.MutationFunction<InsertInvoiceMutation, InsertInvoiceMutationVariables>;
+
+/**
+ * __useInsertInvoiceMutation__
+ *
+ * To run a mutation, you first call `useInsertInvoiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertInvoiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertInvoiceMutation, { data, loading, error }] = useInsertInvoiceMutation({
+ *   variables: {
+ *      object: // value for 'object'
+ *   },
+ * });
+ */
+export function useInsertInvoiceMutation(baseOptions?: Apollo.MutationHookOptions<InsertInvoiceMutation, InsertInvoiceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InsertInvoiceMutation, InsertInvoiceMutationVariables>(InsertInvoiceDocument, options);
+      }
+export type InsertInvoiceMutationHookResult = ReturnType<typeof useInsertInvoiceMutation>;
+export type InsertInvoiceMutationResult = Apollo.MutationResult<InsertInvoiceMutation>;
+export type InsertInvoiceMutationOptions = Apollo.BaseMutationOptions<InsertInvoiceMutation, InsertInvoiceMutationVariables>;
 export const RefreshNonceDocument = gql`
     mutation refreshNonce($publicKey: String!) {
   refresh_nonce(args: {pkey: $publicKey}) {

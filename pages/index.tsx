@@ -1,60 +1,17 @@
 import Link from "next/link";
 import {
+  useInsertInvoiceMutation,
   useGetUsersQuery,
 } from "@/graphql/generated/graphql";
 import { useAuth } from "@/providers/auth";
 import { Box, Button, Center, Container, Heading, Text, Tab, TabList, Tabs, FormControl, FormLabel, Input, FormErrorMessage, Select } from "@chakra-ui/react";
 import { ConnectWalletButton } from "@/components/ConnectWalletButton";
 import { Formik, Form, Field } from 'formik';
+import { userEvent } from "@storybook/testing-library";
 
-
-function FormikExample() {
-  function validateName(value) {
-    let error
-    if (!value) {
-      error = 'Name is required'
-    } else if (value.toLowerCase() !== 'naruto') {
-      error = "Jeez! You're not a fan 😱"
-    }
-    return error
-  }
-
-  return (
-    <Formik
-      initialValues={{ name: 'Sasuke' }}
-      onSubmit={(values, actions) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2))
-          actions.setSubmitting(false)
-        }, 1000)
-      }}
-    >
-      {(props) => (
-        <Form>
-          <Field name='name' validate={validateName}>
-            {({ field, form }) => (
-              <FormControl isInvalid={form.errors.name && form.touched.name}>
-                <FormLabel htmlFor='name'>First name</FormLabel>
-                <Input {...field} id='name' placeholder='name' />
-                <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
-          <Button
-            mt={4}
-            colorScheme='teal'
-            isLoading={props.isSubmitting}
-            type='submit'
-          >
-            Submit
-          </Button>
-        </Form>
-      )}
-    </Formik>
-  )
-}
-
-const CreateRequest = () => {
+const CreateRequest = (props) => {
+  const {user} = props;
+  const [insertInvoice, {loading}] = useInsertInvoiceMutation();
   return (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
       <Heading size="xl" mb={2}>
@@ -66,10 +23,17 @@ const CreateRequest = () => {
       <Formik
         initialValues={{ amount: 0 }}
         onSubmit={(values, actions) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2))
-            actions.setSubmitting(false)
-          }, 1000)
+          console.log("creating", values)
+          insertInvoice({
+            variables: {
+              object: {
+                amount: parseInt(values.amount, 10),
+                token_address: values.tokenAddress,
+                user_id: user.id,
+              }
+            },
+          }).then((response) => console.log("response", response));
+          actions.setSubmitting(false);
         }}
       >
         {(props) => (
@@ -134,7 +98,7 @@ const Index = () => {
       <Center height="60%">
         {
           user
-            ? <CreateRequest/>
+            ? <CreateRequest user={user}/>
             : <LoginState/>
         }
       </Center>

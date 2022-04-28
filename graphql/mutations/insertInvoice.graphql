@@ -1,0 +1,5 @@
+mutation insertInvoice($object: invoices_insert_input!) {
+  insert_invoices_one(object: $object) {
+    id
+  }
+}
