@@ -1,19 +1,29 @@
-import Link from "next/link";
-import {
-  useInsertInvoiceMutation,
-  useGetUsersQuery,
-} from "@/graphql/generated/graphql";
-import { useAuth } from "@/providers/auth";
-import { Box, Button, Center, Container, Heading, Text, Tab, TabList, Tabs, FormControl, FormLabel, Input, FormErrorMessage, Select } from "@chakra-ui/react";
-import { ConnectWalletButton } from "@/components/ConnectWalletButton";
 import { Formik, Form, Field } from 'formik';
 import { useRouter } from "next/router";
+import {
+  Box,
+  Button,
+  Center,
+  Container,
+  Heading,
+  Text,
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  Select
+} from "@chakra-ui/react";
 
+import {
+  useInsertInvoiceMutation,
+} from "@/graphql/generated/graphql";
+
+import { useAuth } from "@/providers/auth";
+import { ConnectWalletButton } from "@/components/ConnectWalletButton";
 
 const CreateRequest = (props) => {
   const {user} = props;
   const router = useRouter();
-
   const [insertInvoice, {loading}] = useInsertInvoiceMutation();
   return (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
@@ -94,8 +104,6 @@ const LoginState = () => {
 
 const Index = () => {
   const { user } = useAuth();
-  const { data: allUsersData } = useGetUsersQuery();
-  console.log("Example page data:", allUsersData);
 
   return (
     <Container width="100%" height="100vh" maxW="832px">
