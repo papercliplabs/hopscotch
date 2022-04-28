@@ -7,10 +7,13 @@ import { useAuth } from "@/providers/auth";
 import { Box, Button, Center, Container, Heading, Text, Tab, TabList, Tabs, FormControl, FormLabel, Input, FormErrorMessage, Select } from "@chakra-ui/react";
 import { ConnectWalletButton } from "@/components/ConnectWalletButton";
 import { Formik, Form, Field } from 'formik';
-import { userEvent } from "@storybook/testing-library";
+import { useRouter } from "next/router";
+
 
 const CreateRequest = (props) => {
   const {user} = props;
+  const router = useRouter();
+
   const [insertInvoice, {loading}] = useInsertInvoiceMutation();
   return (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
@@ -32,7 +35,11 @@ const CreateRequest = (props) => {
                 user_id: user.id,
               }
             },
-          }).then((response) => console.log("response", response));
+          }).then(({data}) => {
+            console.log("response", data)
+            const invoiceId = data?.insert_invoices_one?.id;
+            router.push(`/request/${invoiceId}`);
+          });
           actions.setSubmitting(false);
         }}
       >
@@ -106,18 +113,5 @@ const Index = () => {
     </Container>
   );
 };
-
-const DashboardNavigation = () => {
-  return (
-    <Tabs variant='soft-rounded' colorScheme='blackWhite'>
-      <TabList>
-        <Tab>Requests</Tab>
-        <Tab>Contacts</Tab>
-      </TabList>
-    </Tabs>
-  )
-}
-
-Index.NavElement = DashboardNavigation;
 
 export default Index;

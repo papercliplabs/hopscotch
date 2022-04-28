@@ -1555,6 +1555,13 @@ export type GetCurrentUserInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetCurrentUserInfoQuery = { __typename?: 'query_root', user_info: Array<{ __typename?: 'user_info', user_id: any, name?: string | null | undefined, email?: string | null | undefined }> };
 
+export type GetInvoiceQueryVariables = Exact<{
+  id: Scalars['uuid'];
+}>;
+
+
+export type GetInvoiceQuery = { __typename?: 'query_root', invoices_by_pk?: { __typename?: 'invoices', id: any, amount: any, chain_id: number, status: string, token_address: string, transaction_id?: string | null | undefined, user_id: any, owner: { __typename?: 'users', public_key: string, user_info?: { __typename?: 'user_info', name?: string | null | undefined, email?: string | null | undefined } | null | undefined } } | null | undefined };
+
 export type GetUserByPublicKeyQueryVariables = Exact<{
   publicKey: Scalars['String'];
 }>;
@@ -1742,6 +1749,54 @@ export function useGetCurrentUserInfoLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetCurrentUserInfoQueryHookResult = ReturnType<typeof useGetCurrentUserInfoQuery>;
 export type GetCurrentUserInfoLazyQueryHookResult = ReturnType<typeof useGetCurrentUserInfoLazyQuery>;
 export type GetCurrentUserInfoQueryResult = Apollo.QueryResult<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>;
+export const GetInvoiceDocument = gql`
+    query getInvoice($id: uuid!) {
+  invoices_by_pk(id: $id) {
+    id
+    amount
+    chain_id
+    status
+    token_address
+    transaction_id
+    user_id
+    owner {
+      user_info {
+        name
+        email
+      }
+      public_key
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetInvoiceQuery__
+ *
+ * To run a query within a React component, call `useGetInvoiceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetInvoiceQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetInvoiceQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetInvoiceQuery(baseOptions: Apollo.QueryHookOptions<GetInvoiceQuery, GetInvoiceQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInvoiceQuery, GetInvoiceQueryVariables>(GetInvoiceDocument, options);
+      }
+export function useGetInvoiceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInvoiceQuery, GetInvoiceQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInvoiceQuery, GetInvoiceQueryVariables>(GetInvoiceDocument, options);
+        }
+export type GetInvoiceQueryHookResult = ReturnType<typeof useGetInvoiceQuery>;
+export type GetInvoiceLazyQueryHookResult = ReturnType<typeof useGetInvoiceLazyQuery>;
+export type GetInvoiceQueryResult = Apollo.QueryResult<GetInvoiceQuery, GetInvoiceQueryVariables>;
 export const GetUserByPublicKeyDocument = gql`
     query getUserByPublicKey($publicKey: String!) {
   users(limit: 1, where: {public_key: {_eq: $publicKey}}) {

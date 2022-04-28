@@ -1,0 +1,18 @@
+query getInvoice($id: uuid!) {
+  invoices_by_pk(id: $id) {
+    id
+    amount
+    chain_id
+    status
+    token_address
+    transaction_id
+    user_id
+    owner {
+      user_info {
+        name
+        email
+      }
+      public_key
+    }
+  }
+}

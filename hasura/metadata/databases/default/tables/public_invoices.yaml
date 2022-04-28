@@ -48,9 +48,7 @@ select_permissions:
         - token_address
         - transaction_id
         - user_id
-      filter:
-        user_id:
-          _eq: X-Hasura-User-Id
+      filter: {}
 update_permissions:
   - role: user
     permission:
