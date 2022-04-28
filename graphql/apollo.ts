@@ -11,7 +11,8 @@ const authLink = setContext((_, { headers }) => {
   if (typeof window === "undefined") return {};
 
   // get the authentication accessToken from local storage if it exists
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem("token");
+
   if (!accessToken) return {};
 
   // return the headers to the context so httpLink can read them

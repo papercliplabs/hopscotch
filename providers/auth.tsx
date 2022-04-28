@@ -91,6 +91,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     deleteFromStorage('token');
   };
 
+  console.log("AUTH", { user, token });
+
   return (
     <AuthContext.Provider
       value={{

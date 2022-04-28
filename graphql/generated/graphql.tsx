@@ -241,14 +241,14 @@ export type Invoices = {
   amount: Scalars['bigint'];
   chain_id: Scalars['Int'];
   /** An object relationship */
-  client: Clients;
-  client_id: Scalars['uuid'];
+  client?: Maybe<Clients>;
+  client_id?: Maybe<Scalars['uuid']>;
   id: Scalars['uuid'];
   /** An object relationship */
   owner: Users;
   status: Scalars['String'];
   token_address: Scalars['String'];
-  transaction_id: Scalars['String'];
+  transaction_id?: Maybe<Scalars['String']>;
   user_id: Scalars['uuid'];
 };
 
@@ -1521,6 +1521,13 @@ export type ValidateSignatureOutput = {
   accessToken: Scalars['String'];
 };
 
+export type InsertInvoiceMutationVariables = Exact<{
+  object: Invoices_Insert_Input;
+}>;
+
+
+export type InsertInvoiceMutation = { __typename?: 'mutation_root', insert_invoices_one?: { __typename?: 'invoices', id: any } | null | undefined };
+
 export type RefreshNonceMutationVariables = Exact<{
   publicKey: Scalars['String'];
 }>;
@@ -1548,6 +1555,13 @@ export type GetCurrentUserInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetCurrentUserInfoQuery = { __typename?: 'query_root', user_info: Array<{ __typename?: 'user_info', user_id: any, name?: string | null | undefined, email?: string | null | undefined }> };
 
+export type GetInvoiceQueryVariables = Exact<{
+  id: Scalars['uuid'];
+}>;
+
+
+export type GetInvoiceQuery = { __typename?: 'query_root', invoices_by_pk?: { __typename?: 'invoices', id: any, amount: any, chain_id: number, status: string, token_address: string, transaction_id?: string | null | undefined, user_id: any, owner: { __typename?: 'users', public_key: string, user_info?: { __typename?: 'user_info', name?: string | null | undefined, email?: string | null | undefined } | null | undefined } } | null | undefined };
+
 export type GetUserByPublicKeyQueryVariables = Exact<{
   publicKey: Scalars['String'];
 }>;
@@ -1561,6 +1575,39 @@ export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetUsersQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any, public_key: string }> };
 
 
+export const InsertInvoiceDocument = gql`
+    mutation insertInvoice($object: invoices_insert_input!) {
+  insert_invoices_one(object: $object) {
+    id
+  }
+}
+    `;
+export type InsertInvoiceMutationFn = Apollo.MutationFunction<InsertInvoiceMutation, InsertInvoiceMutationVariables>;
+
+/**
+ * __useInsertInvoiceMutation__
+ *
+ * To run a mutation, you first call `useInsertInvoiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertInvoiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertInvoiceMutation, { data, loading, error }] = useInsertInvoiceMutation({
+ *   variables: {
+ *      object: // value for 'object'
+ *   },
+ * });
+ */
+export function useInsertInvoiceMutation(baseOptions?: Apollo.MutationHookOptions<InsertInvoiceMutation, InsertInvoiceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InsertInvoiceMutation, InsertInvoiceMutationVariables>(InsertInvoiceDocument, options);
+      }
+export type InsertInvoiceMutationHookResult = ReturnType<typeof useInsertInvoiceMutation>;
+export type InsertInvoiceMutationResult = Apollo.MutationResult<InsertInvoiceMutation>;
+export type InsertInvoiceMutationOptions = Apollo.BaseMutationOptions<InsertInvoiceMutation, InsertInvoiceMutationVariables>;
 export const RefreshNonceDocument = gql`
     mutation refreshNonce($publicKey: String!) {
   refresh_nonce(args: {pkey: $publicKey}) {
@@ -1702,6 +1749,54 @@ export function useGetCurrentUserInfoLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetCurrentUserInfoQueryHookResult = ReturnType<typeof useGetCurrentUserInfoQuery>;
 export type GetCurrentUserInfoLazyQueryHookResult = ReturnType<typeof useGetCurrentUserInfoLazyQuery>;
 export type GetCurrentUserInfoQueryResult = Apollo.QueryResult<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>;
+export const GetInvoiceDocument = gql`
+    query getInvoice($id: uuid!) {
+  invoices_by_pk(id: $id) {
+    id
+    amount
+    chain_id
+    status
+    token_address
+    transaction_id
+    user_id
+    owner {
+      user_info {
+        name
+        email
+      }
+      public_key
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetInvoiceQuery__
+ *
+ * To run a query within a React component, call `useGetInvoiceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetInvoiceQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetInvoiceQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetInvoiceQuery(baseOptions: Apollo.QueryHookOptions<GetInvoiceQuery, GetInvoiceQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInvoiceQuery, GetInvoiceQueryVariables>(GetInvoiceDocument, options);
+      }
+export function useGetInvoiceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInvoiceQuery, GetInvoiceQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInvoiceQuery, GetInvoiceQueryVariables>(GetInvoiceDocument, options);
+        }
+export type GetInvoiceQueryHookResult = ReturnType<typeof useGetInvoiceQuery>;
+export type GetInvoiceLazyQueryHookResult = ReturnType<typeof useGetInvoiceLazyQuery>;
+export type GetInvoiceQueryResult = Apollo.QueryResult<GetInvoiceQuery, GetInvoiceQueryVariables>;
 export const GetUserByPublicKeyDocument = gql`
     query getUserByPublicKey($publicKey: String!) {
   users(limit: 1, where: {public_key: {_eq: $publicKey}}) {
