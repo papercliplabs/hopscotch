@@ -1,53 +1,53 @@
 table:
-  name: clients
   schema: public
+  name: clients
 object_relationships:
-- name: owner
-  using:
-    foreign_key_constraint_on: user_id
+  - name: owner
+    using:
+      foreign_key_constraint_on: user_id
 array_relationships:
-- name: invoices
-  using:
-    foreign_key_constraint_on:
-      column: client_id
-      table:
-        name: invoices
-        schema: public
+  - name: invoices
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: invoices
 insert_permissions:
-- permission:
-    backend_only: false
-    check:
-      user_id:
-        _eq: X-Hasura-User-Id
-    columns:
-    - id
-    - name
-    - user_id
-  role: user
+  - role: user
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      columns:
+        - id
+        - name
+        - user_id
+      backend_only: false
 select_permissions:
-- permission:
-    columns:
-    - name
-    - id
-    - user_id
-    filter:
-      user_id:
-        _eq: X-Hasura-User-Id
-  role: user
+  - role: user
+    permission:
+      columns:
+        - name
+        - id
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - name
-    - id
-    - user_id
-    filter:
-      user_id:
-        _eq: X-Hasura-User-Id
-  role: user
+  - role: user
+    permission:
+      columns:
+        - name
+        - id
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
 delete_permissions:
-- permission:
-    filter:
-      user_id:
-        _eq: X-Hasura-User-Id
-  role: user
+  - role: user
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id

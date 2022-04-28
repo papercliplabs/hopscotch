@@ -1,60 +1,60 @@
 table:
-  name: users
   schema: public
+  name: users
 object_relationships:
-- name: user_info
-  using:
-    manual_configuration:
-      column_mapping:
-        id: user_id
-      insertion_order: null
-      remote_table:
-        name: user_info
-        schema: public
+  - name: user_info
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: user_info
+        insertion_order: null
+        column_mapping:
+          id: user_id
 array_relationships:
-- name: clients
-  using:
-    foreign_key_constraint_on:
-      column: user_id
-      table:
-        name: clients
-        schema: public
-- name: invoices
-  using:
-    foreign_key_constraint_on:
-      column: user_id
-      table:
-        name: invoices
-        schema: public
+  - name: clients
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: clients
+  - name: invoices
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: invoices
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - client_last_requested
-    - public_key
-  role: anon
+  - role: anon
+    permission:
+      check: {}
+      columns:
+        - client_last_requested
+        - public_key
+      backend_only: false
 select_permissions:
-- permission:
-    columns:
-    - client_last_requested
-    - id
-    - nonce
-    - public_key
-    filter: {}
-  role: anon
-- permission:
-    columns:
-    - client_last_requested
-    - id
-    - nonce
-    - public_key
-    filter: {}
-  role: user
+  - role: anon
+    permission:
+      columns:
+        - client_last_requested
+        - id
+        - nonce
+        - public_key
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - client_last_requested
+        - id
+        - nonce
+        - public_key
+      filter: {}
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - client_last_requested
-    filter: {}
-  role: anon
+  - role: anon
+    permission:
+      columns:
+        - client_last_requested
+      filter: {}
+      check: null
