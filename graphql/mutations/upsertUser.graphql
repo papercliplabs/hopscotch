@@ -1,0 +1,10 @@
+mutation upsertUser($address: String!) {
+  insert_users_one(
+    object: {address: $address},
+    on_conflict: {constraint: users_address_key,
+    update_columns: [last_upsert_at]}
+  ) {
+    id
+    address
+  }
+}

@@ -1,67 +1,45 @@
 table:
-  schema: public
   name: invoices
+  schema: public
 object_relationships:
-  - name: client
-    using:
-      foreign_key_constraint_on: client_id
-  - name: owner
-    using:
-      foreign_key_constraint_on: user_id
+- name: recipient_user
+  using:
+    foreign_key_constraint_on: recipient_id
 insert_permissions:
-  - role: user
-    permission:
-      check:
-        user_id:
-          _eq: X-Hasura-User-Id
-      columns:
-        - id
-        - status
-        - amount
-        - token_address
-        - transaction_id
-        - client_id
-        - chain_id
-        - user_id
-      backend_only: false
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - status
+    - recipient_token_amount_raw
+    - recipient_token_address
+    - transaction_id
+    - chain_id
+    - recipient_id
+  role: anon
 select_permissions:
-  - role: anon
-    permission:
-      columns:
-        - id
-        - status
-        - amount
-        - token_address
-        - transaction_id
-        - client_id
-        - chain_id
-        - user_id
-      filter: {}
-  - role: user
-    permission:
-      columns:
-        - amount
-        - chain_id
-        - client_id
-        - id
-        - status
-        - token_address
-        - transaction_id
-        - user_id
-      filter: {}
+- permission:
+    columns:
+    - recipient_token_amount_raw
+    - chain_id
+    - recipient_token_address
+    - status
+    - transaction_id
+    - id
+    - recipient_id
+    filter: {}
+  role: anon
 update_permissions:
-  - role: user
-    permission:
-      columns:
-        - amount
-        - chain_id
-        - status
-        - token_address
-        - transaction_id
-        - client_id
-        - id
-        - user_id
-      filter:
-        user_id:
-          _eq: X-Hasura-User-Id
-      check: {}
+- permission:
+    check: null
+    columns:
+    - recipient_token_amount_raw
+    - chain_id
+    - recipient_token_address
+    - status
+    - transaction_id
+    - id
+    - recipient_id
+    filter: {}
+  role: anon

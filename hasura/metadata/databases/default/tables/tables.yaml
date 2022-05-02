@@ -1,4 +1,2 @@
-- "!include public_clients.yaml"
 - "!include public_invoices.yaml"
-- "!include public_user_info.yaml"
 - "!include public_users.yaml"

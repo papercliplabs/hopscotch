@@ -1,37 +1,37 @@
 table:
-  schema: public
   name: user_info
+  schema: public
 insert_permissions:
-  - role: user
-    permission:
-      check:
-        user_id:
-          _eq: X-Hasura-User-Id
-      columns:
-        - user_id
-        - name
-        - email
-      backend_only: false
+- permission:
+    backend_only: false
+    check:
+      user_id:
+        _eq: X-Hasura-User-Id
+    columns:
+    - user_id
+    - name
+    - email
+  role: user
 select_permissions:
-  - role: user
-    permission:
-      columns:
-        - email
-        - name
-        - user_id
-      filter:
-        user_id:
-          _eq: X-Hasura-User-Id
+- permission:
+    columns:
+    - email
+    - name
+    - user_id
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: user
 update_permissions:
-  - role: user
-    permission:
-      columns:
-        - email
-        - name
-        - user_id
-      filter:
-        user_id:
-          _eq: X-Hasura-User-Id
-      check:
-        user_id:
-          _eq: X-Hasura-User-Id
+- permission:
+    check:
+      user_id:
+        _eq: X-Hasura-User-Id
+    columns:
+    - email
+    - name
+    - user_id
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: user

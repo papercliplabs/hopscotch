@@ -1,6 +1,6 @@
 query getUsers {
   users {
     id
-    public_key
+    address
   }
 }

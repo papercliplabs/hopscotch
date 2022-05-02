@@ -1,6 +1,5 @@
-query getUserByPublicKey($publicKey: String!) {
-  users(limit: 1, where: {public_key: {_eq: $publicKey}}) {
+query getUserByPublicKey($address: String!) {
+  users(limit: 1, where: {address: {_eq: $address}}) {
     id
-    nonce
   }
 }
