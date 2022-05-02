@@ -1,38 +1,38 @@
 import { Box, Button, Heading, Text, Flex, Input, Select } from "@chakra-ui/react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
 import { useAccount, useBalance, useNetwork, useSignMessage } from "wagmi";
 import router from "next/router";
+import { Image } from "@chakra-ui/react";
 
-import { SUPPORTED_TOKENS, TOKEN_INFO_LIST } from "@/common/constants";
-import { SupportedToken } from "@/common/enums";
-import {
-    useInsertInvoiceMutation,
-    useUpsertUserMutation,
-    useGetUsersQuery,
-    Invoices_Insert_Input,
-} from "@/graphql/generated/graphql";
+import { SupportedChainId, SupportedToken } from "@/common/enums";
+import { useInsertInvoiceMutation, useUpsertUserMutation } from "@/graphql/generated/graphql";
+import { ethers, BigNumber } from "ethers";
+import { chain } from "lodash";
+import { Token } from "@/common/types";
+import TokenSelector from "@/components/TokenSelector";
+import ConnectWalletIfNotConnectedButton from "@/components/ConnectWalletIfNotConnectedButton";
 
 export default function CreateRequest() {
-    const [{ data: account, loading, error }, disconnect] = useAccount();
+    const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
+    const [tokenAmountScaled, setTokenAmountScaled] = useState<string>("0");
+
+    const [{ data: account }, disconnect] = useAccount();
     const [{ data }, signMessage] = useSignMessage({
         message: "Message signature verification",
     });
-    const [{ data: network }, switchNetwork] = useNetwork();
+    const [{ data: network }] = useNetwork();
 
     const [insertInvoice] = useInsertInvoiceMutation();
     const [upsertUser] = useUpsertUserMutation();
 
-    const [selectedToken, setSelectedToken] = useState<SupportedToken>(SupportedToken.USDC);
-    const [tokenAmountScaled, setTokenAmountScaled] = useState<string>("0");
+    const chainId = (network.chain?.id as SupportedChainId) ?? SupportedChainId.MAINNET;
 
     async function createRequest() {
         const { data: signature, error } = await signMessage();
-        const chainId = network.chain?.id;
 
         console.log(error);
 
-        if (signature && account && chainId) {
+        if (signature && account && selectedToken) {
             const receipientAddress = account.address;
             console.log("CREATE REQUEST");
             console.log(
@@ -45,6 +45,7 @@ export default function CreateRequest() {
             })
                 .then(({ data }) => {
                     const recipientUser = data?.insert_users_one;
+                    const tokenAmountRaw = ethers.utils.parseUnits(tokenAmountScaled, selectedToken.decimals);
 
                     // Add invoice to database
                     if (recipientUser) {
@@ -53,8 +54,8 @@ export default function CreateRequest() {
                                 object: {
                                     recipient_id: recipientUser.id,
                                     chain_id: chainId,
-                                    recipient_token_address: TOKEN_INFO_LIST[selectedToken].address,
-                                    recipient_token_amount_raw: tokenAmountScaled,
+                                    recipient_token_address: selectedToken.address,
+                                    recipient_token_amount_raw: tokenAmountRaw.toString(),
                                     status: "OPEN",
                                 },
                             },
@@ -62,6 +63,7 @@ export default function CreateRequest() {
                     } else {
                         return Promise.reject("Error upserting user");
                     }
+                    BigInt;
                 })
                 .then(({ data }) => {
                     console.log("insertInvoiceResponse", data);
@@ -82,14 +84,13 @@ export default function CreateRequest() {
                 </Box>
                 <Flex direction="row">
                     <Input onChange={(e) => setTokenAmountScaled(e.target.value)} value={tokenAmountScaled} />
-                    <Select onChange={(e) => setSelectedToken(e.target.value as SupportedToken)} value={selectedToken}>
-                        {SUPPORTED_TOKENS.map((token) => {
-                            const tokenInfo = TOKEN_INFO_LIST[token];
-                            return <option value={token}>{tokenInfo.symbol}</option>;
-                        })}
-                    </Select>
+                    <TokenSelector chainId={chainId} selectedTokenCallback={setSelectedToken} />
                 </Flex>
-                {account ? <Button onClick={createRequest}>Create request</Button> : <ConnectButton />}
+                <ConnectWalletIfNotConnectedButton
+                    textIfConnected="Create request"
+                    isDisabledIfConnected={selectedToken == undefined}
+                    onClickIfconnectedCallback={createRequest}
+                />
             </Flex>
         </>
     );

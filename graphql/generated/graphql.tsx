@@ -12,22 +12,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  bigint: any;
   timestamptz: any;
   uuid: any;
-};
-
-/** Boolean expression to compare columns of type "bigint". All fields are combined with logical 'AND'. */
-export type Bigint_Comparison_Exp = {
-  _eq?: Maybe<Scalars['bigint']>;
-  _gt?: Maybe<Scalars['bigint']>;
-  _gte?: Maybe<Scalars['bigint']>;
-  _in?: Maybe<Array<Scalars['bigint']>>;
-  _is_null?: Maybe<Scalars['Boolean']>;
-  _lt?: Maybe<Scalars['bigint']>;
-  _lte?: Maybe<Scalars['bigint']>;
-  _neq?: Maybe<Scalars['bigint']>;
-  _nin?: Maybe<Array<Scalars['bigint']>>;
 };
 
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
@@ -50,7 +36,7 @@ export type Invoices = {
   id: Scalars['uuid'];
   recipient_id: Scalars['uuid'];
   recipient_token_address: Scalars['String'];
-  recipient_token_amount_raw: Scalars['bigint'];
+  recipient_token_amount_raw: Scalars['String'];
   /** An object relationship */
   recipient_user: Users;
   status: Scalars['String'];
@@ -113,13 +99,11 @@ export type Invoices_Arr_Rel_Insert_Input = {
 export type Invoices_Avg_Fields = {
   __typename?: 'invoices_avg_fields';
   chain_id?: Maybe<Scalars['Float']>;
-  recipient_token_amount_raw?: Maybe<Scalars['Float']>;
 };
 
 /** order by avg() on columns of table "invoices" */
 export type Invoices_Avg_Order_By = {
   chain_id?: Maybe<Order_By>;
-  recipient_token_amount_raw?: Maybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "invoices". All fields are combined with a logical 'AND'. */
@@ -131,7 +115,7 @@ export type Invoices_Bool_Exp = {
   id?: Maybe<Uuid_Comparison_Exp>;
   recipient_id?: Maybe<Uuid_Comparison_Exp>;
   recipient_token_address?: Maybe<String_Comparison_Exp>;
-  recipient_token_amount_raw?: Maybe<Bigint_Comparison_Exp>;
+  recipient_token_amount_raw?: Maybe<String_Comparison_Exp>;
   recipient_user?: Maybe<Users_Bool_Exp>;
   status?: Maybe<String_Comparison_Exp>;
   transaction_id?: Maybe<String_Comparison_Exp>;
@@ -146,7 +130,6 @@ export enum Invoices_Constraint {
 /** input type for incrementing numeric columns in table "invoices" */
 export type Invoices_Inc_Input = {
   chain_id?: Maybe<Scalars['Int']>;
-  recipient_token_amount_raw?: Maybe<Scalars['bigint']>;
 };
 
 /** input type for inserting data into table "invoices" */
@@ -155,7 +138,7 @@ export type Invoices_Insert_Input = {
   id?: Maybe<Scalars['uuid']>;
   recipient_id?: Maybe<Scalars['uuid']>;
   recipient_token_address?: Maybe<Scalars['String']>;
-  recipient_token_amount_raw?: Maybe<Scalars['bigint']>;
+  recipient_token_amount_raw?: Maybe<Scalars['String']>;
   recipient_user?: Maybe<Users_Obj_Rel_Insert_Input>;
   status?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
@@ -168,7 +151,7 @@ export type Invoices_Max_Fields = {
   id?: Maybe<Scalars['uuid']>;
   recipient_id?: Maybe<Scalars['uuid']>;
   recipient_token_address?: Maybe<Scalars['String']>;
-  recipient_token_amount_raw?: Maybe<Scalars['bigint']>;
+  recipient_token_amount_raw?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
 };
@@ -191,7 +174,7 @@ export type Invoices_Min_Fields = {
   id?: Maybe<Scalars['uuid']>;
   recipient_id?: Maybe<Scalars['uuid']>;
   recipient_token_address?: Maybe<Scalars['String']>;
-  recipient_token_amount_raw?: Maybe<Scalars['bigint']>;
+  recipient_token_amount_raw?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
 };
@@ -264,7 +247,7 @@ export type Invoices_Set_Input = {
   id?: Maybe<Scalars['uuid']>;
   recipient_id?: Maybe<Scalars['uuid']>;
   recipient_token_address?: Maybe<Scalars['String']>;
-  recipient_token_amount_raw?: Maybe<Scalars['bigint']>;
+  recipient_token_amount_raw?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
 };
@@ -273,52 +256,44 @@ export type Invoices_Set_Input = {
 export type Invoices_Stddev_Fields = {
   __typename?: 'invoices_stddev_fields';
   chain_id?: Maybe<Scalars['Float']>;
-  recipient_token_amount_raw?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev() on columns of table "invoices" */
 export type Invoices_Stddev_Order_By = {
   chain_id?: Maybe<Order_By>;
-  recipient_token_amount_raw?: Maybe<Order_By>;
 };
 
 /** aggregate stddev_pop on columns */
 export type Invoices_Stddev_Pop_Fields = {
   __typename?: 'invoices_stddev_pop_fields';
   chain_id?: Maybe<Scalars['Float']>;
-  recipient_token_amount_raw?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_pop() on columns of table "invoices" */
 export type Invoices_Stddev_Pop_Order_By = {
   chain_id?: Maybe<Order_By>;
-  recipient_token_amount_raw?: Maybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
 export type Invoices_Stddev_Samp_Fields = {
   __typename?: 'invoices_stddev_samp_fields';
   chain_id?: Maybe<Scalars['Float']>;
-  recipient_token_amount_raw?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_samp() on columns of table "invoices" */
 export type Invoices_Stddev_Samp_Order_By = {
   chain_id?: Maybe<Order_By>;
-  recipient_token_amount_raw?: Maybe<Order_By>;
 };
 
 /** aggregate sum on columns */
 export type Invoices_Sum_Fields = {
   __typename?: 'invoices_sum_fields';
   chain_id?: Maybe<Scalars['Int']>;
-  recipient_token_amount_raw?: Maybe<Scalars['bigint']>;
 };
 
 /** order by sum() on columns of table "invoices" */
 export type Invoices_Sum_Order_By = {
   chain_id?: Maybe<Order_By>;
-  recipient_token_amount_raw?: Maybe<Order_By>;
 };
 
 /** update columns of table "invoices" */
@@ -343,39 +318,33 @@ export enum Invoices_Update_Column {
 export type Invoices_Var_Pop_Fields = {
   __typename?: 'invoices_var_pop_fields';
   chain_id?: Maybe<Scalars['Float']>;
-  recipient_token_amount_raw?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_pop() on columns of table "invoices" */
 export type Invoices_Var_Pop_Order_By = {
   chain_id?: Maybe<Order_By>;
-  recipient_token_amount_raw?: Maybe<Order_By>;
 };
 
 /** aggregate var_samp on columns */
 export type Invoices_Var_Samp_Fields = {
   __typename?: 'invoices_var_samp_fields';
   chain_id?: Maybe<Scalars['Float']>;
-  recipient_token_amount_raw?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_samp() on columns of table "invoices" */
 export type Invoices_Var_Samp_Order_By = {
   chain_id?: Maybe<Order_By>;
-  recipient_token_amount_raw?: Maybe<Order_By>;
 };
 
 /** aggregate variance on columns */
 export type Invoices_Variance_Fields = {
   __typename?: 'invoices_variance_fields';
   chain_id?: Maybe<Scalars['Float']>;
-  recipient_token_amount_raw?: Maybe<Scalars['Float']>;
 };
 
 /** order by variance() on columns of table "invoices" */
 export type Invoices_Variance_Order_By = {
   chain_id?: Maybe<Order_By>;
-  recipient_token_amount_raw?: Maybe<Order_By>;
 };
 
 /** mutation root */
@@ -895,7 +864,7 @@ export type GetInvoiceQueryVariables = Exact<{
 }>;
 
 
-export type GetInvoiceQuery = { __typename?: 'query_root', invoices_by_pk?: { __typename?: 'invoices', id: any, recipient_id: any, recipient_token_address: string, recipient_token_amount_raw: any, chain_id: number, status: string, transaction_id?: string | null | undefined, recipient_user: { __typename?: 'users', address: string } } | null | undefined };
+export type GetInvoiceQuery = { __typename?: 'query_root', invoices_by_pk?: { __typename?: 'invoices', id: any, recipient_id: any, recipient_token_address: string, recipient_token_amount_raw: string, chain_id: number, status: string, transaction_id?: string | null | undefined, recipient_user: { __typename?: 'users', address: string } } | null | undefined };
 
 export type GetUserByPublicKeyQueryVariables = Exact<{
   address: Scalars['String'];

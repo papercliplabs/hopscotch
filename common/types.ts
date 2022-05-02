@@ -1,19 +1,22 @@
-import { SupportedChainId, SupportedToken } from "./enums";
+import { SupportedChainId } from "./enums";
 
 export interface ChainInfo {
-  readonly network: string;
+    readonly name: string;
+    readonly rpcUrl: string;
 }
 
 export type ChainInfoList = {
-  [chainId in SupportedChainId]: ChainInfo;
+    [chainId in SupportedChainId]: ChainInfo;
 };
 
-export interface TokenInfo {
-  readonly symbol: string;
-  readonly address: string;
-  readonly decimals: number;
-}
-
-export type TokenInfoList = {
-  [token in SupportedToken]: TokenInfo;
+/**
+ * Token matching the output of https://tokens.uniswap.org
+ */
+export type Token = {
+    chainId: number;
+    address: string;
+    name: string;
+    symbol: string;
+    decimals: number;
+    logoURI: string;
 };

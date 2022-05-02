@@ -5,7 +5,8 @@ declare global {
             NEXT_PUBLIC_GRAPHQL_ENDPOINT: string;
             ACTION_SECRET: string;
             JWT_SECRET: string;
-            INFURA_ID: string;
+            MAINNET_RPC_URL: string;
+            MATIC_RPC_URL: string;
         }
     }
 }

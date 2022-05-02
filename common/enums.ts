@@ -1,9 +1,12 @@
+import { WagmiProvider, chain } from "wagmi";
+
 export enum SupportedChainId {
-  MATIC = 137,
+    MAINNET = chain.mainnet.id,
+    MATIC = chain.polygonMainnet.id,
 }
 
 export enum SupportedToken {
-  DAI = "DAI",
-  USDC = "USDC",
-  AAVE = "AAVE",
+    DAI = "DAI",
+    USDC = "USDC",
+    AAVE = "AAVE",
 }

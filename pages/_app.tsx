@@ -15,23 +15,22 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider, Chain, getDefaultWallets, connectorsForWallets } from "@rainbow-me/rainbowkit";
 import { WagmiProvider, chain } from "wagmi";
 import { providers } from "ethers";
+import { CHAIN_INFO_LIST } from "@/common/constants";
+import { SupportedChainId } from "@/common/enums";
+import { getRpcUrlForChainId } from "@/common/utils";
 
-const infuraId = process.env.INFURA_ID;
-
-const provider = ({ chainId }: { chainId: number }) => new providers.InfuraProvider(chainId, infuraId);
+const provider = ({ chainId }: { chainId: number | undefined }) =>
+    new providers.JsonRpcProvider(getRpcUrlForChainId(chainId), chainId);
 
 const chains: Chain[] = [
     { ...chain.mainnet, name: "Ethereum" },
     { ...chain.polygonMainnet, name: "Polygon" },
-    // { ...chain.optimism, name: "Optimism" },
-    // { ...chain.arbitrumOne, name: "Arbitrum" },
 ];
 
 const wallets = getDefaultWallets({
     chains,
-    infuraId,
     appName: "My RainbowKit App",
-    jsonRpcUrl: ({ chainId }) => chains.find((x) => x.id === chainId)?.rpcUrls?.[0] ?? chain.mainnet.rpcUrls[0],
+    jsonRpcUrl: ({ chainId }) => getRpcUrlForChainId(chainId),
 });
 
 const connectors = connectorsForWallets(wallets);

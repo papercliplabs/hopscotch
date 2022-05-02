@@ -10,36 +10,36 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - id
-    - status
-    - recipient_token_amount_raw
-    - recipient_token_address
-    - transaction_id
     - chain_id
+    - id
     - recipient_id
+    - recipient_token_address
+    - recipient_token_amount_raw
+    - status
+    - transaction_id
   role: anon
 select_permissions:
 - permission:
     columns:
-    - recipient_token_amount_raw
     - chain_id
-    - recipient_token_address
-    - status
-    - transaction_id
     - id
     - recipient_id
+    - recipient_token_address
+    - recipient_token_amount_raw
+    - status
+    - transaction_id
     filter: {}
   role: anon
 update_permissions:
 - permission:
     check: null
     columns:
-    - recipient_token_amount_raw
     - chain_id
-    - recipient_token_address
-    - status
-    - transaction_id
     - id
     - recipient_id
+    - recipient_token_address
+    - recipient_token_amount_raw
+    - status
+    - transaction_id
     filter: {}
   role: anon
