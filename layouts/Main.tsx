@@ -2,6 +2,7 @@ import { Avatar, Box, Button, Center, Container, Flex, Heading, Menu, MenuButton
 import { ConnectWalletButton } from "@/components/ConnectWalletButton";
 import { useAuth } from "@/providers/auth";
 import { ElementType, FC, ReactComponentElement, ReactElement, ReactNode } from "react";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export interface AccountMenuProps {
   user: {public_key: string, id: string};
@@ -55,6 +56,7 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
       >
         <Box w={10}/>
         {<NavElement/>}
+        {<ConnectButton />}
         {
           !!user
             ? <AccountMenu logout={logout} user={user}/>
