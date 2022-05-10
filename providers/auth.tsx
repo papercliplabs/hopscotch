@@ -52,7 +52,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const web3 = new Web3(provider);
     const accounts = await web3.eth.getAccounts();
     const publicAddress = accounts[0];
-    console.log("Got address", { publicAddress });
+    console.log("Got address", { publicAddress, token });
 
     console.log(accounts);
 

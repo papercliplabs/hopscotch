@@ -1,8 +1,7 @@
 import { Avatar, Box, Button, Center, Container, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, Tag, TagLabel } from "@chakra-ui/react"
-import { ConnectWalletButton } from "@/components/ConnectWalletButton";
+import { AuthStatusMenu } from "@/components/ConnectWalletButton";
 import { useAuth } from "@/providers/auth";
 import { ElementType, FC, ReactComponentElement, ReactElement, ReactNode } from "react";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export interface AccountMenuProps {
   user: {public_key: string, id: string};
@@ -32,7 +31,6 @@ const AccountMenu: FC<AccountMenuProps> = (props) => {
       </MenuList>
     </Menu>
   );
-
 }
 
 export interface MainLayoutProps {
@@ -56,12 +54,7 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
       >
         <Box w={10}/>
         {<NavElement/>}
-        {<ConnectButton />}
-        {
-          !!user
-            ? <AccountMenu logout={logout} user={user}/>
-            : <ConnectWalletButton />
-        }
+        <AuthStatusMenu />
 
       </Flex>
       <Container as="main" m={0} p={14} mt={3} maxW="100vw" display="flex" justifyContent="center" alignItems="center">
