@@ -19,7 +19,7 @@ import {
 } from "@/graphql/generated/graphql";
 
 import { useAuth } from "@/providers/auth";
-import { ConnectWalletButton } from "@/components/ConnectWalletButton";
+import { VerifyAccountButton } from "@/components/ConnectWalletButton";
 
 const CreateRequest = (props) => {
   const {user} = props;
@@ -97,7 +97,7 @@ const LoginState = () => {
       <Heading size="md" mb={4}>
         Please Login
       </Heading>
-      <ConnectWalletButton />
+      <VerifyAccountButton />
     </Center>
   );
 };

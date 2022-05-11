@@ -87,7 +87,7 @@ export const CustomizeRainbowDemo = () => {
 };
 
 
-export const ConnectWalletButton: FC = () => {
+export const VerifyAccountButton: FC = () => {
   const { login } = useAuth();
 
   return (
@@ -96,33 +96,21 @@ export const ConnectWalletButton: FC = () => {
       borderRadius="full"
       onClick={login}
     >
-      🔓
+      Verify
     </Button>
     );
 }
 
 export interface AccountMenuProps {
-  user: {public_key: string, id: string};
   logout: () => void;
 }
 
 const AccountMenu: FC<AccountMenuProps> = (props) => {
-  const {user, logout} = props;
-  const address = user?.public_key;
-  const truncatedAddress = address
-    ? `${address.slice(0, 4)}...${address.slice(-4)}`
-    : "";
+  const {logout} = props;
 
   return (
-
     <Menu>
       <MenuButton>
-        {/* <Tag size="lg" colorScheme="gray" borderRadius="full" p={1} as={Button}>
-          <TagLabel fontWeight="bold" ml={3}>
-            {truncatedAddress}
-          </TagLabel>
-          <Avatar size="sm" name="?" my={2} mx={3} />
-        </Tag> */}
         🔒
       </MenuButton>
       <MenuList>
@@ -133,20 +121,15 @@ const AccountMenu: FC<AccountMenuProps> = (props) => {
 }
 
 export const AuthStatusMenu: FC = () => {
-  const { user, logout } = useAuth();
-  const { data, isError, isLoading } = useAccount();
-  const connectedAddress = data?.address;
-  const currentAddress = user?.public_key;
-
-  const isAuthenticated = currentAddress && (currentAddress === connectedAddress);
+  const { user, logout, isAuthenticated } = useAuth();
 
   return (
     <Box display="flex" flexDirection="row">
         <ConnectButton/>
         {
-          !!user
-            ? <AccountMenu logout={logout} user={user}/>
-            : <ConnectWalletButton />
+          isAuthenticated
+            ? <AccountMenu logout={logout}/>
+            : <VerifyAccountButton />
         }
     </Box>
   )
