@@ -103,7 +103,7 @@ const LoginState = () => {
 };
 
 const Index = () => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   return (
     <Container width="100%" height="100vh" maxW="832px">
@@ -112,7 +112,7 @@ const Index = () => {
       </Heading>
       <Center height="60%">
         {
-          user
+          isAuthenticated
             ? <CreateRequest user={user}/>
             : <LoginState/>
         }
