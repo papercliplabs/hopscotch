@@ -5,7 +5,6 @@ import get from "lodash/fp/get";
 
 import { useAccount, useSignMessage } from 'wagmi'
 
-
 import {
   useUpsertPublicUserMutation,
   useValidateSignatureMutation,
@@ -16,6 +15,7 @@ import { clearCache } from "@/graphql/apollo";
 const defaultContextValues = {
   user: null,
   token: null,
+  connectedAddress: null,
   isAuthenticated: false,
   login: () => {},
   logout: () => {},
