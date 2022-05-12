@@ -1,4 +1,4 @@
-import { useContext, createContext, FC, ReactNode } from 'react';
+import { useContext, createContext, FC, ReactNode, useEffect } from 'react';
 import { useLocalStorage, deleteFromStorage, writeStorage } from '@rehooks/local-storage';
 
 import get from "lodash/fp/get";
@@ -32,7 +32,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const {children} = props;
 
   const [token] = useLocalStorage('token');
-  const { data, loading } = useGetUsersQuery({skip: !token});
+  const { data, loading } = useGetUsersQuery({skip: !token, fetchPolicy: 'network-only'});
   const user = get('users[0]', data);
 
   const [upsertPublicUser] = useUpsertPublicUserMutation();
@@ -67,6 +67,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       signatureResponse
     );
 
+    console.log('Access token data', {publicKey, accessToken});
+
     if (accessToken) {
       writeStorage('token', accessToken);
     }
@@ -85,6 +87,13 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     clearCache();
     deleteFromStorage('token');
   };
+
+  useEffect(() => {
+    // logout if address changes
+    if (jwtAddress && (jwtAddress !== connectedAddress)) {
+      logout()
+    }
+  },[jwtAddress, connectedAddress])
 
   return (
     <AuthContext.Provider
