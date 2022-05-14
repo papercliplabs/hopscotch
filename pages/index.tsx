@@ -1,4 +1,4 @@
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, FormikProps } from 'formik';
 import { useRouter } from "next/router";
 import {
   Box,
@@ -20,8 +20,13 @@ import {
 
 import { useAuth } from "@/providers/auth";
 import { VerifyAccountButton } from "@/components/ConnectWalletButton";
+import { FC } from 'react';
 
-const CreateRequest = (props) => {
+interface CreateRequestProps {
+  user: {id: string, public_key: string} | undefined | null;
+}
+
+const CreateRequest: FC<CreateRequestProps> = (props) => {
   const {user} = props;
   const router = useRouter();
   const [insertInvoice, {loading}] = useInsertInvoiceMutation();
@@ -34,15 +39,15 @@ const CreateRequest = (props) => {
         Get a link you can send anyone to pay you
       </Text>
       <Formik
-        initialValues={{ amount: 0 }}
+        initialValues={{ amount: 0, tokenAddress: "" }}
         onSubmit={(values, actions) => {
           console.log("creating", values)
           insertInvoice({
             variables: {
               object: {
-                amount: parseInt(values.amount, 10),
+                amount: values.amount,
                 token_address: values.tokenAddress,
-                user_id: user.id,
+                user_id: user?.id,
               }
             },
           }).then(({data}) => {
@@ -56,7 +61,7 @@ const CreateRequest = (props) => {
         {(props) => (
           <Form>
             <Field name='amount'>
-              {({ field, form }) => (
+              {({ field, form }: any) => (
                 <FormControl isInvalid={form.errors.amount && form.touched.amount}>
                   <FormLabel htmlFor='amount'>Amount</FormLabel>
                   <Input {...field} id='amount' placeholder='amount' />
@@ -65,7 +70,7 @@ const CreateRequest = (props) => {
               )}
             </Field>
             <Field name='tokenAddress'>
-              {({ field, form }) => (
+              {({ field, form }: any) => (
                 <FormControl isInvalid={form.errors.tokenAddress && form.touched.tokenAddress}>
                   <FormLabel htmlFor='tokenAddress'>Token</FormLabel>
                   <Select {...field} placeholder='Select token'>

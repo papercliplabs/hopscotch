@@ -11,12 +11,6 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { chain, createClient, WagmiProvider } from 'wagmi';
-
-import {
-  ExternalProvider,
-  JsonRpcFetchFunc,
-  Web3Provider,
-} from "@ethersproject/providers";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import { theme } from "@/theme";
@@ -36,7 +30,7 @@ const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'My RainbowKit App',
+  appName: 'Hopscotch',
   chains
 });
 
@@ -45,10 +39,6 @@ const wagmiClient = createClient({
   connectors,
   provider
 })
-
-function getLibrary(provider: ExternalProvider | JsonRpcFetchFunc) {
-  return new Web3Provider(provider);
-}
 
 type NextPageWithLayout = NextPage & {
   NavElement?: () => ReactNode
@@ -61,7 +51,6 @@ type AppPropsWithLayout = AppProps & {
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const apolloClient = useApollo();
-  const NavElement = Component?.NavElement;
 
   return (
     <ApolloProvider client={apolloClient}>
@@ -69,7 +58,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         <RainbowKitProvider chains={chains}>
           <AuthProvider>
             <ChakraProvider theme={theme}>
-              <MainLayout NavElement={NavElement}>
+              <MainLayout>
                 <Component {...pageProps} />
               </MainLayout>
             </ChakraProvider>

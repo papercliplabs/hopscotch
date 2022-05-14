@@ -17,7 +17,7 @@ export const VerifyAccountButton: FC = () => {
     );
 }
 
-const AccountMenu: FC = (props) => {
+const AccountMenu: FC = () => {
   const { logout } = useAuth();
 
   return (
@@ -41,7 +41,7 @@ export const VerificationStatus: FC = () => {
 
 }
 
-export const AuthStatusMenu: FC = () => {
+export const ConnectWalletButton: FC = () => {
   const { connectedAddress } = useAuth();
 
   return (
@@ -51,3 +51,5 @@ export const AuthStatusMenu: FC = () => {
     </Box>
   )
 }
+
+export default ConnectWalletButton;

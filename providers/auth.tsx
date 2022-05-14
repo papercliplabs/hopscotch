@@ -9,19 +9,36 @@ import {
   useUpsertPublicUserMutation,
   useValidateSignatureMutation,
   useGetUsersQuery,
+  Users
 } from "@/graphql/generated/graphql";
 import { clearCache } from "@/graphql/apollo";
 
+type Nullable<T> = T | undefined | null;
+
+
+type AuthContextType = {
+  user: Nullable<Users>,
+  token: Nullable<string>,
+  jwtAddress: Nullable<string>,
+  connectedAddress: Nullable<string>,
+  isAuthenticated?: boolean,
+  loading?: boolean,
+  login: () => void,
+  logout: () => void,
+};
+
 const defaultContextValues = {
   user: null,
-  token: null,
-  connectedAddress: null,
+  token: '',
+  jwtAddress: '',
+  loading: false,
+  connectedAddress: '',
   isAuthenticated: false,
   login: () => {},
   logout: () => {},
 }
 
-export const AuthContext = createContext(defaultContextValues);
+export const AuthContext = createContext<AuthContextType>(defaultContextValues);
 export const useAuth = () => useContext(AuthContext);
 
 export interface AuthProviderProps {
