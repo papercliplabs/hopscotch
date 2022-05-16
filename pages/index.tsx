@@ -22,16 +22,11 @@ import { useAuth } from "@/providers/auth";
 import { VerifyAccountButton } from "@/components/ConnectWalletButton";
 import { FC } from 'react';
 
-interface CreateRequestProps {
-  user: {id: string, public_key: string} | undefined | null;
-}
-
-const CreateRequest: FC<CreateRequestProps> = (props) => {
-  const {user} = props;
+const CreateRequest: FC = () => {
   const router = useRouter();
-  const { ensureAuthenticated } = useAuth();
+  const { ensureUser } = useAuth();
+  const [insertInvoice, {loading}] = useInsertInvoiceMutation();
 
-  const [insertInvoice, {loading}] = useInsertInvoiceMutation({onStart: ensureAuthenticated});
   return (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
       <Heading size="xl" mb={2}>
@@ -43,21 +38,23 @@ const CreateRequest: FC<CreateRequestProps> = (props) => {
       <Formik
         initialValues={{ amount: 0, tokenAddress: "" }}
         onSubmit={(values, actions) => {
-          console.log("creating", values)
-          insertInvoice({
-            variables: {
-              object: {
-                amount: values.amount,
-                token_address: values.tokenAddress,
-                user_id: user?.id,
-              }
-            },
-          }).then(({data}) => {
-            console.log("response", data)
-            const invoiceId = data?.insert_invoices_one?.id;
-            router.push(`/request/${invoiceId}`);
-          });
-          actions.setSubmitting(false);
+          ensureUser().then((user) => {
+            insertInvoice({
+              variables: {
+                object: {
+                  amount: values.amount,
+                  token_address: values.tokenAddress,
+                  user_id: user?.id,
+                }
+              },
+            }).then(({data}) => {
+              const invoiceId = data?.insert_invoices_one?.id;
+              router.push(`/request/${invoiceId}`);
+              actions.setSubmitting(false);
+
+            });
+          })
+
         }}
       >
         {(props) => (
@@ -110,7 +107,7 @@ const LoginState = () => {
 };
 
 const Index = () => {
-  const { user, isAuthenticated } = useAuth();
+  // const { user, isAuthenticated } = useAuth();
 
   return (
     <Container width="100%" height="100vh" maxW="832px">
@@ -118,11 +115,12 @@ const Index = () => {
         Requests
       </Heading>
       <Center height="60%">
-        {
+        <CreateRequest />
+        {/* {
           isAuthenticated
             ? <CreateRequest user={user}/>
             : <LoginState/>
-        }
+        } */}
       </Center>
 
     </Container>

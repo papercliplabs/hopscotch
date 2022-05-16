@@ -26,6 +26,7 @@ type AuthContextType = {
   login: () => void,
   logout: () => void,
   ensureAuthenticated: () => void,
+  ensureUser: () => Promise<Nullable<Users>>,
 };
 
 const defaultContextValues = {
@@ -38,6 +39,7 @@ const defaultContextValues = {
   login: () => {},
   logout: () => {},
   ensureAuthenticated: () => {},
+  ensureUser: () => new Promise<null>((resolve) => resolve(null)),
 }
 
 export const AuthContext = createContext<AuthContextType>(defaultContextValues);
@@ -52,9 +54,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
   const [token] = useLocalStorage('token');
   console.log('Call user', {});
-  const { data, loading } = useGetUsersQuery({skip: !token, fetchPolicy: 'network-only'});
+  const { data, loading, refetch: refetchUsers} = useGetUsersQuery({skip: !token, fetchPolicy: 'network-only'});
   const user = get('users[0]', data);
-  console.log('get user', user);
 
   const [upsertPublicUser] = useUpsertPublicUserMutation();
   const [validateSignature] = useValidateSignatureMutation();
@@ -88,8 +89,6 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       signatureResponse
     );
 
-    console.log('Access token data', {publicKey, accessToken});
-
     if (accessToken) {
       writeStorage('token', accessToken);
     }
@@ -104,8 +103,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       return '';
     }
 
-    const token = await authenticatePublicKey(connectedAddress);
-    return token;
+    return authenticatePublicKey(connectedAddress);
   };
 
   const logout = () => {
@@ -119,6 +117,22 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     } else {
       return await login();
     }
+  }
+
+  const ensureUser = () => {
+    return new Promise<Nullable<Users>>((resolve, reject) => {
+      if (isAuthenticated) {
+        resolve(user)
+      } else {
+        login()
+          .then((token) => refetchUsers())
+          .then(({data}) => {
+            const newUser = get('users[0]', data);
+            return newUser
+          }).then(resolve)
+      }
+    })
+
   }
 
   useEffect(() => {
@@ -140,6 +154,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         loading,
         isAuthenticated,
         ensureAuthenticated,
+        ensureUser,
       }}
     >
       {children}
