@@ -25,6 +25,7 @@ type AuthContextType = {
   loading?: boolean,
   login: () => void,
   logout: () => void,
+  ensureAuthenticated: () => void,
 };
 
 const defaultContextValues = {
@@ -36,6 +37,7 @@ const defaultContextValues = {
   isAuthenticated: false,
   login: () => {},
   logout: () => {},
+  ensureAuthenticated: () => {},
 }
 
 export const AuthContext = createContext<AuthContextType>(defaultContextValues);
@@ -49,8 +51,10 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const {children} = props;
 
   const [token] = useLocalStorage('token');
+  console.log('Call user', {});
   const { data, loading } = useGetUsersQuery({skip: !token, fetchPolicy: 'network-only'});
   const user = get('users[0]', data);
+  console.log('get user', user);
 
   const [upsertPublicUser] = useUpsertPublicUserMutation();
   const [validateSignature] = useValidateSignatureMutation();
@@ -89,21 +93,33 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     if (accessToken) {
       writeStorage('token', accessToken);
     }
+
+    return accessToken;
   }
 
 
   const login = async () => {
-    if (connectedAddress) {
-      authenticatePublicKey(connectedAddress);
-    } else {
+    if (!connectedAddress) {
       console.error("No public address connected");
+      return '';
     }
+
+    const token = await authenticatePublicKey(connectedAddress);
+    return token;
   };
 
   const logout = () => {
     clearCache();
     deleteFromStorage('token');
   };
+
+  const ensureAuthenticated = async () => {
+    if (isAuthenticated) {
+      return true;
+    } else {
+      return await login();
+    }
+  }
 
   useEffect(() => {
     // logout if address changes
@@ -123,6 +139,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         logout,
         loading,
         isAuthenticated,
+        ensureAuthenticated,
       }}
     >
       {children}

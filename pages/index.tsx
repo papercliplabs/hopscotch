@@ -29,7 +29,9 @@ interface CreateRequestProps {
 const CreateRequest: FC<CreateRequestProps> = (props) => {
   const {user} = props;
   const router = useRouter();
-  const [insertInvoice, {loading}] = useInsertInvoiceMutation();
+  const { ensureAuthenticated } = useAuth();
+
+  const [insertInvoice, {loading}] = useInsertInvoiceMutation({onStart: ensureAuthenticated});
   return (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
       <Heading size="xl" mb={2}>
