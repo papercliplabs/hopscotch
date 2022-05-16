@@ -50,7 +50,9 @@ select_permissions:
         - id
         - nonce
         - public_key
-      filter: {}
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
 update_permissions:
   - role: anon
     permission:

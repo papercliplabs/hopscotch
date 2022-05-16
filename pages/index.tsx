@@ -1,4 +1,4 @@
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, FormikProps } from 'formik';
 import { useRouter } from "next/router";
 import {
   Box,
@@ -19,12 +19,14 @@ import {
 } from "@/graphql/generated/graphql";
 
 import { useAuth } from "@/providers/auth";
-import { ConnectWalletButton } from "@/components/ConnectWalletButton";
+import { VerifyAccountButton } from "@/components/ConnectWalletButton";
+import { FC } from 'react';
 
-const CreateRequest = (props) => {
-  const {user} = props;
+const CreateRequest: FC = () => {
   const router = useRouter();
+  const { ensureUser } = useAuth();
   const [insertInvoice, {loading}] = useInsertInvoiceMutation();
+
   return (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
       <Heading size="xl" mb={2}>
@@ -34,29 +36,31 @@ const CreateRequest = (props) => {
         Get a link you can send anyone to pay you
       </Text>
       <Formik
-        initialValues={{ amount: 0 }}
+        initialValues={{ amount: 0, tokenAddress: "" }}
         onSubmit={(values, actions) => {
-          console.log("creating", values)
-          insertInvoice({
-            variables: {
-              object: {
-                amount: parseInt(values.amount, 10),
-                token_address: values.tokenAddress,
-                user_id: user.id,
-              }
-            },
-          }).then(({data}) => {
-            console.log("response", data)
-            const invoiceId = data?.insert_invoices_one?.id;
-            router.push(`/request/${invoiceId}`);
-          });
-          actions.setSubmitting(false);
+          ensureUser().then((user) => {
+            insertInvoice({
+              variables: {
+                object: {
+                  amount: values.amount,
+                  token_address: values.tokenAddress,
+                  user_id: user?.id,
+                }
+              },
+            }).then(({data}) => {
+              const invoiceId = data?.insert_invoices_one?.id;
+              router.push(`/request/${invoiceId}`);
+              actions.setSubmitting(false);
+
+            });
+          })
+
         }}
       >
         {(props) => (
           <Form>
             <Field name='amount'>
-              {({ field, form }) => (
+              {({ field, form }: any) => (
                 <FormControl isInvalid={form.errors.amount && form.touched.amount}>
                   <FormLabel htmlFor='amount'>Amount</FormLabel>
                   <Input {...field} id='amount' placeholder='amount' />
@@ -65,7 +69,7 @@ const CreateRequest = (props) => {
               )}
             </Field>
             <Field name='tokenAddress'>
-              {({ field, form }) => (
+              {({ field, form }: any) => (
                 <FormControl isInvalid={form.errors.tokenAddress && form.touched.tokenAddress}>
                   <FormLabel htmlFor='tokenAddress'>Token</FormLabel>
                   <Select {...field} placeholder='Select token'>
@@ -97,25 +101,19 @@ const LoginState = () => {
       <Heading size="md" mb={4}>
         Please Login
       </Heading>
-      <ConnectWalletButton />
+      <VerifyAccountButton />
     </Center>
   );
 };
 
 const Index = () => {
-  const { user } = useAuth();
-
   return (
     <Container width="100%" height="100vh" maxW="832px">
       <Heading size="2xl" mb={4}>
         Requests
       </Heading>
       <Center height="60%">
-        {
-          user
-            ? <CreateRequest user={user}/>
-            : <LoginState/>
-        }
+        <CreateRequest />
       </Center>
 
     </Container>

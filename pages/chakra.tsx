@@ -9,9 +9,10 @@ import {
   Center,
   useTheme,
 } from "@chakra-ui/react";
+import { FC } from "react";
 
 
-const SiteContainer = ({ children }) => {
+const SiteContainer: FC = ({ children }) => {
   return (
     <Center width="100vw" height="100vh" backgroundColor="gray.100">
       <Container centerContent>{children}</Container>
@@ -19,7 +20,7 @@ const SiteContainer = ({ children }) => {
   );
 };
 
-const OnNetwork = () => {
+const OnNetwork: FC = () => {
   return (
     <Tag size="lg" colorScheme="gray" borderRadius="full" width="100%" p={1}>
       <Avatar size="sm" name="USDC" my={2} mx={3} bg="blue.500" color="white" />
@@ -32,7 +33,7 @@ const OnNetwork = () => {
   );
 };
 
-const Card = ({ children }) => {
+const Card: FC = ({ children }) => {
   const theme = useTheme()
   return (
     <Flex
@@ -50,7 +51,7 @@ const Card = ({ children }) => {
   );
 };
 
-const PayCardDemo = () => {
+const PayCardDemo: FC = () => {
   return (
     <Card>
       <Avatar size="lg" name="Spencer Perkins" mb={4} />
@@ -80,7 +81,7 @@ const PayCardDemo = () => {
   );
 };
 
-const ChakraApp = (pageProps) => {
+const ChakraApp: FC = () => {
   return (
     <SiteContainer>
       <PayCardDemo />
