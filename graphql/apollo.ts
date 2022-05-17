@@ -6,7 +6,7 @@ const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
 });
 
-const authLink = setContext((_, { headers}) => {
+const authLink = setContext((_, { headers }) => {
   // We dont have access to the access token during server side rendering
   if (typeof window === "undefined") return {};
 
@@ -14,7 +14,7 @@ const authLink = setContext((_, { headers}) => {
   const accessToken = localStorage.getItem("token");
 
   if (!accessToken) {
-    return {headers}
+    return { headers };
   }
 
   // return the headers to the context so httpLink can read them

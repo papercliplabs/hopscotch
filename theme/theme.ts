@@ -19,25 +19,30 @@ const colors = {
     800: "#17181A",
     900: "#17181A",
   },
+  text0: "#000000",
+  text1: "#777777",
+  text2: "#757575",
+  bg0: "#FFFFFF",
+  bg1: "#F6F6F6",
 };
 
 const radii = {
-    none: '0',
-    sm: '0.5rem',
-    base: '0.75rem',
-    md: '0.75rem',
-    lg: '1rem',
-    xl: '1.25rem',
-    '2xl': '1.5rem',
-    '3xl': '1.75rem',
-    full: '9999px',
-}
-
-const fonts = {
-  heading: 'Inter, sans-serif',
-  body: 'Inter, sans-serif',
+  none: "0",
+  sm: "0.5rem",
+  base: "0.75rem",
+  md: "0.75rem",
+  lg: "1rem",
+  xl: "1.25rem",
+  "2xl": "1.5rem",
+  "3xl": "1.75rem",
+  full: "9999px",
 };
 
-const theme = extendTheme({fonts, radii, colors });
+const fonts = {
+  heading: "Inter, sans-serif",
+  body: "Inter, sans-serif",
+};
+
+const theme = extendTheme({ fonts, radii, colors });
 
 export { theme };

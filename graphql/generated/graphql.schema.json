@@ -848,133 +848,6 @@
       },
       {
         "kind": "SCALAR",
-        "name": "bigint",
-        "description": null,
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "bigint_comparison_exp",
-        "description": "Boolean expression to compare columns of type \"bigint\". All fields are combined with logical 'AND'.",
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "_eq",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_gt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_gte",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_in",
-            "description": null,
-            "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "bigint",
-                  "ofType": null
-                }
-              }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_is_null",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_lt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_lte",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_neq",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_nin",
-            "description": null,
-            "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "bigint",
-                  "ofType": null
-                }
-              }
-            },
-            "defaultValue": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
         "name": "Boolean",
         "description": "The `Boolean` scalar type represents `true` or `false`.",
         "fields": null,
@@ -2275,22 +2148,6 @@
         "description": "columns and relationships of \"invoices\"",
         "fields": [
           {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "bigint",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "args": [],
@@ -2363,7 +2220,7 @@
             "deprecationReason": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": null,
             "args": [],
             "type": {
@@ -2379,7 +2236,23 @@
             "deprecationReason": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "status",
             "description": null,
             "args": [],
             "type": {
@@ -2821,18 +2694,6 @@
         "description": "aggregate avg on columns",
         "fields": [
           {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "args": [],
@@ -2856,16 +2717,6 @@
         "description": "order by avg() on columns of table \"invoices\"",
         "fields": null,
         "inputFields": [
-          {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
           {
             "name": "chain_id",
             "description": null,
@@ -2934,16 +2785,6 @@
             "defaultValue": null
           },
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "bigint_comparison_exp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -2994,7 +2835,7 @@
             "defaultValue": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -3004,7 +2845,17 @@
             "defaultValue": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "String_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "status",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -3062,16 +2913,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -3092,16 +2933,6 @@
         "description": "input type for inserting data into table \"invoices\"",
         "fields": null,
         "inputFields": [
-          {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
           {
             "name": "chain_id",
             "description": null,
@@ -3153,7 +2984,7 @@
             "defaultValue": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -3163,7 +2994,17 @@
             "defaultValue": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "status",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -3203,18 +3044,6 @@
         "description": "aggregate max on columns",
         "fields": [
           {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "args": [],
@@ -3251,7 +3080,7 @@
             "deprecationReason": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": null,
             "args": [],
             "type": {
@@ -3263,7 +3092,19 @@
             "deprecationReason": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "status",
             "description": null,
             "args": [],
             "type": {
@@ -3311,16 +3152,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -3351,7 +3182,7 @@
             "defaultValue": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -3361,7 +3192,17 @@
             "defaultValue": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "status",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -3401,18 +3242,6 @@
         "description": "aggregate min on columns",
         "fields": [
           {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "args": [],
@@ -3449,7 +3278,7 @@
             "deprecationReason": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": null,
             "args": [],
             "type": {
@@ -3461,7 +3290,19 @@
             "deprecationReason": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "status",
             "description": null,
             "args": [],
             "type": {
@@ -3509,16 +3350,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -3549,7 +3380,7 @@
             "defaultValue": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -3559,7 +3390,17 @@
             "defaultValue": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "status",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -3708,16 +3549,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -3768,7 +3599,7 @@
             "defaultValue": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -3778,7 +3609,17 @@
             "defaultValue": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "status",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -3846,12 +3687,6 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "amount",
-            "description": "column name",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "chain_id",
             "description": "column name",
             "isDeprecated": false,
@@ -3870,13 +3705,19 @@
             "deprecationReason": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "status",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -3902,16 +3743,6 @@
         "description": "input type for updating data in table \"invoices\"",
         "fields": null,
         "inputFields": [
-          {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
           {
             "name": "chain_id",
             "description": null,
@@ -3943,7 +3774,7 @@
             "defaultValue": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -3953,7 +3784,17 @@
             "defaultValue": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "status",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -3993,18 +3834,6 @@
         "description": "aggregate stddev on columns",
         "fields": [
           {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "args": [],
@@ -4029,16 +3858,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -4058,18 +3877,6 @@
         "name": "invoices_stddev_pop_fields",
         "description": "aggregate stddev_pop on columns",
         "fields": [
-          {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "chain_id",
             "description": null,
@@ -4095,16 +3902,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -4124,18 +3921,6 @@
         "name": "invoices_stddev_samp_fields",
         "description": "aggregate stddev_samp on columns",
         "fields": [
-          {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "chain_id",
             "description": null,
@@ -4161,16 +3946,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -4190,18 +3965,6 @@
         "name": "invoices_sum_fields",
         "description": "aggregate sum on columns",
         "fields": [
-          {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "bigint",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "chain_id",
             "description": null,
@@ -4227,16 +3990,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -4260,12 +4013,6 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "amount",
-            "description": "column name",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "chain_id",
             "description": "column name",
             "isDeprecated": false,
@@ -4284,13 +4031,19 @@
             "deprecationReason": null
           },
           {
-            "name": "status",
+            "name": "recipient_token_address",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "token_address",
+            "name": "recipient_token_amount",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "status",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -4316,18 +4069,6 @@
         "description": "aggregate var_pop on columns",
         "fields": [
           {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "args": [],
@@ -4352,16 +4093,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -4381,18 +4112,6 @@
         "name": "invoices_var_samp_fields",
         "description": "aggregate var_samp on columns",
         "fields": [
-          {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "chain_id",
             "description": null,
@@ -4418,16 +4137,6 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "chain_id",
             "description": null,
             "type": {
@@ -4447,18 +4156,6 @@
         "name": "invoices_variance_fields",
         "description": "aggregate variance on columns",
         "fields": [
-          {
-            "name": "amount",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "chain_id",
             "description": null,
@@ -4483,16 +4180,6 @@
         "description": "order by variance() on columns of table \"invoices\"",
         "fields": null,
         "inputFields": [
-          {
-            "name": "amount",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
           {
             "name": "chain_id",
             "description": null,

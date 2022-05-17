@@ -1,46 +1,45 @@
-import { useContext, createContext, FC, ReactNode, useEffect } from 'react';
-import { useLocalStorage, deleteFromStorage, writeStorage } from '@rehooks/local-storage';
+import { useContext, createContext, FC, ReactNode, useEffect } from "react";
+import { useLocalStorage, deleteFromStorage, writeStorage } from "@rehooks/local-storage";
 
 import get from "lodash/fp/get";
 
-import { useAccount, useSignMessage } from 'wagmi'
+import { useAccount, useSignMessage } from "wagmi";
 
 import {
   useUpsertPublicUserMutation,
   useValidateSignatureMutation,
   useGetUsersQuery,
-  Users
+  Users,
 } from "@/graphql/generated/graphql";
 import { clearCache } from "@/graphql/apollo";
 
 type Nullable<T> = T | undefined | null;
 
-
 type AuthContextType = {
-  user: Nullable<Users>,
-  token: Nullable<string>,
-  jwtAddress: Nullable<string>,
-  connectedAddress: Nullable<string>,
-  isAuthenticated?: boolean,
-  loading?: boolean,
-  login: () => void,
-  logout: () => void,
-  ensureAuthenticated: () => void,
-  ensureUser: () => Promise<Nullable<Users>>,
+  user: Nullable<Users>;
+  token: Nullable<string>;
+  jwtAddress: Nullable<string>;
+  connectedAddress: Nullable<string>;
+  isAuthenticated?: boolean;
+  loading?: boolean;
+  login: () => void;
+  logout: () => void;
+  ensureAuthenticated: () => void;
+  ensureUser: () => Promise<Nullable<Users>>;
 };
 
 const defaultContextValues = {
   user: null,
-  token: '',
-  jwtAddress: '',
+  token: "",
+  jwtAddress: "",
   loading: false,
-  connectedAddress: '',
+  connectedAddress: "",
   isAuthenticated: false,
   login: () => {},
   logout: () => {},
   ensureAuthenticated: () => {},
   ensureUser: () => new Promise<null>((resolve) => resolve(null)),
-}
+};
 
 export const AuthContext = createContext<AuthContextType>(defaultContextValues);
 export const useAuth = () => useContext(AuthContext);
@@ -50,22 +49,22 @@ export interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
-  const {children} = props;
+  const { children } = props;
 
-  const [token] = useLocalStorage('token');
-  console.log('Call user', {});
-  const { data, loading, refetch: refetchUsers} = useGetUsersQuery({skip: !token, fetchPolicy: 'network-only'});
-  const user = get('users[0]', data);
+  const [token] = useLocalStorage("token");
+  console.log("Call user", {});
+  const { data, loading, refetch: refetchUsers } = useGetUsersQuery({ skip: !token, fetchPolicy: "network-only" });
+  const user = get("users[0]", data);
 
   const [upsertPublicUser] = useUpsertPublicUserMutation();
   const [validateSignature] = useValidateSignatureMutation();
-  const { signMessageAsync } = useSignMessage()
+  const { signMessageAsync } = useSignMessage();
 
   const { data: localAccountData } = useAccount();
   const connectedAddress = localAccountData?.address;
   const jwtAddress = user?.public_key;
 
-  const isAuthenticated = jwtAddress && (jwtAddress === connectedAddress);
+  const isAuthenticated = jwtAddress && jwtAddress === connectedAddress;
 
   const authenticatePublicKey = async (publicKey: string) => {
     // get nonce
@@ -83,24 +82,19 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       variables: { signature, publicKey },
     });
 
-
-    const accessToken = get(
-      "data.validate_signature.accessToken",
-      signatureResponse
-    );
+    const accessToken = get("data.validate_signature.accessToken", signatureResponse);
 
     if (accessToken) {
-      writeStorage('token', accessToken);
+      writeStorage("token", accessToken);
     }
 
     return accessToken;
-  }
-
+  };
 
   const login = async () => {
     if (!connectedAddress) {
       console.error("No public address connected");
-      return '';
+      return "";
     }
 
     return authenticatePublicKey(connectedAddress);
@@ -108,7 +102,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
   const logout = () => {
     clearCache();
-    deleteFromStorage('token');
+    deleteFromStorage("token");
   };
 
   const ensureAuthenticated = async () => {
@@ -117,30 +111,30 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     } else {
       return await login();
     }
-  }
+  };
 
   const ensureUser = () => {
     return new Promise<Nullable<Users>>((resolve, reject) => {
       if (isAuthenticated) {
-        resolve(user)
+        resolve(user);
       } else {
         login()
           .then((token) => refetchUsers())
-          .then(({data}) => {
-            const newUser = get('users[0]', data);
-            return newUser
-          }).then(resolve)
+          .then(({ data }) => {
+            const newUser = get("users[0]", data);
+            return newUser;
+          })
+          .then(resolve);
       }
-    })
-
-  }
+    });
+  };
 
   useEffect(() => {
     // logout if address changes
-    if (jwtAddress && (jwtAddress !== connectedAddress)) {
-      logout()
+    if (jwtAddress && jwtAddress !== connectedAddress) {
+      logout();
     }
-  },[jwtAddress, connectedAddress])
+  }, [jwtAddress, connectedAddress]);
 
   return (
     <AuthContext.Provider
@@ -160,5 +154,4 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       {children}
     </AuthContext.Provider>
   );
-
 };
