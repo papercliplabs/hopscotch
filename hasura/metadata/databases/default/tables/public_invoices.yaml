@@ -17,8 +17,8 @@ insert_permissions:
       columns:
         - id
         - status
-        - amount
-        - token_address
+        - recipient_token_amount
+        - recipient_token_address
         - transaction_id
         - client_id
         - chain_id
@@ -30,8 +30,8 @@ select_permissions:
       columns:
         - id
         - status
-        - amount
-        - token_address
+        - recipient_token_amount
+        - recipient_token_address
         - transaction_id
         - client_id
         - chain_id
@@ -40,12 +40,12 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - amount
+        - recipient_token_amount
         - chain_id
         - client_id
         - id
         - status
-        - token_address
+        - recipient_token_address
         - transaction_id
         - user_id
       filter: {}
@@ -53,10 +53,10 @@ update_permissions:
   - role: user
     permission:
       columns:
-        - amount
+        - recipient_token_amount
         - chain_id
         - status
-        - token_address
+        - recipient_token_address
         - transaction_id
         - client_id
         - id

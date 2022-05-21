@@ -1,10 +1,11 @@
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -12,23 +13,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  bigint: any;
   timestamp: any;
   timestamptz: any;
   uuid: any;
-};
-
-/** Boolean expression to compare columns of type "bigint". All fields are combined with logical 'AND'. */
-export type Bigint_Comparison_Exp = {
-  _eq?: Maybe<Scalars['bigint']>;
-  _gt?: Maybe<Scalars['bigint']>;
-  _gte?: Maybe<Scalars['bigint']>;
-  _in?: Maybe<Array<Scalars['bigint']>>;
-  _is_null?: Maybe<Scalars['Boolean']>;
-  _lt?: Maybe<Scalars['bigint']>;
-  _lte?: Maybe<Scalars['bigint']>;
-  _neq?: Maybe<Scalars['bigint']>;
-  _nin?: Maybe<Array<Scalars['bigint']>>;
 };
 
 /** columns and relationships of "clients" */
@@ -48,21 +35,21 @@ export type Clients = {
 
 /** columns and relationships of "clients" */
 export type ClientsInvoicesArgs = {
-  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Invoices_Order_By>>;
-  where?: Maybe<Invoices_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Invoices_Order_By>>;
+  where?: InputMaybe<Invoices_Bool_Exp>;
 };
 
 
 /** columns and relationships of "clients" */
 export type ClientsInvoices_AggregateArgs = {
-  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Invoices_Order_By>>;
-  where?: Maybe<Invoices_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Invoices_Order_By>>;
+  where?: InputMaybe<Invoices_Bool_Exp>;
 };
 
 /** aggregated selection of "clients" */
@@ -83,34 +70,34 @@ export type Clients_Aggregate_Fields = {
 
 /** aggregate fields of "clients" */
 export type Clients_Aggregate_FieldsCountArgs = {
-  columns?: Maybe<Array<Clients_Select_Column>>;
-  distinct?: Maybe<Scalars['Boolean']>;
+  columns?: InputMaybe<Array<Clients_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** order by aggregate values of table "clients" */
 export type Clients_Aggregate_Order_By = {
-  count?: Maybe<Order_By>;
-  max?: Maybe<Clients_Max_Order_By>;
-  min?: Maybe<Clients_Min_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Clients_Max_Order_By>;
+  min?: InputMaybe<Clients_Min_Order_By>;
 };
 
 /** input type for inserting array relation for remote table "clients" */
 export type Clients_Arr_Rel_Insert_Input = {
   data: Array<Clients_Insert_Input>;
   /** on conflict condition */
-  on_conflict?: Maybe<Clients_On_Conflict>;
+  on_conflict?: InputMaybe<Clients_On_Conflict>;
 };
 
 /** Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'. */
 export type Clients_Bool_Exp = {
-  _and?: Maybe<Array<Clients_Bool_Exp>>;
-  _not?: Maybe<Clients_Bool_Exp>;
-  _or?: Maybe<Array<Clients_Bool_Exp>>;
-  id?: Maybe<Uuid_Comparison_Exp>;
-  invoices?: Maybe<Invoices_Bool_Exp>;
-  name?: Maybe<String_Comparison_Exp>;
-  owner?: Maybe<Users_Bool_Exp>;
-  user_id?: Maybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<Clients_Bool_Exp>>;
+  _not?: InputMaybe<Clients_Bool_Exp>;
+  _or?: InputMaybe<Array<Clients_Bool_Exp>>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  invoices?: InputMaybe<Invoices_Bool_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  owner?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "clients" */
@@ -121,11 +108,11 @@ export enum Clients_Constraint {
 
 /** input type for inserting data into table "clients" */
 export type Clients_Insert_Input = {
-  id?: Maybe<Scalars['uuid']>;
-  invoices?: Maybe<Invoices_Arr_Rel_Insert_Input>;
-  name?: Maybe<Scalars['String']>;
-  owner?: Maybe<Users_Obj_Rel_Insert_Input>;
-  user_id?: Maybe<Scalars['uuid']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  invoices?: InputMaybe<Invoices_Arr_Rel_Insert_Input>;
+  name?: InputMaybe<Scalars['String']>;
+  owner?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars['uuid']>;
 };
 
 /** aggregate max on columns */
@@ -138,9 +125,9 @@ export type Clients_Max_Fields = {
 
 /** order by max() on columns of table "clients" */
 export type Clients_Max_Order_By = {
-  id?: Maybe<Order_By>;
-  name?: Maybe<Order_By>;
-  user_id?: Maybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -153,9 +140,9 @@ export type Clients_Min_Fields = {
 
 /** order by min() on columns of table "clients" */
 export type Clients_Min_Order_By = {
-  id?: Maybe<Order_By>;
-  name?: Maybe<Order_By>;
-  user_id?: Maybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "clients" */
@@ -171,23 +158,23 @@ export type Clients_Mutation_Response = {
 export type Clients_Obj_Rel_Insert_Input = {
   data: Clients_Insert_Input;
   /** on conflict condition */
-  on_conflict?: Maybe<Clients_On_Conflict>;
+  on_conflict?: InputMaybe<Clients_On_Conflict>;
 };
 
 /** on conflict condition type for table "clients" */
 export type Clients_On_Conflict = {
   constraint: Clients_Constraint;
   update_columns?: Array<Clients_Update_Column>;
-  where?: Maybe<Clients_Bool_Exp>;
+  where?: InputMaybe<Clients_Bool_Exp>;
 };
 
 /** Ordering options when selecting data from "clients". */
 export type Clients_Order_By = {
-  id?: Maybe<Order_By>;
-  invoices_aggregate?: Maybe<Invoices_Aggregate_Order_By>;
-  name?: Maybe<Order_By>;
-  owner?: Maybe<Users_Order_By>;
-  user_id?: Maybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  invoices_aggregate?: InputMaybe<Invoices_Aggregate_Order_By>;
+  name?: InputMaybe<Order_By>;
+  owner?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: clients */
@@ -207,9 +194,9 @@ export enum Clients_Select_Column {
 
 /** input type for updating data in table "clients" */
 export type Clients_Set_Input = {
-  id?: Maybe<Scalars['uuid']>;
-  name?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['uuid']>;
 };
 
 /** update columns of table "clients" */
@@ -224,21 +211,20 @@ export enum Clients_Update_Column {
 
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
-  _eq?: Maybe<Scalars['Int']>;
-  _gt?: Maybe<Scalars['Int']>;
-  _gte?: Maybe<Scalars['Int']>;
-  _in?: Maybe<Array<Scalars['Int']>>;
-  _is_null?: Maybe<Scalars['Boolean']>;
-  _lt?: Maybe<Scalars['Int']>;
-  _lte?: Maybe<Scalars['Int']>;
-  _neq?: Maybe<Scalars['Int']>;
-  _nin?: Maybe<Array<Scalars['Int']>>;
+  _eq?: InputMaybe<Scalars['Int']>;
+  _gt?: InputMaybe<Scalars['Int']>;
+  _gte?: InputMaybe<Scalars['Int']>;
+  _in?: InputMaybe<Array<Scalars['Int']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']>;
+  _lt?: InputMaybe<Scalars['Int']>;
+  _lte?: InputMaybe<Scalars['Int']>;
+  _neq?: InputMaybe<Scalars['Int']>;
+  _nin?: InputMaybe<Array<Scalars['Int']>>;
 };
 
 /** columns and relationships of "invoices" */
 export type Invoices = {
   __typename?: 'invoices';
-  amount: Scalars['bigint'];
   chain_id: Scalars['Int'];
   /** An object relationship */
   client?: Maybe<Clients>;
@@ -246,8 +232,9 @@ export type Invoices = {
   id: Scalars['uuid'];
   /** An object relationship */
   owner: Users;
+  recipient_token_address: Scalars['String'];
+  recipient_token_amount: Scalars['String'];
   status: Scalars['String'];
-  token_address: Scalars['String'];
   transaction_id?: Maybe<Scalars['String']>;
   user_id: Scalars['uuid'];
 };
@@ -278,60 +265,58 @@ export type Invoices_Aggregate_Fields = {
 
 /** aggregate fields of "invoices" */
 export type Invoices_Aggregate_FieldsCountArgs = {
-  columns?: Maybe<Array<Invoices_Select_Column>>;
-  distinct?: Maybe<Scalars['Boolean']>;
+  columns?: InputMaybe<Array<Invoices_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** order by aggregate values of table "invoices" */
 export type Invoices_Aggregate_Order_By = {
-  avg?: Maybe<Invoices_Avg_Order_By>;
-  count?: Maybe<Order_By>;
-  max?: Maybe<Invoices_Max_Order_By>;
-  min?: Maybe<Invoices_Min_Order_By>;
-  stddev?: Maybe<Invoices_Stddev_Order_By>;
-  stddev_pop?: Maybe<Invoices_Stddev_Pop_Order_By>;
-  stddev_samp?: Maybe<Invoices_Stddev_Samp_Order_By>;
-  sum?: Maybe<Invoices_Sum_Order_By>;
-  var_pop?: Maybe<Invoices_Var_Pop_Order_By>;
-  var_samp?: Maybe<Invoices_Var_Samp_Order_By>;
-  variance?: Maybe<Invoices_Variance_Order_By>;
+  avg?: InputMaybe<Invoices_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Invoices_Max_Order_By>;
+  min?: InputMaybe<Invoices_Min_Order_By>;
+  stddev?: InputMaybe<Invoices_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Invoices_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Invoices_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Invoices_Sum_Order_By>;
+  var_pop?: InputMaybe<Invoices_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Invoices_Var_Samp_Order_By>;
+  variance?: InputMaybe<Invoices_Variance_Order_By>;
 };
 
 /** input type for inserting array relation for remote table "invoices" */
 export type Invoices_Arr_Rel_Insert_Input = {
   data: Array<Invoices_Insert_Input>;
   /** on conflict condition */
-  on_conflict?: Maybe<Invoices_On_Conflict>;
+  on_conflict?: InputMaybe<Invoices_On_Conflict>;
 };
 
 /** aggregate avg on columns */
 export type Invoices_Avg_Fields = {
   __typename?: 'invoices_avg_fields';
-  amount?: Maybe<Scalars['Float']>;
   chain_id?: Maybe<Scalars['Float']>;
 };
 
 /** order by avg() on columns of table "invoices" */
 export type Invoices_Avg_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "invoices". All fields are combined with a logical 'AND'. */
 export type Invoices_Bool_Exp = {
-  _and?: Maybe<Array<Invoices_Bool_Exp>>;
-  _not?: Maybe<Invoices_Bool_Exp>;
-  _or?: Maybe<Array<Invoices_Bool_Exp>>;
-  amount?: Maybe<Bigint_Comparison_Exp>;
-  chain_id?: Maybe<Int_Comparison_Exp>;
-  client?: Maybe<Clients_Bool_Exp>;
-  client_id?: Maybe<Uuid_Comparison_Exp>;
-  id?: Maybe<Uuid_Comparison_Exp>;
-  owner?: Maybe<Users_Bool_Exp>;
-  status?: Maybe<String_Comparison_Exp>;
-  token_address?: Maybe<String_Comparison_Exp>;
-  transaction_id?: Maybe<String_Comparison_Exp>;
-  user_id?: Maybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<Invoices_Bool_Exp>>;
+  _not?: InputMaybe<Invoices_Bool_Exp>;
+  _or?: InputMaybe<Array<Invoices_Bool_Exp>>;
+  chain_id?: InputMaybe<Int_Comparison_Exp>;
+  client?: InputMaybe<Clients_Bool_Exp>;
+  client_id?: InputMaybe<Uuid_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  owner?: InputMaybe<Users_Bool_Exp>;
+  recipient_token_address?: InputMaybe<String_Comparison_Exp>;
+  recipient_token_amount?: InputMaybe<String_Comparison_Exp>;
+  status?: InputMaybe<String_Comparison_Exp>;
+  transaction_id?: InputMaybe<String_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "invoices" */
@@ -342,72 +327,71 @@ export enum Invoices_Constraint {
 
 /** input type for incrementing numeric columns in table "invoices" */
 export type Invoices_Inc_Input = {
-  amount?: Maybe<Scalars['bigint']>;
-  chain_id?: Maybe<Scalars['Int']>;
+  chain_id?: InputMaybe<Scalars['Int']>;
 };
 
 /** input type for inserting data into table "invoices" */
 export type Invoices_Insert_Input = {
-  amount?: Maybe<Scalars['bigint']>;
-  chain_id?: Maybe<Scalars['Int']>;
-  client?: Maybe<Clients_Obj_Rel_Insert_Input>;
-  client_id?: Maybe<Scalars['uuid']>;
-  id?: Maybe<Scalars['uuid']>;
-  owner?: Maybe<Users_Obj_Rel_Insert_Input>;
-  status?: Maybe<Scalars['String']>;
-  token_address?: Maybe<Scalars['String']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
+  chain_id?: InputMaybe<Scalars['Int']>;
+  client?: InputMaybe<Clients_Obj_Rel_Insert_Input>;
+  client_id?: InputMaybe<Scalars['uuid']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  owner?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  recipient_token_address?: InputMaybe<Scalars['String']>;
+  recipient_token_amount?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Scalars['String']>;
+  transaction_id?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['uuid']>;
 };
 
 /** aggregate max on columns */
 export type Invoices_Max_Fields = {
   __typename?: 'invoices_max_fields';
-  amount?: Maybe<Scalars['bigint']>;
   chain_id?: Maybe<Scalars['Int']>;
   client_id?: Maybe<Scalars['uuid']>;
   id?: Maybe<Scalars['uuid']>;
+  recipient_token_address?: Maybe<Scalars['String']>;
+  recipient_token_amount?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
-  token_address?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
   user_id?: Maybe<Scalars['uuid']>;
 };
 
 /** order by max() on columns of table "invoices" */
 export type Invoices_Max_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
-  client_id?: Maybe<Order_By>;
-  id?: Maybe<Order_By>;
-  status?: Maybe<Order_By>;
-  token_address?: Maybe<Order_By>;
-  transaction_id?: Maybe<Order_By>;
-  user_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
+  client_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  recipient_token_address?: InputMaybe<Order_By>;
+  recipient_token_amount?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  transaction_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
 export type Invoices_Min_Fields = {
   __typename?: 'invoices_min_fields';
-  amount?: Maybe<Scalars['bigint']>;
   chain_id?: Maybe<Scalars['Int']>;
   client_id?: Maybe<Scalars['uuid']>;
   id?: Maybe<Scalars['uuid']>;
+  recipient_token_address?: Maybe<Scalars['String']>;
+  recipient_token_amount?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
-  token_address?: Maybe<Scalars['String']>;
   transaction_id?: Maybe<Scalars['String']>;
   user_id?: Maybe<Scalars['uuid']>;
 };
 
 /** order by min() on columns of table "invoices" */
 export type Invoices_Min_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
-  client_id?: Maybe<Order_By>;
-  id?: Maybe<Order_By>;
-  status?: Maybe<Order_By>;
-  token_address?: Maybe<Order_By>;
-  transaction_id?: Maybe<Order_By>;
-  user_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
+  client_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  recipient_token_address?: InputMaybe<Order_By>;
+  recipient_token_amount?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  transaction_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "invoices" */
@@ -423,21 +407,21 @@ export type Invoices_Mutation_Response = {
 export type Invoices_On_Conflict = {
   constraint: Invoices_Constraint;
   update_columns?: Array<Invoices_Update_Column>;
-  where?: Maybe<Invoices_Bool_Exp>;
+  where?: InputMaybe<Invoices_Bool_Exp>;
 };
 
 /** Ordering options when selecting data from "invoices". */
 export type Invoices_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
-  client?: Maybe<Clients_Order_By>;
-  client_id?: Maybe<Order_By>;
-  id?: Maybe<Order_By>;
-  owner?: Maybe<Users_Order_By>;
-  status?: Maybe<Order_By>;
-  token_address?: Maybe<Order_By>;
-  transaction_id?: Maybe<Order_By>;
-  user_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
+  client?: InputMaybe<Clients_Order_By>;
+  client_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  owner?: InputMaybe<Users_Order_By>;
+  recipient_token_address?: InputMaybe<Order_By>;
+  recipient_token_amount?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  transaction_id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: invoices */
@@ -448,17 +432,17 @@ export type Invoices_Pk_Columns_Input = {
 /** select columns of table "invoices" */
 export enum Invoices_Select_Column {
   /** column name */
-  Amount = 'amount',
-  /** column name */
   ChainId = 'chain_id',
   /** column name */
   ClientId = 'client_id',
   /** column name */
   Id = 'id',
   /** column name */
-  Status = 'status',
+  RecipientTokenAddress = 'recipient_token_address',
   /** column name */
-  TokenAddress = 'token_address',
+  RecipientTokenAmount = 'recipient_token_amount',
+  /** column name */
+  Status = 'status',
   /** column name */
   TransactionId = 'transaction_id',
   /** column name */
@@ -467,72 +451,62 @@ export enum Invoices_Select_Column {
 
 /** input type for updating data in table "invoices" */
 export type Invoices_Set_Input = {
-  amount?: Maybe<Scalars['bigint']>;
-  chain_id?: Maybe<Scalars['Int']>;
-  client_id?: Maybe<Scalars['uuid']>;
-  id?: Maybe<Scalars['uuid']>;
-  status?: Maybe<Scalars['String']>;
-  token_address?: Maybe<Scalars['String']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
+  chain_id?: InputMaybe<Scalars['Int']>;
+  client_id?: InputMaybe<Scalars['uuid']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  recipient_token_address?: InputMaybe<Scalars['String']>;
+  recipient_token_amount?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Scalars['String']>;
+  transaction_id?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['uuid']>;
 };
 
 /** aggregate stddev on columns */
 export type Invoices_Stddev_Fields = {
   __typename?: 'invoices_stddev_fields';
-  amount?: Maybe<Scalars['Float']>;
   chain_id?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev() on columns of table "invoices" */
 export type Invoices_Stddev_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_pop on columns */
 export type Invoices_Stddev_Pop_Fields = {
   __typename?: 'invoices_stddev_pop_fields';
-  amount?: Maybe<Scalars['Float']>;
   chain_id?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_pop() on columns of table "invoices" */
 export type Invoices_Stddev_Pop_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
 export type Invoices_Stddev_Samp_Fields = {
   __typename?: 'invoices_stddev_samp_fields';
-  amount?: Maybe<Scalars['Float']>;
   chain_id?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_samp() on columns of table "invoices" */
 export type Invoices_Stddev_Samp_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate sum on columns */
 export type Invoices_Sum_Fields = {
   __typename?: 'invoices_sum_fields';
-  amount?: Maybe<Scalars['bigint']>;
   chain_id?: Maybe<Scalars['Int']>;
 };
 
 /** order by sum() on columns of table "invoices" */
 export type Invoices_Sum_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "invoices" */
 export enum Invoices_Update_Column {
-  /** column name */
-  Amount = 'amount',
   /** column name */
   ChainId = 'chain_id',
   /** column name */
@@ -540,9 +514,11 @@ export enum Invoices_Update_Column {
   /** column name */
   Id = 'id',
   /** column name */
-  Status = 'status',
+  RecipientTokenAddress = 'recipient_token_address',
   /** column name */
-  TokenAddress = 'token_address',
+  RecipientTokenAmount = 'recipient_token_amount',
+  /** column name */
+  Status = 'status',
   /** column name */
   TransactionId = 'transaction_id',
   /** column name */
@@ -552,40 +528,34 @@ export enum Invoices_Update_Column {
 /** aggregate var_pop on columns */
 export type Invoices_Var_Pop_Fields = {
   __typename?: 'invoices_var_pop_fields';
-  amount?: Maybe<Scalars['Float']>;
   chain_id?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_pop() on columns of table "invoices" */
 export type Invoices_Var_Pop_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate var_samp on columns */
 export type Invoices_Var_Samp_Fields = {
   __typename?: 'invoices_var_samp_fields';
-  amount?: Maybe<Scalars['Float']>;
   chain_id?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_samp() on columns of table "invoices" */
 export type Invoices_Var_Samp_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate variance on columns */
 export type Invoices_Variance_Fields = {
   __typename?: 'invoices_variance_fields';
-  amount?: Maybe<Scalars['Float']>;
   chain_id?: Maybe<Scalars['Float']>;
 };
 
 /** order by variance() on columns of table "invoices" */
 export type Invoices_Variance_Order_By = {
-  amount?: Maybe<Order_By>;
-  chain_id?: Maybe<Order_By>;
+  chain_id?: InputMaybe<Order_By>;
 };
 
 /** mutation root */
@@ -696,124 +666,124 @@ export type Mutation_RootDelete_Users_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootInsert_ClientsArgs = {
   objects: Array<Clients_Insert_Input>;
-  on_conflict?: Maybe<Clients_On_Conflict>;
+  on_conflict?: InputMaybe<Clients_On_Conflict>;
 };
 
 
 /** mutation root */
 export type Mutation_RootInsert_Clients_OneArgs = {
   object: Clients_Insert_Input;
-  on_conflict?: Maybe<Clients_On_Conflict>;
+  on_conflict?: InputMaybe<Clients_On_Conflict>;
 };
 
 
 /** mutation root */
 export type Mutation_RootInsert_InvoicesArgs = {
   objects: Array<Invoices_Insert_Input>;
-  on_conflict?: Maybe<Invoices_On_Conflict>;
+  on_conflict?: InputMaybe<Invoices_On_Conflict>;
 };
 
 
 /** mutation root */
 export type Mutation_RootInsert_Invoices_OneArgs = {
   object: Invoices_Insert_Input;
-  on_conflict?: Maybe<Invoices_On_Conflict>;
+  on_conflict?: InputMaybe<Invoices_On_Conflict>;
 };
 
 
 /** mutation root */
 export type Mutation_RootInsert_User_InfoArgs = {
   objects: Array<User_Info_Insert_Input>;
-  on_conflict?: Maybe<User_Info_On_Conflict>;
+  on_conflict?: InputMaybe<User_Info_On_Conflict>;
 };
 
 
 /** mutation root */
 export type Mutation_RootInsert_User_Info_OneArgs = {
   object: User_Info_Insert_Input;
-  on_conflict?: Maybe<User_Info_On_Conflict>;
+  on_conflict?: InputMaybe<User_Info_On_Conflict>;
 };
 
 
 /** mutation root */
 export type Mutation_RootInsert_UsersArgs = {
   objects: Array<Users_Insert_Input>;
-  on_conflict?: Maybe<Users_On_Conflict>;
+  on_conflict?: InputMaybe<Users_On_Conflict>;
 };
 
 
 /** mutation root */
 export type Mutation_RootInsert_Users_OneArgs = {
   object: Users_Insert_Input;
-  on_conflict?: Maybe<Users_On_Conflict>;
+  on_conflict?: InputMaybe<Users_On_Conflict>;
 };
 
 
 /** mutation root */
 export type Mutation_RootRefresh_NonceArgs = {
   args: Refresh_Nonce_Args;
-  distinct_on?: Maybe<Array<Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Users_Order_By>>;
-  where?: Maybe<Users_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 
 /** mutation root */
 export type Mutation_RootUpdate_ClientsArgs = {
-  _set?: Maybe<Clients_Set_Input>;
+  _set?: InputMaybe<Clients_Set_Input>;
   where: Clients_Bool_Exp;
 };
 
 
 /** mutation root */
 export type Mutation_RootUpdate_Clients_By_PkArgs = {
-  _set?: Maybe<Clients_Set_Input>;
+  _set?: InputMaybe<Clients_Set_Input>;
   pk_columns: Clients_Pk_Columns_Input;
 };
 
 
 /** mutation root */
 export type Mutation_RootUpdate_InvoicesArgs = {
-  _inc?: Maybe<Invoices_Inc_Input>;
-  _set?: Maybe<Invoices_Set_Input>;
+  _inc?: InputMaybe<Invoices_Inc_Input>;
+  _set?: InputMaybe<Invoices_Set_Input>;
   where: Invoices_Bool_Exp;
 };
 
 
 /** mutation root */
 export type Mutation_RootUpdate_Invoices_By_PkArgs = {
-  _inc?: Maybe<Invoices_Inc_Input>;
-  _set?: Maybe<Invoices_Set_Input>;
+  _inc?: InputMaybe<Invoices_Inc_Input>;
+  _set?: InputMaybe<Invoices_Set_Input>;
   pk_columns: Invoices_Pk_Columns_Input;
 };
 
 
 /** mutation root */
 export type Mutation_RootUpdate_User_InfoArgs = {
-  _set?: Maybe<User_Info_Set_Input>;
+  _set?: InputMaybe<User_Info_Set_Input>;
   where: User_Info_Bool_Exp;
 };
 
 
 /** mutation root */
 export type Mutation_RootUpdate_User_Info_By_PkArgs = {
-  _set?: Maybe<User_Info_Set_Input>;
+  _set?: InputMaybe<User_Info_Set_Input>;
   pk_columns: User_Info_Pk_Columns_Input;
 };
 
 
 /** mutation root */
 export type Mutation_RootUpdate_UsersArgs = {
-  _set?: Maybe<Users_Set_Input>;
+  _set?: InputMaybe<Users_Set_Input>;
   where: Users_Bool_Exp;
 };
 
 
 /** mutation root */
 export type Mutation_RootUpdate_Users_By_PkArgs = {
-  _set?: Maybe<Users_Set_Input>;
+  _set?: InputMaybe<Users_Set_Input>;
   pk_columns: Users_Pk_Columns_Input;
 };
 
@@ -869,20 +839,20 @@ export type Query_Root = {
 
 
 export type Query_RootClientsArgs = {
-  distinct_on?: Maybe<Array<Clients_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Clients_Order_By>>;
-  where?: Maybe<Clients_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Clients_Order_By>>;
+  where?: InputMaybe<Clients_Bool_Exp>;
 };
 
 
 export type Query_RootClients_AggregateArgs = {
-  distinct_on?: Maybe<Array<Clients_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Clients_Order_By>>;
-  where?: Maybe<Clients_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Clients_Order_By>>;
+  where?: InputMaybe<Clients_Bool_Exp>;
 };
 
 
@@ -892,20 +862,20 @@ export type Query_RootClients_By_PkArgs = {
 
 
 export type Query_RootInvoicesArgs = {
-  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Invoices_Order_By>>;
-  where?: Maybe<Invoices_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Invoices_Order_By>>;
+  where?: InputMaybe<Invoices_Bool_Exp>;
 };
 
 
 export type Query_RootInvoices_AggregateArgs = {
-  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Invoices_Order_By>>;
-  where?: Maybe<Invoices_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Invoices_Order_By>>;
+  where?: InputMaybe<Invoices_Bool_Exp>;
 };
 
 
@@ -915,20 +885,20 @@ export type Query_RootInvoices_By_PkArgs = {
 
 
 export type Query_RootUser_InfoArgs = {
-  distinct_on?: Maybe<Array<User_Info_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<User_Info_Order_By>>;
-  where?: Maybe<User_Info_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<User_Info_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<User_Info_Order_By>>;
+  where?: InputMaybe<User_Info_Bool_Exp>;
 };
 
 
 export type Query_RootUser_Info_AggregateArgs = {
-  distinct_on?: Maybe<Array<User_Info_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<User_Info_Order_By>>;
-  where?: Maybe<User_Info_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<User_Info_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<User_Info_Order_By>>;
+  where?: InputMaybe<User_Info_Bool_Exp>;
 };
 
 
@@ -938,20 +908,20 @@ export type Query_RootUser_Info_By_PkArgs = {
 
 
 export type Query_RootUsersArgs = {
-  distinct_on?: Maybe<Array<Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Users_Order_By>>;
-  where?: Maybe<Users_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 
 export type Query_RootUsers_AggregateArgs = {
-  distinct_on?: Maybe<Array<Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Users_Order_By>>;
-  where?: Maybe<Users_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 
@@ -960,40 +930,40 @@ export type Query_RootUsers_By_PkArgs = {
 };
 
 export type Refresh_Nonce_Args = {
-  pkey?: Maybe<Scalars['String']>;
+  pkey?: InputMaybe<Scalars['String']>;
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
 export type String_Comparison_Exp = {
-  _eq?: Maybe<Scalars['String']>;
-  _gt?: Maybe<Scalars['String']>;
-  _gte?: Maybe<Scalars['String']>;
+  _eq?: InputMaybe<Scalars['String']>;
+  _gt?: InputMaybe<Scalars['String']>;
+  _gte?: InputMaybe<Scalars['String']>;
   /** does the column match the given case-insensitive pattern */
-  _ilike?: Maybe<Scalars['String']>;
-  _in?: Maybe<Array<Scalars['String']>>;
+  _ilike?: InputMaybe<Scalars['String']>;
+  _in?: InputMaybe<Array<Scalars['String']>>;
   /** does the column match the given POSIX regular expression, case insensitive */
-  _iregex?: Maybe<Scalars['String']>;
-  _is_null?: Maybe<Scalars['Boolean']>;
+  _iregex?: InputMaybe<Scalars['String']>;
+  _is_null?: InputMaybe<Scalars['Boolean']>;
   /** does the column match the given pattern */
-  _like?: Maybe<Scalars['String']>;
-  _lt?: Maybe<Scalars['String']>;
-  _lte?: Maybe<Scalars['String']>;
-  _neq?: Maybe<Scalars['String']>;
+  _like?: InputMaybe<Scalars['String']>;
+  _lt?: InputMaybe<Scalars['String']>;
+  _lte?: InputMaybe<Scalars['String']>;
+  _neq?: InputMaybe<Scalars['String']>;
   /** does the column NOT match the given case-insensitive pattern */
-  _nilike?: Maybe<Scalars['String']>;
-  _nin?: Maybe<Array<Scalars['String']>>;
+  _nilike?: InputMaybe<Scalars['String']>;
+  _nin?: InputMaybe<Array<Scalars['String']>>;
   /** does the column NOT match the given POSIX regular expression, case insensitive */
-  _niregex?: Maybe<Scalars['String']>;
+  _niregex?: InputMaybe<Scalars['String']>;
   /** does the column NOT match the given pattern */
-  _nlike?: Maybe<Scalars['String']>;
+  _nlike?: InputMaybe<Scalars['String']>;
   /** does the column NOT match the given POSIX regular expression, case sensitive */
-  _nregex?: Maybe<Scalars['String']>;
+  _nregex?: InputMaybe<Scalars['String']>;
   /** does the column NOT match the given SQL regular expression */
-  _nsimilar?: Maybe<Scalars['String']>;
+  _nsimilar?: InputMaybe<Scalars['String']>;
   /** does the column match the given POSIX regular expression, case sensitive */
-  _regex?: Maybe<Scalars['String']>;
+  _regex?: InputMaybe<Scalars['String']>;
   /** does the column match the given SQL regular expression */
-  _similar?: Maybe<Scalars['String']>;
+  _similar?: InputMaybe<Scalars['String']>;
 };
 
 export type Subscription_Root = {
@@ -1026,20 +996,20 @@ export type Subscription_Root = {
 
 
 export type Subscription_RootClientsArgs = {
-  distinct_on?: Maybe<Array<Clients_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Clients_Order_By>>;
-  where?: Maybe<Clients_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Clients_Order_By>>;
+  where?: InputMaybe<Clients_Bool_Exp>;
 };
 
 
 export type Subscription_RootClients_AggregateArgs = {
-  distinct_on?: Maybe<Array<Clients_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Clients_Order_By>>;
-  where?: Maybe<Clients_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Clients_Order_By>>;
+  where?: InputMaybe<Clients_Bool_Exp>;
 };
 
 
@@ -1049,20 +1019,20 @@ export type Subscription_RootClients_By_PkArgs = {
 
 
 export type Subscription_RootInvoicesArgs = {
-  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Invoices_Order_By>>;
-  where?: Maybe<Invoices_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Invoices_Order_By>>;
+  where?: InputMaybe<Invoices_Bool_Exp>;
 };
 
 
 export type Subscription_RootInvoices_AggregateArgs = {
-  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Invoices_Order_By>>;
-  where?: Maybe<Invoices_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Invoices_Order_By>>;
+  where?: InputMaybe<Invoices_Bool_Exp>;
 };
 
 
@@ -1072,20 +1042,20 @@ export type Subscription_RootInvoices_By_PkArgs = {
 
 
 export type Subscription_RootUser_InfoArgs = {
-  distinct_on?: Maybe<Array<User_Info_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<User_Info_Order_By>>;
-  where?: Maybe<User_Info_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<User_Info_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<User_Info_Order_By>>;
+  where?: InputMaybe<User_Info_Bool_Exp>;
 };
 
 
 export type Subscription_RootUser_Info_AggregateArgs = {
-  distinct_on?: Maybe<Array<User_Info_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<User_Info_Order_By>>;
-  where?: Maybe<User_Info_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<User_Info_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<User_Info_Order_By>>;
+  where?: InputMaybe<User_Info_Bool_Exp>;
 };
 
 
@@ -1095,20 +1065,20 @@ export type Subscription_RootUser_Info_By_PkArgs = {
 
 
 export type Subscription_RootUsersArgs = {
-  distinct_on?: Maybe<Array<Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Users_Order_By>>;
-  where?: Maybe<Users_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 
 export type Subscription_RootUsers_AggregateArgs = {
-  distinct_on?: Maybe<Array<Users_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Users_Order_By>>;
-  where?: Maybe<Users_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Users_Order_By>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 
@@ -1118,28 +1088,28 @@ export type Subscription_RootUsers_By_PkArgs = {
 
 /** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
 export type Timestamp_Comparison_Exp = {
-  _eq?: Maybe<Scalars['timestamp']>;
-  _gt?: Maybe<Scalars['timestamp']>;
-  _gte?: Maybe<Scalars['timestamp']>;
-  _in?: Maybe<Array<Scalars['timestamp']>>;
-  _is_null?: Maybe<Scalars['Boolean']>;
-  _lt?: Maybe<Scalars['timestamp']>;
-  _lte?: Maybe<Scalars['timestamp']>;
-  _neq?: Maybe<Scalars['timestamp']>;
-  _nin?: Maybe<Array<Scalars['timestamp']>>;
+  _eq?: InputMaybe<Scalars['timestamp']>;
+  _gt?: InputMaybe<Scalars['timestamp']>;
+  _gte?: InputMaybe<Scalars['timestamp']>;
+  _in?: InputMaybe<Array<Scalars['timestamp']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']>;
+  _lt?: InputMaybe<Scalars['timestamp']>;
+  _lte?: InputMaybe<Scalars['timestamp']>;
+  _neq?: InputMaybe<Scalars['timestamp']>;
+  _nin?: InputMaybe<Array<Scalars['timestamp']>>;
 };
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
 export type Timestamptz_Comparison_Exp = {
-  _eq?: Maybe<Scalars['timestamptz']>;
-  _gt?: Maybe<Scalars['timestamptz']>;
-  _gte?: Maybe<Scalars['timestamptz']>;
-  _in?: Maybe<Array<Scalars['timestamptz']>>;
-  _is_null?: Maybe<Scalars['Boolean']>;
-  _lt?: Maybe<Scalars['timestamptz']>;
-  _lte?: Maybe<Scalars['timestamptz']>;
-  _neq?: Maybe<Scalars['timestamptz']>;
-  _nin?: Maybe<Array<Scalars['timestamptz']>>;
+  _eq?: InputMaybe<Scalars['timestamptz']>;
+  _gt?: InputMaybe<Scalars['timestamptz']>;
+  _gte?: InputMaybe<Scalars['timestamptz']>;
+  _in?: InputMaybe<Array<Scalars['timestamptz']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']>;
+  _lt?: InputMaybe<Scalars['timestamptz']>;
+  _lte?: InputMaybe<Scalars['timestamptz']>;
+  _neq?: InputMaybe<Scalars['timestamptz']>;
+  _nin?: InputMaybe<Array<Scalars['timestamptz']>>;
 };
 
 /** columns and relationships of "user_info" */
@@ -1168,18 +1138,18 @@ export type User_Info_Aggregate_Fields = {
 
 /** aggregate fields of "user_info" */
 export type User_Info_Aggregate_FieldsCountArgs = {
-  columns?: Maybe<Array<User_Info_Select_Column>>;
-  distinct?: Maybe<Scalars['Boolean']>;
+  columns?: InputMaybe<Array<User_Info_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Boolean expression to filter rows from the table "user_info". All fields are combined with a logical 'AND'. */
 export type User_Info_Bool_Exp = {
-  _and?: Maybe<Array<User_Info_Bool_Exp>>;
-  _not?: Maybe<User_Info_Bool_Exp>;
-  _or?: Maybe<Array<User_Info_Bool_Exp>>;
-  email?: Maybe<String_Comparison_Exp>;
-  name?: Maybe<String_Comparison_Exp>;
-  user_id?: Maybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<User_Info_Bool_Exp>>;
+  _not?: InputMaybe<User_Info_Bool_Exp>;
+  _or?: InputMaybe<Array<User_Info_Bool_Exp>>;
+  email?: InputMaybe<String_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "user_info" */
@@ -1190,9 +1160,9 @@ export enum User_Info_Constraint {
 
 /** input type for inserting data into table "user_info" */
 export type User_Info_Insert_Input = {
-  email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
+  email?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['uuid']>;
 };
 
 /** aggregate max on columns */
@@ -1224,21 +1194,21 @@ export type User_Info_Mutation_Response = {
 export type User_Info_Obj_Rel_Insert_Input = {
   data: User_Info_Insert_Input;
   /** on conflict condition */
-  on_conflict?: Maybe<User_Info_On_Conflict>;
+  on_conflict?: InputMaybe<User_Info_On_Conflict>;
 };
 
 /** on conflict condition type for table "user_info" */
 export type User_Info_On_Conflict = {
   constraint: User_Info_Constraint;
   update_columns?: Array<User_Info_Update_Column>;
-  where?: Maybe<User_Info_Bool_Exp>;
+  where?: InputMaybe<User_Info_Bool_Exp>;
 };
 
 /** Ordering options when selecting data from "user_info". */
 export type User_Info_Order_By = {
-  email?: Maybe<Order_By>;
-  name?: Maybe<Order_By>;
-  user_id?: Maybe<Order_By>;
+  email?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: user_info */
@@ -1258,9 +1228,9 @@ export enum User_Info_Select_Column {
 
 /** input type for updating data in table "user_info" */
 export type User_Info_Set_Input = {
-  email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
+  email?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['uuid']>;
 };
 
 /** update columns of table "user_info" */
@@ -1297,41 +1267,41 @@ export type Users = {
 
 /** columns and relationships of "users" */
 export type UsersClientsArgs = {
-  distinct_on?: Maybe<Array<Clients_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Clients_Order_By>>;
-  where?: Maybe<Clients_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Clients_Order_By>>;
+  where?: InputMaybe<Clients_Bool_Exp>;
 };
 
 
 /** columns and relationships of "users" */
 export type UsersClients_AggregateArgs = {
-  distinct_on?: Maybe<Array<Clients_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Clients_Order_By>>;
-  where?: Maybe<Clients_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Clients_Order_By>>;
+  where?: InputMaybe<Clients_Bool_Exp>;
 };
 
 
 /** columns and relationships of "users" */
 export type UsersInvoicesArgs = {
-  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Invoices_Order_By>>;
-  where?: Maybe<Invoices_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Invoices_Order_By>>;
+  where?: InputMaybe<Invoices_Bool_Exp>;
 };
 
 
 /** columns and relationships of "users" */
 export type UsersInvoices_AggregateArgs = {
-  distinct_on?: Maybe<Array<Invoices_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Invoices_Order_By>>;
-  where?: Maybe<Invoices_Bool_Exp>;
+  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Invoices_Order_By>>;
+  where?: InputMaybe<Invoices_Bool_Exp>;
 };
 
 /** aggregated selection of "users" */
@@ -1352,24 +1322,24 @@ export type Users_Aggregate_Fields = {
 
 /** aggregate fields of "users" */
 export type Users_Aggregate_FieldsCountArgs = {
-  columns?: Maybe<Array<Users_Select_Column>>;
-  distinct?: Maybe<Scalars['Boolean']>;
+  columns?: InputMaybe<Array<Users_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'. */
 export type Users_Bool_Exp = {
-  _and?: Maybe<Array<Users_Bool_Exp>>;
-  _not?: Maybe<Users_Bool_Exp>;
-  _or?: Maybe<Array<Users_Bool_Exp>>;
-  client_last_requested?: Maybe<Timestamp_Comparison_Exp>;
-  clients?: Maybe<Clients_Bool_Exp>;
-  created_at?: Maybe<Timestamptz_Comparison_Exp>;
-  id?: Maybe<Uuid_Comparison_Exp>;
-  invoices?: Maybe<Invoices_Bool_Exp>;
-  nonce?: Maybe<Uuid_Comparison_Exp>;
-  public_key?: Maybe<String_Comparison_Exp>;
-  updated_at?: Maybe<Timestamptz_Comparison_Exp>;
-  user_info?: Maybe<User_Info_Bool_Exp>;
+  _and?: InputMaybe<Array<Users_Bool_Exp>>;
+  _not?: InputMaybe<Users_Bool_Exp>;
+  _or?: InputMaybe<Array<Users_Bool_Exp>>;
+  client_last_requested?: InputMaybe<Timestamp_Comparison_Exp>;
+  clients?: InputMaybe<Clients_Bool_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  invoices?: InputMaybe<Invoices_Bool_Exp>;
+  nonce?: InputMaybe<Uuid_Comparison_Exp>;
+  public_key?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user_info?: InputMaybe<User_Info_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "users" */
@@ -1382,15 +1352,15 @@ export enum Users_Constraint {
 
 /** input type for inserting data into table "users" */
 export type Users_Insert_Input = {
-  client_last_requested?: Maybe<Scalars['timestamp']>;
-  clients?: Maybe<Clients_Arr_Rel_Insert_Input>;
-  created_at?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['uuid']>;
-  invoices?: Maybe<Invoices_Arr_Rel_Insert_Input>;
-  nonce?: Maybe<Scalars['uuid']>;
-  public_key?: Maybe<Scalars['String']>;
-  updated_at?: Maybe<Scalars['timestamptz']>;
-  user_info?: Maybe<User_Info_Obj_Rel_Insert_Input>;
+  client_last_requested?: InputMaybe<Scalars['timestamp']>;
+  clients?: InputMaybe<Clients_Arr_Rel_Insert_Input>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  invoices?: InputMaybe<Invoices_Arr_Rel_Insert_Input>;
+  nonce?: InputMaybe<Scalars['uuid']>;
+  public_key?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+  user_info?: InputMaybe<User_Info_Obj_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -1428,27 +1398,27 @@ export type Users_Mutation_Response = {
 export type Users_Obj_Rel_Insert_Input = {
   data: Users_Insert_Input;
   /** on conflict condition */
-  on_conflict?: Maybe<Users_On_Conflict>;
+  on_conflict?: InputMaybe<Users_On_Conflict>;
 };
 
 /** on conflict condition type for table "users" */
 export type Users_On_Conflict = {
   constraint: Users_Constraint;
   update_columns?: Array<Users_Update_Column>;
-  where?: Maybe<Users_Bool_Exp>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** Ordering options when selecting data from "users". */
 export type Users_Order_By = {
-  client_last_requested?: Maybe<Order_By>;
-  clients_aggregate?: Maybe<Clients_Aggregate_Order_By>;
-  created_at?: Maybe<Order_By>;
-  id?: Maybe<Order_By>;
-  invoices_aggregate?: Maybe<Invoices_Aggregate_Order_By>;
-  nonce?: Maybe<Order_By>;
-  public_key?: Maybe<Order_By>;
-  updated_at?: Maybe<Order_By>;
-  user_info?: Maybe<User_Info_Order_By>;
+  client_last_requested?: InputMaybe<Order_By>;
+  clients_aggregate?: InputMaybe<Clients_Aggregate_Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  invoices_aggregate?: InputMaybe<Invoices_Aggregate_Order_By>;
+  nonce?: InputMaybe<Order_By>;
+  public_key?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_info?: InputMaybe<User_Info_Order_By>;
 };
 
 /** primary key columns input for table: users */
@@ -1474,12 +1444,12 @@ export enum Users_Select_Column {
 
 /** input type for updating data in table "users" */
 export type Users_Set_Input = {
-  client_last_requested?: Maybe<Scalars['timestamp']>;
-  created_at?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['uuid']>;
-  nonce?: Maybe<Scalars['uuid']>;
-  public_key?: Maybe<Scalars['String']>;
-  updated_at?: Maybe<Scalars['timestamptz']>;
+  client_last_requested?: InputMaybe<Scalars['timestamp']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  nonce?: InputMaybe<Scalars['uuid']>;
+  public_key?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
 
 /** update columns of table "users" */
@@ -1500,15 +1470,15 @@ export enum Users_Update_Column {
 
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
 export type Uuid_Comparison_Exp = {
-  _eq?: Maybe<Scalars['uuid']>;
-  _gt?: Maybe<Scalars['uuid']>;
-  _gte?: Maybe<Scalars['uuid']>;
-  _in?: Maybe<Array<Scalars['uuid']>>;
-  _is_null?: Maybe<Scalars['Boolean']>;
-  _lt?: Maybe<Scalars['uuid']>;
-  _lte?: Maybe<Scalars['uuid']>;
-  _neq?: Maybe<Scalars['uuid']>;
-  _nin?: Maybe<Array<Scalars['uuid']>>;
+  _eq?: InputMaybe<Scalars['uuid']>;
+  _gt?: InputMaybe<Scalars['uuid']>;
+  _gte?: InputMaybe<Scalars['uuid']>;
+  _in?: InputMaybe<Array<Scalars['uuid']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']>;
+  _lt?: InputMaybe<Scalars['uuid']>;
+  _lte?: InputMaybe<Scalars['uuid']>;
+  _neq?: InputMaybe<Scalars['uuid']>;
+  _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
 export type ValidateSignatureInput = {
@@ -1526,7 +1496,7 @@ export type InsertInvoiceMutationVariables = Exact<{
 }>;
 
 
-export type InsertInvoiceMutation = { __typename?: 'mutation_root', insert_invoices_one?: { __typename?: 'invoices', id: any } | null | undefined };
+export type InsertInvoiceMutation = { __typename?: 'mutation_root', insert_invoices_one?: { __typename?: 'invoices', id: any } | null };
 
 export type RefreshNonceMutationVariables = Exact<{
   publicKey: Scalars['String'];
@@ -1540,7 +1510,7 @@ export type UpsertPublicUserMutationVariables = Exact<{
 }>;
 
 
-export type UpsertPublicUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: any, public_key: string, nonce: any, client_last_requested: any } | null | undefined };
+export type UpsertPublicUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: any, public_key: string, nonce: any, client_last_requested: any } | null };
 
 export type ValidateSignatureMutationVariables = Exact<{
   publicKey: Scalars['String'];
@@ -1548,19 +1518,19 @@ export type ValidateSignatureMutationVariables = Exact<{
 }>;
 
 
-export type ValidateSignatureMutation = { __typename?: 'mutation_root', validate_signature?: { __typename?: 'ValidateSignatureOutput', accessToken: string } | null | undefined };
+export type ValidateSignatureMutation = { __typename?: 'mutation_root', validate_signature?: { __typename?: 'ValidateSignatureOutput', accessToken: string } | null };
 
 export type GetCurrentUserInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserInfoQuery = { __typename?: 'query_root', user_info: Array<{ __typename?: 'user_info', user_id: any, name?: string | null | undefined, email?: string | null | undefined }> };
+export type GetCurrentUserInfoQuery = { __typename?: 'query_root', user_info: Array<{ __typename?: 'user_info', user_id: any, name?: string | null, email?: string | null }> };
 
 export type GetInvoiceQueryVariables = Exact<{
   id: Scalars['uuid'];
 }>;
 
 
-export type GetInvoiceQuery = { __typename?: 'query_root', invoices_by_pk?: { __typename?: 'invoices', id: any, amount: any, chain_id: number, status: string, token_address: string, transaction_id?: string | null | undefined, user_id: any, owner: { __typename?: 'users', public_key: string, user_info?: { __typename?: 'user_info', name?: string | null | undefined, email?: string | null | undefined } | null | undefined } } | null | undefined };
+export type GetInvoiceQuery = { __typename?: 'query_root', invoices_by_pk?: { __typename?: 'invoices', id: any, recipient_token_amount: string, chain_id: number, status: string, recipient_token_address: string, transaction_id?: string | null, user_id: any, owner: { __typename?: 'users', public_key: string, user_info?: { __typename?: 'user_info', name?: string | null, email?: string | null } | null } } | null };
 
 export type GetUserByPublicKeyQueryVariables = Exact<{
   publicKey: Scalars['String'];
@@ -1753,10 +1723,10 @@ export const GetInvoiceDocument = gql`
     query getInvoice($id: uuid!) {
   invoices_by_pk(id: $id) {
     id
-    amount
+    recipient_token_amount
     chain_id
     status
-    token_address
+    recipient_token_address
     transaction_id
     user_id
     owner {
