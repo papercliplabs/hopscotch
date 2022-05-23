@@ -1,9 +1,6 @@
 import { Box, Container, Flex } from "@chakra-ui/react";
+import ConnectWalletButton from "@/components/ConnectWalletButton";
 import { FC, ReactNode } from "react";
-import dynamic from "next/dynamic";
-
-const ConnectWalletButton = dynamic(() => import('@/components/ConnectWalletButton').then((result) => result.default) as any, {ssr: false, loading: () => <p>THE FUCK</p>})
-
 
 export interface AccountMenuProps {
   user: { public_key: string; id: string };
@@ -16,7 +13,6 @@ export interface MainLayoutProps {
 
 export const MainLayout: FC<MainLayoutProps> = (props) => {
   const { children } = props;
-
   return (
     <>
       <Flex as="header" w="100%" py={5} px={7} alignItems="center" justifyContent="space-between">
