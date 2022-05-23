@@ -24,7 +24,7 @@
     "@graphql-tools/load-files": "6.0.18",
     "@graphql-tools/merge": "6.0.18",
     "@graphql-tools/schema": "6.0.18",
-    "@rainbow-me/rainbowkit": "^0.1.0",
+    "@rainbow-me/rainbowkit": "^0.1.1",
     "@rehooks/local-storage": "^2.4.4",
     "@types/lodash": "^4.14.176",
     "@web3-react/core": "^6.1.9",

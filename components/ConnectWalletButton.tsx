@@ -3,6 +3,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Box, Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { FC } from "react";
 
+// const ConnectButton = dynamic(() => import('@rainbow-me/rainbowkit').then((mod) => mod.ConnectButton as any), {ssr: false, loading: () => <p>THE FUCK</p>})
+
 export const VerifyAccountButton: FC = () => {
   const { login } = useAuth();
 
@@ -34,7 +36,7 @@ export const VerificationStatus: FC = () => {
 
 export const ConnectWalletButton: FC = () => {
   const { connectedAddress } = useAuth();
-
+  console.log({connectedAddress})
   return (
     <Box display="flex" flexDirection="row">
       <ConnectButton />
