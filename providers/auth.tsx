@@ -66,6 +66,12 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
   const isAuthenticated = jwtAddress && jwtAddress === connectedAddress;
 
+  useEffect(() => {
+    if(token && !user && !loading) {
+      deleteFromStorage('token');
+    }
+  })
+
   const authenticatePublicKey = async (publicKey: string) => {
     // get nonce
     const nonceReponse = await upsertPublicUser({
