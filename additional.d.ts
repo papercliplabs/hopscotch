@@ -5,6 +5,7 @@ declare global {
       NEXT_PUBLIC_GRAPHQL_ENDPOINT: string;
       ACTION_SECRET: string;
       JWT_SECRET: string;
+      ALCHEMY_ID: string;
     }
   }
 }

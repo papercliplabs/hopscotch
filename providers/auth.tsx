@@ -52,7 +52,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const { children } = props;
 
   const [token] = useLocalStorage("token");
-  console.log("Call user", {});
+  // console.log("Call user", {});
   const { data, loading, refetch: refetchUsers } = useGetUsersQuery({ skip: !token, fetchPolicy: "network-only" });
   const user = get("users[0]", data);
 
@@ -60,17 +60,17 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const [validateSignature] = useValidateSignatureMutation();
   const { signMessageAsync } = useSignMessage();
 
-  const { data: localAccountData } = useAccount();
-  const connectedAddress = localAccountData?.address;
+  const { address } = useAccount();
+  const connectedAddress = address;
   const jwtAddress = user?.public_key;
 
   const isAuthenticated = jwtAddress && jwtAddress === connectedAddress;
 
   useEffect(() => {
-    if(token && !user && !loading) {
-      deleteFromStorage('token');
+    if (token && !user && !loading) {
+      deleteFromStorage("token");
     }
-  })
+  });
 
   const authenticatePublicKey = async (publicKey: string) => {
     // get nonce

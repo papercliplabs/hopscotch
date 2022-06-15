@@ -15,8 +15,7 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
   const { children } = props;
   return (
     <>
-      <Flex as="header" w="100%" py={5} px={7} alignItems="center" justifyContent="space-between">
-        <Box w={10} />
+      <Flex as="header" w="100%" py={5} px={7} justifyContent="end">
         <ConnectWalletButton />
       </Flex>
       <Container as="main" m={0} p={14} mt={3} maxW="100vw" display="flex" justifyContent="center" alignItems="center">
