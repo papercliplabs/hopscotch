@@ -73,6 +73,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   });
 
   const authenticatePublicKey = async (publicKey: string) => {
+
+  try {
     // get nonce
     const nonceReponse = await upsertPublicUser({
       variables: { publicKey },
@@ -95,6 +97,11 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     }
 
     return accessToken;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+
   };
 
   const login = async () => {

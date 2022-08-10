@@ -13,7 +13,7 @@ import { TransactionResponse } from "@ethersproject/providers";
 import { AddressZero, MaxUint256 } from "@ethersproject/constants";
 import { TransactionDescription } from "ethers/lib/utils";
 import { transformStoryIndexToStoriesHash } from "@storybook/api/dist/ts3.9/lib/stories";
-
+import { AlphaRouter } from "@uniswap/smart-order-router";
 import RouterABI from "@/abis/V3UniRouter.json";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 
@@ -210,10 +210,6 @@ export function useExactOutputSwap(
       if (inputToken && outputToken && outputTokenAmount && receipientAddress) {
         const outputCurrencyAmount = CurrencyAmount.fromRawAmount(outputToken, JSBI.BigInt(outputTokenAmount));
 
-        // TODO(spennyp): this dynamic import is needed to even get prod to run
-        // prod still fails on this step tho, don't understand why:
-
-        const AlphaRouter = (await import("@uniswap/smart-order-router")).AlphaRouter;
         const router = new AlphaRouter({ chainId: chainId, provider: provider });
 
         const deadline = Math.floor(Date.now() / 1000 + 3600);
