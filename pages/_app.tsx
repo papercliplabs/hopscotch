@@ -18,6 +18,7 @@ import "@fontsource/inter";
 import "@papercliplabs/rainbowkit/styles.css";
 import { SUPPORTED_CHAINS } from "@/common/constants";
 import TokenListProvider from "@/hooks/useTokenList/provider";
+import { NestedPortalRefProvider } from "@/components/NestedPortal";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
   alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
@@ -53,9 +54,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           <AuthProvider>
             <TokenListProvider>
               <ChakraProvider theme={theme}>
-                <MainLayout>
-                  <Component {...pageProps} />
-                </MainLayout>
+                <NestedPortalRefProvider>
+                  <MainLayout>
+                    <Component {...pageProps} />
+                  </MainLayout>
+                </NestedPortalRefProvider>
               </ChakraProvider>
             </TokenListProvider>
           </AuthProvider>
