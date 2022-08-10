@@ -73,28 +73,43 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   });
 
   const authenticatePublicKey = async (publicKey: string) => {
-    // get nonce
-    const nonceReponse = await upsertPublicUser({
-      variables: { publicKey },
-    });
 
-    const nonce = get("data.insert_users_one.nonce", nonceReponse);
+    try {
+      // get nonce
+      const nonceReponse = await upsertPublicUser({
+        variables: { publicKey },
+      });
 
-    const signature = await signMessageAsync({
-      message: nonce,
-    });
+      console.log('nonceReponse', {nonceReponse});
 
-    const signatureResponse = await validateSignature({
-      variables: { signature, publicKey },
-    });
+      const nonce = get("data.insert_users_one.nonce", nonceReponse);
 
-    const accessToken = get("data.validate_signature.accessToken", signatureResponse);
+      const signature = await signMessageAsync({
+        message: nonce,
+      });
 
-    if (accessToken) {
-      writeStorage("token", accessToken);
+      console.log('signature', {signature});
+
+
+      const signatureResponse = await validateSignature({
+        variables: { signature, publicKey },
+      });
+
+      console.log('signatureResponse', {signatureResponse});
+
+
+      const accessToken = get("data.validate_signature.accessToken", signatureResponse);
+
+      if (accessToken) {
+        writeStorage("token", accessToken);
+      }
+
+      return accessToken;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
 
-    return accessToken;
   };
 
   const login = async () => {

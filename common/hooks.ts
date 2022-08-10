@@ -13,6 +13,7 @@ import { TransactionResponse } from "@ethersproject/providers";
 import { AddressZero, MaxUint256 } from "@ethersproject/constants";
 import { TransactionDescription } from "ethers/lib/utils";
 import { transformStoryIndexToStoriesHash } from "@storybook/api/dist/ts3.9/lib/stories";
+// import {AlphaRouter} from "@uniswap/smart-order-router"
 
 import RouterABI from "@/abis/V3UniRouter.json";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
@@ -205,40 +206,42 @@ export function useExactOutputSwap(
   const outputToken = useUniswapToken(outputTokenAddress, chainId);
   const addRecentTransaction = useAddRecentTransaction();
 
-  useEffect(() => {
-    async function getRoute() {
-      if (inputToken && outputToken && outputTokenAmount && receipientAddress) {
-        const outputCurrencyAmount = CurrencyAmount.fromRawAmount(outputToken, JSBI.BigInt(outputTokenAmount));
+  async function getRoute() {
+    console.log('hiiii', { chainId: chainId, provider: provider })
+    if (inputToken && outputToken && outputTokenAmount && receipientAddress) {
+      const outputCurrencyAmount = CurrencyAmount.fromRawAmount(outputToken, JSBI.BigInt(outputTokenAmount));
 
-        // TODO(spennyp): this dynamic import is needed to even get prod to run
-        // prod still fails on this step tho, don't understand why:
+      // TODO(spennyp): this dynamic import is needed to even get prod to run
+      // prod still fails on this step tho, don't understand why:
 
-        const AlphaRouter = (await import("@uniswap/smart-order-router")).AlphaRouter;
-        const router = new AlphaRouter({ chainId: chainId, provider: provider });
+      const AlphaRouter = (await import("@uniswap/smart-order-router")).AlphaRouter;
+      console.log('hiiii2', { AlphaRouter })
+      const router = new AlphaRouter({ chainId: chainId, provider: provider });
 
-        const deadline = Math.floor(Date.now() / 1000 + 3600);
+      const deadline = Math.floor(Date.now() / 1000 + 3600);
 
-        // Set loading, and clear the last quote
-        setSwapRouteState(SwapRouteState.LOADING);
-        setSwapRoute(undefined);
+      // Set loading, and clear the last quote
+      setSwapRouteState(SwapRouteState.LOADING);
+      setSwapRoute(undefined);
 
-        const route = await router.route(outputCurrencyAmount, inputToken, TradeType.EXACT_OUTPUT, {
-          recipient: receipientAddress,
-          slippageTolerance: new Percent(20, 100),
-          deadline: deadline,
-        });
+      const route = await router.route(outputCurrencyAmount, inputToken, TradeType.EXACT_OUTPUT, {
+        recipient: receipientAddress,
+        slippageTolerance: new Percent(20, 100),
+        deadline: deadline,
+      });
 
-        console.log(route);
+      console.log(route);
 
-        if (route) {
-          setSwapRoute(route);
-          setSwapRouteState(SwapRouteState.VALID);
-        } else {
-          setSwapRouteState(SwapRouteState.INVALID);
-        }
+      if (route) {
+        setSwapRoute(route);
+        setSwapRouteState(SwapRouteState.VALID);
+      } else {
+        setSwapRouteState(SwapRouteState.INVALID);
       }
     }
+  }
 
+  useEffect(() => {
     getRoute();
   }, [provider, inputToken, outputToken, outputTokenAmount, receipientAddress, chainId]);
 
