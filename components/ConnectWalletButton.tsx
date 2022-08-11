@@ -1,6 +1,6 @@
 import { useAuth } from "@/providers/auth";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Box, Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { FC } from "react";
 
 export const VerifyAccountButton: FC = () => {

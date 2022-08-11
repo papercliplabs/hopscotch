@@ -7,6 +7,7 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { createClient, configureChains, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { ChakraProvider } from "@chakra-ui/react";
+import { publicProvider } from "wagmi/providers/public";
 
 import { theme } from "@/theme";
 import { useApollo } from "@/graphql/apollo";
@@ -19,6 +20,7 @@ import { SUPPORTED_CHAINS } from "@/common/constants";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
   alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }),
+  publicProvider(),
 ]);
 
 const { connectors } = getDefaultWallets({
@@ -46,7 +48,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <ApolloProvider client={apolloClient}>
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains}>
+        <RainbowKitProvider chains={chains} showRecentTransactions={true}>
           <AuthProvider>
             <ChakraProvider theme={theme}>
               <MainLayout>
