@@ -1,5 +1,5 @@
 import { useAuth } from "@/providers/auth";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectButton } from "@papercliplabs/rainbowkit";
 import { Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { FC } from "react";
 

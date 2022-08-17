@@ -1,17 +1,18 @@
 import { useRouter } from "next/router";
-import { Button, Center, Container, Flex, Input, Spacer, Text, Tooltip } from "@chakra-ui/react";
-import { chainId, useAccount, useNetwork, useToken } from "wagmi";
+import { Button, Center, Container, Flex, Spacer, Text, Tooltip } from "@chakra-ui/react";
+import { useAccount, useBalance } from "wagmi";
 import { useMemo, useState } from "react";
 import { useGetInvoiceQuery } from "@/graphql/generated/graphql";
+import { useConnectModal } from "@papercliplabs/rainbowkit";
 
-import { formatNumber, shortAddress } from "@/common/utils";
-import { Length, SwapRouteState, TransactionState } from "@/common/types";
+import { shortAddress } from "@/common/utils";
+import { Length, SwapRouteState } from "@/common/types";
 import { Token } from "@/common/types";
 import TokenSelector from "@/components/TokenSelector";
-import { NumberInput } from "@/components/NumberInput";
 import { BigNumber, ethers } from "ethers";
-import { useApproveErc20ForSwap, useExactOutputSwap, useTokenFromAddress } from "@/common/hooks";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useApproveErc20ForSwap } from "@/hooks/useApproveTokenForSwap";
+import { useExactOutputSwap } from "@/hooks/useExactOutputSwap";
+import { useTokenFromAddress } from "@/hooks/useTokenFromAddress";
 
 const RequestPage = () => {
   const { query } = useRouter();
@@ -35,15 +36,15 @@ const RequestPage = () => {
   const {
     swapRouteState,
     swapRoute,
+    transaction: swapTransaction,
     executeSwap,
-    transactionDetails: swapTransactionDetails,
   } = useExactOutputSwap(
     selectedInputToken?.address,
     requestData?.recipient_token_address,
     requestAmount,
     receipientAddress
   );
-  console.log(swapTransactionDetails);
+  console.log(swapTransaction);
 
   const quotedInputAmount = useMemo(() => {
     const quotedInputAmountString = swapRoute?.quote?.quotient.toString();
@@ -53,17 +54,59 @@ const RequestPage = () => {
   const {
     requiresApproval,
     approve,
-    transactionDetails: approveTransactionDetails,
+    transaction: approveTransation,
   } = useApproveErc20ForSwap(selectedInputToken?.address, quotedInputAmount);
-  console.log(approveTransactionDetails);
 
+  const { data: balance, error: berror } = useBalance({
+    addressOrName: address,
+    token: selectedInputToken?.address,
+    enabled: selectedInputToken != undefined,
+  });
+
+  const hasSufficentFunds = useMemo(() => {
+    let ret = false;
+
+    if (balance && quotedInputAmount) {
+      ret = balance.value.gte(quotedInputAmount);
+    }
+
+    return ret;
+  }, [balance, quotedInputAmount]);
+
+  const transactionPending = approveTransation?.status == "pending" || swapTransaction?.status == "pending";
+
+  // Compute the button state
+  const { buttonText, onClickFunction } = useMemo(() => {
+    if (!address) {
+      return { buttonText: "Connect Wallet", onClickFunction: openConnectModal };
+    } else if (transactionPending) {
+      return { buttonText: "Pending txn", onClickFunction: undefined };
+    } else if (SwapRouteState.LOADING == swapRouteState) {
+      return { buttonText: "Fetching route", onClickFunction: undefined };
+    } else if (SwapRouteState.INVALID == swapRouteState) {
+      return { buttonText: "Route not found", onClickFunction: undefined };
+    } else if (!hasSufficentFunds) {
+      return { buttonText: "Insufficient funds", onClickFunction: undefined };
+    } else if (requiresApproval) {
+      return { buttonText: "Approve", onClickFunction: approve };
+    } else {
+      return { buttonText: "Execute swap", onClickFunction: executeSwap };
+    }
+  }, [
+    address,
+    transactionPending,
+    swapRouteState,
+    hasSufficentFunds,
+    requiresApproval,
+    openConnectModal,
+    approve,
+    executeSwap,
+  ]);
+
+  // TODO: remove this
   if (!invoiceData || !invoiceData.invoices_by_pk || !requestData || !outputToken) {
     return <>Loading invoice data</>;
   }
-
-  const transactionPending =
-    approveTransactionDetails?.state == TransactionState.PENDING ||
-    swapTransactionDetails?.state == TransactionState.PENDING;
 
   return (
     <Container width="100%" height="100vh" maxW="832px">
@@ -157,16 +200,12 @@ const RequestPage = () => {
             type="submit"
             width="100%"
             size="lg"
-            onClick={address ? (requiresApproval ? approve : executeSwap) : openConnectModal}
-            isDisabled={(SwapRouteState.VALID != swapRouteState || transactionPending) && !!address}
+            onClick={() => {
+              onClickFunction && onClickFunction();
+            }}
+            isDisabled={onClickFunction == undefined}
           >
-            {address
-              ? transactionPending
-                ? "Pending txn"
-                : requiresApproval
-                ? "Approve"
-                : "Send Transaction"
-              : "Connect wallet"}
+            {buttonText}
           </Button>
         </Flex>
       </Center>
