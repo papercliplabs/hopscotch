@@ -2,13 +2,12 @@ import { FC, useState } from "react";
 import { useRouter } from "next/router";
 import { Button, Center, Container, Heading, Text, Input, Spacer, Flex, Tooltip } from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
+import { ConnectButton, useConnectModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
 import { useAccount, useNetwork } from "wagmi";
 
 import { useInsertInvoiceMutation } from "@/graphql/generated/graphql";
 import { useAuth } from "@/providers/auth";
-import { useTokenPriceUsd } from "@/common/hooks";
 import { FEE_BIPS, SUPPORTED_CHAINS } from "@/common/constants";
 import { Token } from "@/common/types";
 import { formatNumber } from "@/common/utils";
@@ -26,7 +25,7 @@ const CreateRequest: FC = () => {
   const { chain: activeChain } = useNetwork();
   const { address } = useAccount();
 
-  const tokenPriceUsd = useTokenPriceUsd(selectedToken);
+  const tokenPriceUsd = 1; // TODO
 
   function createRequest() {
     if (selectedToken != undefined && tokenAmount != "" && activeChain) {

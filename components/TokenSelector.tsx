@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Select } from "@chakra-ui/react";
 
 import { Token } from "@/common/types";
-import { useTokenList } from "@/common/hooks";
+import { useTokenList } from "@/hooks/useTokenList";
 
 export default function TokenSelector({
   selectedTokenCallback,
