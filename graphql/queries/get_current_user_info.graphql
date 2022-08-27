@@ -1,7 +1,0 @@
-query getCurrentUserInfo {
-  user_info {
-    user_id
-    name
-    email
-  }
-}

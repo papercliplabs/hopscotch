@@ -3751,10 +3751,10 @@
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.4.2-solc-0.7.tgz#38f4dbab672631034076ccdf2f3201fab1726635"
   integrity sha512-W6QmqgkADuFcTLzHL8vVoNBtkwjvQRpYIAom7KiUNoLKghyx3FgH0GBjt8NRvigV1ZmMOBllvE1By1C+bi8WpA==
 
-"@papercliplabs/rainbowkit@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@papercliplabs/rainbowkit/-/rainbowkit-0.5.0.tgz#7154b71d71685acfb04f73f2ada2656f406b87fa"
-  integrity sha512-0ZrMXId+tbBvLN0k73q4WrG0Ghhn5WczgzRKXBwsDrmlKFA/RktxbCEocZU1H0owbYXANriDfnwGSb8jF7+pSQ==
+"@papercliplabs/rainbowkit@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@papercliplabs/rainbowkit/-/rainbowkit-0.5.1.tgz#cec01d0f6c1e1230bc4a8a5b7c180100775da37a"
+  integrity sha512-JODCUyD9bchmaj/HJ2oK8sLnpGfcXt5h5Aumyjt9FR5IWw2xzgj7zw00frsShYjn179hbUyWBB0I58DKrzoDwg==
   dependencies:
     "@vanilla-extract/css" "1.7.0"
     "@vanilla-extract/dynamic" "2.0.2"

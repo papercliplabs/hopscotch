@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { Button, Center, Container, Flex, Spacer, Text, Tooltip } from "@chakra-ui/react";
 import { useAccount, useBalance } from "wagmi";
-import { useMemo, useState } from "react";
-import { useGetInvoiceQuery } from "@/graphql/generated/graphql";
+import { useEffect, useMemo, useState } from "react";
+import { Request_Status_Enum } from "@/graphql/generated/graphql";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
 
 import { shortAddress } from "@/common/utils";
@@ -13,25 +13,18 @@ import { BigNumber, ethers } from "ethers";
 import { useApproveErc20ForSwap } from "@/hooks/useApproveTokenForSwap";
 import { useExactOutputSwap } from "@/hooks/useExactOutputSwap";
 import { useTokenFromAddress } from "@/hooks/useTokenFromAddress";
+import { useRequestData } from "@/hooks/useRequestData";
 
 const RequestPage = () => {
+  const [selectedInputToken, setSelectedInputToken] = useState<Token | undefined>(undefined);
+
   const { query } = useRouter();
   const id = query.id;
+  const { requestData, updateRequestStatus } = useRequestData(id as string);
 
   const { address } = useAccount();
-
-  const [selectedInputToken, setSelectedInputToken] = useState<Token | undefined>(undefined);
-  const { data: invoiceData, loading, error } = useGetInvoiceQuery({ variables: { id }, skip: !id });
   const { openConnectModal } = useConnectModal();
-
-  const requestData = useMemo(() => invoiceData?.invoices_by_pk, [invoiceData]);
-  const requestAmount = useMemo(
-    () => (requestData ? BigNumber.from(requestData.recipient_token_amount) : undefined),
-    [requestData]
-  );
-  const receipientAddress = useMemo(() => requestData?.owner?.public_key, [requestData]);
-
-  const outputToken = useTokenFromAddress(requestData?.recipient_token_address, requestData?.chain_id);
+  const outputToken = useTokenFromAddress(requestData?.recipientTokenAddress, requestData?.chainId);
 
   const {
     swapRouteState,
@@ -40,9 +33,9 @@ const RequestPage = () => {
     executeSwap,
   } = useExactOutputSwap(
     selectedInputToken?.address,
-    requestData?.recipient_token_address,
-    requestAmount,
-    receipientAddress
+    requestData?.recipientTokenAddress,
+    requestData?.recipientTokenAmount,
+    requestData?.recipientAddress
   );
   console.log(swapTransaction);
 
@@ -57,7 +50,7 @@ const RequestPage = () => {
     transaction: approveTransation,
   } = useApproveErc20ForSwap(selectedInputToken?.address, quotedInputAmount);
 
-  const { data: balance, error: berror } = useBalance({
+  const { data: balance } = useBalance({
     addressOrName: address,
     token: selectedInputToken?.address,
     enabled: selectedInputToken != undefined,
@@ -75,10 +68,31 @@ const RequestPage = () => {
 
   const transactionPending = approveTransation?.status == "pending" || swapTransaction?.status == "pending";
 
+  // Set paid if swap is successful
+  useEffect(() => {
+    switch (swapTransaction?.status) {
+      case "pending":
+        updateRequestStatus(Request_Status_Enum.TransactionPending);
+        break;
+
+      case "failed":
+        updateRequestStatus(Request_Status_Enum.Unpaid);
+        break;
+
+      case "confirmed":
+        updateRequestStatus(Request_Status_Enum.Paid);
+        break;
+    }
+  }, [swapTransaction, updateRequestStatus]);
+
   // Compute the button state
   const { buttonText, onClickFunction } = useMemo(() => {
-    if (!address) {
+    if (Request_Status_Enum.Paid == requestData?.status) {
+      return { buttonText: "Request has been paid", onClickFunction: undefined };
+    } else if (!address) {
       return { buttonText: "Connect Wallet", onClickFunction: openConnectModal };
+    } else if (!selectedInputToken) {
+      return { buttonText: "Choose token", onClickFunction: undefined };
     } else if (transactionPending) {
       return { buttonText: "Pending txn", onClickFunction: undefined };
     } else if (SwapRouteState.LOADING == swapRouteState) {
@@ -93,6 +107,8 @@ const RequestPage = () => {
       return { buttonText: "Execute swap", onClickFunction: executeSwap };
     }
   }, [
+    requestData,
+    selectedInputToken,
     address,
     transactionPending,
     swapRouteState,
@@ -104,7 +120,7 @@ const RequestPage = () => {
   ]);
 
   // TODO: remove this
-  if (!invoiceData || !invoiceData.invoices_by_pk || !requestData || !outputToken) {
+  if (!requestData || !outputToken) {
     return <>Loading invoice data</>;
   }
 
@@ -128,8 +144,8 @@ const RequestPage = () => {
             justifyContent="space-between"
           >
             <Text fontSize="lg" color="text0" fontWeight="bold">
-              <Tooltip label={invoiceData.invoices_by_pk.owner.public_key}>
-                {shortAddress(invoiceData.invoices_by_pk.owner.public_key, Length.MEDIUM)}
+              <Tooltip label={requestData?.recipientTokenAddress}>
+                {shortAddress(requestData?.recipientTokenAddress, Length.MEDIUM)}
               </Tooltip>{" "}
               is requesting a payment from you
             </Text>
@@ -188,10 +204,10 @@ const RequestPage = () => {
                 To:
               </Text>
               <Text fontSize="xl">
-                {ethers.utils.formatUnits(BigNumber.from(requestData.recipient_token_amount), 18)} {outputToken.symbol}
+                {ethers.utils.formatUnits(requestData?.recipientTokenAmount, 18)} {outputToken.symbol}
               </Text>
             </Flex>
-            <Flex align="center">{shortAddress(requestData.owner.public_key, Length.MEDIUM)}</Flex>
+            <Flex align="center">{shortAddress(requestData.recipientTokenAddress, Length.MEDIUM)}</Flex>
           </Flex>
 
           <Button

@@ -1,31 +1,14 @@
 table:
   schema: public
   name: users
-object_relationships:
-  - name: user_info
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: user_info
-        insertion_order: null
-        column_mapping:
-          id: user_id
 array_relationships:
-  - name: clients
+  - name: requests
     using:
       foreign_key_constraint_on:
         column: user_id
         table:
           schema: public
-          name: clients
-  - name: invoices
-    using:
-      foreign_key_constraint_on:
-        column: user_id
-        table:
-          schema: public
-          name: invoices
+          name: requests
 insert_permissions:
   - role: anon
     permission:

@@ -1,17 +1,13 @@
-query getInvoice($id: uuid!) {
-  invoices_by_pk(id: $id) {
+query getRequest($id: uuid!) {
+  request_by_pk(id: $id) {
     id
     recipient_token_amount
     chain_id
     status
     recipient_token_address
-    transaction_id
+    transaction_hash
     user_id
     owner {
-      user_info {
-        name
-        email
-      }
       public_key
     }
   }

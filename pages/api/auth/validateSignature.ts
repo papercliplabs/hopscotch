@@ -64,8 +64,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     },
   });
 
-  const nonce = get("users[0].nonce", data);
-  const userId = get("users[0].id", data);
+  const nonce = get("user[0].nonce", data);
+  const userId = get("user[0].id", data);
 
   // Check that the signature is the result of the public address signing the nonce
   const hasSignedNonce = nonceSignedByAddress(publicAddress, nonce, signature);

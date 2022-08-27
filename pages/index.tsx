@@ -6,7 +6,7 @@ import { ConnectButton, useConnectModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
 import { useAccount, useNetwork } from "wagmi";
 
-import { useInsertInvoiceMutation } from "@/graphql/generated/graphql";
+import { useInsertRequestMutation } from "@/graphql/generated/graphql";
 import { useAuth } from "@/providers/auth";
 import { FEE_BIPS, SUPPORTED_CHAINS } from "@/common/constants";
 import { Token } from "@/common/types";
@@ -17,7 +17,7 @@ import { NumberInput } from "@/components/NumberInput";
 const CreateRequest: FC = () => {
   const router = useRouter();
   const { ensureUser } = useAuth();
-  const [insertInvoice, { loading }] = useInsertInvoiceMutation();
+  const [insertRequest, { loading }] = useInsertRequestMutation();
   const { openConnectModal } = useConnectModal();
 
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
@@ -31,7 +31,7 @@ const CreateRequest: FC = () => {
     if (selectedToken != undefined && tokenAmount != "" && activeChain) {
       const tokenAmountRaw = ethers.utils.parseUnits(tokenAmount, selectedToken.decimals);
       ensureUser().then((user) => {
-        insertInvoice({
+        insertRequest({
           variables: {
             object: {
               recipient_token_amount: tokenAmountRaw.toString(),
@@ -42,8 +42,8 @@ const CreateRequest: FC = () => {
           },
         }).then(({ data }) => {
           console.log(data);
-          const invoiceId = data?.insert_invoices_one?.id;
-          router.push(`/request/${invoiceId}`);
+          const requestId = data?.insert_request_one?.id;
+          router.push(`/request/${requestId}`);
         });
       });
     } else {

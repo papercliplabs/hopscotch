@@ -1,39 +1,45 @@
 table:
-  name: user
   schema: public
+  name: user
 array_relationships:
-- name: organization_users
-  using:
-    foreign_key_constraint_on:
-      column: user_id
-      table:
-        name: organization_user
-        schema: public
+  - name: requests
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: request
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - client_last_requested
-    - name
-    - public_key
-  role: anon
+  - role: anon
+    permission:
+      check: {}
+      columns:
+        - client_last_requested
+        - public_key
+      backend_only: false
 select_permissions:
-- permission:
-    columns:
-    - name
-    - id
-    - public_key
-    - nonce
-    - created_at
-    - updated_at
-    - client_last_requested
-    filter: {}
-  role: anon
+  - role: anon
+    permission:
+      columns:
+        - client_last_requested
+        - id
+        - nonce
+        - public_key
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - client_last_requested
+        - id
+        - nonce
+        - public_key
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - client_last_requested
-    filter: {}
-  role: anon
+  - role: anon
+    permission:
+      columns:
+        - client_last_requested
+      filter: {}
+      check: null
