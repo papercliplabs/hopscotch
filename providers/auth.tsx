@@ -9,14 +9,14 @@ import {
   useUpsertPublicUserMutation,
   useValidateSignatureMutation,
   useGetUsersQuery,
-  Users,
+  User,
 } from "@/graphql/generated/graphql";
 import { clearCache } from "@/graphql/apollo";
 
 type Nullable<T> = T | undefined | null;
 
 type AuthContextType = {
-  user: Nullable<Users>;
+  user: Nullable<User>;
   token: Nullable<string>;
   jwtAddress: Nullable<string>;
   connectedAddress: Nullable<string>;
@@ -25,7 +25,7 @@ type AuthContextType = {
   login: () => void;
   logout: () => void;
   ensureAuthenticated: () => void;
-  ensureUser: () => Promise<Nullable<Users>>;
+  ensureUser: () => Promise<Nullable<User>>;
 };
 
 const defaultContextValues = {
@@ -54,7 +54,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const [token] = useLocalStorage("token");
   // console.log("Call user", {});
   const { data, loading, refetch: refetchUsers } = useGetUsersQuery({ skip: !token, fetchPolicy: "network-only" });
-  const user = get("users[0]", data);
+  const user = get("user[0]", data);
 
   const [upsertPublicUser] = useUpsertPublicUserMutation();
   const [validateSignature] = useValidateSignatureMutation();
@@ -73,35 +73,33 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   });
 
   const authenticatePublicKey = async (publicKey: string) => {
+    try {
+      // get nonce
+      const nonceReponse = await upsertPublicUser({
+        variables: { publicKey },
+      });
 
-  try {
-    // get nonce
-    const nonceReponse = await upsertPublicUser({
-      variables: { publicKey },
-    });
+      const nonce = get("data.insert_user_one.nonce", nonceReponse);
 
-    const nonce = get("data.insert_users_one.nonce", nonceReponse);
+      const signature = await signMessageAsync({
+        message: nonce,
+      });
 
-    const signature = await signMessageAsync({
-      message: nonce,
-    });
+      const signatureResponse = await validateSignature({
+        variables: { signature, publicKey },
+      });
 
-    const signatureResponse = await validateSignature({
-      variables: { signature, publicKey },
-    });
+      const accessToken = get("data.validate_signature.accessToken", signatureResponse);
 
-    const accessToken = get("data.validate_signature.accessToken", signatureResponse);
+      if (accessToken) {
+        writeStorage("token", accessToken);
+      }
 
-    if (accessToken) {
-      writeStorage("token", accessToken);
+      return accessToken;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
-
-    return accessToken;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-
   };
 
   const login = async () => {
@@ -127,14 +125,14 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   };
 
   const ensureUser = () => {
-    return new Promise<Nullable<Users>>((resolve, reject) => {
+    return new Promise<Nullable<User>>((resolve, reject) => {
       if (isAuthenticated) {
         resolve(user);
       } else {
         login()
           .then((token) => refetchUsers())
           .then(({ data }) => {
-            const newUser = get("users[0]", data);
+            const newUser = get("user[0]", data);
             return newUser;
           })
           .then(resolve);

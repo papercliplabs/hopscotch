@@ -1,0 +1,6 @@
+mutation updateRequestStatus($id: uuid!, $status: request_status_enum!) {
+  update_request_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
+    id
+    status
+  }
+}

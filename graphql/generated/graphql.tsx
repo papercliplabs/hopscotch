@@ -18,197 +18,6 @@ export type Scalars = {
   uuid: any;
 };
 
-/** columns and relationships of "clients" */
-export type Clients = {
-  __typename?: 'clients';
-  id: Scalars['uuid'];
-  /** An array relationship */
-  invoices: Array<Invoices>;
-  /** An aggregate relationship */
-  invoices_aggregate: Invoices_Aggregate;
-  name: Scalars['String'];
-  /** An object relationship */
-  owner: Users;
-  user_id: Scalars['uuid'];
-};
-
-
-/** columns and relationships of "clients" */
-export type ClientsInvoicesArgs = {
-  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Invoices_Order_By>>;
-  where?: InputMaybe<Invoices_Bool_Exp>;
-};
-
-
-/** columns and relationships of "clients" */
-export type ClientsInvoices_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Invoices_Order_By>>;
-  where?: InputMaybe<Invoices_Bool_Exp>;
-};
-
-/** aggregated selection of "clients" */
-export type Clients_Aggregate = {
-  __typename?: 'clients_aggregate';
-  aggregate?: Maybe<Clients_Aggregate_Fields>;
-  nodes: Array<Clients>;
-};
-
-/** aggregate fields of "clients" */
-export type Clients_Aggregate_Fields = {
-  __typename?: 'clients_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<Clients_Max_Fields>;
-  min?: Maybe<Clients_Min_Fields>;
-};
-
-
-/** aggregate fields of "clients" */
-export type Clients_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Clients_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "clients" */
-export type Clients_Aggregate_Order_By = {
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Clients_Max_Order_By>;
-  min?: InputMaybe<Clients_Min_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "clients" */
-export type Clients_Arr_Rel_Insert_Input = {
-  data: Array<Clients_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Clients_On_Conflict>;
-};
-
-/** Boolean expression to filter rows from the table "clients". All fields are combined with a logical 'AND'. */
-export type Clients_Bool_Exp = {
-  _and?: InputMaybe<Array<Clients_Bool_Exp>>;
-  _not?: InputMaybe<Clients_Bool_Exp>;
-  _or?: InputMaybe<Array<Clients_Bool_Exp>>;
-  id?: InputMaybe<Uuid_Comparison_Exp>;
-  invoices?: InputMaybe<Invoices_Bool_Exp>;
-  name?: InputMaybe<String_Comparison_Exp>;
-  owner?: InputMaybe<Users_Bool_Exp>;
-  user_id?: InputMaybe<Uuid_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "clients" */
-export enum Clients_Constraint {
-  /** unique or primary key constraint */
-  ClientPkey = 'client_pkey'
-}
-
-/** input type for inserting data into table "clients" */
-export type Clients_Insert_Input = {
-  id?: InputMaybe<Scalars['uuid']>;
-  invoices?: InputMaybe<Invoices_Arr_Rel_Insert_Input>;
-  name?: InputMaybe<Scalars['String']>;
-  owner?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-  user_id?: InputMaybe<Scalars['uuid']>;
-};
-
-/** aggregate max on columns */
-export type Clients_Max_Fields = {
-  __typename?: 'clients_max_fields';
-  id?: Maybe<Scalars['uuid']>;
-  name?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
-};
-
-/** order by max() on columns of table "clients" */
-export type Clients_Max_Order_By = {
-  id?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  user_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Clients_Min_Fields = {
-  __typename?: 'clients_min_fields';
-  id?: Maybe<Scalars['uuid']>;
-  name?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
-};
-
-/** order by min() on columns of table "clients" */
-export type Clients_Min_Order_By = {
-  id?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  user_id?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "clients" */
-export type Clients_Mutation_Response = {
-  __typename?: 'clients_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Clients>;
-};
-
-/** input type for inserting object relation for remote table "clients" */
-export type Clients_Obj_Rel_Insert_Input = {
-  data: Clients_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Clients_On_Conflict>;
-};
-
-/** on conflict condition type for table "clients" */
-export type Clients_On_Conflict = {
-  constraint: Clients_Constraint;
-  update_columns?: Array<Clients_Update_Column>;
-  where?: InputMaybe<Clients_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "clients". */
-export type Clients_Order_By = {
-  id?: InputMaybe<Order_By>;
-  invoices_aggregate?: InputMaybe<Invoices_Aggregate_Order_By>;
-  name?: InputMaybe<Order_By>;
-  owner?: InputMaybe<Users_Order_By>;
-  user_id?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: clients */
-export type Clients_Pk_Columns_Input = {
-  id: Scalars['uuid'];
-};
-
-/** select columns of table "clients" */
-export enum Clients_Select_Column {
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  UserId = 'user_id'
-}
-
-/** input type for updating data in table "clients" */
-export type Clients_Set_Input = {
-  id?: InputMaybe<Scalars['uuid']>;
-  name?: InputMaybe<Scalars['String']>;
-  user_id?: InputMaybe<Scalars['uuid']>;
-};
-
-/** update columns of table "clients" */
-export enum Clients_Update_Column {
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  UserId = 'user_id'
-}
-
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['Int']>;
@@ -222,569 +31,181 @@ export type Int_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['Int']>>;
 };
 
-/** columns and relationships of "invoices" */
-export type Invoices = {
-  __typename?: 'invoices';
-  chain_id: Scalars['Int'];
-  /** An object relationship */
-  client?: Maybe<Clients>;
-  client_id?: Maybe<Scalars['uuid']>;
-  id: Scalars['uuid'];
-  /** An object relationship */
-  owner: Users;
-  recipient_token_address: Scalars['String'];
-  recipient_token_amount: Scalars['String'];
-  status: Scalars['String'];
-  transaction_id?: Maybe<Scalars['String']>;
-  user_id: Scalars['uuid'];
-};
-
-/** aggregated selection of "invoices" */
-export type Invoices_Aggregate = {
-  __typename?: 'invoices_aggregate';
-  aggregate?: Maybe<Invoices_Aggregate_Fields>;
-  nodes: Array<Invoices>;
-};
-
-/** aggregate fields of "invoices" */
-export type Invoices_Aggregate_Fields = {
-  __typename?: 'invoices_aggregate_fields';
-  avg?: Maybe<Invoices_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Invoices_Max_Fields>;
-  min?: Maybe<Invoices_Min_Fields>;
-  stddev?: Maybe<Invoices_Stddev_Fields>;
-  stddev_pop?: Maybe<Invoices_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Invoices_Stddev_Samp_Fields>;
-  sum?: Maybe<Invoices_Sum_Fields>;
-  var_pop?: Maybe<Invoices_Var_Pop_Fields>;
-  var_samp?: Maybe<Invoices_Var_Samp_Fields>;
-  variance?: Maybe<Invoices_Variance_Fields>;
-};
-
-
-/** aggregate fields of "invoices" */
-export type Invoices_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Invoices_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "invoices" */
-export type Invoices_Aggregate_Order_By = {
-  avg?: InputMaybe<Invoices_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Invoices_Max_Order_By>;
-  min?: InputMaybe<Invoices_Min_Order_By>;
-  stddev?: InputMaybe<Invoices_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Invoices_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Invoices_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Invoices_Sum_Order_By>;
-  var_pop?: InputMaybe<Invoices_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Invoices_Var_Samp_Order_By>;
-  variance?: InputMaybe<Invoices_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "invoices" */
-export type Invoices_Arr_Rel_Insert_Input = {
-  data: Array<Invoices_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Invoices_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Invoices_Avg_Fields = {
-  __typename?: 'invoices_avg_fields';
-  chain_id?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "invoices" */
-export type Invoices_Avg_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "invoices". All fields are combined with a logical 'AND'. */
-export type Invoices_Bool_Exp = {
-  _and?: InputMaybe<Array<Invoices_Bool_Exp>>;
-  _not?: InputMaybe<Invoices_Bool_Exp>;
-  _or?: InputMaybe<Array<Invoices_Bool_Exp>>;
-  chain_id?: InputMaybe<Int_Comparison_Exp>;
-  client?: InputMaybe<Clients_Bool_Exp>;
-  client_id?: InputMaybe<Uuid_Comparison_Exp>;
-  id?: InputMaybe<Uuid_Comparison_Exp>;
-  owner?: InputMaybe<Users_Bool_Exp>;
-  recipient_token_address?: InputMaybe<String_Comparison_Exp>;
-  recipient_token_amount?: InputMaybe<String_Comparison_Exp>;
-  status?: InputMaybe<String_Comparison_Exp>;
-  transaction_id?: InputMaybe<String_Comparison_Exp>;
-  user_id?: InputMaybe<Uuid_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "invoices" */
-export enum Invoices_Constraint {
-  /** unique or primary key constraint */
-  InvoicePkey = 'invoice_pkey'
-}
-
-/** input type for incrementing numeric columns in table "invoices" */
-export type Invoices_Inc_Input = {
-  chain_id?: InputMaybe<Scalars['Int']>;
-};
-
-/** input type for inserting data into table "invoices" */
-export type Invoices_Insert_Input = {
-  chain_id?: InputMaybe<Scalars['Int']>;
-  client?: InputMaybe<Clients_Obj_Rel_Insert_Input>;
-  client_id?: InputMaybe<Scalars['uuid']>;
-  id?: InputMaybe<Scalars['uuid']>;
-  owner?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-  recipient_token_address?: InputMaybe<Scalars['String']>;
-  recipient_token_amount?: InputMaybe<Scalars['String']>;
-  status?: InputMaybe<Scalars['String']>;
-  transaction_id?: InputMaybe<Scalars['String']>;
-  user_id?: InputMaybe<Scalars['uuid']>;
-};
-
-/** aggregate max on columns */
-export type Invoices_Max_Fields = {
-  __typename?: 'invoices_max_fields';
-  chain_id?: Maybe<Scalars['Int']>;
-  client_id?: Maybe<Scalars['uuid']>;
-  id?: Maybe<Scalars['uuid']>;
-  recipient_token_address?: Maybe<Scalars['String']>;
-  recipient_token_amount?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
-};
-
-/** order by max() on columns of table "invoices" */
-export type Invoices_Max_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-  client_id?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  recipient_token_address?: InputMaybe<Order_By>;
-  recipient_token_amount?: InputMaybe<Order_By>;
-  status?: InputMaybe<Order_By>;
-  transaction_id?: InputMaybe<Order_By>;
-  user_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Invoices_Min_Fields = {
-  __typename?: 'invoices_min_fields';
-  chain_id?: Maybe<Scalars['Int']>;
-  client_id?: Maybe<Scalars['uuid']>;
-  id?: Maybe<Scalars['uuid']>;
-  recipient_token_address?: Maybe<Scalars['String']>;
-  recipient_token_amount?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
-  transaction_id?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
-};
-
-/** order by min() on columns of table "invoices" */
-export type Invoices_Min_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-  client_id?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  recipient_token_address?: InputMaybe<Order_By>;
-  recipient_token_amount?: InputMaybe<Order_By>;
-  status?: InputMaybe<Order_By>;
-  transaction_id?: InputMaybe<Order_By>;
-  user_id?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "invoices" */
-export type Invoices_Mutation_Response = {
-  __typename?: 'invoices_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Invoices>;
-};
-
-/** on conflict condition type for table "invoices" */
-export type Invoices_On_Conflict = {
-  constraint: Invoices_Constraint;
-  update_columns?: Array<Invoices_Update_Column>;
-  where?: InputMaybe<Invoices_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "invoices". */
-export type Invoices_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-  client?: InputMaybe<Clients_Order_By>;
-  client_id?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  owner?: InputMaybe<Users_Order_By>;
-  recipient_token_address?: InputMaybe<Order_By>;
-  recipient_token_amount?: InputMaybe<Order_By>;
-  status?: InputMaybe<Order_By>;
-  transaction_id?: InputMaybe<Order_By>;
-  user_id?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: invoices */
-export type Invoices_Pk_Columns_Input = {
-  id: Scalars['uuid'];
-};
-
-/** select columns of table "invoices" */
-export enum Invoices_Select_Column {
-  /** column name */
-  ChainId = 'chain_id',
-  /** column name */
-  ClientId = 'client_id',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  RecipientTokenAddress = 'recipient_token_address',
-  /** column name */
-  RecipientTokenAmount = 'recipient_token_amount',
-  /** column name */
-  Status = 'status',
-  /** column name */
-  TransactionId = 'transaction_id',
-  /** column name */
-  UserId = 'user_id'
-}
-
-/** input type for updating data in table "invoices" */
-export type Invoices_Set_Input = {
-  chain_id?: InputMaybe<Scalars['Int']>;
-  client_id?: InputMaybe<Scalars['uuid']>;
-  id?: InputMaybe<Scalars['uuid']>;
-  recipient_token_address?: InputMaybe<Scalars['String']>;
-  recipient_token_amount?: InputMaybe<Scalars['String']>;
-  status?: InputMaybe<Scalars['String']>;
-  transaction_id?: InputMaybe<Scalars['String']>;
-  user_id?: InputMaybe<Scalars['uuid']>;
-};
-
-/** aggregate stddev on columns */
-export type Invoices_Stddev_Fields = {
-  __typename?: 'invoices_stddev_fields';
-  chain_id?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "invoices" */
-export type Invoices_Stddev_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Invoices_Stddev_Pop_Fields = {
-  __typename?: 'invoices_stddev_pop_fields';
-  chain_id?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "invoices" */
-export type Invoices_Stddev_Pop_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Invoices_Stddev_Samp_Fields = {
-  __typename?: 'invoices_stddev_samp_fields';
-  chain_id?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "invoices" */
-export type Invoices_Stddev_Samp_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Invoices_Sum_Fields = {
-  __typename?: 'invoices_sum_fields';
-  chain_id?: Maybe<Scalars['Int']>;
-};
-
-/** order by sum() on columns of table "invoices" */
-export type Invoices_Sum_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "invoices" */
-export enum Invoices_Update_Column {
-  /** column name */
-  ChainId = 'chain_id',
-  /** column name */
-  ClientId = 'client_id',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  RecipientTokenAddress = 'recipient_token_address',
-  /** column name */
-  RecipientTokenAmount = 'recipient_token_amount',
-  /** column name */
-  Status = 'status',
-  /** column name */
-  TransactionId = 'transaction_id',
-  /** column name */
-  UserId = 'user_id'
-}
-
-/** aggregate var_pop on columns */
-export type Invoices_Var_Pop_Fields = {
-  __typename?: 'invoices_var_pop_fields';
-  chain_id?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "invoices" */
-export type Invoices_Var_Pop_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Invoices_Var_Samp_Fields = {
-  __typename?: 'invoices_var_samp_fields';
-  chain_id?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "invoices" */
-export type Invoices_Var_Samp_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Invoices_Variance_Fields = {
-  __typename?: 'invoices_variance_fields';
-  chain_id?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "invoices" */
-export type Invoices_Variance_Order_By = {
-  chain_id?: InputMaybe<Order_By>;
-};
-
 /** mutation root */
 export type Mutation_Root = {
   __typename?: 'mutation_root';
-  /** delete data from the table: "clients" */
-  delete_clients?: Maybe<Clients_Mutation_Response>;
-  /** delete single row from the table: "clients" */
-  delete_clients_by_pk?: Maybe<Clients>;
-  /** delete data from the table: "invoices" */
-  delete_invoices?: Maybe<Invoices_Mutation_Response>;
-  /** delete single row from the table: "invoices" */
-  delete_invoices_by_pk?: Maybe<Invoices>;
-  /** delete data from the table: "user_info" */
-  delete_user_info?: Maybe<User_Info_Mutation_Response>;
-  /** delete single row from the table: "user_info" */
-  delete_user_info_by_pk?: Maybe<User_Info>;
-  /** delete data from the table: "users" */
-  delete_users?: Maybe<Users_Mutation_Response>;
-  /** delete single row from the table: "users" */
-  delete_users_by_pk?: Maybe<Users>;
-  /** insert data into the table: "clients" */
-  insert_clients?: Maybe<Clients_Mutation_Response>;
-  /** insert a single row into the table: "clients" */
-  insert_clients_one?: Maybe<Clients>;
-  /** insert data into the table: "invoices" */
-  insert_invoices?: Maybe<Invoices_Mutation_Response>;
-  /** insert a single row into the table: "invoices" */
-  insert_invoices_one?: Maybe<Invoices>;
-  /** insert data into the table: "user_info" */
-  insert_user_info?: Maybe<User_Info_Mutation_Response>;
-  /** insert a single row into the table: "user_info" */
-  insert_user_info_one?: Maybe<User_Info>;
-  /** insert data into the table: "users" */
-  insert_users?: Maybe<Users_Mutation_Response>;
-  /** insert a single row into the table: "users" */
-  insert_users_one?: Maybe<Users>;
-  /** execute VOLATILE function "refresh_nonce" which returns "users" */
-  refresh_nonce: Array<Users>;
-  /** update data of the table: "clients" */
-  update_clients?: Maybe<Clients_Mutation_Response>;
-  /** update single row of the table: "clients" */
-  update_clients_by_pk?: Maybe<Clients>;
-  /** update data of the table: "invoices" */
-  update_invoices?: Maybe<Invoices_Mutation_Response>;
-  /** update single row of the table: "invoices" */
-  update_invoices_by_pk?: Maybe<Invoices>;
-  /** update data of the table: "user_info" */
-  update_user_info?: Maybe<User_Info_Mutation_Response>;
-  /** update single row of the table: "user_info" */
-  update_user_info_by_pk?: Maybe<User_Info>;
-  /** update data of the table: "users" */
-  update_users?: Maybe<Users_Mutation_Response>;
-  /** update single row of the table: "users" */
-  update_users_by_pk?: Maybe<Users>;
+  /** delete data from the table: "request" */
+  delete_request?: Maybe<Request_Mutation_Response>;
+  /** delete single row from the table: "request" */
+  delete_request_by_pk?: Maybe<Request>;
+  /** delete data from the table: "request_status" */
+  delete_request_status?: Maybe<Request_Status_Mutation_Response>;
+  /** delete single row from the table: "request_status" */
+  delete_request_status_by_pk?: Maybe<Request_Status>;
+  /** delete data from the table: "user" */
+  delete_user?: Maybe<User_Mutation_Response>;
+  /** delete single row from the table: "user" */
+  delete_user_by_pk?: Maybe<User>;
+  /** insert data into the table: "request" */
+  insert_request?: Maybe<Request_Mutation_Response>;
+  /** insert a single row into the table: "request" */
+  insert_request_one?: Maybe<Request>;
+  /** insert data into the table: "request_status" */
+  insert_request_status?: Maybe<Request_Status_Mutation_Response>;
+  /** insert a single row into the table: "request_status" */
+  insert_request_status_one?: Maybe<Request_Status>;
+  /** insert data into the table: "user" */
+  insert_user?: Maybe<User_Mutation_Response>;
+  /** insert a single row into the table: "user" */
+  insert_user_one?: Maybe<User>;
+  /** execute VOLATILE function "refresh_nonce" which returns "user" */
+  refresh_nonce: Array<User>;
+  /** update data of the table: "request" */
+  update_request?: Maybe<Request_Mutation_Response>;
+  /** update single row of the table: "request" */
+  update_request_by_pk?: Maybe<Request>;
+  /** update data of the table: "request_status" */
+  update_request_status?: Maybe<Request_Status_Mutation_Response>;
+  /** update single row of the table: "request_status" */
+  update_request_status_by_pk?: Maybe<Request_Status>;
+  /** update data of the table: "user" */
+  update_user?: Maybe<User_Mutation_Response>;
+  /** update single row of the table: "user" */
+  update_user_by_pk?: Maybe<User>;
   validate_signature?: Maybe<ValidateSignatureOutput>;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_ClientsArgs = {
-  where: Clients_Bool_Exp;
+export type Mutation_RootDelete_RequestArgs = {
+  where: Request_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_Clients_By_PkArgs = {
+export type Mutation_RootDelete_Request_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_InvoicesArgs = {
-  where: Invoices_Bool_Exp;
+export type Mutation_RootDelete_Request_StatusArgs = {
+  where: Request_Status_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_Invoices_By_PkArgs = {
+export type Mutation_RootDelete_Request_Status_By_PkArgs = {
+  status: Scalars['String'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_UserArgs = {
+  where: User_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_User_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_User_InfoArgs = {
-  where: User_Info_Bool_Exp;
+export type Mutation_RootInsert_RequestArgs = {
+  objects: Array<Request_Insert_Input>;
+  on_conflict?: InputMaybe<Request_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_User_Info_By_PkArgs = {
-  user_id: Scalars['uuid'];
+export type Mutation_RootInsert_Request_OneArgs = {
+  object: Request_Insert_Input;
+  on_conflict?: InputMaybe<Request_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_UsersArgs = {
-  where: Users_Bool_Exp;
+export type Mutation_RootInsert_Request_StatusArgs = {
+  objects: Array<Request_Status_Insert_Input>;
+  on_conflict?: InputMaybe<Request_Status_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_Users_By_PkArgs = {
-  id: Scalars['uuid'];
+export type Mutation_RootInsert_Request_Status_OneArgs = {
+  object: Request_Status_Insert_Input;
+  on_conflict?: InputMaybe<Request_Status_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_ClientsArgs = {
-  objects: Array<Clients_Insert_Input>;
-  on_conflict?: InputMaybe<Clients_On_Conflict>;
+export type Mutation_RootInsert_UserArgs = {
+  objects: Array<User_Insert_Input>;
+  on_conflict?: InputMaybe<User_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_Clients_OneArgs = {
-  object: Clients_Insert_Input;
-  on_conflict?: InputMaybe<Clients_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_InvoicesArgs = {
-  objects: Array<Invoices_Insert_Input>;
-  on_conflict?: InputMaybe<Invoices_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Invoices_OneArgs = {
-  object: Invoices_Insert_Input;
-  on_conflict?: InputMaybe<Invoices_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_User_InfoArgs = {
-  objects: Array<User_Info_Insert_Input>;
-  on_conflict?: InputMaybe<User_Info_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_User_Info_OneArgs = {
-  object: User_Info_Insert_Input;
-  on_conflict?: InputMaybe<User_Info_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_UsersArgs = {
-  objects: Array<Users_Insert_Input>;
-  on_conflict?: InputMaybe<Users_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Users_OneArgs = {
-  object: Users_Insert_Input;
-  on_conflict?: InputMaybe<Users_On_Conflict>;
+export type Mutation_RootInsert_User_OneArgs = {
+  object: User_Insert_Input;
+  on_conflict?: InputMaybe<User_On_Conflict>;
 };
 
 
 /** mutation root */
 export type Mutation_RootRefresh_NonceArgs = {
   args: Refresh_Nonce_Args;
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
+  distinct_on?: InputMaybe<Array<User_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Order_By>>;
+  where?: InputMaybe<User_Bool_Exp>;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_ClientsArgs = {
-  _set?: InputMaybe<Clients_Set_Input>;
-  where: Clients_Bool_Exp;
+export type Mutation_RootUpdate_RequestArgs = {
+  _inc?: InputMaybe<Request_Inc_Input>;
+  _set?: InputMaybe<Request_Set_Input>;
+  where: Request_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Clients_By_PkArgs = {
-  _set?: InputMaybe<Clients_Set_Input>;
-  pk_columns: Clients_Pk_Columns_Input;
+export type Mutation_RootUpdate_Request_By_PkArgs = {
+  _inc?: InputMaybe<Request_Inc_Input>;
+  _set?: InputMaybe<Request_Set_Input>;
+  pk_columns: Request_Pk_Columns_Input;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_InvoicesArgs = {
-  _inc?: InputMaybe<Invoices_Inc_Input>;
-  _set?: InputMaybe<Invoices_Set_Input>;
-  where: Invoices_Bool_Exp;
+export type Mutation_RootUpdate_Request_StatusArgs = {
+  _set?: InputMaybe<Request_Status_Set_Input>;
+  where: Request_Status_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Invoices_By_PkArgs = {
-  _inc?: InputMaybe<Invoices_Inc_Input>;
-  _set?: InputMaybe<Invoices_Set_Input>;
-  pk_columns: Invoices_Pk_Columns_Input;
+export type Mutation_RootUpdate_Request_Status_By_PkArgs = {
+  _set?: InputMaybe<Request_Status_Set_Input>;
+  pk_columns: Request_Status_Pk_Columns_Input;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_User_InfoArgs = {
-  _set?: InputMaybe<User_Info_Set_Input>;
-  where: User_Info_Bool_Exp;
+export type Mutation_RootUpdate_UserArgs = {
+  _set?: InputMaybe<User_Set_Input>;
+  where: User_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_User_Info_By_PkArgs = {
-  _set?: InputMaybe<User_Info_Set_Input>;
-  pk_columns: User_Info_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_UsersArgs = {
-  _set?: InputMaybe<Users_Set_Input>;
-  where: Users_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Users_By_PkArgs = {
-  _set?: InputMaybe<Users_Set_Input>;
-  pk_columns: Users_Pk_Columns_Input;
+export type Mutation_RootUpdate_User_By_PkArgs = {
+  _set?: InputMaybe<User_Set_Input>;
+  pk_columns: User_Pk_Columns_Input;
 };
 
 
@@ -811,126 +232,528 @@ export enum Order_By {
 
 export type Query_Root = {
   __typename?: 'query_root';
-  /** An array relationship */
-  clients: Array<Clients>;
-  /** An aggregate relationship */
-  clients_aggregate: Clients_Aggregate;
-  /** fetch data from the table: "clients" using primary key columns */
-  clients_by_pk?: Maybe<Clients>;
-  /** An array relationship */
-  invoices: Array<Invoices>;
-  /** An aggregate relationship */
-  invoices_aggregate: Invoices_Aggregate;
-  /** fetch data from the table: "invoices" using primary key columns */
-  invoices_by_pk?: Maybe<Invoices>;
-  /** fetch data from the table: "user_info" */
-  user_info: Array<User_Info>;
-  /** fetch aggregated fields from the table: "user_info" */
-  user_info_aggregate: User_Info_Aggregate;
-  /** fetch data from the table: "user_info" using primary key columns */
-  user_info_by_pk?: Maybe<User_Info>;
-  /** fetch data from the table: "users" */
-  users: Array<Users>;
-  /** fetch aggregated fields from the table: "users" */
-  users_aggregate: Users_Aggregate;
-  /** fetch data from the table: "users" using primary key columns */
-  users_by_pk?: Maybe<Users>;
+  /** fetch data from the table: "request" */
+  request: Array<Request>;
+  /** fetch aggregated fields from the table: "request" */
+  request_aggregate: Request_Aggregate;
+  /** fetch data from the table: "request" using primary key columns */
+  request_by_pk?: Maybe<Request>;
+  /** fetch data from the table: "request_status" */
+  request_status: Array<Request_Status>;
+  /** fetch aggregated fields from the table: "request_status" */
+  request_status_aggregate: Request_Status_Aggregate;
+  /** fetch data from the table: "request_status" using primary key columns */
+  request_status_by_pk?: Maybe<Request_Status>;
+  /** fetch data from the table: "user" */
+  user: Array<User>;
+  /** fetch aggregated fields from the table: "user" */
+  user_aggregate: User_Aggregate;
+  /** fetch data from the table: "user" using primary key columns */
+  user_by_pk?: Maybe<User>;
 };
 
 
-export type Query_RootClientsArgs = {
-  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+export type Query_RootRequestArgs = {
+  distinct_on?: InputMaybe<Array<Request_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Clients_Order_By>>;
-  where?: InputMaybe<Clients_Bool_Exp>;
+  order_by?: InputMaybe<Array<Request_Order_By>>;
+  where?: InputMaybe<Request_Bool_Exp>;
 };
 
 
-export type Query_RootClients_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+export type Query_RootRequest_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Request_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Clients_Order_By>>;
-  where?: InputMaybe<Clients_Bool_Exp>;
+  order_by?: InputMaybe<Array<Request_Order_By>>;
+  where?: InputMaybe<Request_Bool_Exp>;
 };
 
 
-export type Query_RootClients_By_PkArgs = {
+export type Query_RootRequest_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
-export type Query_RootInvoicesArgs = {
-  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+export type Query_RootRequest_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Request_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Invoices_Order_By>>;
-  where?: InputMaybe<Invoices_Bool_Exp>;
+  order_by?: InputMaybe<Array<Request_Status_Order_By>>;
+  where?: InputMaybe<Request_Status_Bool_Exp>;
 };
 
 
-export type Query_RootInvoices_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+export type Query_RootRequest_Status_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Request_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Invoices_Order_By>>;
-  where?: InputMaybe<Invoices_Bool_Exp>;
+  order_by?: InputMaybe<Array<Request_Status_Order_By>>;
+  where?: InputMaybe<Request_Status_Bool_Exp>;
 };
 
 
-export type Query_RootInvoices_By_PkArgs = {
-  id: Scalars['uuid'];
+export type Query_RootRequest_Status_By_PkArgs = {
+  status: Scalars['String'];
 };
 
 
-export type Query_RootUser_InfoArgs = {
-  distinct_on?: InputMaybe<Array<User_Info_Select_Column>>;
+export type Query_RootUserArgs = {
+  distinct_on?: InputMaybe<Array<User_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<User_Info_Order_By>>;
-  where?: InputMaybe<User_Info_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Order_By>>;
+  where?: InputMaybe<User_Bool_Exp>;
 };
 
 
-export type Query_RootUser_Info_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<User_Info_Select_Column>>;
+export type Query_RootUser_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<User_Info_Order_By>>;
-  where?: InputMaybe<User_Info_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Order_By>>;
+  where?: InputMaybe<User_Bool_Exp>;
 };
 
 
-export type Query_RootUser_Info_By_PkArgs = {
-  user_id: Scalars['uuid'];
-};
-
-
-export type Query_RootUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-export type Query_RootUsers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-export type Query_RootUsers_By_PkArgs = {
+export type Query_RootUser_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 export type Refresh_Nonce_Args = {
   pkey?: InputMaybe<Scalars['String']>;
+};
+
+/** columns and relationships of "request" */
+export type Request = {
+  __typename?: 'request';
+  chain_id: Scalars['Int'];
+  id: Scalars['uuid'];
+  /** An object relationship */
+  owner: User;
+  recipient_token_address: Scalars['String'];
+  recipient_token_amount: Scalars['String'];
+  status: Request_Status_Enum;
+  transaction_hash?: Maybe<Scalars['String']>;
+  user_id: Scalars['uuid'];
+};
+
+/** aggregated selection of "request" */
+export type Request_Aggregate = {
+  __typename?: 'request_aggregate';
+  aggregate?: Maybe<Request_Aggregate_Fields>;
+  nodes: Array<Request>;
+};
+
+/** aggregate fields of "request" */
+export type Request_Aggregate_Fields = {
+  __typename?: 'request_aggregate_fields';
+  avg?: Maybe<Request_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Request_Max_Fields>;
+  min?: Maybe<Request_Min_Fields>;
+  stddev?: Maybe<Request_Stddev_Fields>;
+  stddev_pop?: Maybe<Request_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Request_Stddev_Samp_Fields>;
+  sum?: Maybe<Request_Sum_Fields>;
+  var_pop?: Maybe<Request_Var_Pop_Fields>;
+  var_samp?: Maybe<Request_Var_Samp_Fields>;
+  variance?: Maybe<Request_Variance_Fields>;
+};
+
+
+/** aggregate fields of "request" */
+export type Request_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Request_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "request" */
+export type Request_Aggregate_Order_By = {
+  avg?: InputMaybe<Request_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Request_Max_Order_By>;
+  min?: InputMaybe<Request_Min_Order_By>;
+  stddev?: InputMaybe<Request_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Request_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Request_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Request_Sum_Order_By>;
+  var_pop?: InputMaybe<Request_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Request_Var_Samp_Order_By>;
+  variance?: InputMaybe<Request_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "request" */
+export type Request_Arr_Rel_Insert_Input = {
+  data: Array<Request_Insert_Input>;
+  /** on conflict condition */
+  on_conflict?: InputMaybe<Request_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Request_Avg_Fields = {
+  __typename?: 'request_avg_fields';
+  chain_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "request" */
+export type Request_Avg_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "request". All fields are combined with a logical 'AND'. */
+export type Request_Bool_Exp = {
+  _and?: InputMaybe<Array<Request_Bool_Exp>>;
+  _not?: InputMaybe<Request_Bool_Exp>;
+  _or?: InputMaybe<Array<Request_Bool_Exp>>;
+  chain_id?: InputMaybe<Int_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  owner?: InputMaybe<User_Bool_Exp>;
+  recipient_token_address?: InputMaybe<String_Comparison_Exp>;
+  recipient_token_amount?: InputMaybe<String_Comparison_Exp>;
+  status?: InputMaybe<Request_Status_Enum_Comparison_Exp>;
+  transaction_hash?: InputMaybe<String_Comparison_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "request" */
+export enum Request_Constraint {
+  /** unique or primary key constraint */
+  InvoicePkey = 'invoice_pkey'
+}
+
+/** input type for incrementing numeric columns in table "request" */
+export type Request_Inc_Input = {
+  chain_id?: InputMaybe<Scalars['Int']>;
+};
+
+/** input type for inserting data into table "request" */
+export type Request_Insert_Input = {
+  chain_id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  owner?: InputMaybe<User_Obj_Rel_Insert_Input>;
+  recipient_token_address?: InputMaybe<Scalars['String']>;
+  recipient_token_amount?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Request_Status_Enum>;
+  transaction_hash?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['uuid']>;
+};
+
+/** aggregate max on columns */
+export type Request_Max_Fields = {
+  __typename?: 'request_max_fields';
+  chain_id?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['uuid']>;
+  recipient_token_address?: Maybe<Scalars['String']>;
+  recipient_token_amount?: Maybe<Scalars['String']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  user_id?: Maybe<Scalars['uuid']>;
+};
+
+/** order by max() on columns of table "request" */
+export type Request_Max_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  recipient_token_address?: InputMaybe<Order_By>;
+  recipient_token_amount?: InputMaybe<Order_By>;
+  transaction_hash?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Request_Min_Fields = {
+  __typename?: 'request_min_fields';
+  chain_id?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['uuid']>;
+  recipient_token_address?: Maybe<Scalars['String']>;
+  recipient_token_amount?: Maybe<Scalars['String']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  user_id?: Maybe<Scalars['uuid']>;
+};
+
+/** order by min() on columns of table "request" */
+export type Request_Min_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  recipient_token_address?: InputMaybe<Order_By>;
+  recipient_token_amount?: InputMaybe<Order_By>;
+  transaction_hash?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "request" */
+export type Request_Mutation_Response = {
+  __typename?: 'request_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Request>;
+};
+
+/** on conflict condition type for table "request" */
+export type Request_On_Conflict = {
+  constraint: Request_Constraint;
+  update_columns?: Array<Request_Update_Column>;
+  where?: InputMaybe<Request_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "request". */
+export type Request_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  owner?: InputMaybe<User_Order_By>;
+  recipient_token_address?: InputMaybe<Order_By>;
+  recipient_token_amount?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  transaction_hash?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: request */
+export type Request_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** select columns of table "request" */
+export enum Request_Select_Column {
+  /** column name */
+  ChainId = 'chain_id',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  RecipientTokenAddress = 'recipient_token_address',
+  /** column name */
+  RecipientTokenAmount = 'recipient_token_amount',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  TransactionHash = 'transaction_hash',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** input type for updating data in table "request" */
+export type Request_Set_Input = {
+  chain_id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  recipient_token_address?: InputMaybe<Scalars['String']>;
+  recipient_token_amount?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<Request_Status_Enum>;
+  transaction_hash?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['uuid']>;
+};
+
+/** columns and relationships of "request_status" */
+export type Request_Status = {
+  __typename?: 'request_status';
+  status: Scalars['String'];
+};
+
+/** aggregated selection of "request_status" */
+export type Request_Status_Aggregate = {
+  __typename?: 'request_status_aggregate';
+  aggregate?: Maybe<Request_Status_Aggregate_Fields>;
+  nodes: Array<Request_Status>;
+};
+
+/** aggregate fields of "request_status" */
+export type Request_Status_Aggregate_Fields = {
+  __typename?: 'request_status_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<Request_Status_Max_Fields>;
+  min?: Maybe<Request_Status_Min_Fields>;
+};
+
+
+/** aggregate fields of "request_status" */
+export type Request_Status_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Request_Status_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Boolean expression to filter rows from the table "request_status". All fields are combined with a logical 'AND'. */
+export type Request_Status_Bool_Exp = {
+  _and?: InputMaybe<Array<Request_Status_Bool_Exp>>;
+  _not?: InputMaybe<Request_Status_Bool_Exp>;
+  _or?: InputMaybe<Array<Request_Status_Bool_Exp>>;
+  status?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "request_status" */
+export enum Request_Status_Constraint {
+  /** unique or primary key constraint */
+  TransactionStatusPkey = 'transaction_status_pkey'
+}
+
+export enum Request_Status_Enum {
+  Paid = 'PAID',
+  TransactionPending = 'TRANSACTION_PENDING',
+  Unpaid = 'UNPAID'
+}
+
+/** Boolean expression to compare columns of type "request_status_enum". All fields are combined with logical 'AND'. */
+export type Request_Status_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Request_Status_Enum>;
+  _in?: InputMaybe<Array<Request_Status_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']>;
+  _neq?: InputMaybe<Request_Status_Enum>;
+  _nin?: InputMaybe<Array<Request_Status_Enum>>;
+};
+
+/** input type for inserting data into table "request_status" */
+export type Request_Status_Insert_Input = {
+  status?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate max on columns */
+export type Request_Status_Max_Fields = {
+  __typename?: 'request_status_max_fields';
+  status?: Maybe<Scalars['String']>;
+};
+
+/** aggregate min on columns */
+export type Request_Status_Min_Fields = {
+  __typename?: 'request_status_min_fields';
+  status?: Maybe<Scalars['String']>;
+};
+
+/** response of any mutation on the table "request_status" */
+export type Request_Status_Mutation_Response = {
+  __typename?: 'request_status_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Request_Status>;
+};
+
+/** on conflict condition type for table "request_status" */
+export type Request_Status_On_Conflict = {
+  constraint: Request_Status_Constraint;
+  update_columns?: Array<Request_Status_Update_Column>;
+  where?: InputMaybe<Request_Status_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "request_status". */
+export type Request_Status_Order_By = {
+  status?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: request_status */
+export type Request_Status_Pk_Columns_Input = {
+  status: Scalars['String'];
+};
+
+/** select columns of table "request_status" */
+export enum Request_Status_Select_Column {
+  /** column name */
+  Status = 'status'
+}
+
+/** input type for updating data in table "request_status" */
+export type Request_Status_Set_Input = {
+  status?: InputMaybe<Scalars['String']>;
+};
+
+/** update columns of table "request_status" */
+export enum Request_Status_Update_Column {
+  /** column name */
+  Status = 'status'
+}
+
+/** aggregate stddev on columns */
+export type Request_Stddev_Fields = {
+  __typename?: 'request_stddev_fields';
+  chain_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "request" */
+export type Request_Stddev_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Request_Stddev_Pop_Fields = {
+  __typename?: 'request_stddev_pop_fields';
+  chain_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "request" */
+export type Request_Stddev_Pop_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Request_Stddev_Samp_Fields = {
+  __typename?: 'request_stddev_samp_fields';
+  chain_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "request" */
+export type Request_Stddev_Samp_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate sum on columns */
+export type Request_Sum_Fields = {
+  __typename?: 'request_sum_fields';
+  chain_id?: Maybe<Scalars['Int']>;
+};
+
+/** order by sum() on columns of table "request" */
+export type Request_Sum_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "request" */
+export enum Request_Update_Column {
+  /** column name */
+  ChainId = 'chain_id',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  RecipientTokenAddress = 'recipient_token_address',
+  /** column name */
+  RecipientTokenAmount = 'recipient_token_amount',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  TransactionHash = 'transaction_hash',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** aggregate var_pop on columns */
+export type Request_Var_Pop_Fields = {
+  __typename?: 'request_var_pop_fields';
+  chain_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "request" */
+export type Request_Var_Pop_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Request_Var_Samp_Fields = {
+  __typename?: 'request_var_samp_fields';
+  chain_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "request" */
+export type Request_Var_Samp_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Request_Variance_Fields = {
+  __typename?: 'request_variance_fields';
+  chain_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "request" */
+export type Request_Variance_Order_By = {
+  chain_id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -968,121 +791,92 @@ export type String_Comparison_Exp = {
 
 export type Subscription_Root = {
   __typename?: 'subscription_root';
-  /** An array relationship */
-  clients: Array<Clients>;
-  /** An aggregate relationship */
-  clients_aggregate: Clients_Aggregate;
-  /** fetch data from the table: "clients" using primary key columns */
-  clients_by_pk?: Maybe<Clients>;
-  /** An array relationship */
-  invoices: Array<Invoices>;
-  /** An aggregate relationship */
-  invoices_aggregate: Invoices_Aggregate;
-  /** fetch data from the table: "invoices" using primary key columns */
-  invoices_by_pk?: Maybe<Invoices>;
-  /** fetch data from the table: "user_info" */
-  user_info: Array<User_Info>;
-  /** fetch aggregated fields from the table: "user_info" */
-  user_info_aggregate: User_Info_Aggregate;
-  /** fetch data from the table: "user_info" using primary key columns */
-  user_info_by_pk?: Maybe<User_Info>;
-  /** fetch data from the table: "users" */
-  users: Array<Users>;
-  /** fetch aggregated fields from the table: "users" */
-  users_aggregate: Users_Aggregate;
-  /** fetch data from the table: "users" using primary key columns */
-  users_by_pk?: Maybe<Users>;
+  /** fetch data from the table: "request" */
+  request: Array<Request>;
+  /** fetch aggregated fields from the table: "request" */
+  request_aggregate: Request_Aggregate;
+  /** fetch data from the table: "request" using primary key columns */
+  request_by_pk?: Maybe<Request>;
+  /** fetch data from the table: "request_status" */
+  request_status: Array<Request_Status>;
+  /** fetch aggregated fields from the table: "request_status" */
+  request_status_aggregate: Request_Status_Aggregate;
+  /** fetch data from the table: "request_status" using primary key columns */
+  request_status_by_pk?: Maybe<Request_Status>;
+  /** fetch data from the table: "user" */
+  user: Array<User>;
+  /** fetch aggregated fields from the table: "user" */
+  user_aggregate: User_Aggregate;
+  /** fetch data from the table: "user" using primary key columns */
+  user_by_pk?: Maybe<User>;
 };
 
 
-export type Subscription_RootClientsArgs = {
-  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+export type Subscription_RootRequestArgs = {
+  distinct_on?: InputMaybe<Array<Request_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Clients_Order_By>>;
-  where?: InputMaybe<Clients_Bool_Exp>;
+  order_by?: InputMaybe<Array<Request_Order_By>>;
+  where?: InputMaybe<Request_Bool_Exp>;
 };
 
 
-export type Subscription_RootClients_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+export type Subscription_RootRequest_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Request_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Clients_Order_By>>;
-  where?: InputMaybe<Clients_Bool_Exp>;
+  order_by?: InputMaybe<Array<Request_Order_By>>;
+  where?: InputMaybe<Request_Bool_Exp>;
 };
 
 
-export type Subscription_RootClients_By_PkArgs = {
+export type Subscription_RootRequest_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
-export type Subscription_RootInvoicesArgs = {
-  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+export type Subscription_RootRequest_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Request_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Invoices_Order_By>>;
-  where?: InputMaybe<Invoices_Bool_Exp>;
+  order_by?: InputMaybe<Array<Request_Status_Order_By>>;
+  where?: InputMaybe<Request_Status_Bool_Exp>;
 };
 
 
-export type Subscription_RootInvoices_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
+export type Subscription_RootRequest_Status_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Request_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Invoices_Order_By>>;
-  where?: InputMaybe<Invoices_Bool_Exp>;
+  order_by?: InputMaybe<Array<Request_Status_Order_By>>;
+  where?: InputMaybe<Request_Status_Bool_Exp>;
 };
 
 
-export type Subscription_RootInvoices_By_PkArgs = {
-  id: Scalars['uuid'];
+export type Subscription_RootRequest_Status_By_PkArgs = {
+  status: Scalars['String'];
 };
 
 
-export type Subscription_RootUser_InfoArgs = {
-  distinct_on?: InputMaybe<Array<User_Info_Select_Column>>;
+export type Subscription_RootUserArgs = {
+  distinct_on?: InputMaybe<Array<User_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<User_Info_Order_By>>;
-  where?: InputMaybe<User_Info_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Order_By>>;
+  where?: InputMaybe<User_Bool_Exp>;
 };
 
 
-export type Subscription_RootUser_Info_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<User_Info_Select_Column>>;
+export type Subscription_RootUser_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<User_Info_Order_By>>;
-  where?: InputMaybe<User_Info_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Order_By>>;
+  where?: InputMaybe<User_Bool_Exp>;
 };
 
 
-export type Subscription_RootUser_Info_By_PkArgs = {
-  user_id: Scalars['uuid'];
-};
-
-
-export type Subscription_RootUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-export type Subscription_RootUsers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-export type Subscription_RootUsers_By_PkArgs = {
+export type Subscription_RootUser_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -1112,260 +906,99 @@ export type Timestamptz_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['timestamptz']>>;
 };
 
-/** columns and relationships of "user_info" */
-export type User_Info = {
-  __typename?: 'user_info';
-  email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  user_id: Scalars['uuid'];
-};
-
-/** aggregated selection of "user_info" */
-export type User_Info_Aggregate = {
-  __typename?: 'user_info_aggregate';
-  aggregate?: Maybe<User_Info_Aggregate_Fields>;
-  nodes: Array<User_Info>;
-};
-
-/** aggregate fields of "user_info" */
-export type User_Info_Aggregate_Fields = {
-  __typename?: 'user_info_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<User_Info_Max_Fields>;
-  min?: Maybe<User_Info_Min_Fields>;
-};
-
-
-/** aggregate fields of "user_info" */
-export type User_Info_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<User_Info_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** Boolean expression to filter rows from the table "user_info". All fields are combined with a logical 'AND'. */
-export type User_Info_Bool_Exp = {
-  _and?: InputMaybe<Array<User_Info_Bool_Exp>>;
-  _not?: InputMaybe<User_Info_Bool_Exp>;
-  _or?: InputMaybe<Array<User_Info_Bool_Exp>>;
-  email?: InputMaybe<String_Comparison_Exp>;
-  name?: InputMaybe<String_Comparison_Exp>;
-  user_id?: InputMaybe<Uuid_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "user_info" */
-export enum User_Info_Constraint {
-  /** unique or primary key constraint */
-  UserInfoPkey = 'user_info_pkey'
-}
-
-/** input type for inserting data into table "user_info" */
-export type User_Info_Insert_Input = {
-  email?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  user_id?: InputMaybe<Scalars['uuid']>;
-};
-
-/** aggregate max on columns */
-export type User_Info_Max_Fields = {
-  __typename?: 'user_info_max_fields';
-  email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
-};
-
-/** aggregate min on columns */
-export type User_Info_Min_Fields = {
-  __typename?: 'user_info_min_fields';
-  email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['uuid']>;
-};
-
-/** response of any mutation on the table "user_info" */
-export type User_Info_Mutation_Response = {
-  __typename?: 'user_info_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<User_Info>;
-};
-
-/** input type for inserting object relation for remote table "user_info" */
-export type User_Info_Obj_Rel_Insert_Input = {
-  data: User_Info_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<User_Info_On_Conflict>;
-};
-
-/** on conflict condition type for table "user_info" */
-export type User_Info_On_Conflict = {
-  constraint: User_Info_Constraint;
-  update_columns?: Array<User_Info_Update_Column>;
-  where?: InputMaybe<User_Info_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "user_info". */
-export type User_Info_Order_By = {
-  email?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  user_id?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: user_info */
-export type User_Info_Pk_Columns_Input = {
-  user_id: Scalars['uuid'];
-};
-
-/** select columns of table "user_info" */
-export enum User_Info_Select_Column {
-  /** column name */
-  Email = 'email',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  UserId = 'user_id'
-}
-
-/** input type for updating data in table "user_info" */
-export type User_Info_Set_Input = {
-  email?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  user_id?: InputMaybe<Scalars['uuid']>;
-};
-
-/** update columns of table "user_info" */
-export enum User_Info_Update_Column {
-  /** column name */
-  Email = 'email',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  UserId = 'user_id'
-}
-
-/** columns and relationships of "users" */
-export type Users = {
-  __typename?: 'users';
+/** columns and relationships of "user" */
+export type User = {
+  __typename?: 'user';
   client_last_requested: Scalars['timestamp'];
-  /** An array relationship */
-  clients: Array<Clients>;
-  /** An aggregate relationship */
-  clients_aggregate: Clients_Aggregate;
   created_at?: Maybe<Scalars['timestamptz']>;
   id: Scalars['uuid'];
-  /** An array relationship */
-  invoices: Array<Invoices>;
-  /** An aggregate relationship */
-  invoices_aggregate: Invoices_Aggregate;
   nonce: Scalars['uuid'];
   public_key: Scalars['String'];
+  /** An array relationship */
+  requests: Array<Request>;
+  /** An aggregate relationship */
+  requests_aggregate: Request_Aggregate;
   updated_at?: Maybe<Scalars['timestamptz']>;
-  /** An object relationship */
-  user_info?: Maybe<User_Info>;
 };
 
 
-/** columns and relationships of "users" */
-export type UsersClientsArgs = {
-  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+/** columns and relationships of "user" */
+export type UserRequestsArgs = {
+  distinct_on?: InputMaybe<Array<Request_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Clients_Order_By>>;
-  where?: InputMaybe<Clients_Bool_Exp>;
+  order_by?: InputMaybe<Array<Request_Order_By>>;
+  where?: InputMaybe<Request_Bool_Exp>;
 };
 
 
-/** columns and relationships of "users" */
-export type UsersClients_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Clients_Select_Column>>;
+/** columns and relationships of "user" */
+export type UserRequests_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Request_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Clients_Order_By>>;
-  where?: InputMaybe<Clients_Bool_Exp>;
+  order_by?: InputMaybe<Array<Request_Order_By>>;
+  where?: InputMaybe<Request_Bool_Exp>;
 };
 
-
-/** columns and relationships of "users" */
-export type UsersInvoicesArgs = {
-  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Invoices_Order_By>>;
-  where?: InputMaybe<Invoices_Bool_Exp>;
+/** aggregated selection of "user" */
+export type User_Aggregate = {
+  __typename?: 'user_aggregate';
+  aggregate?: Maybe<User_Aggregate_Fields>;
+  nodes: Array<User>;
 };
 
-
-/** columns and relationships of "users" */
-export type UsersInvoices_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Invoices_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Invoices_Order_By>>;
-  where?: InputMaybe<Invoices_Bool_Exp>;
-};
-
-/** aggregated selection of "users" */
-export type Users_Aggregate = {
-  __typename?: 'users_aggregate';
-  aggregate?: Maybe<Users_Aggregate_Fields>;
-  nodes: Array<Users>;
-};
-
-/** aggregate fields of "users" */
-export type Users_Aggregate_Fields = {
-  __typename?: 'users_aggregate_fields';
+/** aggregate fields of "user" */
+export type User_Aggregate_Fields = {
+  __typename?: 'user_aggregate_fields';
   count: Scalars['Int'];
-  max?: Maybe<Users_Max_Fields>;
-  min?: Maybe<Users_Min_Fields>;
+  max?: Maybe<User_Max_Fields>;
+  min?: Maybe<User_Min_Fields>;
 };
 
 
-/** aggregate fields of "users" */
-export type Users_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Users_Select_Column>>;
+/** aggregate fields of "user" */
+export type User_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<User_Select_Column>>;
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'. */
-export type Users_Bool_Exp = {
-  _and?: InputMaybe<Array<Users_Bool_Exp>>;
-  _not?: InputMaybe<Users_Bool_Exp>;
-  _or?: InputMaybe<Array<Users_Bool_Exp>>;
+/** Boolean expression to filter rows from the table "user". All fields are combined with a logical 'AND'. */
+export type User_Bool_Exp = {
+  _and?: InputMaybe<Array<User_Bool_Exp>>;
+  _not?: InputMaybe<User_Bool_Exp>;
+  _or?: InputMaybe<Array<User_Bool_Exp>>;
   client_last_requested?: InputMaybe<Timestamp_Comparison_Exp>;
-  clients?: InputMaybe<Clients_Bool_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  invoices?: InputMaybe<Invoices_Bool_Exp>;
   nonce?: InputMaybe<Uuid_Comparison_Exp>;
   public_key?: InputMaybe<String_Comparison_Exp>;
+  requests?: InputMaybe<Request_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  user_info?: InputMaybe<User_Info_Bool_Exp>;
 };
 
-/** unique or primary key constraints on table "users" */
-export enum Users_Constraint {
+/** unique or primary key constraints on table "user" */
+export enum User_Constraint {
   /** unique or primary key constraint */
   UserPkey = 'user_pkey',
   /** unique or primary key constraint */
   UserPublicKeyKey = 'user_public_key_key'
 }
 
-/** input type for inserting data into table "users" */
-export type Users_Insert_Input = {
+/** input type for inserting data into table "user" */
+export type User_Insert_Input = {
   client_last_requested?: InputMaybe<Scalars['timestamp']>;
-  clients?: InputMaybe<Clients_Arr_Rel_Insert_Input>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
-  invoices?: InputMaybe<Invoices_Arr_Rel_Insert_Input>;
   nonce?: InputMaybe<Scalars['uuid']>;
   public_key?: InputMaybe<Scalars['String']>;
+  requests?: InputMaybe<Request_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
-  user_info?: InputMaybe<User_Info_Obj_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
-export type Users_Max_Fields = {
-  __typename?: 'users_max_fields';
+export type User_Max_Fields = {
+  __typename?: 'user_max_fields';
   client_last_requested?: Maybe<Scalars['timestamp']>;
   created_at?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
@@ -1375,8 +1008,8 @@ export type Users_Max_Fields = {
 };
 
 /** aggregate min on columns */
-export type Users_Min_Fields = {
-  __typename?: 'users_min_fields';
+export type User_Min_Fields = {
+  __typename?: 'user_min_fields';
   client_last_requested?: Maybe<Scalars['timestamp']>;
   created_at?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
@@ -1385,49 +1018,47 @@ export type Users_Min_Fields = {
   updated_at?: Maybe<Scalars['timestamptz']>;
 };
 
-/** response of any mutation on the table "users" */
-export type Users_Mutation_Response = {
-  __typename?: 'users_mutation_response';
+/** response of any mutation on the table "user" */
+export type User_Mutation_Response = {
+  __typename?: 'user_mutation_response';
   /** number of rows affected by the mutation */
   affected_rows: Scalars['Int'];
   /** data from the rows affected by the mutation */
-  returning: Array<Users>;
+  returning: Array<User>;
 };
 
-/** input type for inserting object relation for remote table "users" */
-export type Users_Obj_Rel_Insert_Input = {
-  data: Users_Insert_Input;
+/** input type for inserting object relation for remote table "user" */
+export type User_Obj_Rel_Insert_Input = {
+  data: User_Insert_Input;
   /** on conflict condition */
-  on_conflict?: InputMaybe<Users_On_Conflict>;
+  on_conflict?: InputMaybe<User_On_Conflict>;
 };
 
-/** on conflict condition type for table "users" */
-export type Users_On_Conflict = {
-  constraint: Users_Constraint;
-  update_columns?: Array<Users_Update_Column>;
-  where?: InputMaybe<Users_Bool_Exp>;
+/** on conflict condition type for table "user" */
+export type User_On_Conflict = {
+  constraint: User_Constraint;
+  update_columns?: Array<User_Update_Column>;
+  where?: InputMaybe<User_Bool_Exp>;
 };
 
-/** Ordering options when selecting data from "users". */
-export type Users_Order_By = {
+/** Ordering options when selecting data from "user". */
+export type User_Order_By = {
   client_last_requested?: InputMaybe<Order_By>;
-  clients_aggregate?: InputMaybe<Clients_Aggregate_Order_By>;
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  invoices_aggregate?: InputMaybe<Invoices_Aggregate_Order_By>;
   nonce?: InputMaybe<Order_By>;
   public_key?: InputMaybe<Order_By>;
+  requests_aggregate?: InputMaybe<Request_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
-  user_info?: InputMaybe<User_Info_Order_By>;
 };
 
-/** primary key columns input for table: users */
-export type Users_Pk_Columns_Input = {
+/** primary key columns input for table: user */
+export type User_Pk_Columns_Input = {
   id: Scalars['uuid'];
 };
 
-/** select columns of table "users" */
-export enum Users_Select_Column {
+/** select columns of table "user" */
+export enum User_Select_Column {
   /** column name */
   ClientLastRequested = 'client_last_requested',
   /** column name */
@@ -1442,8 +1073,8 @@ export enum Users_Select_Column {
   UpdatedAt = 'updated_at'
 }
 
-/** input type for updating data in table "users" */
-export type Users_Set_Input = {
+/** input type for updating data in table "user" */
+export type User_Set_Input = {
   client_last_requested?: InputMaybe<Scalars['timestamp']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -1452,8 +1083,8 @@ export type Users_Set_Input = {
   updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
 
-/** update columns of table "users" */
-export enum Users_Update_Column {
+/** update columns of table "user" */
+export enum User_Update_Column {
   /** column name */
   ClientLastRequested = 'client_last_requested',
   /** column name */
@@ -1491,26 +1122,34 @@ export type ValidateSignatureOutput = {
   accessToken: Scalars['String'];
 };
 
-export type InsertInvoiceMutationVariables = Exact<{
-  object: Invoices_Insert_Input;
+export type InsertRequestMutationVariables = Exact<{
+  object: Request_Insert_Input;
 }>;
 
 
-export type InsertInvoiceMutation = { __typename?: 'mutation_root', insert_invoices_one?: { __typename?: 'invoices', id: any } | null };
+export type InsertRequestMutation = { __typename?: 'mutation_root', insert_request_one?: { __typename?: 'request', id: any } | null };
 
 export type RefreshNonceMutationVariables = Exact<{
   publicKey: Scalars['String'];
 }>;
 
 
-export type RefreshNonceMutation = { __typename?: 'mutation_root', refresh_nonce: Array<{ __typename?: 'users', id: any, nonce: any, public_key: string }> };
+export type RefreshNonceMutation = { __typename?: 'mutation_root', refresh_nonce: Array<{ __typename?: 'user', id: any, nonce: any, public_key: string }> };
+
+export type UpdateRequestStatusMutationVariables = Exact<{
+  id: Scalars['uuid'];
+  status: Request_Status_Enum;
+}>;
+
+
+export type UpdateRequestStatusMutation = { __typename?: 'mutation_root', update_request_by_pk?: { __typename?: 'request', id: any, status: Request_Status_Enum } | null };
 
 export type UpsertPublicUserMutationVariables = Exact<{
   publicKey: Scalars['String'];
 }>;
 
 
-export type UpsertPublicUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: any, public_key: string, nonce: any, client_last_requested: any } | null };
+export type UpsertPublicUserMutation = { __typename?: 'mutation_root', insert_user_one?: { __typename?: 'user', id: any, public_key: string, nonce: any, client_last_requested: any } | null };
 
 export type ValidateSignatureMutationVariables = Exact<{
   publicKey: Scalars['String'];
@@ -1520,64 +1159,59 @@ export type ValidateSignatureMutationVariables = Exact<{
 
 export type ValidateSignatureMutation = { __typename?: 'mutation_root', validate_signature?: { __typename?: 'ValidateSignatureOutput', accessToken: string } | null };
 
-export type GetCurrentUserInfoQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetCurrentUserInfoQuery = { __typename?: 'query_root', user_info: Array<{ __typename?: 'user_info', user_id: any, name?: string | null, email?: string | null }> };
-
-export type GetInvoiceQueryVariables = Exact<{
+export type GetRequestQueryVariables = Exact<{
   id: Scalars['uuid'];
 }>;
 
 
-export type GetInvoiceQuery = { __typename?: 'query_root', invoices_by_pk?: { __typename?: 'invoices', id: any, recipient_token_amount: string, chain_id: number, status: string, recipient_token_address: string, transaction_id?: string | null, user_id: any, owner: { __typename?: 'users', public_key: string, user_info?: { __typename?: 'user_info', name?: string | null, email?: string | null } | null } } | null };
+export type GetRequestQuery = { __typename?: 'query_root', request_by_pk?: { __typename?: 'request', id: any, recipient_token_amount: string, chain_id: number, status: Request_Status_Enum, recipient_token_address: string, transaction_hash?: string | null, user_id: any, owner: { __typename?: 'user', public_key: string } } | null };
 
 export type GetUserByPublicKeyQueryVariables = Exact<{
   publicKey: Scalars['String'];
 }>;
 
 
-export type GetUserByPublicKeyQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any, nonce: any }> };
+export type GetUserByPublicKeyQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'user', id: any, nonce: any }> };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUsersQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any, public_key: string }> };
+export type GetUsersQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'user', id: any, public_key: string }> };
 
 
-export const InsertInvoiceDocument = gql`
-    mutation insertInvoice($object: invoices_insert_input!) {
-  insert_invoices_one(object: $object) {
+export const InsertRequestDocument = gql`
+    mutation insertRequest($object: request_insert_input!) {
+  insert_request_one(object: $object) {
     id
   }
 }
     `;
-export type InsertInvoiceMutationFn = Apollo.MutationFunction<InsertInvoiceMutation, InsertInvoiceMutationVariables>;
+export type InsertRequestMutationFn = Apollo.MutationFunction<InsertRequestMutation, InsertRequestMutationVariables>;
 
 /**
- * __useInsertInvoiceMutation__
+ * __useInsertRequestMutation__
  *
- * To run a mutation, you first call `useInsertInvoiceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useInsertInvoiceMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useInsertRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertRequestMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [insertInvoiceMutation, { data, loading, error }] = useInsertInvoiceMutation({
+ * const [insertRequestMutation, { data, loading, error }] = useInsertRequestMutation({
  *   variables: {
  *      object: // value for 'object'
  *   },
  * });
  */
-export function useInsertInvoiceMutation(baseOptions?: Apollo.MutationHookOptions<InsertInvoiceMutation, InsertInvoiceMutationVariables>) {
+export function useInsertRequestMutation(baseOptions?: Apollo.MutationHookOptions<InsertRequestMutation, InsertRequestMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<InsertInvoiceMutation, InsertInvoiceMutationVariables>(InsertInvoiceDocument, options);
+        return Apollo.useMutation<InsertRequestMutation, InsertRequestMutationVariables>(InsertRequestDocument, options);
       }
-export type InsertInvoiceMutationHookResult = ReturnType<typeof useInsertInvoiceMutation>;
-export type InsertInvoiceMutationResult = Apollo.MutationResult<InsertInvoiceMutation>;
-export type InsertInvoiceMutationOptions = Apollo.BaseMutationOptions<InsertInvoiceMutation, InsertInvoiceMutationVariables>;
+export type InsertRequestMutationHookResult = ReturnType<typeof useInsertRequestMutation>;
+export type InsertRequestMutationResult = Apollo.MutationResult<InsertRequestMutation>;
+export type InsertRequestMutationOptions = Apollo.BaseMutationOptions<InsertRequestMutation, InsertRequestMutationVariables>;
 export const RefreshNonceDocument = gql`
     mutation refreshNonce($publicKey: String!) {
   refresh_nonce(args: {pkey: $publicKey}) {
@@ -1613,9 +1247,44 @@ export function useRefreshNonceMutation(baseOptions?: Apollo.MutationHookOptions
 export type RefreshNonceMutationHookResult = ReturnType<typeof useRefreshNonceMutation>;
 export type RefreshNonceMutationResult = Apollo.MutationResult<RefreshNonceMutation>;
 export type RefreshNonceMutationOptions = Apollo.BaseMutationOptions<RefreshNonceMutation, RefreshNonceMutationVariables>;
+export const UpdateRequestStatusDocument = gql`
+    mutation updateRequestStatus($id: uuid!, $status: request_status_enum!) {
+  update_request_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
+    id
+    status
+  }
+}
+    `;
+export type UpdateRequestStatusMutationFn = Apollo.MutationFunction<UpdateRequestStatusMutation, UpdateRequestStatusMutationVariables>;
+
+/**
+ * __useUpdateRequestStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateRequestStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRequestStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRequestStatusMutation, { data, loading, error }] = useUpdateRequestStatusMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateRequestStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRequestStatusMutation, UpdateRequestStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRequestStatusMutation, UpdateRequestStatusMutationVariables>(UpdateRequestStatusDocument, options);
+      }
+export type UpdateRequestStatusMutationHookResult = ReturnType<typeof useUpdateRequestStatusMutation>;
+export type UpdateRequestStatusMutationResult = Apollo.MutationResult<UpdateRequestStatusMutation>;
+export type UpdateRequestStatusMutationOptions = Apollo.BaseMutationOptions<UpdateRequestStatusMutation, UpdateRequestStatusMutationVariables>;
 export const UpsertPublicUserDocument = gql`
     mutation upsertPublicUser($publicKey: String!) {
-  insert_users_one(object: {public_key: $publicKey}, on_conflict: {constraint: user_public_key_key, update_columns: [client_last_requested]}) {
+  insert_user_one(object: {public_key: $publicKey}, on_conflict: {constraint: user_public_key_key, update_columns: [client_last_requested]}) {
     id
     public_key
     nonce
@@ -1683,57 +1352,17 @@ export function useValidateSignatureMutation(baseOptions?: Apollo.MutationHookOp
 export type ValidateSignatureMutationHookResult = ReturnType<typeof useValidateSignatureMutation>;
 export type ValidateSignatureMutationResult = Apollo.MutationResult<ValidateSignatureMutation>;
 export type ValidateSignatureMutationOptions = Apollo.BaseMutationOptions<ValidateSignatureMutation, ValidateSignatureMutationVariables>;
-export const GetCurrentUserInfoDocument = gql`
-    query getCurrentUserInfo {
-  user_info {
-    user_id
-    name
-    email
-  }
-}
-    `;
-
-/**
- * __useGetCurrentUserInfoQuery__
- *
- * To run a query within a React component, call `useGetCurrentUserInfoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCurrentUserInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCurrentUserInfoQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetCurrentUserInfoQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>(GetCurrentUserInfoDocument, options);
-      }
-export function useGetCurrentUserInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>(GetCurrentUserInfoDocument, options);
-        }
-export type GetCurrentUserInfoQueryHookResult = ReturnType<typeof useGetCurrentUserInfoQuery>;
-export type GetCurrentUserInfoLazyQueryHookResult = ReturnType<typeof useGetCurrentUserInfoLazyQuery>;
-export type GetCurrentUserInfoQueryResult = Apollo.QueryResult<GetCurrentUserInfoQuery, GetCurrentUserInfoQueryVariables>;
-export const GetInvoiceDocument = gql`
-    query getInvoice($id: uuid!) {
-  invoices_by_pk(id: $id) {
+export const GetRequestDocument = gql`
+    query getRequest($id: uuid!) {
+  request_by_pk(id: $id) {
     id
     recipient_token_amount
     chain_id
     status
     recipient_token_address
-    transaction_id
+    transaction_hash
     user_id
     owner {
-      user_info {
-        name
-        email
-      }
       public_key
     }
   }
@@ -1741,35 +1370,35 @@ export const GetInvoiceDocument = gql`
     `;
 
 /**
- * __useGetInvoiceQuery__
+ * __useGetRequestQuery__
  *
- * To run a query within a React component, call `useGetInvoiceQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetInvoiceQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetRequestQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRequestQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetInvoiceQuery({
+ * const { data, loading, error } = useGetRequestQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetInvoiceQuery(baseOptions: Apollo.QueryHookOptions<GetInvoiceQuery, GetInvoiceQueryVariables>) {
+export function useGetRequestQuery(baseOptions: Apollo.QueryHookOptions<GetRequestQuery, GetRequestQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetInvoiceQuery, GetInvoiceQueryVariables>(GetInvoiceDocument, options);
+        return Apollo.useQuery<GetRequestQuery, GetRequestQueryVariables>(GetRequestDocument, options);
       }
-export function useGetInvoiceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInvoiceQuery, GetInvoiceQueryVariables>) {
+export function useGetRequestLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRequestQuery, GetRequestQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetInvoiceQuery, GetInvoiceQueryVariables>(GetInvoiceDocument, options);
+          return Apollo.useLazyQuery<GetRequestQuery, GetRequestQueryVariables>(GetRequestDocument, options);
         }
-export type GetInvoiceQueryHookResult = ReturnType<typeof useGetInvoiceQuery>;
-export type GetInvoiceLazyQueryHookResult = ReturnType<typeof useGetInvoiceLazyQuery>;
-export type GetInvoiceQueryResult = Apollo.QueryResult<GetInvoiceQuery, GetInvoiceQueryVariables>;
+export type GetRequestQueryHookResult = ReturnType<typeof useGetRequestQuery>;
+export type GetRequestLazyQueryHookResult = ReturnType<typeof useGetRequestLazyQuery>;
+export type GetRequestQueryResult = Apollo.QueryResult<GetRequestQuery, GetRequestQueryVariables>;
 export const GetUserByPublicKeyDocument = gql`
     query getUserByPublicKey($publicKey: String!) {
-  users(limit: 1, where: {public_key: {_eq: $publicKey}}) {
+  user(limit: 1, where: {public_key: {_eq: $publicKey}}) {
     id
     nonce
   }
@@ -1805,7 +1434,7 @@ export type GetUserByPublicKeyLazyQueryHookResult = ReturnType<typeof useGetUser
 export type GetUserByPublicKeyQueryResult = Apollo.QueryResult<GetUserByPublicKeyQuery, GetUserByPublicKeyQueryVariables>;
 export const GetUsersDocument = gql`
     query getUsers {
-  users {
+  user {
     id
     public_key
   }

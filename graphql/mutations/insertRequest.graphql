@@ -1,0 +1,5 @@
+mutation insertRequest($object: request_insert_input!) {
+  insert_request_one(object: $object) {
+    id
+  }
+}

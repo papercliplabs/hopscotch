@@ -1,5 +1,5 @@
 query getUsers {
-  users {
+  user {
     id
     public_key
   }
