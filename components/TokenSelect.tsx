@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Avatar, Box, Button, CloseButton, Flex, Grid, GridItem, IconButton, Image, Input, List, ListIcon, ListItem, Portal, Select, Stack, Text, useDisclosure } from "@chakra-ui/react";
 
 import { Token } from "@/common/types";
-import { useTokenList } from "@/common/hooks";
+import { useTokenList } from "@/hooks/useTokenList";
 import { NestedPortal } from "./NestedPortal";
 import { ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
 import { useNetwork, useSwitchNetwork } from "wagmi";
