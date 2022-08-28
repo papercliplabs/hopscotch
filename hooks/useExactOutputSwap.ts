@@ -104,7 +104,6 @@ export function useExactOutputSwap(
           gas = await routerContract.estimateGas.multicall(calls, {
             value: value,
           });
-          console.log("NO ERROR");
         } catch (error) {
           console.log(error);
           gas = BigNumber.from("400000");

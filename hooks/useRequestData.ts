@@ -1,6 +1,6 @@
 import { Request_Status_Enum, useGetRequestQuery, useUpdateRequestStatusMutation } from "@/graphql/generated/graphql";
 import { BigNumber } from "ethers";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 export type RequestData = {
   id: string;
@@ -44,18 +44,19 @@ export function useRequestData(id: string): {
     return ret;
   }, [requestQuery]);
 
-  async function updateRequestStatus(newStatus: Request_Status_Enum): Promise<void> {
-    if (id && requestData) {
-      await updateRequestStatusMutation({
-        variables: {
-          id: id,
-          status: newStatus,
-        },
-      });
-
-      // refetch({ variables: { id }});
-    }
-  }
+  const updateRequestStatus = useCallback(
+    async (newStatus: Request_Status_Enum) => {
+      if (id && requestData) {
+        await updateRequestStatusMutation({
+          variables: {
+            id: id,
+            status: newStatus,
+          },
+        });
+      }
+    },
+    [id, requestData, updateRequestStatusMutation]
+  );
 
   return { requestData, updateRequestStatus };
 }

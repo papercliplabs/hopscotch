@@ -52,7 +52,6 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const { children } = props;
 
   const [token] = useLocalStorage("token");
-  // console.log("Call user", {});
   const { data, loading, refetch: refetchUsers } = useGetUsersQuery({ skip: !token, fetchPolicy: "network-only" });
   const user = get("user[0]", data);
 

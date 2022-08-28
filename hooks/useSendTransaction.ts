@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { BigNumberish } from "ethers";
 import { TransactionRequest } from "@ethersproject/providers";
 import { Transaction, useAddRecentTransaction } from "@papercliplabs/rainbowkit";
@@ -44,7 +44,7 @@ export function useSendTransaction(
    * Send transaction
    * @returns transaction hash, or INVALID_PARAMS
    */
-  async function sendTransaction(): Promise<string> {
+  const sendTransaction = useCallback(async () => {
     let txHash = "INVALID_PARAMS";
 
     if (sendTransactionAsync) {
@@ -60,7 +60,7 @@ export function useSendTransaction(
     setHash(txHash);
 
     return txHash;
-  }
+  }, [sendTransactionAsync, addRecentTransaction]);
 
   return { quotedGas: prepareTransactionConfig?.request?.gasLimit, transaction, sendTransaction };
 }

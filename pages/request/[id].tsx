@@ -37,7 +37,6 @@ const RequestPage = () => {
     requestData?.recipientTokenAmount,
     requestData?.recipientAddress
   );
-  console.log(swapTransaction);
 
   const quotedInputAmount = useMemo(() => {
     const quotedInputAmountString = swapRoute?.quote?.quotient.toString();

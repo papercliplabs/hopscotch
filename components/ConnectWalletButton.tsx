@@ -29,8 +29,6 @@ const AccountMenu: FC = () => {
 export const VerificationStatus: FC = () => {
   const { isAuthenticated } = useAuth();
 
-  console.log(isAuthenticated);
-
   return isAuthenticated ? <AccountMenu /> : <VerifyAccountButton />;
 };
 

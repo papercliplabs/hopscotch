@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { ApolloClient, createHttpLink, InMemoryCache, NextLink, Operation, ServerError } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
-import { deleteFromStorage } from '@rehooks/local-storage';
+import { deleteFromStorage } from "@rehooks/local-storage";
 import { NetworkError } from "@apollo/client/errors";
 import { GraphQLError } from "graphql";
 
@@ -37,22 +37,24 @@ const onStartLink = setContext((_, { onStart }) => {
 });
 
 const handleNetworkError = (networkError: NetworkError) => {
-  console.log(`[Network error]: ${networkError}`)
-  const {statusCode} = networkError || {} as any;
+  console.log(`[Network error]: ${networkError}`);
+  const { statusCode } = networkError || ({} as any);
   if (statusCode === 401) {
     deleteFromStorage("token");
   }
 };
 
-const handleGraphQLError = ({ message, locations, path, extensions }: GraphQLError, operation: Operation, forward: NextLink) => {
-  console.log(
-    `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-  )
+const handleGraphQLError = (
+  { message, locations, path, extensions }: GraphQLError,
+  operation: Operation,
+  forward: NextLink
+) => {
+  console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
 
   if (extensions?.code === "invalid-jwt") {
     deleteFromStorage("token");
-    const {authorization, ...headers} = operation.getContext().headers;
-    operation.setContext({headers});
+    const { authorization, ...headers } = operation.getContext().headers;
+    operation.setContext({ headers });
 
     return forward(operation);
   }
@@ -61,21 +63,17 @@ const handleGraphQLError = ({ message, locations, path, extensions }: GraphQLErr
 // Log any GraphQL errors or network error that occurred
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   console.log({ graphQLErrors, networkError });
-  if (graphQLErrors)
-    graphQLErrors.forEach((err) => handleGraphQLError(err, operation, forward));
+  if (graphQLErrors) graphQLErrors.forEach((err) => handleGraphQLError(err, operation, forward));
   if (networkError) {
     handleNetworkError(networkError);
-  };
+  }
 });
 
 /**
  * Based on https://github.com/vercel/next.js/tree/canary/examples/with-apollo
  */
 const createApolloClient = () => {
-  const link = onStartLink
-    .concat(errorLink)
-    .concat(authLink)
-    .concat(httpLink);
+  const link = onStartLink.concat(errorLink).concat(authLink).concat(httpLink);
 
   return new ApolloClient({
     ssrMode: typeof window === "undefined",

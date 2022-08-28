@@ -18,7 +18,6 @@ export function useTokenList(): Token[] {
     async function checkForData() {
       // Fetch the data if it hasn't been fetched already
       if (allTokens.length == 0) {
-        console.log("FETCH_TOKEN_LIST");
         fetch(URLS.UNISWAP_TOKEN_LIST)
           .then((response) => response.json())
           .then((data) => {

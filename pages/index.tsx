@@ -41,7 +41,6 @@ const CreateRequest: FC = () => {
             },
           },
         }).then(({ data }) => {
-          console.log(data);
           const requestId = data?.insert_request_one?.id;
           router.push(`/request/${requestId}`);
         });
