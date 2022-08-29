@@ -10,6 +10,10 @@ export interface BaseToken {
   readonly logoURI: string;
 }
 
+export interface NativeBaseToken extends BaseToken {
+  readonly wrappedAddress: string;
+}
+
 export interface Token extends BaseToken {
   priceUsd?: number;
   balance?: BigNumber;

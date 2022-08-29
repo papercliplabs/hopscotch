@@ -1,9 +1,11 @@
 import { useContext, createContext, ReactNode, useEffect, useState, useMemo } from "react";
 
 import { BaseToken, Token } from "@/common/types";
-import { erc20ABI, useAccount, useContractReads } from "wagmi";
-import { COIN_GECKO_API_PLATFORM_ID, SUPPORTED_CHAINS, URLS } from "@/common/constants";
+import { erc20ABI, useAccount, useContractReads, useProvider, useSigner } from "wagmi";
+import { COIN_GECKO_API_PLATFORM_ID, NATIVE_TOKENS, SUPPORTED_CHAINS, URLS } from "@/common/constants";
 import { BigNumber, ethers } from "ethers";
+import { AddressZero } from "@ethersproject/constants";
+import { wagmiClient } from "@/pages/_app";
 
 type TokenListProviderInterface = {
   tokens: Token[];
@@ -19,8 +21,10 @@ export default function TokenListProvider({ children }: { children: ReactNode })
   const [tokens, setTokens] = useState<Token[]>([]);
   const [baseTokens, setBaseTokens] = useState<BaseToken[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
+  const [nativeTokenBalances, setNativeTokenBalances] = useState<BigNumber[]>([]);
 
   const { address } = useAccount();
+  const provider = useProvider();
 
   ////
   // Fetch base tokens
@@ -33,7 +37,8 @@ export default function TokenListProvider({ children }: { children: ReactNode })
         fetch(URLS.UNISWAP_TOKEN_LIST)
           .then((response) => response.json())
           .then((data) => {
-            setBaseTokens(data.tokens as Array<BaseToken>);
+            let tokens = data.tokens as Array<BaseToken>;
+            setBaseTokens(tokens);
           });
       }
     }
@@ -122,15 +127,38 @@ export default function TokenListProvider({ children }: { children: ReactNode })
   }, [balanceResults]);
 
   ////
+  // Fetch balances of native tokens (a bit ugly)
+  ////
+  useEffect(() => {
+    async function getNativeTokenBalances() {
+      if (address && typeof wagmiClient.config.provider === "function" && nativeTokenBalances.length == 0) {
+        let nativeBalances: BigNumber[] = [];
+        for (const chain of SUPPORTED_CHAINS) {
+          const provider = wagmiClient.config.provider({ chainId: chain.id });
+          const bal = await provider.getBalance(address);
+          nativeBalances.push(bal);
+        }
+        setNativeTokenBalances(nativeBalances);
+      }
+    }
+
+    getNativeTokenBalances();
+  }, [nativeTokenBalances, setNativeTokenBalances, address, wagmiClient.config.provider]);
+
+  ////
   // Construct tokens
   ////
   useEffect(() => {
     let ret: Token[] = [];
 
-    for (let i = 0; i < baseTokens.length; i++) {
-      const baseToken = baseTokens[i];
+    // Append native tokens and balances
+    const baseTokensExtended = [...baseTokens].concat(NATIVE_TOKENS);
+    const balancesExtended = balances ? [...balances].concat(nativeTokenBalances) : undefined;
+
+    for (let i = 0; i < baseTokensExtended.length; i++) {
+      const baseToken = baseTokensExtended[i];
       const price = prices ? prices[i] : undefined;
-      const balance = balances ? balances[i] : undefined;
+      const balance = balancesExtended ? balancesExtended[i] : undefined;
       const balanceUsd =
         balance != undefined && price != undefined
           ? Number(ethers.utils.formatUnits(balance, baseToken.decimals)) * price
@@ -145,7 +173,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     }
 
     setTokens(ret);
-  }, [baseTokens, balances, prices]);
+  }, [baseTokens, balances, prices, nativeTokenBalances]);
 
   return <TokenListContext.Provider value={{ tokens }}>{children}</TokenListContext.Provider>;
 }
