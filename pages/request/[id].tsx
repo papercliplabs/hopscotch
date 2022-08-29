@@ -101,10 +101,10 @@ const RequestPage = () => {
           text = "Send";
           break;
         case SwapType.UNWRAP_AND_SEND:
-          text = "Unwrap and send (todo)";
+          text = "Unwrap and send";
           break;
         case SwapType.WRAP_AND_SEND:
-          text = "Wrap and send (todo)";
+          text = "Wrap and send";
           break;
       }
       return { buttonText: text, onClickFunction: executeSwap };

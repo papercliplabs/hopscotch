@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { erc20ABI, useContract, useProvider, useSigner } from "wagmi";
+import { erc20ABI, useAccount, useContract, useProvider, useSigner } from "wagmi";
 import { BigNumber, ethers } from "ethers";
 import { SwapRoute } from "@uniswap/smart-order-router";
 import { CurrencyAmount, TradeType, Percent, Token as UniswapToken } from "@uniswap/sdk-core";
@@ -66,14 +66,10 @@ export function useExactOutputSwap(
 
   const provider = useProvider();
   const { data: signer } = useSigner();
+  const { address } = useAccount();
   const chainId = useChainId();
   const inputToken = useUniswapToken(inputIsNative ? getWrappedTokenAddress(chainId) : inputTokenAddress, chainId);
   const outputToken = useUniswapToken(outputIsNative ? getWrappedTokenAddress(chainId) : outputTokenAddress, chainId);
-  const {
-    quotedGas,
-    transaction,
-    sendTransaction: executeSwap,
-  } = useSendTransaction(transcationRequest, "multicall", Object.keys(transcationRequest).length != 0);
 
   ////
   // Compute swap type based on inputs
@@ -93,6 +89,16 @@ export function useExactOutputSwap(
 
     return swapType;
   }, [inputToken, outputToken, inputTokenAddress, outputTokenAddress, inputIsNative, outputIsNative]);
+
+  const {
+    quotedGas,
+    transaction,
+    sendTransaction: executeSwap,
+  } = useSendTransaction(
+    transcationRequest,
+    swapType != SwapType.SEND_ONLY ? "multicall" : "transfer",
+    Object.keys(transcationRequest).length != 0
+  );
 
   ////
   // Get route quote
@@ -196,6 +202,7 @@ export function useExactOutputSwap(
         outputToken &&
         receipientAddress &&
         outputTokenAmount &&
+        address &&
         inputToken.address == outputToken.address
       ) {
         // Just a transfer
@@ -210,16 +217,57 @@ export function useExactOutputSwap(
             // erc20 transfer
             const contract = new ethers.Contract(inputToken.address, erc20ABI, signer);
             request = {
-              to: receipientAddress,
-              data: contract.interface.encodeFunctionData("transfer", [outputToken.address, outputTokenAmount]),
+              to: inputToken.address,
+              value: Zero,
+              data: contract.interface.encodeFunctionData("transfer", [receipientAddress, outputTokenAmount]),
             };
           }
         } else if (SwapType.WRAP_AND_SEND == swapType) {
-          const contract = new ethers.Contract(outputToken.address, Weth9Abi, signer);
-          // TODO(spennyp): wrap and send
+          const routerContract = new ethers.Contract(V3_SWAP_ROUTER_ADDRESS, RouterABI, signer);
+          const multi1 = routerContract.interface.encodeFunctionData("wrapETH", [outputTokenAmount]);
+          const multi2 = routerContract.interface.encodeFunctionData("sweepToken", [
+            outputTokenAddress,
+            outputTokenAmount,
+            receipientAddress,
+          ]);
+          const calls = [multi1, multi2];
+
+          let gas;
+
+          try {
+            gas = await routerContract.estimateGas.multicall(calls);
+          } catch (error) {
+            console.log(error);
+            gas = BigNumber.from("400000");
+          }
+          request = {
+            to: V3_SWAP_ROUTER_ADDRESS,
+            data: routerContract.interface.encodeFunctionData("multicall", [calls]),
+            value: outputTokenAmount,
+            gasLimit: gas.add(BigNumber.from("20000")), // 20000 margin
+          };
         } else if (SwapType.UNWRAP_AND_SEND == swapType) {
-          const contract = new ethers.Contract(inputToken.address, Weth9Abi, signer);
-          // TODO(spennyp): unwrap and send
+          const routerContract = new ethers.Contract(V3_SWAP_ROUTER_ADDRESS, RouterABI, signer);
+          const multi1 = routerContract.interface.encodeFunctionData("pull", [outputToken.address, outputTokenAmount]);
+          const multi2 = routerContract.interface.encodeFunctionData("unwrapWETH9", [
+            outputTokenAmount,
+            receipientAddress,
+          ]);
+          const calls = [multi1, multi2];
+
+          let gas;
+
+          try {
+            gas = await routerContract.estimateGas.multicall(calls);
+          } catch (error) {
+            console.log(error);
+            gas = BigNumber.from("400000");
+          }
+          request = {
+            to: V3_SWAP_ROUTER_ADDRESS,
+            data: routerContract.interface.encodeFunctionData("multicall", [calls]),
+            gasLimit: gas.add(BigNumber.from("20000")), // 20000 margin
+          };
         }
       }
 
