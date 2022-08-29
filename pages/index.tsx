@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { Button, Center, Container, Heading, Text, Input, Spacer, Flex, Tooltip, Box } from "@chakra-ui/react";
+import { Button, Center, Container, Heading, Text, Input, Spacer, Flex, Tooltip, Box, GridItem } from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { ConnectButton, useConnectModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
@@ -13,20 +13,13 @@ import { Token } from "@/common/types";
 import { formatNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
 import { NumberInput } from "@/components/NumberInput";
+import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
 
 const CreateRequest: FC = () => {
   const router = useRouter();
   const { ensureUser } = useAuth();
   const [insertRequest, { loading }] = useInsertRequestMutation();
   const { openConnectModal } = useConnectModal();
-
-  const [element, setElement] = useState<HTMLDivElement | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    // Force a rerender, so it can be passed to the child.
-    // If this causes an unwanted flicker, use useLayoutEffect instead
-    setElement(containerRef.current);
-  }, []);
 
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
   const [tokenAmount, setTokenAmount] = useState<string>("");
@@ -65,26 +58,14 @@ const CreateRequest: FC = () => {
     tokenAmount == "" ? "Enter token amount" : selectedToken == undefined ? "Select token" : "Create request";
 
   return (
-    <Box
-      borderRadius="3xl"
-      display="grid"
-      grid-template-columns="1fr"
-      maxWidth="456px"
-      minH="30vh"
-      width="100%"
-      boxShadow='dark-lg'
-      padding={2}
-      >
-      <Flex
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      width="100%"
-      height="100%"
-      gap="0.5"
-      grid-row-start={1}
-      grid-column-start={1}
-      >
+    <PrimaryCardGrid>
+      <GridItem
+          gridRowStart={1}
+          gridColumnStart={1}
+          zIndex={1}
+          height="100%"
+          margin={4}
+        >
       <Heading size="lg" fontWeight="semibold" color="text0" mb={2}>
         Create your request
       </Heading>
@@ -108,7 +89,7 @@ const CreateRequest: FC = () => {
         </Flex>
 
         <Flex flexDirection="column" justifyContent="center">
-          <TokenSelect element={element} containerRef={containerRef} selectedTokenCallback={setSelectedToken} />
+          <TokenSelect token={selectedToken} setToken={setSelectedToken} />
         </Flex>
       </Flex>
       <Spacer height="2px" />
@@ -146,19 +127,9 @@ const CreateRequest: FC = () => {
           {address ? requestButtonMsg : "Connect Wallet"}
         </Button>
       </Flex>
-      </Flex>
-      <Box
-        ref={containerRef}
-        grid-row-start={1}
-        grid-column-start={1}
-        // width="100%"
-        // height="100%"
-        // backgroundColor="purple"
-
-      >
-      </Box>
-    </Box>
-  );
+      </GridItem>
+    </PrimaryCardGrid>
+      );
 };
 
 const Index = () => {
