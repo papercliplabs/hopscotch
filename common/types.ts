@@ -31,21 +31,3 @@ export enum LoadingStatus {
   ERROR,
   SUCCESS,
 }
-
-export enum SwapRouteState {
-  INVALID,
-  LOADING,
-  VALID,
-}
-
-export enum TransactionState {
-  PENDING,
-  FAILED,
-  SUCCESS,
-}
-
-export type TransactionDetails = {
-  state: TransactionState;
-  response: TransactionResponse;
-  receipt?: TransactionReceipt;
-};

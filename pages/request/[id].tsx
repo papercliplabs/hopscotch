@@ -6,7 +6,7 @@ import { Request_Status_Enum } from "@/graphql/generated/graphql";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
 
 import { shortAddress } from "@/common/utils";
-import { Length, SwapRouteState } from "@/common/types";
+import { Length, LoadingStatus } from "@/common/types";
 import { Token } from "@/common/types";
 import TokenSelector from "@/components/TokenSelector";
 import { BigNumber, ethers } from "ethers";
@@ -28,8 +28,7 @@ const RequestPage = () => {
   const outputToken = useToken(requestData?.recipientTokenAddress, requestData?.chainId);
 
   const {
-    swapRouteState,
-    swapRoute,
+    swapQuote,
     transaction: swapTransaction,
     executeSwap,
   } = useExactOutputSwap(
@@ -39,26 +38,21 @@ const RequestPage = () => {
     requestData?.recipientAddress
   );
 
-  const quotedInputAmount = useMemo(() => {
-    const quotedInputAmountString = swapRoute?.quote?.quotient.toString();
-    return quotedInputAmountString ? BigNumber.from(quotedInputAmountString) : undefined;
-  }, [swapRoute]);
-
   const {
     requiresApproval,
     approve,
     transaction: approveTransation,
-  } = useApproveErc20ForSwap(inputToken?.address, quotedInputAmount);
+  } = useApproveErc20ForSwap(inputToken?.address, swapQuote.quoteAmount);
 
   const hasSufficentFunds = useMemo(() => {
     let ret = false;
 
-    if (inputToken && inputToken.balance && quotedInputAmount) {
-      ret = inputToken.balance.gte(quotedInputAmount);
+    if (inputToken && inputToken.balance && swapQuote.quoteAmount) {
+      ret = inputToken.balance.gte(swapQuote.quoteAmount);
     }
 
     return ret;
-  }, [inputToken, quotedInputAmount]);
+  }, [inputToken, swapQuote.quoteAmount]);
 
   const transactionPending = approveTransation?.status == "pending" || swapTransaction?.status == "pending";
 
@@ -89,23 +83,23 @@ const RequestPage = () => {
       return { buttonText: "Choose token", onClickFunction: undefined };
     } else if (transactionPending) {
       return { buttonText: "Pending txn", onClickFunction: undefined };
-    } else if (SwapRouteState.LOADING == swapRouteState) {
+    } else if (LoadingStatus.LOADING == swapQuote.quoteStatus) {
       return { buttonText: "Fetching route", onClickFunction: undefined };
-    } else if (SwapRouteState.INVALID == swapRouteState) {
+    } else if (LoadingStatus.ERROR == swapQuote.quoteStatus) {
       return { buttonText: "Route not found", onClickFunction: undefined };
     } else if (!hasSufficentFunds) {
       return { buttonText: "Insufficient funds", onClickFunction: undefined };
     } else if (requiresApproval) {
       return { buttonText: "Approve", onClickFunction: approve };
     } else {
-      return { buttonText: "Execute swap", onClickFunction: executeSwap };
+      return { buttonText: swapQuote.requiresSwap ? "Execute swap" : "Send", onClickFunction: executeSwap };
     }
   }, [
     requestData,
     inputToken,
     address,
     transactionPending,
-    swapRouteState,
+    swapQuote,
     hasSufficentFunds,
     requiresApproval,
     openConnectModal,
@@ -159,25 +153,16 @@ const RequestPage = () => {
           >
             <Flex direction="column" flex="1">
               <Text fontSize="xl" color="text2">
-                {SwapRouteState.LOADING == swapRouteState ? "LOADING" : swapRoute?.quote.toFixed(2)}
+                {LoadingStatus.LOADING == swapQuote.quoteStatus ? "LOADING" : swapQuote.quoteAmount?.toString()}
               </Text>
               <Text fontSize="xs" color="text2">
-                Estimated gwei: {swapRoute?.estimatedGasUsed.toString()}
-              </Text>
-              <Text fontSize="xs" color="text2">
-                Estimated gas USD: {swapRoute?.estimatedGasUsedUSD.toFixed(6)}
-              </Text>
-              <Text fontSize="xs" color="text2">
-                Gas Adjusted Quote: {swapRoute?.quoteGasAdjusted.toFixed(2)}
+                Estimated gas: {swapQuote?.estimatedGas?.toString()}
               </Text>
 
-              <Text fontSize="xs" color="text2">
-                Route:{" "}
-                {swapRoute?.route[0]?.tokenPath.reduce(
-                  (previousValue, currentValue) => previousValue + currentValue.symbol + "->",
-                  ""
-                )}
-              </Text>
+              {/* <Text fontSize="xs" color="text2">
+                Route (token): {swapQuote.tokenAddressRoute?.reduce((state, address) => state + "->" + address)}
+                Route (pool): {swapQuote.poolAddressRoute?.reduce((state, address) => state + "->" + address)}
+              </Text> */}
             </Flex>
 
             <Flex flexDirection="column" justifyContent="center">

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useContract, useProvider, useSigner } from "wagmi";
+import { erc20ABI, useContract, useProvider, useSigner } from "wagmi";
 import { BigNumber, ethers } from "ethers";
 import { SwapRoute } from "@uniswap/smart-order-router";
 import { CurrencyAmount, TradeType, Percent, Token as UniswapToken } from "@uniswap/sdk-core";
@@ -12,8 +12,18 @@ import RouterABI from "@/abis/V3UniRouter.json";
 import { useSendTransaction } from "./useSendTransaction";
 import { useChainId } from "./useChainId";
 import { V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
-import { SwapRouteState } from "@/common/types";
+
+import { LoadingStatus, Token } from "@/common/types";
 import { useToken } from "./useTokenList";
+
+export interface SwapQuote {
+  quoteStatus: LoadingStatus;
+  quoteAmount?: BigNumber;
+  estimatedGas?: BigNumber;
+  requiresSwap: boolean;
+  tokenAddressRoute?: string[];
+  poolAddressRoute?: string[];
+}
 
 /**
  * Hook to get quote for exact output swap, and provides a callback to execute the quoted swap.
@@ -22,8 +32,7 @@ import { useToken } from "./useTokenList";
  * @param outputTokenAmount amount of output token required for the swap
  * @param receipientAddress address to send the output token to
  * @returns
- *    swapRouteState: state of the swap route quote
- *    swapRoute: swap route being quoted
+ *    swapQuote: quote for the swap, only valid if quoteStatus = SUCCESS
  *    transaction: swap transaction from executeSwap
  *    executeSwap: execute the swap for the current swapRoute quote
  */
@@ -33,14 +42,12 @@ export function useExactOutputSwap(
   outputTokenAmount?: BigNumber,
   receipientAddress?: string
 ): {
-  swapRouteState: SwapRouteState;
-  swapRoute?: SwapRoute;
-  sufficientFunds?: boolean;
+  swapQuote: SwapQuote;
   transaction?: Transaction;
   executeSwap: () => Promise<string>;
 } {
   const [swapRoute, setSwapRoute] = useState<SwapRoute | undefined>(undefined);
-  const [swapRouteState, setSwapRouteState] = useState<SwapRouteState>(SwapRouteState.INVALID);
+  const [quoteStatus, setQuoteStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
   const [transcationRequest, setTranscationRequest] = useState<TransactionRequest>({});
 
   const provider = useProvider();
@@ -54,7 +61,9 @@ export function useExactOutputSwap(
     sendTransaction: executeSwap,
   } = useSendTransaction(transcationRequest, "multicall", Object.keys(transcationRequest).length != 0);
 
+  ////
   // Get route quote
+  ////
   useEffect(() => {
     async function getRoute() {
       if (inputToken && outputToken && outputTokenAmount && receipientAddress) {
@@ -65,20 +74,26 @@ export function useExactOutputSwap(
         const deadline = Math.floor(Date.now() / 1000 + 3600);
 
         // Set loading, and clear the last quote
-        setSwapRouteState(SwapRouteState.LOADING);
+        setQuoteStatus(LoadingStatus.LOADING);
         setSwapRoute(undefined);
 
-        const route = await router.route(outputCurrencyAmount, inputToken, TradeType.EXACT_OUTPUT, {
-          recipient: receipientAddress,
-          slippageTolerance: new Percent(20, 100),
-          deadline: deadline,
-        });
-
-        if (route) {
-          setSwapRoute(route);
-          setSwapRouteState(SwapRouteState.VALID);
+        if (inputToken.address == outputToken.address) {
+          // Direct send
+          setQuoteStatus(LoadingStatus.SUCCESS);
         } else {
-          setSwapRouteState(SwapRouteState.INVALID);
+          // Compute swap route
+          const route = await router.route(outputCurrencyAmount, inputToken, TradeType.EXACT_OUTPUT, {
+            recipient: receipientAddress,
+            slippageTolerance: new Percent(20, 100),
+            deadline: deadline,
+          });
+
+          if (route) {
+            setSwapRoute(route);
+            setQuoteStatus(LoadingStatus.SUCCESS);
+          } else {
+            setQuoteStatus(LoadingStatus.ERROR);
+          }
         }
       }
     }
@@ -86,7 +101,9 @@ export function useExactOutputSwap(
     getRoute();
   }, [provider, inputToken, outputToken, outputTokenAmount, receipientAddress, chainId]);
 
-  // Set transaction request
+  ////
+  // Compute transaction request
+  ////
   useEffect(() => {
     async function configureTransaction() {
       let request = {};
@@ -116,15 +133,53 @@ export function useExactOutputSwap(
           data: routerContract.interface.encodeFunctionData("multicall", [calls]),
           gasLimit: gas.add(BigNumber.from("20000")), // 20000 margin
         };
+      } else if (
+        signer &&
+        inputToken &&
+        outputToken &&
+        receipientAddress &&
+        outputTokenAmount &&
+        inputToken.address == outputToken.address
+      ) {
+        // Just a transfer
+        const contract = new ethers.Contract(inputToken.address, erc20ABI, signer);
+
+        request = {
+          to: receipientAddress,
+          data: contract.interface.encodeFunctionData("transfer", [outputToken.address, outputTokenAmount]),
+        };
       }
 
       setTranscationRequest(request);
     }
 
     configureTransaction();
-  }, [signer, swapRoute]);
+  }, [signer, swapRoute, inputToken, outputToken, outputTokenAmount, outputTokenAddress, receipientAddress]);
 
-  return { swapRouteState, swapRoute, transaction, executeSwap };
+  ////
+  // Construct quote that works for direct transfer or swap
+  ////
+  const swapQuote = useMemo(() => {
+    let ret: SwapQuote = {
+      quoteStatus: quoteStatus,
+      estimatedGas: quotedGas,
+      requiresSwap: inputToken?.address != outputToken?.address,
+    };
+
+    if (!ret.requiresSwap) {
+      // Direct transfer
+      ret.quoteAmount = outputTokenAmount;
+    } else if (LoadingStatus.SUCCESS == quoteStatus && swapRoute && swapRoute.quote && swapRoute.route) {
+      // Swap route
+      ret.quoteAmount = BigNumber.from(swapRoute.quote.quotient.toString());
+      ret.tokenAddressRoute = swapRoute.route[0].tokenPath.map((uniswapToken) => uniswapToken.address);
+      ret.poolAddressRoute = swapRoute.route[0].poolAddresses;
+    }
+
+    return ret;
+  }, [quoteStatus, swapRoute, quotedGas, inputToken, outputToken]);
+
+  return { swapQuote, transaction, executeSwap };
 }
 
 // Helper to get uniswap token for alpha router
