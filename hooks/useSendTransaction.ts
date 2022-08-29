@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { TransactionRequest } from "@ethersproject/providers";
 import { Transaction, useAddRecentTransaction } from "@papercliplabs/rainbowkit";
 import { usePrepareSendTransaction, useSendTransaction as useWagmiSendTransaction } from "wagmi";
@@ -22,7 +22,7 @@ export function useSendTransaction(
   transactionDescription: string,
   enableEagerFetch: boolean = true
 ): {
-  quotedGas?: BigNumberish;
+  quotedGas?: BigNumber;
   transaction?: Transaction;
   sendTransaction: () => Promise<string>;
 } {
@@ -62,5 +62,5 @@ export function useSendTransaction(
     return txHash;
   }, [sendTransactionAsync, addRecentTransaction]);
 
-  return { quotedGas: prepareTransactionConfig?.request?.gasLimit, transaction, sendTransaction };
+  return { quotedGas: prepareTransactionConfig?.request?.gasLimit as BigNumber, transaction, sendTransaction };
 }
