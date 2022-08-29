@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
-import { Avatar, Box, Button, CloseButton, Flex, Grid, GridItem, IconButton, Image, Input, List, ListIcon, ListItem, Portal, Select, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import { Avatar, Button, CloseButton, Flex, Grid, GridItem, Input, Stack, Text, useDisclosure } from "@chakra-ui/react";
 
 import { Token } from "@/common/types";
 import { useTokenList } from "@/hooks/useTokenList";
 import { NestedPortal } from "./NestedPortal";
-import { ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
-import { useNetwork, useSwitchNetwork } from "wagmi";
-import { MIN_SUCCESSFUL_TX_CONFIRMATIONS, SUPPORTED_CHAINS, URLS, V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
-
-const LONG_CONTENT = Array(100).fill("LONG CONTENT").join("\n");
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { NetworkSelect } from "./NetworkSelect";
 
 const SlideMenu = ({title, onClose, isOpen, children}) => {
   // slide in or out
@@ -49,21 +46,6 @@ const SlideMenu = ({title, onClose, isOpen, children}) => {
         </Grid>
   )
 }
-
-const NetworkSelect = () => {
-  const { chain: activeChain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork()
-
-  return (
-    <Select
-      value={activeChain?.id}
-      disabled={!switchNetwork}
-      onChange={(event) => switchNetwork?.(parseInt(event.target.value, 10))}
-    >
-      {SUPPORTED_CHAINS.map(chain => <option key={chain.id} value={chain.id}>{chain.name}</option>)}
-    </Select>)
-}
-
 
 export default function TokenSelect({
   setToken,
