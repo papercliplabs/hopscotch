@@ -9,18 +9,28 @@ import { TransactionRequest } from "@ethersproject/providers";
 import { AlphaRouter } from "@uniswap/smart-order-router";
 
 import RouterABI from "@/abis/V3UniRouter.json";
+import Weth9Abi from "@/abis/WETH9.json";
 import { useSendTransaction } from "./useSendTransaction";
 import { useChainId } from "./useChainId";
 import { V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
 
 import { LoadingStatus, Token } from "@/common/types";
 import { useToken } from "./useTokenList";
+import { AddressZero, Zero } from "@ethersproject/constants";
+import { getWrappedTokenAddress } from "@/common/utils";
+
+export enum SwapType {
+  SWAP,
+  SEND_ONLY,
+  WRAP_AND_SEND,
+  UNWRAP_AND_SEND,
+}
 
 export interface SwapQuote {
   quoteStatus: LoadingStatus;
   quoteAmount?: BigNumber;
   estimatedGas?: BigNumber;
-  requiresSwap: boolean;
+  swapType: SwapType;
   tokenAddressRoute?: string[];
   poolAddressRoute?: string[];
 }
@@ -50,11 +60,15 @@ export function useExactOutputSwap(
   const [quoteStatus, setQuoteStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
   const [transcationRequest, setTranscationRequest] = useState<TransactionRequest>({});
 
+  const [inputIsNative, outputIsNative] = useMemo(() => {
+    return [AddressZero == inputTokenAddress, AddressZero == outputTokenAddress];
+  }, [inputTokenAddress, outputTokenAddress]);
+
   const provider = useProvider();
   const { data: signer } = useSigner();
   const chainId = useChainId();
-  const inputToken = useUniswapToken(inputTokenAddress, chainId);
-  const outputToken = useUniswapToken(outputTokenAddress, chainId);
+  const inputToken = useUniswapToken(inputIsNative ? getWrappedTokenAddress(chainId) : inputTokenAddress, chainId);
+  const outputToken = useUniswapToken(outputIsNative ? getWrappedTokenAddress(chainId) : outputTokenAddress, chainId);
   const {
     quotedGas,
     transaction,
@@ -62,11 +76,30 @@ export function useExactOutputSwap(
   } = useSendTransaction(transcationRequest, "multicall", Object.keys(transcationRequest).length != 0);
 
   ////
+  // Compute swap type based on inputs
+  ////
+  const swapType = useMemo(() => {
+    let swapType = SwapType.SWAP;
+    const wrappedTokenAddress = getWrappedTokenAddress(chainId);
+    if (inputToken?.address == outputToken?.address) {
+      if (inputIsNative && outputTokenAddress == wrappedTokenAddress) {
+        swapType = SwapType.WRAP_AND_SEND;
+      } else if (outputIsNative && inputTokenAddress == wrappedTokenAddress) {
+        swapType = SwapType.UNWRAP_AND_SEND;
+      } else {
+        swapType = SwapType.SEND_ONLY;
+      }
+    }
+
+    return swapType;
+  }, [inputToken, outputToken, inputTokenAddress, outputTokenAddress, inputIsNative, outputIsNative]);
+
+  ////
   // Get route quote
   ////
   useEffect(() => {
     async function getRoute() {
-      if (inputToken && outputToken && outputTokenAmount && receipientAddress) {
+      if (inputToken && outputToken && outputTokenAmount) {
         const outputCurrencyAmount = CurrencyAmount.fromRawAmount(outputToken, JSBI.BigInt(outputTokenAmount));
 
         const router = new AlphaRouter({ chainId: chainId, provider: provider });
@@ -83,7 +116,7 @@ export function useExactOutputSwap(
         } else {
           // Compute swap route
           const route = await router.route(outputCurrencyAmount, inputToken, TradeType.EXACT_OUTPUT, {
-            recipient: receipientAddress,
+            recipient: V3_SWAP_ROUTER_ADDRESS,
             slippageTolerance: new Percent(20, 100),
             deadline: deadline,
           });
@@ -99,7 +132,7 @@ export function useExactOutputSwap(
     }
 
     getRoute();
-  }, [provider, inputToken, outputToken, outputTokenAmount, receipientAddress, chainId]);
+  }, [provider, inputToken, outputToken, outputTokenAmount, chainId]);
 
   ////
   // Compute transaction request
@@ -116,6 +149,30 @@ export function useExactOutputSwap(
         // TODO: add more here to support ETH wrap/unwrap + take fee
         calls.push(swapRoute.methodParameters.calldata);
 
+        if (inputIsNative) {
+          // If the input is ETH, need to call refund on router to get back any overspend
+          const multi2 = routerContract.interface.encodeFunctionData("refundETH");
+          calls.push(multi2);
+        }
+
+        // TODO: add taking fee here
+        if (outputIsNative) {
+          // If the output is ETH, need to unwrap WETH
+          const multi3 = routerContract.interface.encodeFunctionData("unwrapWETH9", [
+            outputTokenAmount,
+            receipientAddress,
+          ]);
+          calls.push(multi3);
+        } else {
+          // Else, just sweep it as is
+          const multi3 = routerContract.interface.encodeFunctionData("sweepToken", [
+            outputTokenAddress,
+            outputTokenAmount,
+            receipientAddress,
+          ]);
+          calls.push(multi3);
+        }
+
         let gas;
 
         try {
@@ -129,7 +186,7 @@ export function useExactOutputSwap(
 
         request = {
           to: V3_SWAP_ROUTER_ADDRESS,
-          value: value,
+          value: inputIsNative ? value : Zero,
           data: routerContract.interface.encodeFunctionData("multicall", [calls]),
           gasLimit: gas.add(BigNumber.from("20000")), // 20000 margin
         };
@@ -142,12 +199,28 @@ export function useExactOutputSwap(
         inputToken.address == outputToken.address
       ) {
         // Just a transfer
-        const contract = new ethers.Contract(inputToken.address, erc20ABI, signer);
-
-        request = {
-          to: receipientAddress,
-          data: contract.interface.encodeFunctionData("transfer", [outputToken.address, outputTokenAmount]),
-        };
+        if (SwapType.SEND_ONLY == swapType) {
+          if (inputToken.address == AddressZero) {
+            // native token transfer
+            request = {
+              to: receipientAddress,
+              value: outputTokenAmount,
+            };
+          } else {
+            // erc20 transfer
+            const contract = new ethers.Contract(inputToken.address, erc20ABI, signer);
+            request = {
+              to: receipientAddress,
+              data: contract.interface.encodeFunctionData("transfer", [outputToken.address, outputTokenAmount]),
+            };
+          }
+        } else if (SwapType.WRAP_AND_SEND == swapType) {
+          const contract = new ethers.Contract(outputToken.address, Weth9Abi, signer);
+          // TODO(spennyp): wrap and send
+        } else if (SwapType.UNWRAP_AND_SEND == swapType) {
+          const contract = new ethers.Contract(inputToken.address, Weth9Abi, signer);
+          // TODO(spennyp): unwrap and send
+        }
       }
 
       setTranscationRequest(request);
@@ -163,11 +236,11 @@ export function useExactOutputSwap(
     let ret: SwapQuote = {
       quoteStatus: quoteStatus,
       estimatedGas: quotedGas,
-      requiresSwap: inputToken?.address != outputToken?.address,
+      swapType: swapType,
     };
 
-    if (!ret.requiresSwap) {
-      // Direct transfer
+    if (SwapType.SWAP != swapType) {
+      // Direct send, wrap or unwrap
       ret.quoteAmount = outputTokenAmount;
     } else if (LoadingStatus.SUCCESS == quoteStatus && swapRoute && swapRoute.quote && swapRoute.route) {
       // Swap route
@@ -177,7 +250,7 @@ export function useExactOutputSwap(
     }
 
     return ret;
-  }, [quoteStatus, swapRoute, quotedGas, inputToken, outputToken]);
+  }, [quoteStatus, swapRoute, quotedGas, inputToken, outputToken, swapType]);
 
   return { swapQuote, transaction, executeSwap };
 }

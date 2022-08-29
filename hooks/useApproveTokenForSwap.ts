@@ -3,7 +3,7 @@ import { BigNumber, ethers } from "ethers";
 import { erc20ABI, useSigner } from "wagmi";
 import { TransactionRequest } from "@ethersproject/providers";
 import { Transaction } from "@papercliplabs/rainbowkit";
-import { MaxUint256 } from "@ethersproject/constants";
+import { AddressZero, MaxUint256 } from "@ethersproject/constants";
 
 import { V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
 import { useSendTransaction } from "./useSendTransaction";
@@ -61,9 +61,15 @@ export function useApproveErc20ForSwap(
   useEffect(() => {
     async function getAllowance() {
       if (signer && tokenAddress) {
-        const contract = new ethers.Contract(tokenAddress, erc20ABI, signer);
-        const allowance = await contract.allowance(signer.getAddress(), V3_SWAP_ROUTER_ADDRESS);
-        setAllowance(allowance);
+        if (tokenAddress == AddressZero) {
+          // Native token, doesn't need approval
+          setAllowance(MaxUint256);
+        } else {
+          // Erc20 token
+          const contract = new ethers.Contract(tokenAddress, erc20ABI, signer);
+          const allowance = await contract.allowance(signer.getAddress(), V3_SWAP_ROUTER_ADDRESS);
+          setAllowance(allowance);
+        }
       }
     }
 

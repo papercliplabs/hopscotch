@@ -11,7 +11,7 @@ import { Token } from "@/common/types";
 import TokenSelector from "@/components/TokenSelector";
 import { BigNumber, ethers } from "ethers";
 import { useApproveErc20ForSwap } from "@/hooks/useApproveTokenForSwap";
-import { useExactOutputSwap } from "@/hooks/useExactOutputSwap";
+import { SwapType, useExactOutputSwap } from "@/hooks/useExactOutputSwap";
 import { useToken } from "@/hooks/useTokenList";
 import { useRequestData } from "@/hooks/useRequestData";
 
@@ -92,7 +92,22 @@ const RequestPage = () => {
     } else if (requiresApproval) {
       return { buttonText: "Approve", onClickFunction: approve };
     } else {
-      return { buttonText: swapQuote.requiresSwap ? "Execute swap" : "Send", onClickFunction: executeSwap };
+      let text = "";
+      switch (swapQuote.swapType) {
+        case SwapType.SWAP:
+          text = "Execute swap";
+          break;
+        case SwapType.SEND_ONLY:
+          text = "Send";
+          break;
+        case SwapType.UNWRAP_AND_SEND:
+          text = "Unwrap and send (todo)";
+          break;
+        case SwapType.WRAP_AND_SEND:
+          text = "Wrap and send (todo)";
+          break;
+      }
+      return { buttonText: text, onClickFunction: executeSwap };
     }
   }, [
     requestData,
