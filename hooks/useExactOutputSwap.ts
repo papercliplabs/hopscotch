@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useContract, useProvider, useSigner, useToken } from "wagmi";
+import { useContract, useProvider, useSigner } from "wagmi";
 import { BigNumber, ethers } from "ethers";
 import { SwapRoute } from "@uniswap/smart-order-router";
 import { CurrencyAmount, TradeType, Percent, Token as UniswapToken } from "@uniswap/sdk-core";
@@ -13,6 +13,7 @@ import { useSendTransaction } from "./useSendTransaction";
 import { useChainId } from "./useChainId";
 import { V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
 import { SwapRouteState } from "@/common/types";
+import { useToken } from "./useTokenList";
 
 /**
  * Hook to get quote for exact output swap, and provides a callback to execute the quoted swap.
@@ -128,19 +129,14 @@ export function useExactOutputSwap(
 
 // Helper to get uniswap token for alpha router
 function useUniswapToken(address?: string, chainId?: number): UniswapToken | undefined {
-  const wagmiToken = useToken({ address: address, chainId: chainId });
+  const token = useToken(address, chainId);
 
   return useMemo(() => {
-    if (!wagmiToken.data || !chainId) {
+    if (!token || !chainId) {
       return undefined;
     }
 
-    const uniswapToken = new UniswapToken(
-      chainId,
-      wagmiToken.data.address,
-      wagmiToken.data.decimals,
-      wagmiToken.data.symbol
-    );
+    const uniswapToken = new UniswapToken(chainId, token.address, token.decimals, token.symbol);
     return uniswapToken;
-  }, [wagmiToken.data, chainId]);
+  }, [token, chainId]);
 }

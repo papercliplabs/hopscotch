@@ -12,11 +12,11 @@ import TokenSelector from "@/components/TokenSelector";
 import { BigNumber, ethers } from "ethers";
 import { useApproveErc20ForSwap } from "@/hooks/useApproveTokenForSwap";
 import { useExactOutputSwap } from "@/hooks/useExactOutputSwap";
-import { useTokenFromAddress } from "@/hooks/useTokenFromAddress";
+import { useToken } from "@/hooks/useTokenList";
 import { useRequestData } from "@/hooks/useRequestData";
 
 const RequestPage = () => {
-  const [selectedInputToken, setSelectedInputToken] = useState<Token | undefined>(undefined);
+  const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
 
   const { query } = useRouter();
   const id = query.id;
@@ -24,7 +24,8 @@ const RequestPage = () => {
 
   const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
-  const outputToken = useTokenFromAddress(requestData?.recipientTokenAddress, requestData?.chainId);
+
+  const outputToken = useToken(requestData?.recipientTokenAddress, requestData?.chainId);
 
   const {
     swapRouteState,
@@ -32,7 +33,7 @@ const RequestPage = () => {
     transaction: swapTransaction,
     executeSwap,
   } = useExactOutputSwap(
-    selectedInputToken?.address,
+    inputToken?.address,
     requestData?.recipientTokenAddress,
     requestData?.recipientTokenAmount,
     requestData?.recipientAddress
@@ -47,23 +48,17 @@ const RequestPage = () => {
     requiresApproval,
     approve,
     transaction: approveTransation,
-  } = useApproveErc20ForSwap(selectedInputToken?.address, quotedInputAmount);
-
-  const { data: balance } = useBalance({
-    addressOrName: address,
-    token: selectedInputToken?.address,
-    enabled: selectedInputToken != undefined,
-  });
+  } = useApproveErc20ForSwap(inputToken?.address, quotedInputAmount);
 
   const hasSufficentFunds = useMemo(() => {
     let ret = false;
 
-    if (balance && quotedInputAmount) {
-      ret = balance.value.gte(quotedInputAmount);
+    if (inputToken && inputToken.balance && quotedInputAmount) {
+      ret = inputToken.balance.gte(quotedInputAmount);
     }
 
     return ret;
-  }, [balance, quotedInputAmount]);
+  }, [inputToken, quotedInputAmount]);
 
   const transactionPending = approveTransation?.status == "pending" || swapTransaction?.status == "pending";
 
@@ -90,7 +85,7 @@ const RequestPage = () => {
       return { buttonText: "Request has been paid", onClickFunction: undefined };
     } else if (!address) {
       return { buttonText: "Connect Wallet", onClickFunction: openConnectModal };
-    } else if (!selectedInputToken) {
+    } else if (!inputToken) {
       return { buttonText: "Choose token", onClickFunction: undefined };
     } else if (transactionPending) {
       return { buttonText: "Pending txn", onClickFunction: undefined };
@@ -107,7 +102,7 @@ const RequestPage = () => {
     }
   }, [
     requestData,
-    selectedInputToken,
+    inputToken,
     address,
     transactionPending,
     swapRouteState,
@@ -186,7 +181,7 @@ const RequestPage = () => {
             </Flex>
 
             <Flex flexDirection="column" justifyContent="center">
-              <TokenSelector selectedTokenCallback={setSelectedInputToken} />
+              <TokenSelector selectedTokenCallback={setInputToken} />
             </Flex>
           </Flex>
           <Spacer height="2px" />
