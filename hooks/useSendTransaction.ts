@@ -40,6 +40,10 @@ export function useSendTransaction(
     console.log("ERROR_IN_TX_PREPARE", error);
   }
 
+  if (transaction?.status == "failed") {
+    console.log("TX FAILED", transaction);
+  }
+
   /**
    * Send transaction
    * @returns transaction hash, or INVALID_PARAMS
@@ -58,7 +62,6 @@ export function useSendTransaction(
     }
 
     setHash(txHash);
-
     return txHash;
   }, [sendTransactionAsync, addRecentTransaction]);
 
