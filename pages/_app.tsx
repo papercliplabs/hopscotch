@@ -17,6 +17,7 @@ import { AuthProvider } from "@/providers/auth";
 import "@fontsource/inter";
 import "@papercliplabs/rainbowkit/styles.css";
 import { SUPPORTED_CHAINS } from "@/common/constants";
+import TokenListProvider from "@/hooks/useTokenList/provider";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
   alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
@@ -50,11 +51,13 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains} showRecentTransactions={true}>
           <AuthProvider>
-            <ChakraProvider theme={theme}>
-              <MainLayout>
-                <Component {...pageProps} />
-              </MainLayout>
-            </ChakraProvider>
+            <TokenListProvider>
+              <ChakraProvider theme={theme}>
+                <MainLayout>
+                  <Component {...pageProps} />
+                </MainLayout>
+              </ChakraProvider>
+            </TokenListProvider>
           </AuthProvider>
         </RainbowKitProvider>
       </WagmiConfig>

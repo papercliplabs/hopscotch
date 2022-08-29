@@ -1,16 +1,20 @@
 import { TransactionReceipt, TransactionResponse } from "@ethersproject/providers";
+import { BigNumber } from "ethers";
 
-/**
- * Token matching the output of https://tokens.uniswap.org
- */
-export type Token = {
-  chainId: number;
-  address: string;
-  name: string;
-  symbol: string;
-  decimals: number;
-  logoURI: string;
-};
+export interface BaseToken {
+  readonly address: string;
+  readonly chainId: number;
+  readonly name: string;
+  readonly symbol: string;
+  readonly decimals: number;
+  readonly logoURI: string;
+}
+
+export interface Token extends BaseToken {
+  priceUsd?: number;
+  balance?: BigNumber;
+  balanceUsd?: number;
+}
 
 /**
  * Generaly purpose length enum
