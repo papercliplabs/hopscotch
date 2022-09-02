@@ -55,27 +55,23 @@ export default function TokenSelect({
   setToken: (token: Token | undefined) => void;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [index, setIndex] = useState<number | "">("");
   const [search, setSearch] = useState("");
   const handleSearchChange = (event) => setSearch(event.target.value)
 
   const tokenList = useTokenList();
   const filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
 
-  // Reset selected token when token list changes
-  useEffect(() => {
-    setIndex("");
-  }, [tokenList]);
-
   console.log('tokenList', {tokenList});
 
   const buttonProps = token ? {
+    color: "black",
     backgroundColor: "white",
     children: token.symbol,
     rightIcon: <ChevronDownIcon />,
     leftIcon: <Avatar height={8} width={8} src={token.logoURI}/>,
     onClick: () => onOpen(),
   } : {
+    color: "white",
     backgroundColor: "blue",
     children: "Choose Token",
     rightIcon: <ChevronDownIcon />,
