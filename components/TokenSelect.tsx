@@ -36,7 +36,7 @@ const SlideMenu = ({title, onClose, isOpen, children}) => {
             flexDirection="row"
           >
             <div></div>
-            <Text fontSize="3xl">
+            <Text textStyle="h4">
               {title}
             </Text>
             <CloseButton onClick={() => onClose()} />
@@ -72,7 +72,7 @@ export default function TokenSelect({
     onClick: () => onOpen(),
   } : {
     color: "white",
-    backgroundColor: "blue",
+    colorScheme: "brand",
     children: "Choose Token",
     rightIcon: <ChevronDownIcon />,
     onClick: () => onOpen(),
@@ -99,7 +99,6 @@ export default function TokenSelect({
           paddingY={4}
           overflowY="scroll"
         >
-          <Text fontSize="xl" mb={2} paddingX={4}>Your wallet</Text>
           <Stack width="100%">
           {
             filteredTokenList.map((tokenDetails, index) => {
