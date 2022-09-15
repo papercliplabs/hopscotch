@@ -12,6 +12,8 @@ export const NetworkSelect = () => {
       value={activeChain?.id}
       disabled={!switchNetwork}
       onChange={(event) => switchNetwork?.(parseInt(event.target.value, 10))}
+      borderRadius="full"
+      boxShadow="md"
     >
       {SUPPORTED_CHAINS.map(chain => <option key={chain.id} value={chain.id}>{chain.name}</option>)}
     </Select>)

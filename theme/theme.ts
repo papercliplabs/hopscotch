@@ -1,10 +1,17 @@
 import { extendTheme } from "@chakra-ui/react";
 
 const colors = {
+  primary: "#0D88FF",
   brand: {
-    900: "#0D88FF",
-    800: "#153e75",
-    700: "#2a69ac",
+    900: "##053461",
+    800: "#074886",
+    700: "#08549e",
+    600: "#0a69c5",
+    500: "#0D88FF",
+    400: "#2a96ff",
+    300: "#53aaff",
+    200: "#95cbff",
+    100: "#c7e3ff",
   },
   black: "#1B1D1F",
   blackWhite: {
@@ -49,37 +56,37 @@ const fonts = {
 const textStyles = {
   h1: {
     fontSize: "52px",
-    fontWeight: 'bold',
+    fontWeight: 800,
     lineHeight: '120%',
     letterSpacing: '0',
   },
   h2: {
     fontSize: "40px",
-    fontWeight: 'bold',
+    fontWeight: 800,
     lineHeight: '120%',
     letterSpacing: '0',
   },
   h3: {
     fontSize: "24px",
-    fontWeight: 'bold',
+    fontWeight: 800,
     lineHeight: '120%',
     letterSpacing: '0',
   },
   h4: {
     fontSize: "20px",
-    fontWeight: 'bold',
+    fontWeight: 800,
     lineHeight: '120%',
     letterSpacing: '0',
   },
   h5: {
     fontSize: "18px",
-    fontWeight: 'bold',
+    fontWeight: 800,
     lineHeight: '120%',
     letterSpacing: '0',
   },
   h6: {
     fontSize: "18px",
-    fontWeight: 'bold',
+    fontWeight: 800,
     lineHeight: '120%',
     letterSpacing: '0',
   },
@@ -103,7 +110,7 @@ const textStyles = {
   },
   eyebrow: {
     fontSize: "14px",
-    fontWeight: "bold",
+    fontWeight: 800,
     lineHeight: '20px',
     letterSpacing: '0',
   },
