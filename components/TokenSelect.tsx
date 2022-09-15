@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -21,7 +21,15 @@ import { NestedPortal } from "./NestedPortal";
 import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import { NetworkSelect } from "./NetworkSelect";
 
-const SlideMenu = ({ title, onClose, isOpen, children }) => {
+interface SlideMenuProps {
+  isOpen: boolean;
+  title: string;
+  onClose: () => void;
+  children: ReactNode;
+}
+
+
+const SlideMenu: FC<SlideMenuProps> = ({ title, onClose, isOpen, children }) => {
   // slide in or out
   const transform = isOpen ? "translateY(0%)" : "translateY(100%)";
   const transition = "transform 0.25s linear";
@@ -62,12 +70,12 @@ export default function TokenSelect({
   setToken,
   token,
 }: {
-  token: Token | null;
+  token?: Token;
   setToken: (token: Token | undefined) => void;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState("");
-  const handleSearchChange = (event) => setSearch(event.target.value);
+  const handleSearchChange = (event: any) => setSearch(event?.target?.value);
 
   const tokenList = useTokenList();
   const filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
