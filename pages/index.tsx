@@ -1,6 +1,6 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { Button, Center, Container, Heading, Text, Input, Spacer, Flex, Tooltip } from "@chakra-ui/react";
+import { Button, Center, Container, Heading, Text, Input, Spacer, Flex, Tooltip, Box, GridItem } from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { ConnectButton, useConnectModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
@@ -11,8 +11,9 @@ import { useAuth } from "@/providers/auth";
 import { FEE_BIPS, SUPPORTED_CHAINS } from "@/common/constants";
 import { Token } from "@/common/types";
 import { formatNumber } from "@/common/utils";
-import TokenSelector from "@/components/TokenSelector";
+import TokenSelect from "@/components/TokenSelect";
 import { NumberInput } from "@/components/NumberInput";
+import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
 
 const CreateRequest: FC = () => {
   const router = useRouter();
@@ -57,7 +58,14 @@ const CreateRequest: FC = () => {
     tokenAmount == "" ? "Enter token amount" : selectedToken == undefined ? "Select token" : "Create request";
 
   return (
-    <Flex flexDirection="column" alignItems="center" justifyContent="center" maxWidth="456px" width="100%" gap="0.5">
+    <PrimaryCardGrid>
+      <GridItem
+          gridRowStart={1}
+          gridColumnStart={1}
+          zIndex={1}
+          height="100%"
+          margin={4}
+        >
       <Heading size="lg" fontWeight="semibold" color="text0" mb={2}>
         Create your request
       </Heading>
@@ -81,7 +89,7 @@ const CreateRequest: FC = () => {
         </Flex>
 
         <Flex flexDirection="column" justifyContent="center">
-          <TokenSelector selectedTokenCallback={setSelectedToken} />
+          <TokenSelect token={selectedToken} setToken={setSelectedToken} />
         </Flex>
       </Flex>
       <Spacer height="2px" />
@@ -119,8 +127,9 @@ const CreateRequest: FC = () => {
           {address ? requestButtonMsg : "Connect Wallet"}
         </Button>
       </Flex>
-    </Flex>
-  );
+      </GridItem>
+    </PrimaryCardGrid>
+      );
 };
 
 const Index = () => {
