@@ -13,8 +13,7 @@ export const URLS = {
 export const SUPPORTED_CHAINS = [
   chain.polygon,
   chain.polygonMumbai,
-  chain.rinkeby,
-  chain.ropsten,
+  chain.goerli,
   chain.mainnet,
   chain.optimism,
   chain.arbitrum,
@@ -23,8 +22,7 @@ export const SUPPORTED_CHAINS = [
 export const COIN_GECKO_API_PLATFORM_ID = {
   [chain.polygon.id]: "polygon-pos",
   [chain.polygonMumbai.id]: undefined,
-  [chain.rinkeby.id]: undefined,
-  [chain.ropsten.id]: undefined,
+  [chain.goerli.id]: undefined,
   [chain.mainnet.id]: "ethereum",
   [chain.optimism.id]: "optimistic-ethereum",
   [chain.arbitrum.id]: "arbitrum-one",
@@ -51,16 +49,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
   },
   {
     address: ethers.constants.AddressZero,
-    chainId: chain.rinkeby.id,
-    name: "Ethereum",
-    symbol: "ETH",
-    decimals: 18,
-    logoURI: "",
-    wrappedAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
-  },
-  {
-    address: ethers.constants.AddressZero,
-    chainId: chain.ropsten.id,
+    chainId: chain.goerli.id,
     name: "Ethereum",
     symbol: "ETH",
     decimals: 18,

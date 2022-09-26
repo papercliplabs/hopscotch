@@ -19,6 +19,17 @@ insert_permissions:
         - user_id
       backend_only: false
 select_permissions:
+  - role: anon
+    permission:
+      columns:
+        - id
+        - recipient_token_amount
+        - recipient_token_address
+        - transaction_hash
+        - chain_id
+        - user_id
+        - status
+      filter: {}
   - role: user
     permission:
       columns:
@@ -31,22 +42,15 @@ select_permissions:
         - user_id
       filter: {}
 update_permissions:
-  - role: anon
-    permission:
-      columns:
-        - status
-        - transaction_hash
-      filter: {}
-      check: {}
   - role: user
     permission:
       columns:
         - chain_id
-        - id
         - recipient_token_address
         - recipient_token_amount
         - status
         - transaction_hash
+        - id
         - user_id
       filter:
         user_id:
