@@ -1,6 +1,18 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { Button, Center, Container, Heading, Text, Input, Spacer, Flex, Tooltip, Box, GridItem } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Container,
+  Heading,
+  Text,
+  Input,
+  Spacer,
+  Flex,
+  Tooltip,
+  Box,
+  GridItem,
+} from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { ConnectButton, useConnectModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
@@ -59,77 +71,71 @@ const CreateRequest: FC = () => {
 
   return (
     <PrimaryCardGrid>
-      <GridItem
-          gridRowStart={1}
-          gridColumnStart={1}
-          zIndex={1}
-          height="100%"
-          margin={4}
-        >
-      <Heading size="lg" fontWeight="semibold" color="text0" mb={2}>
-        Create your request
-      </Heading>
-      <Text size="md" mb={4} color="text1">
-        Get a link you can send anyone to pay you
-      </Text>
-
-      <Flex
-        width="100%"
-        backgroundColor="bg1"
-        borderTopRadius="sm"
-        padding="3"
-        flexDirection="row"
-        justifyContent="space-between"
-      >
-        <Flex direction="column" flex="1">
-          <NumberInput placeholder="Request amount" setNumCallback={setTokenAmount} />
-          <Text fontSize="xs" color="text2">
-            ${formatNumber(tokenAmountUsd)}
-          </Text>
-        </Flex>
-
-        <Flex flexDirection="column" justifyContent="center">
-          <TokenSelect token={selectedToken} setToken={setSelectedToken} />
-        </Flex>
-      </Flex>
-      <Spacer height="2px" />
-      <Flex width="100%" backgroundColor="bg1" borderBottomRadius="sm" padding="2" flexDirection="row">
-        <Text>On {activeChain ? activeChain.name : SUPPORTED_CHAINS[0].name}</Text>
-        <Text fontSize="xs" color="text1">
-          (alpha)
+      <GridItem gridRowStart={1} gridColumnStart={1} zIndex={1} height="100%" margin={4}>
+        <Heading size="lg" fontWeight="semibold" color="text0" mb={2}>
+          Create your request
+        </Heading>
+        <Text size="md" mb={4} color="text1">
+          Get a link you can send anyone to pay you
         </Text>
-      </Flex>
 
-      <Flex flexDirection="row" width="100%" justifyContent="space-between">
-        <Flex flexDirection="row">
-          <Text fontSize="sm" color="text1">
-            <Tooltip label="Hopscotch transaction fee">
-              <QuestionOutlineIcon />
-            </Tooltip>{" "}
-            Estimated fee
-          </Text>
-        </Flex>
-        <Text fontSize="sm" color="text1">
-          ${formatNumber(feeAmountUsd)}
-        </Text>
-      </Flex>
-
-      <Flex width="100%">
-        <Button
-          mt={4}
-          colorScheme="blue"
-          type="submit"
+        <Flex
           width="100%"
-          size="lg"
-          onClick={address ? createRequest : openConnectModal}
-          isDisabled={!!address && (tokenAmount == "" || selectedToken == undefined)}
+          backgroundColor="bg1"
+          borderTopRadius="sm"
+          padding="3"
+          flexDirection="row"
+          justifyContent="space-between"
         >
-          {address ? requestButtonMsg : "Connect Wallet"}
-        </Button>
-      </Flex>
+          <Flex direction="column" flex="1">
+            <NumberInput placeholder="Request amount" setNumCallback={setTokenAmount} />
+            <Text fontSize="xs" color="text2">
+              ${formatNumber(tokenAmountUsd)}
+            </Text>
+          </Flex>
+
+          <Flex flexDirection="column" justifyContent="center">
+            <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={false} />
+          </Flex>
+        </Flex>
+        <Spacer height="2px" />
+        <Flex width="100%" backgroundColor="bg1" borderBottomRadius="sm" padding="2" flexDirection="row">
+          <Text>On {activeChain ? activeChain.name : SUPPORTED_CHAINS[0].name}</Text>
+          <Text fontSize="xs" color="text1">
+            (alpha)
+          </Text>
+        </Flex>
+
+        <Flex flexDirection="row" width="100%" justifyContent="space-between">
+          <Flex flexDirection="row">
+            <Text fontSize="sm" color="text1">
+              <Tooltip label="Hopscotch transaction fee">
+                <QuestionOutlineIcon />
+              </Tooltip>{" "}
+              Estimated fee
+            </Text>
+          </Flex>
+          <Text fontSize="sm" color="text1">
+            ${formatNumber(feeAmountUsd)}
+          </Text>
+        </Flex>
+
+        <Flex width="100%">
+          <Button
+            mt={4}
+            colorScheme="blue"
+            type="submit"
+            width="100%"
+            size="lg"
+            onClick={address ? createRequest : openConnectModal}
+            isDisabled={!!address && (tokenAmount == "" || selectedToken == undefined)}
+          >
+            {address ? requestButtonMsg : "Connect Wallet"}
+          </Button>
+        </Flex>
       </GridItem>
     </PrimaryCardGrid>
-      );
+  );
 };
 
 const Index = () => {
