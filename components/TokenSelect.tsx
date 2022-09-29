@@ -28,7 +28,6 @@ interface SlideMenuProps {
   children: ReactNode;
 }
 
-
 const SlideMenu: FC<SlideMenuProps> = ({ title, onClose, isOpen, children }) => {
   // slide in or out
   const transform = isOpen ? "translateY(0%)" : "translateY(100%)";
@@ -69,9 +68,11 @@ const SlideMenu: FC<SlideMenuProps> = ({ title, onClose, isOpen, children }) => 
 export default function TokenSelect({
   setToken,
   token,
+  isDisabled,
 }: {
   token?: Token;
   setToken: (token: Token | undefined) => void;
+  isDisabled: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState("");
@@ -90,6 +91,7 @@ export default function TokenSelect({
         rightIcon: <ChevronDownIcon />,
         leftIcon: <Avatar height={8} width={8} src={token.logoURI} />,
         onClick: () => onOpen(),
+        isDisabled: isDisabled,
       }
     : {
         color: "white",
@@ -97,6 +99,7 @@ export default function TokenSelect({
         children: "Choose Token",
         rightIcon: <ChevronDownIcon />,
         onClick: () => onOpen(),
+        isDisabled: isDisabled,
       };
 
   return (
@@ -107,7 +110,9 @@ export default function TokenSelect({
           <Grid templateRows="auto auto minmax(0, 1fr)" rowGap={2} width="100%" height="100%" templateColumns="1fr">
             <GridItem>
               <InputGroup>
-                <InputLeftElement pointerEvents="none"><SearchIcon color="black" /></InputLeftElement>
+                <InputLeftElement pointerEvents="none">
+                  <SearchIcon color="black" />
+                </InputLeftElement>
                 <Input
                   placeholder="Search"
                   value={search}
@@ -118,8 +123,8 @@ export default function TokenSelect({
                   textStyle="h5"
                   fontSize="18px"
                   fontWeight={800}
-                  lineHeight='120%'
-                  letterSpacing='0'
+                  lineHeight="120%"
+                  letterSpacing="0"
                 />
               </InputGroup>
             </GridItem>

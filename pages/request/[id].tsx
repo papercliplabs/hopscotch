@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { Button, Center, Container, Flex, GridItem, Spacer, Text, Tooltip } from "@chakra-ui/react";
-import { useAccount, useBalance } from "wagmi";
+import { useAccount, useBalance, useSwitchNetwork } from "wagmi";
 import { useEffect, useMemo, useState } from "react";
 import { Request_Status_Enum } from "@/graphql/generated/graphql";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
@@ -15,6 +15,7 @@ import { useToken } from "@/hooks/useTokenList";
 import { useRequestData } from "@/hooks/useRequestData";
 import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
 import TokenSelect from "@/components/TokenSelect";
+import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
 
 const RequestPage = () => {
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
@@ -25,6 +26,9 @@ const RequestPage = () => {
 
   const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
+  const { switchNetwork } = useSwitchNetwork();
+
+  const onExpectedChain = useIsOnExpectedChain(requestData?.chainId);
 
   const outputToken = useToken(requestData?.recipientTokenAddress, requestData?.chainId);
 
@@ -80,6 +84,11 @@ const RequestPage = () => {
       return { buttonText: "Request has been paid", onClickFunction: undefined };
     } else if (!address) {
       return { buttonText: "Connect Wallet", onClickFunction: openConnectModal };
+    } else if (!onExpectedChain) {
+      return {
+        buttonText: "Wrong Network",
+        onClickFunction: () => (switchNetwork ? switchNetwork(requestData?.chainId) : null),
+      };
     } else if (!selectedToken) {
       return { buttonText: "Choose token", onClickFunction: undefined };
     } else if (transactionPending) {
@@ -174,7 +183,7 @@ const RequestPage = () => {
           </Flex>
 
           <Flex flexDirection="column" justifyContent="center">
-            <TokenSelect token={selectedToken} setToken={setSelectedToken} />
+            <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={!onExpectedChain} />
           </Flex>
         </Flex>
         <Spacer height="2px" />
