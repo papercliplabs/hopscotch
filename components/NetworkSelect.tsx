@@ -1,20 +1,23 @@
-import { Select } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { useNetwork, useSwitchNetwork } from "wagmi";
 import { SUPPORTED_CHAINS } from "@/common/constants";
+import { useChainModal } from "@papercliplabs/rainbowkit";
 
 
 export const NetworkSelect = () => {
   const { chain: activeChain } = useNetwork();
   const { switchNetwork } = useSwitchNetwork()
+  const { openChainModal } = useChainModal();
 
+  // log chain
+  console.log({activeChain});
   return (
-    <Select
-      value={activeChain?.id}
+    <Button
       disabled={!switchNetwork}
-      onChange={(event) => switchNetwork?.(parseInt(event.target.value, 10))}
+      onClick={(event) => openChainModal?.()}
       borderRadius="full"
       boxShadow="md"
     >
-      {SUPPORTED_CHAINS.map(chain => <option key={chain.id} value={chain.id}>{chain.name}</option>)}
-    </Select>)
+      {activeChain?.name}
+    </Button>)
 }
