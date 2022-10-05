@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNetwork } from "wagmi";
+import { Chain as WagmiChain, useNetwork } from "wagmi";
 
 import { SUPPORTED_CHAINS } from "@/common/constants";
-import { useRainbowKitChainsById, Chain } from "@papercliplabs/rainbowkit";
+import { useRainbowKitChainsById } from "@papercliplabs/rainbowkit";
+import { RainbowKitChain } from "@papercliplabs/rainbowkit/dist/components/RainbowKitProvider/RainbowKitChainContext";
+
+type Chain = WagmiChain & RainbowKitChain
 
 export interface UseActiveChain extends Chain {
   connected: boolean,
@@ -14,7 +17,7 @@ export function useActiveChain(): UseActiveChain {
   const { chain: connectedChain } = useNetwork();
   const rainbowkitChainsById = useRainbowKitChainsById();
   const activeChainId = connectedChain?.id ?? SUPPORTED_CHAINS[0].id;
-  const rainbowKitChain = rainbowkitChainsById[activeChainId];
+  const rainbowKitChain = rainbowkitChainsById[activeChainId] as Chain;
 
   // iconUrl is a promise so we must resolve it
   useEffect(() => {
@@ -27,7 +30,7 @@ export function useActiveChain(): UseActiveChain {
         setIconUrlSync(url)
       });
     } else {
-      setIconUrlSync(iconUrl);
+      setIconUrlSync(iconUrl ?? "");
     }
   }, [rainbowKitChain]);
 
