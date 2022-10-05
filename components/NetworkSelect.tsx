@@ -1,20 +1,45 @@
-import { Select } from "@chakra-ui/react";
-import { useNetwork, useSwitchNetwork } from "wagmi";
-import { SUPPORTED_CHAINS } from "@/common/constants";
+import { Button } from "@chakra-ui/react";
+import { useChainModal, useConnectModal } from "@papercliplabs/rainbowkit";
+import Image from "next/image";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { useActiveChain } from "@/hooks/useActiveChain";
 
 
 export const NetworkSelect = () => {
-  const { chain: activeChain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork()
+  const { openChainModal } = useChainModal();
+  const { openConnectModal } = useConnectModal();
+  const activeChain = useActiveChain();
+
 
   return (
-    <Select
-      value={activeChain?.id}
-      disabled={!switchNetwork}
-      onChange={(event) => switchNetwork?.(parseInt(event.target.value, 10))}
+    <Button
+      onClick={(event) => activeChain.connected ? openChainModal?.() : openConnectModal?.()}
+      leftIcon={
+        <Image
+          src={activeChain?.iconUrlSync}
+          alt={activeChain?.name}
+          width={32}
+          height={32}
+          layout="fixed"
+          objectFit="contain"
+          className="rounded-full"
+        />
+      }
+      rightIcon={
+        <ChevronDownIcon width={6} height={6}/>
+      }
+      width="100%"
+      bgColor="white"
+      sx={{
+        justifyContent: "flex-start",
+        "& > :last-child": {
+          marginLeft: "auto",
+        },
+      }}
+
       borderRadius="full"
       boxShadow="md"
     >
-      {SUPPORTED_CHAINS.map(chain => <option key={chain.id} value={chain.id}>{chain.name}</option>)}
-    </Select>)
+      on {activeChain?.name} Network
+    </Button>)
 }
