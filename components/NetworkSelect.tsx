@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import { ConnectButton, useChainModal, useConnectModal } from "@papercliplabs/rainbowkit";
+import { useChainModal, useConnectModal } from "@papercliplabs/rainbowkit";
 import Image from "next/image";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useActiveChain } from "@/hooks/useActiveChain";
@@ -10,9 +10,6 @@ export const NetworkSelect = () => {
   const { openConnectModal } = useConnectModal();
   const activeChain = useActiveChain();
 
-
-  // TODO handle no active chain
-  if (!activeChain) return <ConnectButton />;
 
   return (
     <Button
