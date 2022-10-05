@@ -11,7 +11,7 @@ import { AlphaRouter } from "@uniswap/smart-order-router";
 import RouterABI from "@/abis/V3UniRouter.json";
 import Weth9Abi from "@/abis/WETH9.json";
 import { useSendTransaction } from "./useSendTransaction";
-import { useChainId } from "./useChainId";
+import { useActiveChain } from "@/hooks/useActiveChain";
 import { V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
 
 import { LoadingStatus, Token } from "@/common/types";
@@ -67,7 +67,7 @@ export function useExactOutputSwap(
   const provider = useProvider();
   const { data: signer } = useSigner();
   const { address } = useAccount();
-  const chainId = useChainId();
+  const {id: chainId} = useActiveChain();
   const inputToken = useUniswapToken(inputIsNative ? getWrappedTokenAddress(chainId) : inputTokenAddress, chainId);
   const outputToken = useUniswapToken(outputIsNative ? getWrappedTokenAddress(chainId) : outputTokenAddress, chainId);
 

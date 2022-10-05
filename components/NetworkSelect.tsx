@@ -1,37 +1,25 @@
 import { Button } from "@chakra-ui/react";
-import { useNetwork, useSwitchNetwork } from "wagmi";
-import { SUPPORTED_CHAINS } from "@/common/constants";
-import { ConnectButton, useChainModal, useRainbowKitChainsById } from "@papercliplabs/rainbowkit";
+import { ConnectButton, useChainModal, useConnectModal } from "@papercliplabs/rainbowkit";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import { useActiveChain } from "@/hooks/useActiveChain";
 
 
 export const NetworkSelect = () => {
-  const [chainIconUrl, setChainIconUrl] = useState("");
-  const { chain: activeChain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork()
   const { openChainModal } = useChainModal();
-  const rainbowkitChainsById = useRainbowKitChainsById();
-
-  const rainbowKitChain = rainbowkitChainsById[activeChain?.id];
-
-  // iconUrl is a promise so we must resolve it
-  useEffect(() => { rainbowKitChain?.iconUrl?.().then(setChainIconUrl) }, [rainbowKitChain]);
-
+  const { openConnectModal } = useConnectModal();
+  const activeChain = useActiveChain();
 
 
   // TODO handle no active chain
   if (!activeChain) return <ConnectButton />;
 
-
   return (
     <Button
-      disabled={!switchNetwork}
-      onClick={(event) => openChainModal?.()}
+      onClick={(event) => activeChain.connected ? openChainModal?.() : openConnectModal?.()}
       leftIcon={
         <Image
-          src={chainIconUrl}
+          src={activeChain?.iconUrlSync}
           alt={activeChain?.name}
           width={32}
           height={32}
