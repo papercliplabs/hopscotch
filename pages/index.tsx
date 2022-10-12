@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Button,
@@ -32,6 +32,7 @@ const CreateRequest: FC = () => {
   const { ensureUser } = useAuth();
   const [insertRequest, { loading }] = useInsertRequestMutation();
   const { openConnectModal } = useConnectModal();
+  console.log(openConnectModal);
 
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
   const [tokenAmount, setTokenAmount] = useState<string>("");
@@ -66,8 +67,22 @@ const CreateRequest: FC = () => {
   const tokenAmountUsd = tokenPriceUsd && tokenAmount ? tokenPriceUsd * parseFloat(tokenAmount) : 0;
   const feeAmountUsd = tokenAmountUsd ? (tokenAmountUsd * FEE_BIPS) / 10000 : 0;
 
-  const requestButtonMsg =
-    tokenAmount == "" ? "Enter token amount" : selectedToken == undefined ? "Select token" : "Create request";
+  const requestButtonMsg = useMemo(() => {
+    return tokenAmount == "" ? "Enter token amount" : selectedToken == undefined ? "Select token" : "Create request";
+  }, []);
+
+  // Compute the button state
+  const { buttonText, onClickFunction } = useMemo(() => {
+    if (!address) {
+      return { buttonText: "Connect Wallet", onClickFunction: openConnectModal };
+    } else if (selectedToken == undefined) {
+      return { buttonText: "Select Token", onClickFunction: undefined };
+    } else if (tokenAmount == "") {
+      return { buttonText: "Enter Token Amount", onClickFunction: undefined };
+    } else {
+      return { buttonText: "Create Request", onClickFunction: createRequest };
+    }
+  }, [tokenAmount, selectedToken, address]);
 
   return (
     <PrimaryCardGrid>
@@ -127,10 +142,12 @@ const CreateRequest: FC = () => {
             type="submit"
             width="100%"
             size="lg"
-            onClick={address ? createRequest : openConnectModal}
-            isDisabled={!!address && (tokenAmount == "" || selectedToken == undefined)}
+            onClick={() => {
+              onClickFunction && onClickFunction();
+            }}
+            isDisabled={onClickFunction == undefined}
           >
-            {address ? requestButtonMsg : "Connect Wallet"}
+            {buttonText}
           </Button>
         </Flex>
       </GridItem>

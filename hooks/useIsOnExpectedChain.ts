@@ -1,6 +1,6 @@
-import { useChainId } from "./useChainId";
+import { useActiveChain } from "./useActiveChain";
 
 export function useIsOnExpectedChain(expectedChainId: number | undefined): boolean {
-  const chainId = useChainId();
+  const { id: chainId } = useActiveChain();
   return chainId == expectedChainId;
 }

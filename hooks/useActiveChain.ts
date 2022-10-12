@@ -5,11 +5,11 @@ import { SUPPORTED_CHAINS } from "@/common/constants";
 import { useRainbowKitChainsById } from "@papercliplabs/rainbowkit";
 import { RainbowKitChain } from "@papercliplabs/rainbowkit/dist/components/RainbowKitProvider/RainbowKitChainContext";
 
-type Chain = WagmiChain & RainbowKitChain
+type Chain = WagmiChain & RainbowKitChain;
 
 export interface UseActiveChain extends Chain {
-  connected: boolean,
-  iconUrlSync: string,
+  connected: boolean;
+  iconUrlSync: string;
 }
 
 export function useActiveChain(): UseActiveChain {
@@ -22,12 +22,10 @@ export function useActiveChain(): UseActiveChain {
   // iconUrl is a promise so we must resolve it
   useEffect(() => {
     const iconUrl = rainbowKitChain?.iconUrl;
-    // log
-    console.log("iconUrl", iconUrl);
     // if iconUrl is a promise, resolve it
     if (iconUrl instanceof Function) {
       iconUrl().then((url: string) => {
-        setIconUrlSync(url)
+        setIconUrlSync(url);
       });
     } else {
       setIconUrlSync(iconUrl ?? "");

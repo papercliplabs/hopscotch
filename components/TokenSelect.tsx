@@ -81,8 +81,6 @@ export default function TokenSelect({
   const tokenList = useTokenList();
   const filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
 
-  console.log("tokenList", { tokenList });
-
   const buttonProps = token
     ? {
         color: "black",

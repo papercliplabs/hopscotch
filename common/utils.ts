@@ -3,7 +3,7 @@ import { Token as UniswapToken } from "@uniswap/sdk-core";
 import { useNetwork, useToken } from "wagmi";
 import { Token } from "./types";
 import { add } from "lodash";
-import { NATIVE_TOKENS } from "./constants";
+import { NATIVE_TOKENS, SUPPORTED_CHAINS } from "./constants";
 
 /**
  * Format a number so it can nicely be rendered
@@ -70,4 +70,8 @@ export function shortAddress(address: string, length: Length): string {
  */
 export function getWrappedTokenAddress(chainId: number): string | undefined {
   return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.wrappedAddress;
+}
+
+export function getSupportedChainIds(): Array<number> {
+  return SUPPORTED_CHAINS.map((chain) => chain.id);
 }
