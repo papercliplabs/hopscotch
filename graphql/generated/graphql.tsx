@@ -1171,7 +1171,7 @@ export type GetUserByPublicKeyQueryVariables = Exact<{
 }>;
 
 
-export type GetUserByPublicKeyQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'user', id: any, nonce: any }> };
+export type GetUserByPublicKeyQuery = { __typename?: 'query_root', user: Array<{ __typename?: 'user', id: any, public_key: string, nonce: any }> };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1400,6 +1400,7 @@ export const GetUserByPublicKeyDocument = gql`
     query getUserByPublicKey($publicKey: String!) {
   user(limit: 1, where: {public_key: {_eq: $publicKey}}) {
     id
+    public_key
     nonce
   }
 }

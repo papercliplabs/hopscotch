@@ -41,24 +41,26 @@ const CreateRequest: FC = () => {
 
   const tokenPriceUsd = 1; // TODO
 
-  function createRequest() {
+  async function createRequest() {
     if (selectedToken != undefined && tokenAmount != "" && activeChain) {
       const tokenAmountRaw = ethers.utils.parseUnits(tokenAmount, selectedToken.decimals);
-      ensureUser().then((user) => {
-        insertRequest({
+      const userId = await ensureUser();
+
+      if (userId != undefined && userId != null) {
+        const { data: insertData } = await insertRequest({
           variables: {
             object: {
               recipient_token_amount: tokenAmountRaw.toString(),
               recipient_token_address: selectedToken.address,
               chain_id: activeChain.id,
-              user_id: user?.id,
+              user_id: userId,
             },
           },
-        }).then(({ data }) => {
-          const requestId = data?.insert_request_one?.id;
-          router.push(`/request/${requestId}`);
         });
-      });
+
+        const requestId = insertData?.insert_request_one?.id;
+        router.push(`/request/${requestId}`);
+      }
     } else {
       console.log("Invalid data");
     }
