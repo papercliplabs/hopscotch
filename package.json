@@ -46,7 +46,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "styled-components": "^5.3.3",
-    "wagmi": "^0.6.4",
+    "wagmi": "^0.6.2",
     "web3": "^1.6.0",
     "web3modal": "^1.9.4"
   },

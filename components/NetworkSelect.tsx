@@ -4,16 +4,14 @@ import Image from "next/image";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useActiveChain } from "@/hooks/useActiveChain";
 
-
 export const NetworkSelect = () => {
   const { openChainModal } = useChainModal();
   const { openConnectModal } = useConnectModal();
   const activeChain = useActiveChain();
 
-
   return (
     <Button
-      onClick={(event) => activeChain.connected ? openChainModal?.() : openConnectModal?.()}
+      onClick={(event) => (activeChain.connected ? openChainModal?.() : openConnectModal?.())}
       leftIcon={
         <Image
           src={activeChain?.iconUrlSync}
@@ -25,9 +23,7 @@ export const NetworkSelect = () => {
           className="rounded-full"
         />
       }
-      rightIcon={
-        <ChevronDownIcon width={6} height={6}/>
-      }
+      rightIcon={<ChevronDownIcon width={6} height={6} />}
       width="100%"
       bgColor="white"
       sx={{
@@ -36,10 +32,12 @@ export const NetworkSelect = () => {
           marginLeft: "auto",
         },
       }}
-
       borderRadius="full"
       boxShadow="md"
+      // TODO: TEMP HACK
+      isDisabled={true}
     >
       on {activeChain?.name} Network
-    </Button>)
-}
+    </Button>
+  );
+};

@@ -18,7 +18,16 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
       <Flex as="header" w="100%" py={5} px={7} justifyContent="end">
         <ConnectWalletButton />
       </Flex>
-      <Container as="main" m={0} p={14} mt={3} maxW="100vw" display="flex" justifyContent="center" alignItems="center">
+      <Container
+        as="main"
+        mt={3}
+        m="0px"
+        p="16px"
+        maxW="100vw"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
         {children}
       </Container>
     </>

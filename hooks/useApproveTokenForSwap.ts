@@ -7,6 +7,7 @@ import { AddressZero, MaxUint256 } from "@ethersproject/constants";
 
 import { V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
 import { useSendTransaction } from "./useSendTransaction";
+import { useTokenAllowance } from "@/hooks/useTokenAllowance";
 
 /**
  * Hook to get the allowance of the swap router for the erc20 token for the user, and provieds a callback to set approval
@@ -25,8 +26,9 @@ export function useApproveErc20ForSwap(
   transaction?: Transaction;
   approve: () => Promise<string>;
 } {
-  const [allowance, setAllowance] = useState<BigNumber | undefined>(undefined);
   const [transcationRequest, setTranscationRequest] = useState<TransactionRequest>({});
+
+  const { allowance, refetch: refetchAllowance } = useTokenAllowance(tokenAddress, V3_SWAP_ROUTER_ADDRESS);
 
   const { data: signer } = useSigner();
   const { transaction, sendTransaction: approve } = useSendTransaction(
@@ -57,24 +59,10 @@ export function useApproveErc20ForSwap(
     configureTransaction();
   }, [tokenAddress, signer, setTranscationRequest]);
 
-  // Set allowance
+  // Refetch allowance on tx state change (TODO: this should be callback on tx completion)
   useEffect(() => {
-    async function getAllowance() {
-      if (signer && tokenAddress) {
-        if (tokenAddress == AddressZero) {
-          // Native token, doesn't need approval
-          setAllowance(MaxUint256);
-        } else {
-          // Erc20 token
-          const contract = new ethers.Contract(tokenAddress, erc20ABI, signer);
-          const allowance = await contract.allowance(signer.getAddress(), V3_SWAP_ROUTER_ADDRESS);
-          setAllowance(allowance);
-        }
-      }
-    }
-
-    getAllowance();
-  }, [signer, tokenAddress, setAllowance, transaction]);
+    refetchAllowance();
+  }, [transaction]);
 
   const requiresApproval = useMemo(() => {
     if (minimumApprovalAmount && allowance) {

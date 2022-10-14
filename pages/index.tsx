@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Button,
@@ -32,6 +32,7 @@ const CreateRequest: FC = () => {
   const { ensureUser } = useAuth();
   const [insertRequest, { loading }] = useInsertRequestMutation();
   const { openConnectModal } = useConnectModal();
+  console.log(openConnectModal);
 
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
   const [tokenAmount, setTokenAmount] = useState<string>("");
@@ -40,24 +41,26 @@ const CreateRequest: FC = () => {
 
   const tokenPriceUsd = 1; // TODO
 
-  function createRequest() {
+  async function createRequest() {
     if (selectedToken != undefined && tokenAmount != "" && activeChain) {
       const tokenAmountRaw = ethers.utils.parseUnits(tokenAmount, selectedToken.decimals);
-      ensureUser().then((user) => {
-        insertRequest({
+      const userId = await ensureUser();
+
+      if (userId != undefined && userId != null) {
+        const { data: insertData } = await insertRequest({
           variables: {
             object: {
               recipient_token_amount: tokenAmountRaw.toString(),
               recipient_token_address: selectedToken.address,
               chain_id: activeChain.id,
-              user_id: user?.id,
+              user_id: userId,
             },
           },
-        }).then(({ data }) => {
-          const requestId = data?.insert_request_one?.id;
-          router.push(`/request/${requestId}`);
         });
-      });
+
+        const requestId = insertData?.insert_request_one?.id;
+        router.push(`/request/${requestId}`);
+      }
     } else {
       console.log("Invalid data");
     }
@@ -66,8 +69,22 @@ const CreateRequest: FC = () => {
   const tokenAmountUsd = tokenPriceUsd && tokenAmount ? tokenPriceUsd * parseFloat(tokenAmount) : 0;
   const feeAmountUsd = tokenAmountUsd ? (tokenAmountUsd * FEE_BIPS) / 10000 : 0;
 
-  const requestButtonMsg =
-    tokenAmount == "" ? "Enter token amount" : selectedToken == undefined ? "Select token" : "Create request";
+  const requestButtonMsg = useMemo(() => {
+    return tokenAmount == "" ? "Enter token amount" : selectedToken == undefined ? "Select token" : "Create request";
+  }, []);
+
+  // Compute the button state
+  const { buttonText, onClickFunction } = useMemo(() => {
+    if (!address) {
+      return { buttonText: "Connect Wallet", onClickFunction: openConnectModal };
+    } else if (selectedToken == undefined) {
+      return { buttonText: "Select Token", onClickFunction: undefined };
+    } else if (tokenAmount == "") {
+      return { buttonText: "Enter Token Amount", onClickFunction: undefined };
+    } else {
+      return { buttonText: "Create Request", onClickFunction: createRequest };
+    }
+  }, [tokenAmount, selectedToken, address]);
 
   return (
     <PrimaryCardGrid>
@@ -127,10 +144,12 @@ const CreateRequest: FC = () => {
             type="submit"
             width="100%"
             size="lg"
-            onClick={address ? createRequest : openConnectModal}
-            isDisabled={!!address && (tokenAmount == "" || selectedToken == undefined)}
+            onClick={() => {
+              onClickFunction && onClickFunction();
+            }}
+            isDisabled={onClickFunction == undefined}
           >
-            {address ? requestButtonMsg : "Connect Wallet"}
+            {buttonText}
           </Button>
         </Flex>
       </GridItem>

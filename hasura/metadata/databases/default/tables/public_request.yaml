@@ -42,6 +42,12 @@ select_permissions:
         - user_id
       filter: {}
 update_permissions:
+  - role: anon
+    permission:
+      columns:
+        - status
+      filter: {}
+      check: null
   - role: user
     permission:
       columns:

@@ -35,7 +35,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
     name: "Polygon",
     symbol: "MATIC",
     decimals: 18,
-    logoURI: "",
+    logoURI: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912",
     wrappedAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
   },
   {
@@ -44,7 +44,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
     name: "Polygon",
     symbol: "MATIC",
     decimals: 18,
-    logoURI: "",
+    logoURI: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912",
     wrappedAddress: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
   },
   {
@@ -53,7 +53,8 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
     name: "Ethereum",
     symbol: "ETH",
     decimals: 18,
-    logoURI: "",
+    logoURI:
+      "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
     wrappedAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
   },
   {
@@ -62,7 +63,8 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
     name: "Ethereum",
     symbol: "ETH",
     decimals: 18,
-    logoURI: "",
+    logoURI:
+      "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
     wrappedAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
   },
   {
@@ -71,7 +73,8 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
     name: "Ethereum",
     symbol: "ETH",
     decimals: 18,
-    logoURI: "",
+    logoURI:
+      "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
     wrappedAddress: "0x4200000000000000000000000000000000000006",
   },
   {
@@ -80,7 +83,8 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
     name: "Ethereum",
     symbol: "ETH",
     decimals: 18,
-    logoURI: "",
+    logoURI:
+      "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
     wrappedAddress: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
   },
 ];
@@ -89,4 +93,4 @@ export const FEE_BIPS = 100; // 1%
 
 export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
 
-export const MIN_SUCCESSFUL_TX_CONFIRMATIONS = 1;
+export const MIN_SUCCESSFUL_TX_CONFIRMATIONS = 3;

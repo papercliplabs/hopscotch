@@ -1,6 +1,7 @@
 query getUserByPublicKey($publicKey: String!) {
   user(limit: 1, where: {public_key: {_eq: $publicKey}}) {
     id
+    public_key
     nonce
   }
 }

@@ -6,6 +6,7 @@ import { COIN_GECKO_API_PLATFORM_ID, NATIVE_TOKENS, SUPPORTED_CHAINS, URLS } fro
 import { BigNumber, ethers } from "ethers";
 import { AddressZero } from "@ethersproject/constants";
 import { wagmiClient } from "@/pages/_app";
+import { getSupportedChainIds } from "@/common/utils";
 
 type TokenListProviderInterface = {
   tokens: Token[];
@@ -38,7 +39,12 @@ export default function TokenListProvider({ children }: { children: ReactNode })
           .then((response) => response.json())
           .then((data) => {
             let tokens = data.tokens as Array<BaseToken>;
-            setBaseTokens(tokens);
+
+            // Filter for only chains we are on
+            const supportedChainIds = getSupportedChainIds();
+            let supportedTokens = tokens.filter((token) => supportedChainIds.includes(token.chainId));
+
+            setBaseTokens(supportedTokens);
           });
       }
     }
@@ -68,7 +74,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
 
           const coinGeckoPlatformId = COIN_GECKO_API_PLATFORM_ID[chain.id];
 
-          if (coinGeckoPlatformId) {
+          if (coinGeckoPlatformId && addresses.length != 0) {
             const contractAddressQueryParams =
               "&contract_addresses=" + addresses.reduce((state, address) => state + "," + address);
             const currencyQuaryParams = "&vs_currencies=usd";
@@ -83,6 +89,9 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                 for (let i = 0; i < indecies.length; i++) {
                   priceData[indecies[i]] = data[addresses[i].toLowerCase()]?.usd;
                 }
+              })
+              .catch((error) => {
+                console.log("ERROR WITH COINGECKO REQ: ", error);
               });
           }
         }
@@ -98,15 +107,19 @@ export default function TokenListProvider({ children }: { children: ReactNode })
   // Fetch token balances
   ////
   const readBalanceContractData = useMemo(() => {
-    return baseTokens.map((token) => {
-      return {
-        addressOrName: token.address,
-        contractInterface: erc20ABI,
-        functionName: "balanceOf",
-        args: [address],
-        chainId: token.chainId,
-      };
-    });
+    if (address != undefined) {
+      return baseTokens.map((token) => {
+        return {
+          addressOrName: token.address,
+          contractInterface: erc20ABI,
+          functionName: "balanceOf",
+          args: [address],
+          chainId: token.chainId,
+        };
+      });
+    } else {
+      return [];
+    }
   }, [baseTokens, address]);
 
   const { data: balanceResults } = useContractReads({
