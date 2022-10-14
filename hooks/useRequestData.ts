@@ -21,7 +21,7 @@ export type RequestData = {
  */
 export function useRequestData(id: string): {
   requestData?: RequestData;
-  updateRequestStatus: (newStatus: Request_Status_Enum) => Promise<void>;
+  updateRequestStatus: (hash: string, newStatus: Request_Status_Enum) => Promise<void>;
 } {
   const { data: requestQuery, loading, error, refetch } = useGetRequestQuery({ variables: { id }, skip: !id });
   const [updateRequestStatusMutation] = useUpdateRequestStatusMutation();
@@ -45,12 +45,13 @@ export function useRequestData(id: string): {
   }, [requestQuery]);
 
   const updateRequestStatus = useCallback(
-    async (newStatus: Request_Status_Enum) => {
+    async (hash: string, newStatus: Request_Status_Enum) => {
       if (id && requestData) {
         await updateRequestStatusMutation({
           variables: {
             id: id,
             status: newStatus,
+            transactionHash: hash,
           },
         });
       }

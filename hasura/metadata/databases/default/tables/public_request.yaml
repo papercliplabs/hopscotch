@@ -46,6 +46,7 @@ update_permissions:
     permission:
       columns:
         - status
+        - transaction_hash
       filter: {}
       check: null
   - role: user

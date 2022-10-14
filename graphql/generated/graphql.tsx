@@ -1138,11 +1138,12 @@ export type RefreshNonceMutation = { __typename?: 'mutation_root', refresh_nonce
 
 export type UpdateRequestStatusMutationVariables = Exact<{
   id: Scalars['uuid'];
+  transactionHash: Scalars['String'];
   status: Request_Status_Enum;
 }>;
 
 
-export type UpdateRequestStatusMutation = { __typename?: 'mutation_root', update_request_by_pk?: { __typename?: 'request', id: any, status: Request_Status_Enum } | null };
+export type UpdateRequestStatusMutation = { __typename?: 'mutation_root', update_request_by_pk?: { __typename?: 'request', id: any, transaction_hash?: string | null, status: Request_Status_Enum } | null };
 
 export type UpsertPublicUserMutationVariables = Exact<{
   publicKey: Scalars['String'];
@@ -1248,9 +1249,10 @@ export type RefreshNonceMutationHookResult = ReturnType<typeof useRefreshNonceMu
 export type RefreshNonceMutationResult = Apollo.MutationResult<RefreshNonceMutation>;
 export type RefreshNonceMutationOptions = Apollo.BaseMutationOptions<RefreshNonceMutation, RefreshNonceMutationVariables>;
 export const UpdateRequestStatusDocument = gql`
-    mutation updateRequestStatus($id: uuid!, $status: request_status_enum!) {
-  update_request_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
+    mutation updateRequestStatus($id: uuid!, $transactionHash: String!, $status: request_status_enum!) {
+  update_request_by_pk(pk_columns: {id: $id}, _set: {status: $status, transaction_hash: $transactionHash}) {
     id
+    transaction_hash
     status
   }
 }
@@ -1271,6 +1273,7 @@ export type UpdateRequestStatusMutationFn = Apollo.MutationFunction<UpdateReques
  * const [updateRequestStatusMutation, { data, loading, error }] = useUpdateRequestStatusMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      transactionHash: // value for 'transactionHash'
  *      status: // value for 'status'
  *   },
  * });
