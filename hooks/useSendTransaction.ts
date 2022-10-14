@@ -52,6 +52,7 @@ export function useSendTransaction(
     let txHash = "INVALID_PARAMS";
 
     if (sendTransactionAsync) {
+      console.log("SENDING TXN", transactionRequest);
       const txResponse = await sendTransactionAsync();
       txHash = await txResponse.hash;
       addRecentTransaction({

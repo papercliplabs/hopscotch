@@ -67,7 +67,7 @@ export function useExactOutputSwap(
   const provider = useProvider();
   const { data: signer } = useSigner();
   const { address } = useAccount();
-  const {id: chainId} = useActiveChain();
+  const { id: chainId } = useActiveChain();
   const inputToken = useUniswapToken(inputIsNative ? getWrappedTokenAddress(chainId) : inputTokenAddress, chainId);
   const outputToken = useUniswapToken(outputIsNative ? getWrappedTokenAddress(chainId) : outputTokenAddress, chainId);
 
@@ -89,6 +89,8 @@ export function useExactOutputSwap(
 
     return swapType;
   }, [inputToken, outputToken, inputTokenAddress, outputTokenAddress, inputIsNative, outputIsNative]);
+
+  console.log("SWAPTYPE!!!", swapType);
 
   const {
     quotedGas,
@@ -149,10 +151,9 @@ export function useExactOutputSwap(
 
       if (signer && swapRoute && swapRoute.methodParameters) {
         const calls = [];
-        const value = BigNumber.from(swapRoute.methodParameters.value);
+        const value = BigNumber.from(swapRoute.quote.quotient.toString());
         const routerContract = new ethers.Contract(V3_SWAP_ROUTER_ADDRESS, RouterABI, signer);
 
-        // TODO: add more here to support ETH wrap/unwrap + take fee
         calls.push(swapRoute.methodParameters.calldata);
 
         if (inputIsNative) {
@@ -271,6 +272,10 @@ export function useExactOutputSwap(
         }
       }
 
+      console.log("IN NATIVE", inputIsNative);
+      console.log("OUTPUT NATIVE", outputIsNative);
+      console.log("SWAP TYPE", swapType);
+      console.log("REQ", request);
       setTranscationRequest(request);
     }
 

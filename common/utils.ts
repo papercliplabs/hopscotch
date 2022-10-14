@@ -1,6 +1,6 @@
 import { Length } from "./types";
 import { Token as UniswapToken } from "@uniswap/sdk-core";
-import { useNetwork, useToken } from "wagmi";
+import { Chain, useNetwork, useToken } from "wagmi";
 import { Token } from "./types";
 import { add } from "lodash";
 import { NATIVE_TOKENS, SUPPORTED_CHAINS } from "./constants";
@@ -74,4 +74,8 @@ export function getWrappedTokenAddress(chainId: number): string | undefined {
 
 export function getSupportedChainIds(): Array<number> {
   return SUPPORTED_CHAINS.map((chain) => chain.id);
+}
+
+export function getChainForId(chainId: number | undefined): Chain | undefined {
+  return SUPPORTED_CHAINS.find((chain) => chain.id == chainId);
 }
