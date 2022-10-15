@@ -5,6 +5,7 @@ import Image from "next/future/image";
 import ConnectWalletButton from "@/components/ConnectWalletButton";
 
 import Logo from "@/public/static/Logo.svg";
+import Link from "next/link";
 
 export interface AccountMenuProps {
   user: { public_key: string; id: string };
@@ -20,12 +21,23 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
   return (
     <>
       <Flex as="header" w="100%" py={5} px={7} justifyContent="space-between" alignItems="center">
-        <Image
-          alt="Hopscotch Logo"
-          src={Logo}
-          sizes="100vw"
-          style={{ width: 40, maxWidth: "100%", height: "auto" }}
-        />
+        <Link href="/" passHref>
+          <Box
+            as="a"
+            cursor="pointer"
+            transition="transform 0.2s"
+            _hover={{
+              transform: "rotate(15deg)",
+            }}
+          >
+            <Image
+              alt="Hopscotch Logo"
+              src={Logo}
+              sizes="100vw"
+              style={{ width: 40, maxWidth: "100%", height: "auto" }}
+            />
+          </Box>
+        </Link>
         <ConnectWalletButton />
       </Flex>
       <Container
