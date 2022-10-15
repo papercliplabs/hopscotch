@@ -1,25 +1,25 @@
 import { useAuth } from "@/providers/auth";
 import { ConnectButton } from "@papercliplabs/rainbowkit";
-import { Box, Button, Flex, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Box, Button, ButtonProps, Flex, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { FC } from "react";
-import {Lock} from "react-feather"
+import {Lock, Unlock} from "react-feather"
 
-export const VerifyAccountButton: FC = () => {
+export const VerifyAccountButton: FC<ButtonProps> = (props) => {
   const { login } = useAuth();
 
   return (
-    <Button colorScheme="gray" borderRadius="full" onClick={login}>
-      Verify
-    </Button>
+    <IconButton aria-label="account menu" colorScheme="gray" borderRadius="full" {...props} onClick={login}>
+      <Icon as={Unlock} />
+    </IconButton>
   );
 };
 
-const AccountMenu: FC = () => {
+const AccountMenu: FC<ButtonProps> = (props) => {
   const { logout } = useAuth();
 
   return (
     <Menu>
-      <MenuButton><IconButton ml={2} aria-label="account menu"><Icon as={Lock} /></IconButton></MenuButton>
+      <MenuButton><IconButton aria-label="account menu" colorScheme="brand" {...props} ><Icon as={Lock} /></IconButton></MenuButton>
       <MenuList>
         <MenuItem onClick={() => logout()}>Logout</MenuItem>
       </MenuList>
@@ -30,7 +30,7 @@ const AccountMenu: FC = () => {
 export const VerificationStatus: FC = () => {
   const { isAuthenticated } = useAuth();
 
-  return isAuthenticated ? <AccountMenu /> : <VerifyAccountButton />;
+  return isAuthenticated ? <AccountMenu ml={2} /> : <VerifyAccountButton ml={2} />;
 };
 
 export const ConnectWalletButton: FC = () => {
