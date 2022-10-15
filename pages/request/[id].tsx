@@ -175,7 +175,7 @@ const RequestPage = () => {
       <Flex
         width="100%"
         backgroundColor="bgSecondary"
-        borderRadius="sm"
+        borderRadius="md"
         padding="3"
         flexDirection="column"
         justifyContent="space-between"
@@ -202,7 +202,7 @@ const RequestPage = () => {
                   <Flex
                     width="100%"
                     backgroundColor="bgSecondary"
-                    borderTopRadius="sm"
+                    borderTopRadius="md"
                     padding="3"
                     flexDirection="row"
                     justifyContent="space-between"
@@ -224,7 +224,7 @@ const RequestPage = () => {
                   <Flex
                     width="100%"
                     backgroundColor="bgSecondary"
-                    borderBottomRadius="sm"
+                    borderBottomRadius="md"
                     padding="2"
                     flexDirection="row"
                     justifyContent="space-between"
@@ -290,7 +290,6 @@ const RequestPage = () => {
               onClick={() => {
                 onClickFunction && onClickFunction();
               }}
-              borderRadius="20px"
               isDisabled={onClickFunction == undefined}
             >
               {buttonText}

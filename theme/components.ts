@@ -1,4 +1,9 @@
 export const components = {
+  Button: {
+    baseStyle: {
+      borderRadius: "full"
+    }
+  },
   Modal: {
     baseStyle: {
       overlay: {

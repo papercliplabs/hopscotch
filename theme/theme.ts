@@ -2,18 +2,19 @@ import { extendTheme } from "@chakra-ui/react";
 
 import { colors, semanticTokens } from "./colors";
 import { components } from "./components";
-import { fonts, textStyles, fontSizes, lineHeights, fontWeights } from "./typography";
+import { fonts, textStyles, fontSizes, lineHeights, fontWeights, pxToRem } from "./typography";
 
 const radii = {
   none: "0",
-  sm: "0.5rem",
-  base: "0.75rem",
-  md: "0.75rem",
-  lg: "1rem",
+  xs: pxToRem(16),
+  sm: pxToRem(20),
+  base: pxToRem(24),
+  md: pxToRem(24),
+  lg: pxToRem(32),
   xl: "1.25rem",
   "2xl": "1.5rem",
   "3xl": "1.75rem",
-  full: "9999px",
+  full: pxToRem(100),
 };
 
 const styles = {

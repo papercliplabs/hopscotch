@@ -32,7 +32,6 @@ export const NetworkSelect = () => {
           marginLeft: "auto",
         },
       }}
-      borderRadius="full"
       boxShadow="md"
       // TODO: TEMP HACK
       isDisabled={true}

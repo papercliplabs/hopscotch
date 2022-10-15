@@ -22,7 +22,7 @@ export const PrimaryCardGrid: FC<PrimaryCardGridProps> = (props) => {
       width="100%"
       minH={0}
       boxShadow="dark-lg"
-      borderRadius="3xl"
+      borderRadius="lg"
       templateRows={`minmax(${HEIGHT}, ${MAX_HEGIHT}) minmax(${HEIGHT}, ${MAX_HEGIHT})`}
       overflow="hidden"
       ref={containerRef}
