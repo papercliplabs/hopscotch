@@ -19,7 +19,7 @@ const AccountMenu: FC = () => {
 
   return (
     <Menu>
-      <MenuButton><IconButton alt="account menu"><Icon as={Lock} /></IconButton></MenuButton>
+      <MenuButton><IconButton aria-label="account menu"><Icon as={Lock} /></IconButton></MenuButton>
       <MenuList>
         <MenuItem onClick={() => logout()}>Logout</MenuItem>
       </MenuList>
