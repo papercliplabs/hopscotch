@@ -93,9 +93,18 @@ const CreateRequest: FC = () => {
         Get paid in any token.
       </Text>
       <PrimaryCardGrid>
-        <GridItem gridRowStart={1} gridColumnStart={1} zIndex={1} height="100%" margin={4}>
-          <Text textStyle="h3" mb={2}>
-            Create your request
+        <GridItem
+          gridRowStart={1}
+          gridColumnStart={1}
+          zIndex={1}
+          height="100%"
+          margin={4}
+          display={"flex"}
+          alignItems="center"
+          flexDirection="column"
+        >
+          <Text textStyle="h6" variant="gradient" mb={2}>
+            Create a request
           </Text>
           <Text size="md" mb={4} color="textSecondary">
             Get a link you can send anyone to pay you
@@ -106,15 +115,16 @@ const CreateRequest: FC = () => {
             backgroundColor="bgSecondary"
             borderTopRadius="sm"
             padding="3"
-            flexDirection="row"
-            justifyContent="space-between"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
           >
-            <Flex direction="column" flex="1">
-              <NumberInput placeholder="Request amount" setNumCallback={setTokenAmount} />
-              <Text fontSize="xs" color="textTertiary">
-                ${formatNumber(tokenAmountUsd)}
-              </Text>
+            <Flex>
+              <NumberInput placeholder="0.00" setNumCallback={setTokenAmount} />
             </Flex>
+            <Text fontSize="xs" color="textTertiary">
+              ${formatNumber(tokenAmountUsd)}
+            </Text>
 
             <Flex flexDirection="column" justifyContent="center">
               <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={false} />

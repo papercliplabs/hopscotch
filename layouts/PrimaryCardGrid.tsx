@@ -4,7 +4,7 @@ import { Grid } from "@chakra-ui/react";
 import { useNestedPortalRef } from "@/components/NestedPortal";
 
 const HEIGHT = "440px";
-const MAX_HEGIHT = "494px";
+const MAX_HEGIHT = "500px";
 
 export interface PrimaryCardGridProps {
   children: ReactNode;
@@ -17,7 +17,7 @@ export const PrimaryCardGrid: FC<PrimaryCardGridProps> = (props) => {
     <Grid
       templateColumns="1fr"
       backgroundColor="white"
-      maxWidth="456px"
+      maxWidth="400px"
       height={HEIGHT}
       width="100%"
       minH={0}
