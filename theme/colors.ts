@@ -106,6 +106,7 @@ const themeColors = {
 
 const gradients = {
   primary: "linear-gradient(135deg, #E013DD 0%, #F41FEC 52.08%, #FF4E82 100%)",
+  brand: "linear-gradient(180deg, #005CB6 0%, #0D88FF 100%)"
 };
 
 export const colors = {

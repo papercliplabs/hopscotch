@@ -88,75 +88,77 @@ const CreateRequest: FC = () => {
 
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center">
-    <Text textStyle="h3">Send a request.</Text>
-    <Text textStyle="h3">Get paid in any token.</Text>
-    <PrimaryCardGrid>
-      <GridItem gridRowStart={1} gridColumnStart={1} zIndex={1} height="100%" margin={4}>
-        <Text textStyle="h3" mb={2}>
-          Create your request
-        </Text>
-        <Text size="md" mb={4} color="textSecondary">
-          Get a link you can send anyone to pay you
-        </Text>
-
-        <Flex
-          width="100%"
-          backgroundColor="bgSecondary"
-          borderTopRadius="sm"
-          padding="3"
-          flexDirection="row"
-          justifyContent="space-between"
-        >
-          <Flex direction="column" flex="1">
-            <NumberInput placeholder="Request amount" setNumCallback={setTokenAmount} />
-            <Text fontSize="xs" color="textTertiary">
-              ${formatNumber(tokenAmountUsd)}
-            </Text>
-          </Flex>
-
-          <Flex flexDirection="column" justifyContent="center">
-            <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={false} />
-          </Flex>
-        </Flex>
-        <Spacer height="2px" />
-        <Flex width="100%" backgroundColor="bgSecondary" borderBottomRadius="sm" padding="2" flexDirection="row">
-          <Text>On {activeChain ? activeChain.name : SUPPORTED_CHAINS[0].name}</Text>
-          <Text fontSize="xs" color="textSecondary">
-            (alpha)
+      <Text textStyle="h3">Send a request.</Text>
+      <Text textStyle="h3" variant="gradient" mb={6}>
+        Get paid in any token.
+      </Text>
+      <PrimaryCardGrid>
+        <GridItem gridRowStart={1} gridColumnStart={1} zIndex={1} height="100%" margin={4}>
+          <Text textStyle="h3" mb={2}>
+            Create your request
           </Text>
-        </Flex>
-
-        <Flex flexDirection="row" width="100%" justifyContent="space-between">
-          <Flex flexDirection="row">
-            <Text fontSize="sm" color="textSecondary">
-              <Tooltip label="Hopscotch transaction fee">
-                <QuestionOutlineIcon />
-              </Tooltip>{" "}
-              Estimated fee
-            </Text>
-          </Flex>
-          <Text fontSize="sm" color="textSecondary">
-            ${formatNumber(feeAmountUsd)}
+          <Text size="md" mb={4} color="textSecondary">
+            Get a link you can send anyone to pay you
           </Text>
-        </Flex>
 
-        <Flex width="100%">
-          <Button
-            mt={4}
-            colorScheme="blue"
-            type="submit"
+          <Flex
             width="100%"
-            size="lg"
-            onClick={() => {
-              onClickFunction && onClickFunction();
-            }}
-            isDisabled={onClickFunction == undefined}
+            backgroundColor="bgSecondary"
+            borderTopRadius="sm"
+            padding="3"
+            flexDirection="row"
+            justifyContent="space-between"
           >
-            {buttonText}
-          </Button>
-        </Flex>
-      </GridItem>
-    </PrimaryCardGrid>
+            <Flex direction="column" flex="1">
+              <NumberInput placeholder="Request amount" setNumCallback={setTokenAmount} />
+              <Text fontSize="xs" color="textTertiary">
+                ${formatNumber(tokenAmountUsd)}
+              </Text>
+            </Flex>
+
+            <Flex flexDirection="column" justifyContent="center">
+              <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={false} />
+            </Flex>
+          </Flex>
+          <Spacer height="2px" />
+          <Flex width="100%" backgroundColor="bgSecondary" borderBottomRadius="sm" padding="2" flexDirection="row">
+            <Text>On {activeChain ? activeChain.name : SUPPORTED_CHAINS[0].name}</Text>
+            <Text fontSize="xs" color="textSecondary">
+              (alpha)
+            </Text>
+          </Flex>
+
+          <Flex flexDirection="row" width="100%" justifyContent="space-between">
+            <Flex flexDirection="row">
+              <Text fontSize="sm" color="textSecondary">
+                <Tooltip label="Hopscotch transaction fee">
+                  <QuestionOutlineIcon />
+                </Tooltip>{" "}
+                Estimated fee
+              </Text>
+            </Flex>
+            <Text fontSize="sm" color="textSecondary">
+              ${formatNumber(feeAmountUsd)}
+            </Text>
+          </Flex>
+
+          <Flex width="100%">
+            <Button
+              mt={4}
+              colorScheme="blue"
+              type="submit"
+              width="100%"
+              size="lg"
+              onClick={() => {
+                onClickFunction && onClickFunction();
+              }}
+              isDisabled={onClickFunction == undefined}
+            >
+              {buttonText}
+            </Button>
+          </Flex>
+        </GridItem>
+      </PrimaryCardGrid>
     </Flex>
   );
 };
