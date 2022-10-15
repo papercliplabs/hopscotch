@@ -102,7 +102,7 @@ export default function TokenSelect({
 
   return (
     <>
-      <Button borderRadius="full" {...buttonProps} />
+      <Button {...buttonProps} />
       <NestedPortal>
         <SlideMenu title="Choose Token" isOpen={isOpen} onClose={onClose}>
           <Grid templateRows="auto auto minmax(0, 1fr)" rowGap={2} width="100%" height="100%" templateColumns="1fr">
@@ -116,7 +116,7 @@ export default function TokenSelect({
                   value={search}
                   onChange={handleSearchChange}
                   borderRadius="full"
-                  backgroundColor="bg1"
+                  backgroundColor="bgSecondary"
                   color="grey"
                   textStyle="h5"
                   fontSize="18px"
@@ -129,7 +129,7 @@ export default function TokenSelect({
             <GridItem>
               <NetworkSelect />
             </GridItem>
-            <GridItem flexDirection="column" borderRadius="2xl" backgroundColor="bg1" paddingY={4} overflowY="scroll">
+            <GridItem flexDirection="column" borderRadius="lg" backgroundColor="bgSecondary" paddingY={4} overflowY="scroll">
               <Stack width="100%">
                 {filteredTokenList.map((tokenDetails, index) => {
                   const { name, address, symbol, decimals, logoURI } = tokenDetails;

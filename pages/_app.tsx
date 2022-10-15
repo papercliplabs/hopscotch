@@ -20,6 +20,8 @@ import { SUPPORTED_CHAINS } from "@/common/constants";
 import TokenListProvider from "@/hooks/useTokenList/provider";
 import { NestedPortalRefProvider } from "@/components/NestedPortal";
 
+import "@/styles/fonts.css";
+
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
   alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
   publicProvider(),

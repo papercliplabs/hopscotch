@@ -1,7 +1,8 @@
 import { useAuth } from "@/providers/auth";
 import { ConnectButton } from "@papercliplabs/rainbowkit";
-import { Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Box, Button, Flex, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { FC } from "react";
+import {Lock} from "react-feather"
 
 export const VerifyAccountButton: FC = () => {
   const { login } = useAuth();
@@ -18,7 +19,7 @@ const AccountMenu: FC = () => {
 
   return (
     <Menu>
-      <MenuButton>🔒</MenuButton>
+      <MenuButton><IconButton ml={2} aria-label="account menu"><Icon as={Lock} /></IconButton></MenuButton>
       <MenuList>
         <MenuItem onClick={() => logout()}>Logout</MenuItem>
       </MenuList>

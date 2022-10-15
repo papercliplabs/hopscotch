@@ -174,19 +174,19 @@ const RequestPage = () => {
     <Flex direction="column" gap="16px" maxWidth="456px" justifyContent="space-between">
       <Flex
         width="100%"
-        backgroundColor="bg1"
-        borderRadius="sm"
+        backgroundColor="bgSecondary"
+        borderRadius="md"
         padding="3"
         flexDirection="column"
         justifyContent="space-between"
       >
-        <Text fontSize="sm" color="text0" fontWeight="bold">
+        <Text fontSize="sm" color="textPrimary" fontWeight="bold">
           <Tooltip label={requestData?.recipientTokenAddress}>
             {shortAddress(requestData?.recipientTokenAddress, Length.MEDIUM)}
           </Tooltip>{" "}
           requested {formattedOutputAmount} {outputToken.symbol}
         </Text>
-        <Text fontSize="xs" color="text1">
+        <Text fontSize="xs" color="textSecondary">
           Choose the token you want to pay with and it will be converted to {outputToken.symbol} before sending.
         </Text>
       </Flex>
@@ -196,23 +196,23 @@ const RequestPage = () => {
             {!paid ? (
               <>
                 <Flex direction="column" gap="3px">
-                  <Text fontSize="xl" color="text0" align="center">
+                  <Text fontSize="xl" color="textPrimary" align="center">
                     You Pay
                   </Text>
                   <Flex
                     width="100%"
-                    backgroundColor="bg1"
-                    borderTopRadius="sm"
+                    backgroundColor="bgSecondary"
+                    borderTopRadius="md"
                     padding="3"
                     flexDirection="row"
                     justifyContent="space-between"
                     mt="10px"
                   >
                     <Flex direction="column" flex="1">
-                      <Text fontSize="lg" color="text2">
+                      <Text fontSize="lg" color="textTertiary">
                         {quoteAmount}
                       </Text>
-                      <Text fontSize="xs" color="text2">
+                      <Text fontSize="xs" color="textTertiary">
                         ${usdAmount}
                       </Text>
                     </Flex>
@@ -223,21 +223,21 @@ const RequestPage = () => {
                   </Flex>
                   <Flex
                     width="100%"
-                    backgroundColor="bg1"
-                    borderBottomRadius="sm"
+                    backgroundColor="bgSecondary"
+                    borderBottomRadius="md"
                     padding="2"
                     flexDirection="row"
                     justifyContent="space-between"
                   >
                     <Flex direction="column">
-                      <Text fontSize="sm" color="text2" fontWeight="bold">
+                      <Text fontSize="sm" color="textTertiary" fontWeight="bold">
                         They receive:
                       </Text>
                       <Text fontSize="xl">{formattedOutputAmount}</Text>
                     </Flex>
                     <Flex align="center">
                       <Avatar height="32px" width="32px" mr={1} src={outputToken.logoURI} />
-                      <Text fontSize="md" color="text1" fontWeight="bold">
+                      <Text fontSize="md" color="textSecondary" fontWeight="bold">
                         {outputToken.symbol}
                       </Text>
                     </Flex>
@@ -245,7 +245,7 @@ const RequestPage = () => {
 
                   <Flex direction="column" pt="10px" gap="5px">
                     <Flex direction="row" justifyContent="space-between">
-                      <Text color="text1" fontWeight="bold">
+                      <Text color="textSecondary" fontWeight="bold">
                         Swap Rate
                       </Text>
                       <Text fontSize="sm">
@@ -254,7 +254,7 @@ const RequestPage = () => {
                     </Flex>
 
                     <Flex direction="row" justifyContent="space-between">
-                      <Text color="text1" fontWeight="bold">
+                      <Text color="textSecondary" fontWeight="bold">
                         Estimated Fee{" "}
                         <Tooltip label="This app currently does not take a fee from transactions. In the future it could to help support future development.">
                           <QuestionOutlineIcon />
@@ -264,7 +264,7 @@ const RequestPage = () => {
                     </Flex>
 
                     <Flex direction="row" justifyContent="space-between">
-                      <Text color="text1" fontWeight="bold">
+                      <Text color="textSecondary" fontWeight="bold">
                         Network
                       </Text>
                       <Text fontSize="sm">{requestedChain?.name}</Text>
@@ -290,7 +290,6 @@ const RequestPage = () => {
               onClick={() => {
                 onClickFunction && onClickFunction();
               }}
-              borderRadius="20px"
               isDisabled={onClickFunction == undefined}
             >
               {buttonText}

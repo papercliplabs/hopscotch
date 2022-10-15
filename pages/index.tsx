@@ -12,11 +12,14 @@ import {
   Tooltip,
   Box,
   GridItem,
+  NumberInputField,
+  NumberInput,
+  Avatar,
 } from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { ConnectButton, useConnectModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount, useEnsAvatar, useEnsName, useNetwork } from "wagmi";
 
 import { useInsertRequestMutation } from "@/graphql/generated/graphql";
 import { useAuth } from "@/providers/auth";
@@ -24,8 +27,38 @@ import { FEE_BIPS, SUPPORTED_CHAINS } from "@/common/constants";
 import { Token } from "@/common/types";
 import { formatNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
-import { NumberInput } from "@/components/NumberInput";
 import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
+
+const ellipsisMiddle = (str: string): string => {
+  if (str.length < 10) {
+    return str;
+  }
+  return str.slice(0, 6) + "..." + str.slice(-4);
+};
+
+const ConnectedAvatar = () => {
+  const { isConnected, address } = useAccount();
+  const { data: ensAvatarSrc } = useEnsAvatar({
+    addressOrName: address,
+    chainId: 1,
+  });
+
+  const { data: ensName } = useEnsName({
+    address: address,
+    chainId: 1,
+  });
+
+  return isConnected ? (
+    <Flex alignItems="center" flexDirection="column">
+      <Avatar width="72px" height="72px" mb={2} name={address} src={ensAvatarSrc ?? ""} />
+      <Text textStyle="h5" mb={2}>
+        {ensName ? ensName : ellipsisMiddle(address ?? "")}
+      </Text>
+    </Flex>
+  ) : (
+    <Box width="72px" height="72px" borderRadius="full" border="grayDashed" mb={8} />
+  );
+};
 
 const CreateRequest: FC = () => {
   const router = useRouter();
@@ -69,9 +102,8 @@ const CreateRequest: FC = () => {
   const tokenAmountUsd = tokenPriceUsd && tokenAmount ? tokenPriceUsd * parseFloat(tokenAmount) : 0;
   const feeAmountUsd = tokenAmountUsd ? (tokenAmountUsd * FEE_BIPS) / 10000 : 0;
 
-  const requestButtonMsg = useMemo(() => {
-    return tokenAmount == "" ? "Enter token amount" : selectedToken == undefined ? "Select token" : "Create request";
-  }, []);
+  const format = (val: string) => val;
+  const parse = (val: string) => val.replace(/^\$/, "");
 
   // Compute the button state
   const { buttonText, onClickFunction } = useMemo(() => {
@@ -87,73 +119,91 @@ const CreateRequest: FC = () => {
   }, [tokenAmount, selectedToken, address]);
 
   return (
-    <PrimaryCardGrid>
-      <GridItem gridRowStart={1} gridColumnStart={1} zIndex={1} height="100%" margin={4}>
-        <Heading size="lg" fontWeight="semibold" color="text0" mb={2}>
-          Create your request
-        </Heading>
-        <Text size="md" mb={4} color="text1">
-          Get a link you can send anyone to pay you
-        </Text>
-
-        <Flex
-          width="100%"
-          backgroundColor="bg1"
-          borderTopRadius="sm"
-          padding="3"
-          flexDirection="row"
-          justifyContent="space-between"
+    <Flex flexDirection="column" alignItems="center" justifyContent="center">
+      <Text textStyle="h3">Send a request.</Text>
+      <Text textStyle="h3" variant="gradient" mb={6}>
+        Get paid in any token.
+      </Text>
+      <PrimaryCardGrid>
+        <GridItem
+          gridRowStart={1}
+          gridColumnStart={1}
+          zIndex={1}
+          height="100%"
+          margin={4}
+          display={"flex"}
+          alignItems="center"
+          flexDirection="column"
         >
-          <Flex direction="column" flex="1">
-            <NumberInput placeholder="Request amount" setNumCallback={setTokenAmount} />
-            <Text fontSize="xs" color="text2">
+          <ConnectedAvatar />
+          <Text textStyle="h6" variant="gradient" mb={4}>
+            Create a request
+          </Text>
+          <Flex
+            width="100%"
+            backgroundColor="bgSecondary"
+            borderRadius="md"
+            padding={6}
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Flex>
+              <NumberInput
+                placeholder="0.00"
+                precision={4}
+                onChange={(valueString: string) => setTokenAmount(parse(valueString))}
+                value={format(tokenAmount)}
+              >
+                <NumberInputField
+                  border="none"
+                  textAlign="center"
+                  p={0}
+                  fontSize="xl"
+                  lineHeight="xl"
+                  fontWeight="bold"
+                />
+              </NumberInput>
+            </Flex>
+            <Text fontSize="xs" color="textTertiary">
               ${formatNumber(tokenAmountUsd)}
             </Text>
-          </Flex>
 
-          <Flex flexDirection="column" justifyContent="center">
-            <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={false} />
+            <Flex flexDirection="column" justifyContent="center" mt={2}>
+              <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={false} />
+            </Flex>
           </Flex>
-        </Flex>
-        <Spacer height="2px" />
-        <Flex width="100%" backgroundColor="bg1" borderBottomRadius="sm" padding="2" flexDirection="row">
-          <Text>On {activeChain ? activeChain.name : SUPPORTED_CHAINS[0].name}</Text>
-          <Text fontSize="xs" color="text1">
-            (alpha)
-          </Text>
-        </Flex>
-
-        <Flex flexDirection="row" width="100%" justifyContent="space-between">
-          <Flex flexDirection="row">
-            <Text fontSize="sm" color="text1">
-              <Tooltip label="Hopscotch transaction fee">
-                <QuestionOutlineIcon />
-              </Tooltip>{" "}
-              Estimated fee
+          <Flex width="100%">
+            <Button
+              mt={4}
+              colorScheme="blue"
+              type="submit"
+              width="100%"
+              size="lg"
+              onClick={() => {
+                onClickFunction && onClickFunction();
+              }}
+              isDisabled={onClickFunction == undefined}
+            >
+              {buttonText}
+            </Button>
+          </Flex>
+          <Flex flexDirection="row" width="100%" justifyContent="space-between" alignItems="center" my={5}>
+            <Flex flexDirection="row">
+              <Text textStyle="body2" variant="secondary">
+                Estimated fee{" "}
+                <Tooltip label="Hopscotch transaction fee">
+                  <QuestionOutlineIcon />
+                </Tooltip>
+              </Text>
+            </Flex>
+            <Text fontSize="sm" color="textSecondary">
+              ${formatNumber(feeAmountUsd)}
             </Text>
           </Flex>
-          <Text fontSize="sm" color="text1">
-            ${formatNumber(feeAmountUsd)}
-          </Text>
-        </Flex>
-
-        <Flex width="100%">
-          <Button
-            mt={4}
-            colorScheme="blue"
-            type="submit"
-            width="100%"
-            size="lg"
-            onClick={() => {
-              onClickFunction && onClickFunction();
-            }}
-            isDisabled={onClickFunction == undefined}
-          >
-            {buttonText}
-          </Button>
-        </Flex>
-      </GridItem>
-    </PrimaryCardGrid>
+        </GridItem>
+      </PrimaryCardGrid>
+    </Flex>
   );
 };
 
