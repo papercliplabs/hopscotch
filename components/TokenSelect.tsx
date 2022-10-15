@@ -116,7 +116,7 @@ export default function TokenSelect({
                   value={search}
                   onChange={handleSearchChange}
                   borderRadius="full"
-                  backgroundColor="bg1"
+                  backgroundColor="bgSecondary"
                   color="grey"
                   textStyle="h5"
                   fontSize="18px"
@@ -129,7 +129,7 @@ export default function TokenSelect({
             <GridItem>
               <NetworkSelect />
             </GridItem>
-            <GridItem flexDirection="column" borderRadius="2xl" backgroundColor="bg1" paddingY={4} overflowY="scroll">
+            <GridItem flexDirection="column" borderRadius="2xl" backgroundColor="bgSecondary" paddingY={4} overflowY="scroll">
               <Stack width="100%">
                 {filteredTokenList.map((tokenDetails, index) => {
                   const { name, address, symbol, decimals, logoURI } = tokenDetails;
