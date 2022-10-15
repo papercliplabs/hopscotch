@@ -90,8 +90,6 @@ export function useExactOutputSwap(
     return swapType;
   }, [inputToken, outputToken, inputTokenAddress, outputTokenAddress, inputIsNative, outputIsNative]);
 
-  console.log("SWAPTYPE!!!", swapType);
-
   const {
     quotedGas,
     transaction,
@@ -208,10 +206,11 @@ export function useExactOutputSwap(
       ) {
         // Just a transfer
         if (SwapType.SEND_ONLY == swapType) {
-          if (inputToken.address == AddressZero) {
+          if (inputIsNative) {
             // native token transfer
             request = {
               to: receipientAddress,
+              from: address,
               value: outputTokenAmount,
             };
           } else {
@@ -219,6 +218,7 @@ export function useExactOutputSwap(
             const contract = new ethers.Contract(inputToken.address, erc20ABI, signer);
             request = {
               to: inputToken.address,
+              from: address,
               value: Zero,
               data: contract.interface.encodeFunctionData("transfer", [receipientAddress, outputTokenAmount]),
             };
@@ -272,10 +272,6 @@ export function useExactOutputSwap(
         }
       }
 
-      console.log("IN NATIVE", inputIsNative);
-      console.log("OUTPUT NATIVE", outputIsNative);
-      console.log("SWAP TYPE", swapType);
-      console.log("REQ", request);
       setTranscationRequest(request);
     }
 

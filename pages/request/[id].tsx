@@ -21,6 +21,7 @@ import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import Image from "next/image";
+import { useTransaction } from "@/hooks/useTransaction";
 
 const RequestPage = () => {
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
@@ -38,6 +39,9 @@ const RequestPage = () => {
   const requestedChain = getChainForId(requestData?.chainId);
 
   const outputToken = useToken(requestData?.recipientTokenAddress, requestData?.chainId);
+
+  // Load previous transaction if one happened already
+  const swapTransactionFromDatabase = useTransaction(requestData?.transactionHash);
 
   const {
     swapQuote,
@@ -66,27 +70,31 @@ const RequestPage = () => {
     return ret;
   }, [selectedToken, swapQuote.quoteAmount]);
 
-  const transactionPending = approveTransation?.status == "pending" || swapTransaction?.status == "pending";
+  const transactionPending = requestData?.status == Request_Status_Enum.TransactionPending;
+  approveTransation?.status == "pending";
 
   // Set paid if swap is successful
   useEffect(() => {
-    switch (swapTransaction?.status) {
-      case "pending":
-        updateRequestStatus(Request_Status_Enum.TransactionPending);
-        break;
+    const transactionOfInterest = swapTransaction ?? swapTransactionFromDatabase;
+    const hash = transactionOfInterest?.hash;
+    if (hash) {
+      switch (transactionOfInterest?.status) {
+        case "pending":
+          updateRequestStatus(hash, Request_Status_Enum.TransactionPending);
+          break;
 
-      case "failed":
-        updateRequestStatus(Request_Status_Enum.Unpaid);
-        break;
+        case "failed":
+          updateRequestStatus(hash, Request_Status_Enum.Unpaid);
+          break;
 
-      case "confirmed":
-        updateRequestStatus(Request_Status_Enum.Paid);
-        break;
+        case "confirmed":
+          updateRequestStatus(hash, Request_Status_Enum.Paid);
+          break;
+      }
     }
-  }, [swapTransaction, updateRequestStatus]);
+  }, [swapTransaction, swapTransactionFromDatabase, updateRequestStatus]);
 
-  const etherscanLink = requestedChain?.blockExplorers?.default.url + "/tx/" + swapTransaction?.hash;
-  console.log(etherscanLink);
+  const etherscanLink = requestedChain?.blockExplorers?.default.url + "/tx/" + requestData?.transactionHash;
 
   function openInNewTab(url: string): void {
     window.open(url, "_blank", "noopener,noreferrer");
@@ -96,6 +104,8 @@ const RequestPage = () => {
   const { buttonText, onClickFunction } = useMemo(() => {
     if (Request_Status_Enum.Paid == requestData?.status) {
       return { buttonText: "View on Etherscan", onClickFunction: () => openInNewTab(etherscanLink) };
+    } else if (transactionPending) {
+      return { buttonText: "Pending txn", onClickFunction: undefined };
     } else if (!address) {
       return { buttonText: "Connect Wallet", onClickFunction: openConnectModal };
     } else if (!onExpectedChain) {
@@ -105,8 +115,6 @@ const RequestPage = () => {
       };
     } else if (!selectedToken) {
       return { buttonText: "Choose token", onClickFunction: undefined };
-    } else if (transactionPending) {
-      return { buttonText: "Pending txn", onClickFunction: undefined };
     } else if (LoadingStatus.LOADING == swapQuote.quoteStatus) {
       return { buttonText: "Fetching route", onClickFunction: undefined };
     } else if (LoadingStatus.ERROR == swapQuote.quoteStatus) {
@@ -117,20 +125,6 @@ const RequestPage = () => {
       return { buttonText: "Approve", onClickFunction: approve };
     } else {
       let text = "Pay Request";
-      // switch (swapQuote.swapType) {
-      //   case SwapType.SWAP:
-      //     text = "Execute swap";
-      //     break;
-      //   case SwapType.SEND_ONLY:
-      //     text = "Send";
-      //     break;
-      //   case SwapType.UNWRAP_AND_SEND:
-      //     text = "Unwrap and send";
-      //     break;
-      //   case SwapType.WRAP_AND_SEND:
-      //     text = "Wrap and send";
-      //     break;
-      // }
       return { buttonText: text, onClickFunction: executeSwap };
     }
   }, [
@@ -151,7 +145,7 @@ const RequestPage = () => {
     return <>Loading invoice data</>;
   }
 
-  // TODO: clean this up, for MPV
+  // TODO: clean this up, added for MPV
   const formattedOutputAmount = formatNumber(
     ethers.utils.formatUnits(requestData?.recipientTokenAmount, outputToken?.decimals),
     6
