@@ -165,7 +165,7 @@ const RequestPage = () => {
   const paid = Request_Status_Enum.Paid == requestData?.status;
 
   return (
-    <Flex direction="column" gap="16px" maxWidth="456px" justifyContent="space-between">
+    <Flex direction="column" gap="16px" justifyContent="space-between">
       <Flex
         width="100%"
         backgroundColor="bgSecondary"
@@ -173,6 +173,7 @@ const RequestPage = () => {
         padding="3"
         flexDirection="column"
         justifyContent="space-between"
+        maxWidth="400px"
       >
         <Text fontSize="sm" color="textPrimary" fontWeight="bold">
           <Tooltip label={requestData?.recipientTokenAddress}>
