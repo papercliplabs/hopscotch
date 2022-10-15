@@ -87,6 +87,9 @@ const CreateRequest: FC = () => {
   }, [tokenAmount, selectedToken, address]);
 
   return (
+    <Flex flexDirection="column" alignItems="center" justifyContent="center">
+    <Text textStyle="h3">Send a request.</Text>
+    <Text textStyle="h3">Get paid in any token.</Text>
     <PrimaryCardGrid>
       <GridItem gridRowStart={1} gridColumnStart={1} zIndex={1} height="100%" margin={4}>
         <Text textStyle="h3" mb={2}>
@@ -154,6 +157,7 @@ const CreateRequest: FC = () => {
         </Flex>
       </GridItem>
     </PrimaryCardGrid>
+    </Flex>
   );
 };
 
