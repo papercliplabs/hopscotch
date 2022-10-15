@@ -36,6 +36,16 @@ const ellipsisMiddle = (str: string): string => {
   return str.slice(0, 6) + "..." + str.slice(-4);
 };
 
+const getInitials = (name: string): string => {
+  // remove 0x if present
+  name = name.replace(/^0x/, "");
+
+  // get first threee letters
+  const initials = name.slice(0, 3);
+
+  return initials.toUpperCase();
+};
+
 const ConnectedAvatar = () => {
   const { isConnected, address } = useAccount();
   const { data: ensAvatarSrc } = useEnsAvatar({
@@ -50,7 +60,7 @@ const ConnectedAvatar = () => {
 
   return isConnected ? (
     <Flex alignItems="center" flexDirection="column">
-      <Avatar width="72px" height="72px" mb={2} name={address} src={ensAvatarSrc ?? ""} />
+      <Avatar width="72px" height="72px" bg="accent.300" mb={2} name={address} getInitials={getInitials} src={ensAvatarSrc ?? ""} />
       <Text textStyle="h5" mb={2}>
         {ensName ? ensName : ellipsisMiddle(address ?? "")}
       </Text>
