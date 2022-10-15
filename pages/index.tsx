@@ -14,11 +14,12 @@ import {
   GridItem,
   NumberInputField,
   NumberInput,
+  Avatar,
 } from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { ConnectButton, useConnectModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount, useEnsAvatar, useEnsName, useNetwork } from "wagmi";
 
 import { useInsertRequestMutation } from "@/graphql/generated/graphql";
 import { useAuth } from "@/providers/auth";
@@ -27,6 +28,37 @@ import { Token } from "@/common/types";
 import { formatNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
 import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
+
+const ellipsisMiddle = (str: string): string => {
+  if (str.length < 10) {
+    return str;
+  }
+  return str.slice(0, 6) + "..." + str.slice(-4);
+};
+
+const ConnectedAvatar = () => {
+  const { isConnected, address } = useAccount();
+  const { data: ensAvatarSrc } = useEnsAvatar({
+    addressOrName: address,
+    chainId: 1,
+  });
+
+  const { data: ensName } = useEnsName({
+    address: address,
+    chainId: 1,
+  });
+
+  return isConnected ? (
+    <Flex alignItems="center" flexDirection="column">
+      <Avatar width="72px" height="72px" mb={2} name={address} src={ensAvatarSrc ?? ""} />
+      <Text textStyle="h5" mb={2}>
+        {ensName ? ensName : ellipsisMiddle(address ?? "")}
+      </Text>
+    </Flex>
+  ) : (
+    <Box width="72px" height="72px" borderRadius="full" border="grayDashed" mb={8} />
+  );
+};
 
 const CreateRequest: FC = () => {
   const router = useRouter();
@@ -103,14 +135,15 @@ const CreateRequest: FC = () => {
           alignItems="center"
           flexDirection="column"
         >
-          <Text textStyle="h6" variant="gradient" mb={2}>
+          <ConnectedAvatar />
+          <Text textStyle="h6" variant="gradient" mb={4}>
             Create a request
           </Text>
           <Flex
             width="100%"
             backgroundColor="bgSecondary"
             borderRadius="md"
-            padding={3}
+            padding={6}
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
@@ -122,7 +155,14 @@ const CreateRequest: FC = () => {
                 onChange={(valueString: string) => setTokenAmount(parse(valueString))}
                 value={format(tokenAmount)}
               >
-                <NumberInputField border="none" textAlign="center" p={0} fontSize="xl" lineHeight="xl" fontWeight="bold" />
+                <NumberInputField
+                  border="none"
+                  textAlign="center"
+                  p={0}
+                  fontSize="xl"
+                  lineHeight="xl"
+                  fontWeight="bold"
+                />
               </NumberInput>
             </Flex>
             <Text fontSize="xs" color="textTertiary">
@@ -148,7 +188,7 @@ const CreateRequest: FC = () => {
               {buttonText}
             </Button>
           </Flex>
-          <Flex flexDirection="row" width="100%" justifyContent="space-between" alignItems="center" mt={5}>
+          <Flex flexDirection="row" width="100%" justifyContent="space-between" alignItems="center" my={5}>
             <Flex flexDirection="row">
               <Text textStyle="body2" variant="secondary">
                 Estimated fee{" "}

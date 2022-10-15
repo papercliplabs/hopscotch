@@ -14,7 +14,7 @@ const radii = {
   xl: "1.25rem",
   "2xl": "1.5rem",
   "3xl": "1.75rem",
-  full: pxToRem(100),
+  full: pxToRem(1000),
 };
 
 const styles = {
@@ -37,6 +37,9 @@ const theme = extendTheme({
   fontWeights,
   textStyles,
   semanticTokens,
+  borders: {
+    "grayDashed": "4px dashed #ABACAE",
+  }
 });
 
 export { theme };

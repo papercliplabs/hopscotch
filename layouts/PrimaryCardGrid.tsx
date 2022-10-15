@@ -3,8 +3,8 @@ import { Grid } from "@chakra-ui/react";
 
 import { useNestedPortalRef } from "@/components/NestedPortal";
 
-const HEIGHT = "440px";
-const MAX_HEGIHT = "500px";
+const HEIGHT = "450px";
+const MAX_HEGIHT = "540px";
 
 export interface PrimaryCardGridProps {
   children: ReactNode;

@@ -109,12 +109,16 @@ const gradients = {
   brand: "linear-gradient(180deg, #005CB6 0%, #0D88FF 100%)"
 };
 
+const borders = {
+  dashed: "2px dashed #C0C1C1",
+}
+
 export const colors = {
   // theme colors
   ...themeColors,
 
-  // Gradients
   gradients,
+  borders,
 
   // primary
   primary: "#0D88FF",
