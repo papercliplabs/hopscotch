@@ -54,6 +54,7 @@ export function useRequestData(id: string): {
             transactionHash: hash,
           },
         });
+        refetch();
       }
     },
     [id, requestData, updateRequestStatusMutation]

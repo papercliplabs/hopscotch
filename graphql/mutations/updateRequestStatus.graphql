@@ -1,6 +1,5 @@
 mutation updateRequestStatus($id: uuid!, $transactionHash: String!, $status: request_status_enum!) {
   update_request_by_pk(pk_columns: {id: $id}, _set: {status: $status, transaction_hash: $transactionHash }) {
-    id
     transaction_hash
     status
   }

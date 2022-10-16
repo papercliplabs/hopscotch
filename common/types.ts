@@ -35,3 +35,9 @@ export enum LoadingStatus {
   ERROR,
   SUCCESS,
 }
+
+export enum ExplorerLinkType {
+  TOKEN = "token",
+  WALLET_OR_CONTRACT = "address",
+  TRANSACTION = "tx",
+}
