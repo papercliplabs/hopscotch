@@ -83,6 +83,7 @@ const CreateRequest: FC = () => {
   const { ensureUser } = useAuth();
   const [insertRequest] = useInsertRequestMutation();
   const { openConnectModal } = useConnectModal();
+  const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(false);
 
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
   const [tokenAmount, setTokenAmount] = useState<string>("");
@@ -92,7 +93,10 @@ const CreateRequest: FC = () => {
   async function createRequest() {
     if (selectedToken != undefined && tokenAmount != "" && activeChain) {
       const tokenAmountRaw = ethers.utils.parseUnits(tokenAmount, selectedToken.decimals);
+
+      setPendingConfirmation(true);
       const userId = await ensureUser();
+      setPendingConfirmation(false);
 
       if (userId != undefined && userId != null) {
         const { data: insertData } = await insertRequest({
@@ -128,10 +132,12 @@ const CreateRequest: FC = () => {
       return { buttonText: "Select Token", onClickFunction: undefined };
     } else if (tokenAmount == "") {
       return { buttonText: "Enter Token Amount", onClickFunction: undefined };
+    } else if (pendingConfirmation) {
+      return { buttonText: "Confirm In Wallet", onClickFunction: undefined };
     } else {
       return { buttonText: "Create Request", onClickFunction: createRequest };
     }
-  }, [tokenAmount, selectedToken, address]);
+  }, [tokenAmount, selectedToken, address, pendingConfirmation]);
 
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center">

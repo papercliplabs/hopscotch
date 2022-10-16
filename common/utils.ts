@@ -34,6 +34,7 @@ export function formatNumber(num: number | string, decimals: number = 2): string
 
   formattedNum /= 10 ** (3 * suffixIndex);
 
+  // +number is clever trick to remove trailing zeros
   return +formattedNum.toFixed(decimals) + suffixes[suffixIndex];
 }
 

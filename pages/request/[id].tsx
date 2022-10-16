@@ -47,6 +47,7 @@ const RequestPage = () => {
   const {
     swapQuote,
     transaction: swapTransactionLocal,
+    pendingConfirmation: pendingSwapConfirmation,
     executeSwap,
     clearTransaction: clearSwapTransaction,
   } = useExactOutputSwap(
@@ -63,6 +64,7 @@ const RequestPage = () => {
     requiresApproval,
     approve,
     transaction: approveTransation,
+    pendingConfirmation: pendingApproveConfirmation,
     clearTransaction: clearApproveTransaction,
   } = useApproveErc20ForSwap(inputToken?.address, swapQuote.quoteAmount);
 
@@ -85,6 +87,10 @@ const RequestPage = () => {
       return { pendingTransaction: undefined, pendingTransactionMessage: "" };
     }
   }, [approveTransation, swapTransaction]);
+
+  const pendingTransactionConfirmation = useMemo(() => {
+    return pendingApproveConfirmation || pendingSwapConfirmation;
+  }, [pendingApproveConfirmation, pendingSwapConfirmation]);
 
   const transactionExplorerLink = useExplorerLink(
     pendingTransaction ? pendingTransaction.hash : swapTransaction?.hash,
@@ -110,7 +116,6 @@ const RequestPage = () => {
   // Update request status in database
   useEffect(() => {
     const hash = swapTransaction?.hash;
-    console.log("UPDATING SWAP TXN");
     if (hash) {
       switch (swapTransaction?.status) {
         case "pending":
@@ -173,6 +178,8 @@ const RequestPage = () => {
       return { primaryButtonText: "Route not found", primaryButtonOnClickFunction: undefined };
     } else if (!hasSufficentFunds) {
       return { primaryButtonText: "Insufficient funds", primaryButtonOnClickFunction: undefined };
+    } else if (pendingTransactionConfirmation) {
+      return { primaryButtonText: "Confirm In Wallet", primaryButtonOnClickFunction: undefined };
     } else if (requiresApproval) {
       return { primaryButtonText: "Approve", primaryButtonOnClickFunction: approve };
     } else {
@@ -183,6 +190,7 @@ const RequestPage = () => {
     requestData,
     inputToken,
     address,
+    pendingTransactionConfirmation,
     pendingTransaction,
     swapQuote,
     hasSufficentFunds,
@@ -239,9 +247,9 @@ const RequestPage = () => {
         maxWidth="400px"
       >
         <Text fontSize="sm" color="textPrimary" fontWeight="bold">
-          <Link href={recipientAddressExplorerLink} isExternal={true}>
+          <Link href={recipientAddressExplorerLink} isExternal>
             <Tooltip label={requestData?.recipientTokenAddress}>
-              {recipientEnsName ?? shortAddress(requestData?.recipientTokenAddress, Length.MEDIUM)}
+              {recipientEnsName ?? shortAddress(requestData?.recipientAddress, Length.MEDIUM)}
             </Tooltip>{" "}
           </Link>
           requested {formattedOutputAmount} {outputToken.symbol}

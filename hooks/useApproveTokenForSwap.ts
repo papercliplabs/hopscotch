@@ -16,6 +16,7 @@ import { useTokenAllowance } from "@/hooks/useTokenAllowance";
  * @returns
  *    requiresApproval: if the token requires approval to spend minimumApprovalAmount
  *    transaction: transaction from approve
+ *    pendingConfirmation: if the transaction is pending confirmation in a wallet
  *    approve: callback to set the approval amount to at least the minimumApprovalAmount
  *    clearTransaction: clear the transaction if one exists, this is useful if it failed and requires a retry
  */
@@ -23,8 +24,9 @@ export function useApproveErc20ForSwap(
   tokenAddress?: string,
   minimumApprovalAmount?: BigNumber
 ): {
-  requiresApproval?: Boolean;
+  requiresApproval?: boolean;
   transaction?: Transaction;
+  pendingConfirmation: boolean;
   approve: () => Promise<string>;
   clearTransaction: () => void;
 } {
@@ -35,6 +37,7 @@ export function useApproveErc20ForSwap(
   const { data: signer } = useSigner();
   const {
     transaction,
+    pendingConfirmation,
     sendTransaction: approve,
     clearTransaction,
   } = useSendTransaction(transcationRequest, "approve", Object.keys(transcationRequest).length != 0);
@@ -51,7 +54,6 @@ export function useApproveErc20ForSwap(
         request = {
           from: address,
           to: tokenAddress,
-          // gasLimit: BigNumber.from("27000"), // Force fail
           data: contract.interface.encodeFunctionData("approve", [V3_SWAP_ROUTER_ADDRESS, MaxUint256]),
         };
       }
@@ -75,5 +77,5 @@ export function useApproveErc20ForSwap(
     }
   }, [allowance, minimumApprovalAmount]);
 
-  return { requiresApproval, transaction, approve, clearTransaction };
+  return { requiresApproval, transaction, pendingConfirmation, approve, clearTransaction };
 }
