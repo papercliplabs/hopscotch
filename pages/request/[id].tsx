@@ -265,7 +265,7 @@ const RequestPage = () => {
       </Flex>
       <PrimaryCardGrid>
         <GridItem gridRowStart={1} gridColumnStart={1} zIndex={1} height="100%" margin={0} padding={4}>
-          <Flex direction="column" justifyContent="space-between" height="100%">
+          <Flex direction="column" justifyContent="space-between" height="100%" gap="16px">
             {paid ? (
               <Flex direction="column" align="center" justify="center" height="100%">
                 <Image src={circleCheckImage} />
@@ -376,10 +376,10 @@ const RequestPage = () => {
 
             {!pendingTransaction && (
               <Button
-                mt={4}
                 colorScheme="brand"
                 type="submit"
                 width="100%"
+                minHeight="48px"
                 size="lg"
                 onClick={() => {
                   primaryButtonOnClickFunction && primaryButtonOnClickFunction();
@@ -392,11 +392,11 @@ const RequestPage = () => {
 
             {showEtherscanButton && (
               <Button
-                mt={4}
                 colorScheme="blue"
                 backgroundColor="blue.200"
                 type="submit"
                 width="100%"
+                minHeight="48px"
                 size="lg"
                 onClick={() => {
                   openLink(transactionExplorerLink, true);

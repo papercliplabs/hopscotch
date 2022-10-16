@@ -150,10 +150,11 @@ export function useExactOutputSwap(
   // Compute transaction request
   ////
   useEffect(() => {
+    console.log("RECOMPUTING REQUEST");
     async function configureTransaction() {
       let request = {};
 
-      if (signer && swapRoute && swapRoute.methodParameters) {
+      if (signer && swapRoute && swapRoute.methodParameters && swapType == SwapType.SWAP) {
         const calls = [];
         const value = BigNumber.from(swapRoute.quote.quotient.toString());
         const routerContract = new ethers.Contract(V3_SWAP_ROUTER_ADDRESS, RouterABI, signer);
@@ -278,11 +279,13 @@ export function useExactOutputSwap(
         }
       }
 
+      console.log("SWAP TYPE", swapType);
+      console.log("RECOMPUTED REQUEST", request);
       setTranscationRequest(request);
     }
 
     configureTransaction();
-  }, [signer, swapRoute, inputToken, outputToken, outputTokenAmount, outputTokenAddress, receipientAddress]);
+  }, [signer, swapRoute, inputToken, outputToken, swapType, outputTokenAmount, outputTokenAddress, receipientAddress]);
 
   ////
   // Construct quote that works for direct transfer or swap

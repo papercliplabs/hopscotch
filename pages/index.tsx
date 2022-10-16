@@ -203,10 +203,10 @@ const CreateRequest: FC = () => {
           </Flex>
           <Flex width="100%">
             <Button
-              mt={4}
-              colorScheme="blue"
+              colorScheme="brand"
               type="submit"
               width="100%"
+              minHeight="48px"
               size="lg"
               onClick={() => {
                 onClickFunction && onClickFunction();
