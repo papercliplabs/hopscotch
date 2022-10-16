@@ -16,6 +16,7 @@ import { MIN_SUCCESSFUL_TX_CONFIRMATIONS } from "@/common/constants";
  *  quotedGas: quoted gas for the transaction
  *  transaction: transaction that was sent or undefined if sendTransaction for the transactionRequest has not been called
  *  sendTransaction: callback to trigger sending of the transaction, returns TransactionResponse, or undefined if it failed
+ *  clearTransaction: clear the transaction if one exists, this is useful if it failed and requires a retry
  */
 export function useSendTransaction(
   transactionRequest: TransactionRequest,
@@ -25,6 +26,7 @@ export function useSendTransaction(
   quotedGas?: BigNumber;
   transaction?: Transaction;
   sendTransaction: () => Promise<string>;
+  clearTransaction: () => void;
 } {
   const [hash, setHash] = useState<string>("");
 
@@ -66,5 +68,14 @@ export function useSendTransaction(
     return txHash;
   }, [sendTransactionAsync, addRecentTransaction]);
 
-  return { quotedGas: prepareTransactionConfig?.request?.gasLimit as BigNumber, transaction, sendTransaction };
+  const clearTransaction = useCallback(() => {
+    setHash("");
+  }, [setHash]);
+
+  return {
+    quotedGas: prepareTransactionConfig?.request?.gasLimit as BigNumber,
+    transaction,
+    sendTransaction,
+    clearTransaction,
+  };
 }

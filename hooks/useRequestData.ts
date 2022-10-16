@@ -47,6 +47,7 @@ export function useRequestData(id: string): {
   const updateRequestStatus = useCallback(
     async (hash: string, newStatus: Request_Status_Enum) => {
       if (id && requestData) {
+        console.log("UPDATE");
         await updateRequestStatusMutation({
           variables: {
             id: id,
@@ -54,6 +55,7 @@ export function useRequestData(id: string): {
             transactionHash: hash,
           },
         });
+        refetch();
       }
     },
     [id, requestData, updateRequestStatusMutation]

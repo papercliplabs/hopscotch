@@ -587,6 +587,7 @@ export enum Request_Status_Constraint {
 }
 
 export enum Request_Status_Enum {
+  Failed = 'FAILED',
   Paid = 'PAID',
   TransactionPending = 'TRANSACTION_PENDING',
   Unpaid = 'UNPAID'
@@ -1143,7 +1144,7 @@ export type UpdateRequestStatusMutationVariables = Exact<{
 }>;
 
 
-export type UpdateRequestStatusMutation = { __typename?: 'mutation_root', update_request_by_pk?: { __typename?: 'request', id: any, transaction_hash?: string | null, status: Request_Status_Enum } | null };
+export type UpdateRequestStatusMutation = { __typename?: 'mutation_root', update_request_by_pk?: { __typename?: 'request', transaction_hash?: string | null, status: Request_Status_Enum } | null };
 
 export type UpsertPublicUserMutationVariables = Exact<{
   publicKey: Scalars['String'];
@@ -1251,7 +1252,6 @@ export type RefreshNonceMutationOptions = Apollo.BaseMutationOptions<RefreshNonc
 export const UpdateRequestStatusDocument = gql`
     mutation updateRequestStatus($id: uuid!, $transactionHash: String!, $status: request_status_enum!) {
   update_request_by_pk(pk_columns: {id: $id}, _set: {status: $status, transaction_hash: $transactionHash}) {
-    id
     transaction_hash
     status
   }

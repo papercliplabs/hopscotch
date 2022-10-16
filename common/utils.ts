@@ -34,7 +34,7 @@ export function formatNumber(num: number | string, decimals: number = 2): string
 
   formattedNum /= 10 ** (3 * suffixIndex);
 
-  return formattedNum.toFixed(decimals).toString() + suffixes[suffixIndex];
+  return +formattedNum.toFixed(decimals) + suffixes[suffixIndex];
 }
 
 /**
@@ -78,4 +78,16 @@ export function getSupportedChainIds(): Array<number> {
 
 export function getChainForId(chainId: number | undefined): Chain | undefined {
   return SUPPORTED_CHAINS.find((chain) => chain.id == chainId);
+}
+
+export function openLink(url: string | undefined, newTab: boolean): void {
+  if (url) {
+    if (newTab) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    } else {
+      window.open(url, "_self", "noopener,noreferrer");
+    }
+  } else {
+    console.log("NO URL");
+  }
 }

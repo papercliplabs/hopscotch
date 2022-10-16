@@ -60,7 +60,15 @@ const ConnectedAvatar = () => {
 
   return isConnected ? (
     <Flex alignItems="center" flexDirection="column">
-      <Avatar width="72px" height="72px" bg="accent.300" mb={2} name={address} getInitials={getInitials} src={ensAvatarSrc ?? ""} />
+      <Avatar
+        width="72px"
+        height="72px"
+        bg="accent.300"
+        mb={2}
+        name={address}
+        getInitials={getInitials}
+        src={ensAvatarSrc ?? ""}
+      />
       <Text textStyle="h5" mb={2}>
         {ensName ? ensName : ellipsisMiddle(address ?? "")}
       </Text>
@@ -73,16 +81,13 @@ const ConnectedAvatar = () => {
 const CreateRequest: FC = () => {
   const router = useRouter();
   const { ensureUser } = useAuth();
-  const [insertRequest, { loading }] = useInsertRequestMutation();
+  const [insertRequest] = useInsertRequestMutation();
   const { openConnectModal } = useConnectModal();
-  console.log(openConnectModal);
 
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
   const [tokenAmount, setTokenAmount] = useState<string>("");
   const { chain: activeChain } = useNetwork();
   const { address } = useAccount();
-
-  const tokenPriceUsd = 1; // TODO
 
   async function createRequest() {
     if (selectedToken != undefined && tokenAmount != "" && activeChain) {
@@ -109,10 +114,10 @@ const CreateRequest: FC = () => {
     }
   }
 
-  const tokenAmountUsd = tokenPriceUsd && tokenAmount ? tokenPriceUsd * parseFloat(tokenAmount) : 0;
+  const tokenAmountUsd =
+    selectedToken?.priceUsd && tokenAmount ? selectedToken.priceUsd * parseFloat(tokenAmount) : undefined;
   const feeAmountUsd = tokenAmountUsd ? (tokenAmountUsd * FEE_BIPS) / 10000 : 0;
 
-  const format = (val: string) => val;
   const parse = (val: string) => val.replace(/^\$/, "");
 
   // Compute the button state
@@ -159,13 +164,9 @@ const CreateRequest: FC = () => {
             justifyContent="center"
           >
             <Flex>
-              <NumberInput
-                placeholder="0.00"
-                precision={4}
-                onChange={(valueString: string) => setTokenAmount(parse(valueString))}
-                value={format(tokenAmount)}
-              >
+              <NumberInput onChange={(valueString: string) => setTokenAmount(parse(valueString))} value={tokenAmount}>
                 <NumberInputField
+                  placeholder="Enter Amount"
                   border="none"
                   textAlign="center"
                   p={0}
@@ -176,7 +177,7 @@ const CreateRequest: FC = () => {
               </NumberInput>
             </Flex>
             <Text fontSize="xs" color="textTertiary">
-              ${formatNumber(tokenAmountUsd)}
+              ${tokenAmountUsd ? formatNumber(tokenAmountUsd) : "--"}
             </Text>
 
             <Flex flexDirection="column" justifyContent="center" mt={2}>

@@ -14,7 +14,7 @@ export const SUPPORTED_CHAINS = [
   chain.polygon,
   chain.polygonMumbai,
   chain.goerli,
-  chain.mainnet,
+  // chain.mainnet,
   chain.optimism,
   chain.arbitrum,
 ];
@@ -89,7 +89,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
   },
 ];
 
-export const FEE_BIPS = 100; // 1%
+export const FEE_BIPS = 0; // 100; // 1%
 
 export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
 

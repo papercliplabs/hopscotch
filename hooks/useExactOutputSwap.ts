@@ -45,6 +45,7 @@ export interface SwapQuote {
  *    swapQuote: quote for the swap, only valid if quoteStatus = SUCCESS
  *    transaction: swap transaction from executeSwap
  *    executeSwap: execute the swap for the current swapRoute quote
+ *    clearTransaction: clear the transaction if one exists, this is useful if it failed and requires a retry
  */
 export function useExactOutputSwap(
   inputTokenAddress?: string,
@@ -55,6 +56,7 @@ export function useExactOutputSwap(
   swapQuote: SwapQuote;
   transaction?: Transaction;
   executeSwap: () => Promise<string>;
+  clearTransaction: () => void;
 } {
   const [swapRoute, setSwapRoute] = useState<SwapRoute | undefined>(undefined);
   const [quoteStatus, setQuoteStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
@@ -94,6 +96,7 @@ export function useExactOutputSwap(
     quotedGas,
     transaction,
     sendTransaction: executeSwap,
+    clearTransaction,
   } = useSendTransaction(
     transcationRequest,
     swapType != SwapType.SEND_ONLY ? "multicall" : "transfer",
@@ -301,7 +304,7 @@ export function useExactOutputSwap(
     return ret;
   }, [quoteStatus, swapRoute, quotedGas, inputToken, outputToken, swapType]);
 
-  return { swapQuote, transaction, executeSwap };
+  return { swapQuote, transaction, executeSwap, clearTransaction };
 }
 
 // Helper to get uniswap token for alpha router
