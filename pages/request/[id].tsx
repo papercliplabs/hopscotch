@@ -204,7 +204,12 @@ const RequestPage = () => {
 
   // TODO: remove this
   if (!requestData || !outputToken) {
-    return <>Loading invoice data</>;
+    return (
+      <Flex direction="column" justifyContent="center" alignItems="center" height="70vh">
+        <Text>Loading request data</Text>
+        <Spinner />
+      </Flex>
+    );
   }
 
   // TODO: clean this up, added for MPV
@@ -236,7 +241,7 @@ const RequestPage = () => {
   console.log("SWAP TXN", swapTransaction);
 
   return (
-    <Flex direction="column" gap="16px" justifyContent="space-between">
+    <Flex direction="column" gap="16px" justifyContent="space-between" height="100%" alignItems="center">
       <Flex
         width="100%"
         backgroundColor="bgSecondary"
@@ -248,7 +253,7 @@ const RequestPage = () => {
       >
         <Text fontSize="sm" color="textPrimary" fontWeight="bold">
           <Link href={recipientAddressExplorerLink} isExternal>
-            <Tooltip label={requestData?.recipientTokenAddress}>
+            <Tooltip label={requestData?.recipientAddress}>
               {recipientEnsName ?? shortAddress(requestData?.recipientAddress, Length.MEDIUM)}
             </Tooltip>{" "}
           </Link>
@@ -338,14 +343,20 @@ const RequestPage = () => {
                         Swap Rate
                       </Text>
                       <Text fontSize="sm">
-                        1 {outputToken?.symbol} = {swapRate} {inputToken?.symbol}
+                        {inputToken && outputToken ? (
+                          <>
+                            1 {outputToken.symbol} = {swapRate} {inputToken.symbol}
+                          </>
+                        ) : (
+                          "--"
+                        )}
                       </Text>
                     </Flex>
 
                     <Flex direction="row" justifyContent="space-between">
                       <Text color="textSecondary" fontWeight="bold">
-                        Estimated Fee{" "}
-                        <Tooltip label="This app currently does not take a fee from transactions. In the future it could to help support future development.">
+                        Hopscotch Fee{" "}
+                        <Tooltip label="This app currently does not take a fee from transactions. In the future it may to help support development.">
                           <QuestionOutlineIcon />
                         </Tooltip>{" "}
                       </Text>

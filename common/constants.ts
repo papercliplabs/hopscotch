@@ -12,20 +12,20 @@ export const URLS = {
 // Use SUPPORTED_CHAINS[0] as the dedault
 export const SUPPORTED_CHAINS = [
   chain.polygon,
-  chain.polygonMumbai,
-  chain.goerli,
-  chain.mainnet,
-  chain.optimism,
-  chain.arbitrum,
+  // chain.polygonMumbai,
+  // chain.goerli,
+  // chain.mainnet,
+  // chain.optimism,
+  // chain.arbitrum,
 ];
 
 export const COIN_GECKO_API_PLATFORM_ID = {
   [chain.polygon.id]: "polygon-pos",
-  [chain.polygonMumbai.id]: undefined,
-  [chain.goerli.id]: undefined,
-  [chain.mainnet.id]: "ethereum",
-  [chain.optimism.id]: "optimistic-ethereum",
-  [chain.arbitrum.id]: "arbitrum-one",
+  // [chain.polygonMumbai.id]: undefined,
+  // [chain.goerli.id]: undefined,
+  // [chain.mainnet.id]: "ethereum",
+  // [chain.optimism.id]: "optimistic-ethereum",
+  // [chain.arbitrum.id]: "arbitrum-one",
 };
 
 export const NATIVE_TOKENS: NativeBaseToken[] = [
