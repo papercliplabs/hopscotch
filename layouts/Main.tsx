@@ -40,18 +40,18 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
         </Link>
         <ConnectWalletButton />
       </Flex>
-      <Container
+      <Flex
         as="main"
-        mt={3}
-        m="0px"
+        direction="column"
+        mt={4}
         p="16px"
         maxW="100vw"
-        display="flex"
         justifyContent="center"
-        alignItems="center"
+        alignItems="space-between"
+        boxSizing="border-box"
       >
         {children}
-      </Container>
+      </Flex>
     </>
   );
 };

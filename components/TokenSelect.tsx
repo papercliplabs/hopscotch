@@ -47,6 +47,7 @@ const SlideMenu: FC<SlideMenuProps> = ({ title, onClose, isOpen, children }) => 
       transition={transition}
       transform={transform}
       p={4}
+      borderRadius="inherit"
     >
       <GridItem
         position="sticky"
@@ -129,7 +130,13 @@ export default function TokenSelect({
             <GridItem>
               <NetworkSelect />
             </GridItem>
-            <GridItem flexDirection="column" borderRadius="lg" backgroundColor="bgSecondary" paddingY={4} overflowY="scroll">
+            <GridItem
+              flexDirection="column"
+              borderRadius="lg"
+              backgroundColor="bgSecondary"
+              paddingY={4}
+              overflowY="scroll"
+            >
               <Stack width="100%">
                 {filteredTokenList.map((tokenDetails, index) => {
                   const { name, address, symbol, decimals, logoURI } = tokenDetails;

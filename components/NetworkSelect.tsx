@@ -33,8 +33,6 @@ export const NetworkSelect = () => {
         },
       }}
       boxShadow="md"
-      // TODO: TEMP HACK
-      isDisabled={true}
     >
       on {activeChain?.name} Network
     </Button>

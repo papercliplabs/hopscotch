@@ -140,7 +140,7 @@ const CreateRequest: FC = () => {
   }, [tokenAmount, selectedToken, address, pendingConfirmation]);
 
   return (
-    <Flex flexDirection="column" alignItems="center" justifyContent="center">
+    <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
       <Text textStyle="h3">Send a request.</Text>
       <Text textStyle="h3" variant="gradient" mb={6}>
         Get paid in any token.
@@ -151,9 +151,10 @@ const CreateRequest: FC = () => {
           gridColumnStart={1}
           zIndex={1}
           height="100%"
-          margin={4}
+          padding={4}
           display={"flex"}
           alignItems="center"
+          justifyContent="space-between"
           flexDirection="column"
         >
           <ConnectedAvatar />
@@ -167,7 +168,7 @@ const CreateRequest: FC = () => {
             padding={6}
             flexDirection="column"
             alignItems="center"
-            justifyContent="center"
+            justifyContent="space-between"
           >
             <Flex>
               <NumberInput onChange={(valueString: string) => setTokenAmount(parse(valueString))} value={tokenAmount}>
@@ -190,12 +191,22 @@ const CreateRequest: FC = () => {
               <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={false} />
             </Flex>
           </Flex>
+          <Flex flexDirection="row" width="100%" justifyContent="space-between" alignItems="center">
+            <Flex flexDirection="row">
+              <Text textStyle="body2" variant="secondary">
+                Network
+              </Text>
+            </Flex>
+            <Text fontSize="xs" color="textSecondary">
+              {activeChain?.name}
+            </Text>
+          </Flex>
           <Flex width="100%">
             <Button
-              mt={4}
-              colorScheme="blue"
+              colorScheme="brand"
               type="submit"
               width="100%"
+              minHeight="48px"
               size="lg"
               onClick={() => {
                 onClickFunction && onClickFunction();
@@ -205,19 +216,6 @@ const CreateRequest: FC = () => {
               {buttonText}
             </Button>
           </Flex>
-          <Flex flexDirection="row" width="100%" justifyContent="space-between" alignItems="center" my={5}>
-            <Flex flexDirection="row">
-              <Text textStyle="body2" variant="secondary">
-                Estimated fee{" "}
-                <Tooltip label="Hopscotch transaction fee">
-                  <QuestionOutlineIcon />
-                </Tooltip>
-              </Text>
-            </Flex>
-            <Text fontSize="sm" color="textSecondary">
-              ${formatNumber(feeAmountUsd)}
-            </Text>
-          </Flex>
         </GridItem>
       </PrimaryCardGrid>
     </Flex>
@@ -225,13 +223,7 @@ const CreateRequest: FC = () => {
 };
 
 const Index = () => {
-  return (
-    <Container width="100%" height="100vh" maxW="832px">
-      <Center height="60%">
-        <CreateRequest />
-      </Center>
-    </Container>
-  );
+  return <CreateRequest />;
 };
 
 export default Index;
