@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { Token } from "@/common/types";
 import { useTokenListContext } from "./provider";
-import { useActiveChain } from "@/hooks/useActiveChain";
+import { useChain } from "@/hooks/useChain";
 
 /**
  * Get list of all supported tokens for the active chain
@@ -11,7 +11,7 @@ import { useActiveChain } from "@/hooks/useActiveChain";
  */
 export function useTokenList(chainIdOverride?: number): Token[] {
   const { tokens } = useTokenListContext();
-  const {id: activeChainId} = useActiveChain();
+  const { id: activeChainId } = useChain();
 
   const chainId = useMemo(() => {
     return chainIdOverride ?? activeChainId;

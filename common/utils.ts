@@ -1,20 +1,30 @@
-import { Length } from "./types";
+import { Length, Optional } from "./types";
 import { Token as UniswapToken } from "@uniswap/sdk-core";
 import { Chain, useNetwork, useToken } from "wagmi";
 import { Token } from "./types";
 import { add } from "lodash";
 import { NATIVE_TOKENS, SUPPORTED_CHAINS } from "./constants";
+import { BigNumber, ethers } from "ethers";
 
 /**
  * Format a number so it can nicely be rendered
  * @param num the number to be formatted, this can be a number or a string representation of a number. It should be less than 1 quintillion (10^15)
  * @param decimals the number of decimals to keep after formatting, if not specified it will keep 2
+ * @param trimTrailingZeros if the number should have trailing zeros trimmed
  * @returns nicely formatted number, for example if number is 11023 this will return 1.10K
  */
-export function formatNumber(num: number | string, decimals: number = 2): string {
+export function formatNumber(
+  num: number | string | undefined,
+  decimals: number = 2,
+  trimTrailingZeros: boolean = true
+): string {
   const suffixes = ["", "K", "M", "B", "T"];
 
   let formattedNum = num;
+
+  if (formattedNum == undefined || isNaN(Number(num))) {
+    return "--";
+  }
 
   // If it is represented as a sting, convert to number first
   if (typeof formattedNum === "string") {
@@ -35,7 +45,24 @@ export function formatNumber(num: number | string, decimals: number = 2): string
   formattedNum /= 10 ** (3 * suffixIndex);
 
   // +number is clever trick to remove trailing zeros
-  return +formattedNum.toFixed(decimals) + suffixes[suffixIndex];
+  formattedNum = trimTrailingZeros ? +formattedNum.toFixed(decimals) : formattedNum.toFixed(decimals);
+  return formattedNum + suffixes[suffixIndex];
+}
+
+/**
+ * Format a token balance in a human readable way
+ * @param tokenBalance token balance (ex 1e6 for 1 USDC)
+ * @param tokenDecimals number of decimals the token balances uses
+ * @param decimalPrecision nunber of decimals to keep
+ */
+export function formatTokenBalance(
+  tokenBalance: Optional<BigNumber>,
+  tokenDecimals: Optional<number>,
+  decimalPrecision: number
+): string {
+  const tokens = tokenBalance && tokenDecimals ? ethers.utils.formatUnits(tokenBalance, tokenDecimals) : undefined;
+
+  return formatNumber(tokens, decimalPrecision);
 }
 
 /**
@@ -77,16 +104,12 @@ export function getSupportedChainIds(): Array<number> {
   return SUPPORTED_CHAINS.map((chain) => chain.id);
 }
 
-export function getChainForId(chainId: number | undefined): Chain | undefined {
-  return SUPPORTED_CHAINS.find((chain) => chain.id == chainId);
-}
-
 export function openLink(url: string | undefined, newTab: boolean): void {
   if (url) {
     if (newTab) {
-      window.open(url, "_blank", "noopener,noreferrer");
+      window.open(url, "_blank");
     } else {
-      window.open(url, "_self", "noopener,noreferrer");
+      window.open(url, "_self");
     }
   } else {
     console.log("NO URL");

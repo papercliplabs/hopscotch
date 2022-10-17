@@ -1,5 +1,7 @@
 import { TransactionReceipt, TransactionResponse } from "@ethersproject/providers";
 import { BigNumber } from "ethers";
+import { Chain as WagmiChain } from "wagmi";
+import { RainbowKitChain } from "@papercliplabs/rainbowkit/dist/components/RainbowKitProvider/RainbowKitChainContext";
 
 export interface BaseToken {
   readonly address: string;
@@ -19,6 +21,10 @@ export interface Token extends BaseToken {
   balance?: BigNumber;
   balanceUsd?: number;
 }
+
+export type Chain = WagmiChain & RainbowKitChain;
+
+export type Optional<T> = T | undefined;
 
 /**
  * Generaly purpose length enum

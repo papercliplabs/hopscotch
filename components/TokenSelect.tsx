@@ -1,7 +1,6 @@
-import { FC, ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useMemo, useState } from "react";
 import {
   Avatar,
-  Box,
   Button,
   CloseButton,
   Flex,
@@ -20,6 +19,7 @@ import { useTokenList } from "@/hooks/useTokenList";
 import { NestedPortal } from "./NestedPortal";
 import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import { NetworkSelect } from "./NetworkSelect";
+import { formatTokenBalance } from "@/common/utils";
 
 interface SlideMenuProps {
   isOpen: boolean;
@@ -80,7 +80,18 @@ export default function TokenSelect({
   const handleSearchChange = (event: any) => setSearch(event?.target?.value);
 
   const tokenList = useTokenList();
-  const filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
+  const filteredTokenList = useMemo(() => {
+    let filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
+    filteredTokenList.sort((a, b) => {
+      if (a?.balance != undefined && b.balance != undefined) {
+        return a.balance.gt(b.balance) ? -1 : 1;
+      } else {
+        return 0;
+      }
+    });
+
+    return filteredTokenList;
+  }, [tokenList, search]);
 
   const buttonProps = token
     ? {
@@ -100,6 +111,42 @@ export default function TokenSelect({
         onClick: () => onOpen(),
         isDisabled: isDisabled,
       };
+
+  const buttonItems = useMemo(() => {
+    return filteredTokenList.map((tokenDetails, index) => {
+      const { name, address, symbol, balance, decimals, logoURI } = tokenDetails;
+      const isSelected = address === token?.address;
+      return (
+        <Flex
+          key={address}
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+          width="100%"
+          cursor="pointer"
+          paddingY={2}
+          paddingX={4}
+          backgroundColor={isSelected ? "blackAlpha.50" : "transparent"}
+          _hover={{
+            backgroundColor: "blackAlpha.50",
+          }}
+          onClick={() => {
+            setToken(tokenDetails);
+            onClose();
+          }}
+        >
+          <Flex>
+            <Avatar height={12} width={12} mr={4} src={logoURI} />
+            <Flex direction="column">
+              <Text as="b">{symbol}</Text>
+              <Text>{name}</Text>
+            </Flex>
+          </Flex>
+          <Text>{balance ? formatTokenBalance(balance, decimals, 4) : ""}</Text>
+        </Flex>
+      );
+    });
+  }, [filteredTokenList, setToken, onClose]);
 
   return (
     <>
@@ -137,34 +184,7 @@ export default function TokenSelect({
               paddingY={4}
               overflowY="scroll"
             >
-              <Stack width="100%">
-                {filteredTokenList.map((tokenDetails, index) => {
-                  const { name, address, symbol, decimals, logoURI } = tokenDetails;
-                  const isSelected = address === token?.address;
-                  return (
-                    <Flex
-                      key={address}
-                      flexDirection="row"
-                      alignItems="center"
-                      width="100%"
-                      cursor="pointer"
-                      paddingY={2}
-                      paddingX={4}
-                      backgroundColor={isSelected ? "blackAlpha.50" : "transparent"}
-                      _hover={{
-                        backgroundColor: "blackAlpha.50",
-                      }}
-                      onClick={() => {
-                        setToken(tokenDetails);
-                        onClose();
-                      }}
-                    >
-                      <Avatar height={12} width={12} mr={4} src={logoURI} />
-                      <Text as="b">{symbol}</Text>
-                    </Flex>
-                  );
-                })}
-              </Stack>
+              <Stack width="100%">{buttonItems}</Stack>
             </GridItem>
           </Grid>
         </SlideMenu>

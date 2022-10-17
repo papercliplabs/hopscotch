@@ -1,8 +1,7 @@
 import { FC, ReactNode } from "react";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import Image from "next/future/image";
-
-import ConnectWalletButton from "@/components/ConnectWalletButton";
+import { ConnectButton } from "@papercliplabs/rainbowkit";
 
 import Logo from "@/public/static/Logo.svg";
 import Link from "next/link";
@@ -38,7 +37,7 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
             />
           </Box>
         </Link>
-        <ConnectWalletButton />
+        <ConnectButton />
       </Flex>
       <Flex
         as="main"

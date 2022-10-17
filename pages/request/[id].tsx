@@ -3,12 +3,11 @@ import { Avatar, Button, Flex, GridItem, Link, Spinner, Text, Tooltip } from "@c
 import { useAccount, useEnsName, useSwitchNetwork } from "wagmi";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Request_Status_Enum } from "@/graphql/generated/graphql";
-import { Transaction, useConnectModal } from "@papercliplabs/rainbowkit";
+import { useConnectModal } from "@papercliplabs/rainbowkit";
 
-import { formatNumber, getChainForId, shortAddress, openLink } from "@/common/utils";
+import { formatNumber, shortAddress, openLink, formatTokenBalance } from "@/common/utils";
 import { ExplorerLinkType, Length, LoadingStatus } from "@/common/types";
 import { Token } from "@/common/types";
-import { ethers } from "ethers";
 import { useApproveErc20ForSwap } from "@/hooks/useApproveTokenForSwap";
 import { useExactOutputSwap } from "@/hooks/useExactOutputSwap";
 import { useToken } from "@/hooks/useTokenList";
@@ -22,6 +21,7 @@ import circleFailImage from "@/public/static/CircleFail.svg";
 import Image from "next/image";
 import { useTransaction } from "@/hooks/useTransaction";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
+import { useChain } from "@/hooks/useChain";
 
 const RequestPage = () => {
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
@@ -34,7 +34,7 @@ const RequestPage = () => {
 
   const { address } = useAccount();
 
-  const requestedChain = getChainForId(requestData?.chainId);
+  const requestedChain = useChain(requestData?.chainId);
   const onExpectedChain = useIsOnExpectedChain(requestData?.chainId);
 
   const outputToken = useToken(requestData?.recipientTokenAddress, requestData?.chainId);
@@ -212,33 +212,15 @@ const RequestPage = () => {
     );
   }
 
-  // TODO: clean this up, added for MPV
-  const formattedOutputAmount = formatNumber(
-    ethers.utils.formatUnits(requestData?.recipientTokenAmount, outputToken?.decimals),
-    6
-  );
-  const quoteAmount =
-    LoadingStatus.LOADING == swapQuote.quoteStatus ? (
-      <Spinner size="sm" />
-    ) : swapQuote.quoteAmount ? (
-      formatNumber(ethers.utils.formatUnits(swapQuote.quoteAmount, inputToken?.decimals), 6)
-    ) : (
-      "--"
-    );
-  const usdAmount =
-    inputToken?.priceUsd && LoadingStatus.LOADING != swapQuote.quoteStatus
-      ? formatNumber(Number(quoteAmount) * inputToken?.priceUsd, 6)
-      : "--";
-  const swapRate =
-    LoadingStatus.LOADING == swapQuote.quoteStatus ? (
-      <Spinner size="sm" />
-    ) : (
-      formatNumber(Number(quoteAmount) / Math.max(Number(formattedOutputAmount), 0.000001), 4)
-    );
+  const quoteLoading = LoadingStatus.LOADING == swapQuote.quoteStatus;
   const showEtherscanButton = paid || failed || pendingTransaction;
 
-  console.log("STATUS", requestData?.status);
-  console.log("SWAP TXN", swapTransaction);
+  // Format numbers
+  const formattedQuoteAmount = formatTokenBalance(swapQuote?.quoteAmount, inputToken?.decimals, 6);
+  const inputTokenUsdAmount = formatNumber(Number(formattedQuoteAmount) * Number(inputToken?.priceUsd), 2, false);
+  const formattedOutputAmount = formatTokenBalance(requestData?.recipientTokenAmount, outputToken?.decimals, 6);
+  const outputTokenUsdAmount = formatNumber(Number(formattedOutputAmount) * Number(outputToken?.priceUsd), 2, false); // Unused for now (needs updated designs)
+  const swapRate = formatNumber(Number(formattedQuoteAmount) / Number(formattedOutputAmount));
 
   return (
     <Flex direction="column" gap="16px" justifyContent="space-between" height="100%" alignItems="center">
@@ -304,10 +286,10 @@ const RequestPage = () => {
                   >
                     <Flex direction="column" flex="1">
                       <Text fontSize="lg" color="textPrimary">
-                        {quoteAmount}
+                        {quoteLoading ? <Spinner size="sm" /> : formattedQuoteAmount}
                       </Text>
                       <Text fontSize="xs" color="textTertiary">
-                        ${usdAmount}
+                        ${inputTokenUsdAmount}
                       </Text>
                     </Flex>
 
@@ -345,7 +327,8 @@ const RequestPage = () => {
                       <Text fontSize="sm">
                         {inputToken && outputToken ? (
                           <>
-                            1 {outputToken.symbol} = {swapRate} {inputToken.symbol}
+                            1 {outputToken.symbol} = {quoteLoading ? <Spinner size="sm" /> : swapRate}{" "}
+                            {inputToken.symbol}
                           </>
                         ) : (
                           "--"
@@ -357,7 +340,7 @@ const RequestPage = () => {
                       <Text color="textSecondary" fontWeight="bold">
                         Hopscotch Fee{" "}
                         <Tooltip label="This app currently does not take a fee from transactions. In the future it may to help support development.">
-                          <QuestionOutlineIcon />
+                          <QuestionOutlineIcon boxSize="12px" />
                         </Tooltip>{" "}
                       </Text>
                       <Text fontSize="sm">Free</Text>
@@ -367,7 +350,20 @@ const RequestPage = () => {
                       <Text color="textSecondary" fontWeight="bold">
                         Network
                       </Text>
-                      <Text fontSize="sm">{requestedChain?.name}</Text>
+                      <Flex align="center">
+                        <Image
+                          src={requestedChain?.iconUrlSync}
+                          alt={requestedChain?.name}
+                          width={16}
+                          height={16}
+                          layout="fixed"
+                          objectFit="contain"
+                          className="rounded-full"
+                        />
+                        <Text fontSize="sm" pl="4px">
+                          {requestedChain?.name}
+                        </Text>
+                      </Flex>
                     </Flex>
                   </Flex>
                 </Flex>
