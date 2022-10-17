@@ -2,16 +2,16 @@ import { Button } from "@chakra-ui/react";
 import { useChainModal, useConnectModal } from "@papercliplabs/rainbowkit";
 import Image from "next/image";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { useActiveChain } from "@/hooks/useActiveChain";
+import { useChain } from "@/hooks/useChain";
 
 export const NetworkSelect = () => {
   const { openChainModal } = useChainModal();
   const { openConnectModal } = useConnectModal();
-  const activeChain = useActiveChain();
+  const activeChain = useChain();
 
   return (
     <Button
-      onClick={(event) => (activeChain.connected ? openChainModal?.() : openConnectModal?.())}
+      onClick={(_) => (activeChain.connected ? openChainModal?.() : openConnectModal?.())}
       leftIcon={
         <Image
           src={activeChain?.iconUrlSync}
@@ -34,7 +34,7 @@ export const NetworkSelect = () => {
       }}
       boxShadow="md"
     >
-      on {activeChain?.name} Network
+      On {activeChain?.name}
     </Button>
   );
 };

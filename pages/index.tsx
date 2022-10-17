@@ -1,33 +1,19 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import {
-  Button,
-  Center,
-  Container,
-  Heading,
-  Text,
-  Input,
-  Spacer,
-  Flex,
-  Tooltip,
-  Box,
-  GridItem,
-  NumberInputField,
-  NumberInput,
-  Avatar,
-} from "@chakra-ui/react";
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { ConnectButton, useConnectModal } from "@papercliplabs/rainbowkit";
+import { Button, Text, Flex, Box, GridItem, NumberInputField, NumberInput, Avatar } from "@chakra-ui/react";
+import { useConnectModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
 import { useAccount, useEnsAvatar, useEnsName, useNetwork } from "wagmi";
+import Image from "next/image";
 
 import { useInsertRequestMutation } from "@/graphql/generated/graphql";
 import { useAuth } from "@/providers/auth";
-import { FEE_BIPS, SUPPORTED_CHAINS } from "@/common/constants";
+import { FEE_BIPS } from "@/common/constants";
 import { Token } from "@/common/types";
 import { formatNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
 import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
+import { useChain } from "@/hooks/useChain";
 
 const ellipsisMiddle = (str: string): string => {
   if (str.length < 10) {
@@ -87,7 +73,7 @@ const CreateRequest: FC = () => {
 
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
   const [tokenAmount, setTokenAmount] = useState<string>("");
-  const { chain: activeChain } = useNetwork();
+  const activeChain = useChain();
   const { address } = useAccount();
 
   async function createRequest() {
@@ -184,7 +170,7 @@ const CreateRequest: FC = () => {
               </NumberInput>
             </Flex>
             <Text fontSize="xs" color="textTertiary">
-              ${tokenAmountUsd ? formatNumber(tokenAmountUsd) : "--"}
+              ${tokenAmountUsd ? formatNumber(tokenAmountUsd, 2, false) : "--"}
             </Text>
 
             <Flex flexDirection="column" justifyContent="center" mt={2}>
@@ -197,9 +183,21 @@ const CreateRequest: FC = () => {
                 Network
               </Text>
             </Flex>
-            <Text fontSize="xs" color="textSecondary">
-              {activeChain?.name}
-            </Text>
+
+            <Flex align="center">
+              <Image
+                src={activeChain?.iconUrlSync}
+                alt={activeChain?.name}
+                width={16}
+                height={16}
+                layout="fixed"
+                objectFit="contain"
+                className="rounded-full"
+              />
+              <Text pl="4px" fontSize="xs" color="textSecondary">
+                {activeChain?.name}
+              </Text>
+            </Flex>
           </Flex>
           <Flex width="100%">
             <Button

@@ -1,23 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
-import { Chain as WagmiChain, useNetwork } from "wagmi";
+import { useNetwork } from "wagmi";
 
 import { SUPPORTED_CHAINS } from "@/common/constants";
+import { Chain } from "@/common/types";
 import { useRainbowKitChainsById } from "@papercliplabs/rainbowkit";
-import { RainbowKitChain } from "@papercliplabs/rainbowkit/dist/components/RainbowKitProvider/RainbowKitChainContext";
 
-type Chain = WagmiChain & RainbowKitChain;
-
-export interface UseActiveChain extends Chain {
+export interface UseChain extends Chain {
   connected: boolean;
   iconUrlSync: string;
 }
 
-export function useActiveChain(): UseActiveChain {
+/**
+ * Get the chain for the chainId, or the active chain is no chainId is passed
+ * @param customChainId custom chain id to get the chain for
+ * @returns chain for customChainId or the active chain if customChainId is undefined
+ */
+export function useChain(customChainId: number | undefined = undefined): UseChain {
   const [iconUrlSync, setIconUrlSync] = useState("");
   const { chain: connectedChain } = useNetwork();
   const rainbowkitChainsById = useRainbowKitChainsById();
-  const activeChainId = connectedChain?.id ?? SUPPORTED_CHAINS[0].id;
-  const rainbowKitChain = rainbowkitChainsById[activeChainId] as Chain;
+  const chainId = customChainId ?? connectedChain?.id ?? SUPPORTED_CHAINS[0].id;
+  const rainbowKitChain = rainbowkitChainsById[chainId] as Chain;
 
   // iconUrl is a promise so we must resolve it
   useEffect(() => {
