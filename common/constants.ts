@@ -14,7 +14,7 @@ export const SUPPORTED_CHAINS = [
   chain.polygon,
   // chain.polygonMumbai,
   // chain.goerli,
-  // chain.mainnet,
+  chain.mainnet,
   // chain.optimism,
   // chain.arbitrum,
 ];
@@ -23,7 +23,7 @@ export const COIN_GECKO_API_PLATFORM_ID = {
   [chain.polygon.id]: "polygon-pos",
   // [chain.polygonMumbai.id]: undefined,
   // [chain.goerli.id]: undefined,
-  // [chain.mainnet.id]: "ethereum",
+  [chain.mainnet.id]: "ethereum",
   // [chain.optimism.id]: "optimistic-ethereum",
   // [chain.arbitrum.id]: "arbitrum-one",
 };
