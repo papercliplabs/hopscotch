@@ -1,6 +1,7 @@
 export const pxToRem = (px: number): string => `${px / 16}rem`;
 
 export const fontSizes = {
+  "2xs": pxToRem(12),
   xs: pxToRem(14),
   sm: pxToRem(16),
   md: pxToRem(18),
@@ -34,55 +35,67 @@ export const textStyles = {
     fontSize: "3xl",
     fontWeight: "bold",
     lineHeight: "3xl",
-    letterSpacing: '0',
+    letterSpacing: '-0.03em',
   },
   h2: {
     fontSize: "2xl",
     fontWeight: "bold",
     lineHeight: "xl",
-    letterSpacing: '0',
+    letterSpacing: '-0.03em',
   },
   h3: {
     fontSize: "xl",
     fontWeight: "bold",
     lineHeight: "xl",
-    letterSpacing: '0',
+    letterSpacing: '-0.03em',
   },
   h4: {
     fontSize: "lg",
     fontWeight: "bold",
     lineHeight: "xl",
-    letterSpacing: '0',
+    letterSpacing: '-0.03em',
   },
   h5: {
     fontSize: "md",
     fontWeight: "bold",
     lineHeight: "md",
-    letterSpacing: '0',
+    letterSpacing: '-0.03em',
   },
   h6: {
     fontSize: "md",
     fontWeight: "bold",
     lineHeight: "md",
-    letterSpacing: '0',
+    letterSpacing: '-0.03em',
   },
   body1: {
     fontSize: "sm",
     fontWeight: "book",
     lineHeight: "md",
-    letterSpacing: '0',
+    letterSpacing: '-0.03em',
   },
   body2: {
     fontSize: "xs",
     fontWeight: "book",
     lineHeight: "xs",
-    letterSpacing: '0',
+    letterSpacing: '-0.03em',
+  },
+  small: {
+    fontSize: "2xs",
+    fontWeight: "book",
+    lineHeight: "xs",
+    letterSpacing: '-0.03em',
+  },
+  label: {
+    fontSize: pxToRem(13),
+    fontWeight: "medium",
+    lineHeight: "sm",
+    letterSpacing: '-0.03em',
   },
   eyebrow: {
     fontSize: "xs",
     fontWeight: "semibold",
     lineHeight: "xs",
-    letterSpacing: '0',
+    letterSpacing: '-0.03em',
   },
 } as const;
 
