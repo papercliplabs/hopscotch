@@ -60,7 +60,13 @@ const ConnectedAvatar = () => {
       </Text>
     </Flex>
   ) : (
-    <Box width="72px" height="72px" borderRadius="full" border="grayDashed" mb={8} />
+    <Flex alignItems="center" flexDirection="column">
+
+    <Box width="72px" height="72px" borderRadius="full" border="grayDashed" mb={4} />
+    <Text variant="tertiary" textStyle="h5" mb={2} >
+        Connect a Wallet
+      </Text>
+    </Flex>
   );
 };
 
@@ -144,7 +150,7 @@ const CreateRequest: FC = () => {
           flexDirection="column"
         >
           <ConnectedAvatar />
-          <Text textStyle="h6" variant="gradient" mb={4}>
+          <Text textStyle="h6" variant="interactive" mb={4}>
             Create a request
           </Text>
           <Flex

@@ -23,6 +23,12 @@ export const components = {
       secondary: {
         color: "textSecondary",
       },
+      tertiary: {
+        color: "textTertiary",
+      },
+      interactive: {
+        color: "textInteractive",
+      },
       gradient: {
         background: "gradients.brand",
         "-webkit-background-clip": "text",

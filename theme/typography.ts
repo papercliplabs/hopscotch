@@ -62,7 +62,7 @@ export const textStyles = {
     letterSpacing: '-0.03em',
   },
   h6: {
-    fontSize: "md",
+    fontSize: "xs",
     fontWeight: "bold",
     lineHeight: "md",
     letterSpacing: '-0.03em',

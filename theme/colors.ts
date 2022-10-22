@@ -126,11 +126,13 @@ export const colors = {
   accent: createShades("#FF03D7"),
 
 
-  negative: "#BE1E1E",
-  positive: "#05944F",
+
+  negative: "#FF4949",
+  positive: "#019267",
   textPrimary: "#1B1D1F",
   textSecondary: "#3C4242",
   textTertiary: "#C0C1C1",
+  textInteractive: "#0E76FD",
   bgPrimary: "#FFFFFF",
   bgSecondary: "#EFF0F3",
 };
