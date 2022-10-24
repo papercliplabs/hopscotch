@@ -1,24 +1,39 @@
 export const pxToRem = (px: number): string => `${px / 16}rem`;
 
+// export const fontSizes = {
+//   "2xs": pxToRem(12),
+//   xs: pxToRem(14),
+//   sm: pxToRem(16),
+//   md: pxToRem(18),
+//   lg: pxToRem(20),
+//   xl: pxToRem(24),
+//   "2xl": pxToRem(40),
+//   "3xl": pxToRem(52),
+// } as const;
+
 export const fontSizes = {
-  "2xs": pxToRem(12),
-  xs: pxToRem(14),
-  sm: pxToRem(16),
-  md: pxToRem(18),
-  lg: pxToRem(20),
+  xs: pxToRem(13),
+  sm: pxToRem(14),
+  md: pxToRem(16),
+  lg: pxToRem(18),
   xl: pxToRem(24),
-  "2xl": pxToRem(40),
-  "3xl": pxToRem(52),
 } as const;
 
+// export const lineHeights = {
+//   xs: pxToRem(16),
+//   sm: pxToRem(18),
+//   md: pxToRem(22),
+//   lg: pxToRem(24),
+//   xl: pxToRem(28),
+//   "2xl": pxToRem(48),
+//   "3xl": pxToRem(60),
+// } as const;
+
 export const lineHeights = {
-  xs: pxToRem(16),
   sm: pxToRem(18),
-  md: pxToRem(22),
+  md: pxToRem(20),
   lg: pxToRem(24),
-  xl: pxToRem(28),
-  "2xl": pxToRem(48),
-  "3xl": pxToRem(60),
+  xl: pxToRem(32),
 } as const;
 
 export const fontWeights = {
@@ -31,70 +46,54 @@ export const fontWeights = {
 } as const;
 
 export const textStyles = {
-  h1: {
-    fontSize: "3xl",
-    fontWeight: "bold",
-    lineHeight: "3xl",
-    fontFamily: "'Inter Tight', sans-serif",
-  },
-  h2: {
-    fontSize: "2xl",
-    fontWeight: "bold",
-    lineHeight: "xl",
-    fontFamily: "'Inter Tight', sans-serif",
-  },
-  h3: {
+  headline: {
     fontSize: "xl",
     fontWeight: "bold",
     lineHeight: "xl",
     fontFamily: "'Inter Tight', sans-serif",
   },
-  h4: {
+  titleLg: {
     fontSize: "lg",
     fontWeight: "bold",
-    lineHeight: "xl",
+    lineHeight: "lg",
     fontFamily: "'Inter Tight', sans-serif",
   },
-  h5: {
+  titleMd: {
     fontSize: "md",
     fontWeight: "bold",
     lineHeight: "md",
     fontFamily: "'Inter Tight', sans-serif",
   },
-  h6: {
-    fontSize: "xs",
+  titleSm: {
+    fontSize: "sm",
     fontWeight: "bold",
     lineHeight: "md",
     fontFamily: "'Inter Tight', sans-serif",
   },
-  body1: {
+  bodyLg: {
+    fontSize: "md",
+    fontWeight: "book",
+    lineHeight: "lg",
+    fontFamily: "'Inter', sans-serif",
+    lineSpacing: "-0.011em",
+  },
+  bodyMd: {
     fontSize: "sm",
+    fontWeight: "book",
+    lineHeight: "md",
+    fontFamily: "'Inter', sans-serif",
+    lineSpacing: "-0.006em",
+  },
+  bodySm: {
+    fontSize: "xs",
     fontWeight: "book",
     lineHeight: "md",
     fontFamily: "'Inter Tight', sans-serif",
   },
-  body2: {
-    fontSize: "xs",
-    fontWeight: "book",
-    lineHeight: "xs",
-    fontFamily: "'Inter Tight', sans-serif",
-  },
-  small: {
-    fontSize: "2xs",
-    fontWeight: "book",
-    lineHeight: "xs",
-    fontFamily: "'Inter Tight', sans-serif",
-  },
   label: {
-    fontSize: pxToRem(13),
-    fontWeight: "medium",
-    lineHeight: "sm",
-    fontFamily: "'Inter Tight', sans-serif",
-  },
-  eyebrow: {
     fontSize: "xs",
-    fontWeight: "semibold",
-    lineHeight: "xs",
+    fontWeight: "medium",
+    lineHeight: "md",
     fontFamily: "'Inter Tight', sans-serif",
   },
 } as const;

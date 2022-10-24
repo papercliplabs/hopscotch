@@ -55,7 +55,7 @@ const ConnectedAvatar = () => {
         getInitials={getInitials}
         src={ensAvatarSrc ?? ""}
       />
-      <Text textStyle="h5" mb={2}>
+      <Text textStyle="titleLg" mb={2}>
         {ensName ? ensName : ellipsisMiddle(address ?? "")}
       </Text>
     </Flex>
@@ -63,7 +63,7 @@ const ConnectedAvatar = () => {
     <Flex alignItems="center" flexDirection="column">
 
     <Box width="72px" height="72px" borderRadius="full" border="grayDashed" mb={4} />
-    <Text variant="tertiary" textStyle="h5" mb={2} >
+    <Text variant="tertiary" textStyle="titleLg" mb={2} >
         Connect a Wallet
       </Text>
     </Flex>
@@ -133,8 +133,8 @@ const CreateRequest: FC = () => {
 
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
-      <Text textStyle="h3">Send a request.</Text>
-      <Text textStyle="h3" variant="gradient" mb={6}>
+      <Text textStyle="headline">Send a request.</Text>
+      <Text textStyle="headline" variant="gradient" mb={6}>
         Get paid in any token.
       </Text>
       <PrimaryCardGrid>
@@ -150,7 +150,7 @@ const CreateRequest: FC = () => {
           flexDirection="column"
         >
           <ConnectedAvatar />
-          <Text textStyle="h6" variant="interactive" mb={4}>
+          <Text textStyle="titleSm" variant="interactive" mb={4}>
             Create a request
           </Text>
           <Flex
@@ -175,7 +175,7 @@ const CreateRequest: FC = () => {
                 />
               </NumberInput>
             </Flex>
-            <Text fontSize="xs" color="textTertiary">
+            <Text textStyle="bodyMedium" color="textTertiary">
               ${tokenAmountUsd ? formatNumber(tokenAmountUsd, 2, false) : "--"}
             </Text>
 
@@ -185,7 +185,7 @@ const CreateRequest: FC = () => {
           </Flex>
           <Flex flexDirection="row" width="100%" justifyContent="space-between" alignItems="center">
             <Flex flexDirection="row">
-              <Text textStyle="body2" variant="secondary">
+              <Text textStyle="label" variant="secondary">
                 Network
               </Text>
             </Flex>
@@ -200,7 +200,7 @@ const CreateRequest: FC = () => {
                 objectFit="contain"
                 className="rounded-full"
               />
-              <Text pl="4px" fontSize="xs" color="textSecondary">
+              <Text pl="4px" textStyle="label" variant="secondary">
                 {activeChain?.name}
               </Text>
             </Flex>

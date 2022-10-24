@@ -58,7 +58,7 @@ const SlideMenu: FC<SlideMenuProps> = ({ title, onClose, isOpen, children }) => 
         flexDirection="row"
       >
         <div></div>
-        <Text textStyle="h4">{title}</Text>
+        <Text textStyle="titleLg">{title}</Text>
         <CloseButton onClick={() => onClose()} />
       </GridItem>
       {children}
@@ -166,8 +166,8 @@ export default function TokenSelect({
                   borderRadius="full"
                   backgroundColor="bgSecondary"
                   color="grey"
-                  textStyle="h5"
-                  fontSize="18px"
+                  textStyle="titleLg"
+                  fontSize="lg"
                   fontWeight={800}
                   lineHeight="120%"
                   letterSpacing="0"
