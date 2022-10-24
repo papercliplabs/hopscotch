@@ -23,7 +23,7 @@ import { NestedPortalRefProvider } from "@/components/NestedPortal";
 import "@/styles/fonts.css";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
-  alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
+  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
   publicProvider(),
 ]);
 
