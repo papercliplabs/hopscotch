@@ -587,6 +587,7 @@ export enum Request_Status_Constraint {
 }
 
 export enum Request_Status_Enum {
+  Failed = 'FAILED',
   Paid = 'PAID',
   TransactionPending = 'TRANSACTION_PENDING',
   Unpaid = 'UNPAID'

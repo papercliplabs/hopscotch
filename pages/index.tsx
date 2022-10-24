@@ -1,6 +1,6 @@
 import { FC, useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import { Button, Text, Flex, Box, GridItem, NumberInputField, NumberInput, Avatar } from "@chakra-ui/react";
+import { Button, Text, Flex, Box, GridItem, NumberInputField, NumberInput, Avatar, AvatarProps } from "@chakra-ui/react";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
 import { useAccount, useEnsAvatar, useEnsName, useNetwork } from "wagmi";
@@ -32,8 +32,13 @@ const getInitials = (name: string): string => {
   return initials.toUpperCase();
 };
 
-const ConnectedAvatar = () => {
-  const { isConnected, address } = useAccount();
+interface EnsAvatarProps extends AvatarProps {
+  address: string;
+}
+
+
+const EnsAvatar: FC<EnsAvatarProps> = (props) => {
+  const { address, ...rest} = props;
   const { data: ensAvatarSrc } = useEnsAvatar({
     addressOrName: address,
     chainId: 1,
@@ -44,7 +49,7 @@ const ConnectedAvatar = () => {
     chainId: 1,
   });
 
-  return isConnected ? (
+  return (
     <Flex alignItems="center" flexDirection="column">
       <Avatar
         width="72px"
@@ -54,11 +59,20 @@ const ConnectedAvatar = () => {
         name={address}
         getInitials={getInitials}
         src={ensAvatarSrc ?? ""}
+        {...rest}
       />
       <Text textStyle="titleLg" mb={2}>
         {ensName ? ensName : ellipsisMiddle(address ?? "")}
       </Text>
     </Flex>
+  );
+};
+
+const ConnectedAvatar = () => {
+  const { isConnected, address } = useAccount();
+
+  return isConnected && address ? (
+    <EnsAvatar address={address} />
   ) : (
     <Flex alignItems="center" flexDirection="column">
 

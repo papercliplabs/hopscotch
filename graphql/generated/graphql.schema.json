@@ -4213,6 +4213,12 @@
         "interfaces": null,
         "enumValues": [
           {
+            "name": "FAILED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "PAID",
             "description": null,
             "isDeprecated": false,
