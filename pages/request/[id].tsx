@@ -22,6 +22,7 @@ import Image from "next/image";
 import { useTransaction } from "@/hooks/useTransaction";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
 import { useChain } from "@/hooks/useChain";
+import { EnsAvatar } from "@/components/EnsAvatar";
 
 const RequestPage = () => {
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
@@ -229,24 +230,26 @@ const RequestPage = () => {
         backgroundColor="bgSecondary"
         borderRadius="md"
         padding="3"
-        flexDirection="column"
+        flexDirection="row"
         justifyContent="space-between"
         maxWidth="400px"
       >
-        <Text textStyle="titleSm">
-          <Text as="span" variant="gradient">
-          <Link href={recipientAddressExplorerLink} isExternal>
-            <Tooltip label={requestData?.recipientAddress}>
-              {recipientEnsName ?? shortAddress(requestData?.recipientAddress, Length.MEDIUM)}
-            </Tooltip>{" "}
-          </Link>
-        </Text>
-
-          requested {formattedOutputAmount} {outputToken.symbol}
-        </Text>
-        <Text variant="secondary" textStyle="bodySm">
-          Choose the token you want to pay with and it will be converted to {outputToken.symbol} before sending.
-        </Text>
+          <EnsAvatar address={requestData?.recipientAddress} width="32px" height="32px" fontSize="sm" mr={3}/>
+        <Flex direction="column">
+          <Text textStyle="titleSm">
+            <Text as="span" variant="gradient">
+              <Link href={recipientAddressExplorerLink} isExternal>
+                <Tooltip label={requestData?.recipientAddress}>
+                  {recipientEnsName ?? shortAddress(requestData?.recipientAddress, Length.MEDIUM)}
+                </Tooltip>{" "}
+              </Link>
+            </Text>
+            requested {formattedOutputAmount} {outputToken.symbol}
+          </Text>
+          <Text variant="secondary" textStyle="bodySm">
+            Choose the token you want to pay with and it will be converted to {outputToken.symbol} before sending.
+          </Text>
+        </Flex>
       </Flex>
       <PrimaryCardGrid>
         <GridItem gridRowStart={1} gridColumnStart={1} zIndex={1} height="100%" margin={0} padding={4}>
@@ -288,9 +291,7 @@ const RequestPage = () => {
                     mt="10px"
                   >
                     <Flex direction="column" flex="1">
-                      <Text textStyle="headline">
-                        {quoteLoading ? <Spinner size="sm" /> : formattedQuoteAmount}
-                      </Text>
+                      <Text textStyle="headline">{quoteLoading ? <Spinner size="sm" /> : formattedQuoteAmount}</Text>
                       <Text textStyle="bodyMd" variant="secondary">
                         ${inputTokenUsdAmount}
                       </Text>

@@ -1,9 +1,9 @@
 import { FC, useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import { Button, Text, Flex, Box, GridItem, NumberInputField, NumberInput, Avatar, AvatarProps } from "@chakra-ui/react";
+import { Button, Text, Flex, Box, GridItem, NumberInputField, NumberInput } from "@chakra-ui/react";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
-import { useAccount, useEnsAvatar, useEnsName, useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 import Image from "next/image";
 
 import { useInsertRequestMutation } from "@/graphql/generated/graphql";
@@ -14,75 +14,8 @@ import { formatNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
 import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
 import { useChain } from "@/hooks/useChain";
+import { ConnectedAvatar } from "@/components/EnsAvatar";
 
-const ellipsisMiddle = (str: string): string => {
-  if (str.length < 10) {
-    return str;
-  }
-  return str.slice(0, 6) + "..." + str.slice(-4);
-};
-
-const getInitials = (name: string): string => {
-  // remove 0x if present
-  name = name.replace(/^0x/, "");
-
-  // get first threee letters
-  const initials = name.slice(0, 3);
-
-  return initials.toUpperCase();
-};
-
-interface EnsAvatarProps extends AvatarProps {
-  address: string;
-}
-
-
-const EnsAvatar: FC<EnsAvatarProps> = (props) => {
-  const { address, ...rest} = props;
-  const { data: ensAvatarSrc } = useEnsAvatar({
-    addressOrName: address,
-    chainId: 1,
-  });
-
-  const { data: ensName } = useEnsName({
-    address: address,
-    chainId: 1,
-  });
-
-  return (
-    <Flex alignItems="center" flexDirection="column">
-      <Avatar
-        width="72px"
-        height="72px"
-        bg="accent.300"
-        mb={2}
-        name={address}
-        getInitials={getInitials}
-        src={ensAvatarSrc ?? ""}
-        {...rest}
-      />
-      <Text textStyle="titleLg" mb={2}>
-        {ensName ? ensName : ellipsisMiddle(address ?? "")}
-      </Text>
-    </Flex>
-  );
-};
-
-const ConnectedAvatar = () => {
-  const { isConnected, address } = useAccount();
-
-  return isConnected && address ? (
-    <EnsAvatar address={address} />
-  ) : (
-    <Flex alignItems="center" flexDirection="column">
-
-    <Box width="72px" height="72px" borderRadius="full" border="grayDashed" mb={4} />
-    <Text variant="tertiary" textStyle="titleLg" mb={2} >
-        Connect a Wallet
-      </Text>
-    </Flex>
-  );
-};
 
 const CreateRequest: FC = () => {
   const router = useRouter();

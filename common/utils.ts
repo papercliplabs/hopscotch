@@ -79,7 +79,7 @@ export function shortAddress(address: string, length: Length): string {
       keepLen = 6;
       break;
     case Length.MEDIUM:
-      keepLen = 12;
+      keepLen = 10;
       break;
     case Length.LONG:
       keepLen = 20;
