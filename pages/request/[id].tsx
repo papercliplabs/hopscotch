@@ -233,15 +233,18 @@ const RequestPage = () => {
         justifyContent="space-between"
         maxWidth="400px"
       >
-        <Text fontSize="sm" color="textPrimary" fontWeight="bold">
+        <Text textStyle="titleSm">
+          <Text as="span" variant="gradient">
           <Link href={recipientAddressExplorerLink} isExternal>
             <Tooltip label={requestData?.recipientAddress}>
               {recipientEnsName ?? shortAddress(requestData?.recipientAddress, Length.MEDIUM)}
             </Tooltip>{" "}
           </Link>
+        </Text>
+
           requested {formattedOutputAmount} {outputToken.symbol}
         </Text>
-        <Text fontSize="xs" color="textSecondary">
+        <Text variant="secondary" textStyle="bodySm">
           Choose the token you want to pay with and it will be converted to {outputToken.symbol} before sending.
         </Text>
       </Flex>
@@ -272,7 +275,7 @@ const RequestPage = () => {
             ) : (
               <>
                 <Flex direction="column" gap="3px">
-                  <Text fontSize="xl" color="textPrimary" align="center">
+                  <Text textStyle="titleLg" align="center">
                     You Pay
                   </Text>
                   <Flex
@@ -285,10 +288,10 @@ const RequestPage = () => {
                     mt="10px"
                   >
                     <Flex direction="column" flex="1">
-                      <Text fontSize="lg" color="textPrimary">
+                      <Text textStyle="headline">
                         {quoteLoading ? <Spinner size="sm" /> : formattedQuoteAmount}
                       </Text>
-                      <Text fontSize="xs" color="textTertiary">
+                      <Text textStyle="bodyMd" variant="secondary">
                         ${inputTokenUsdAmount}
                       </Text>
                     </Flex>
@@ -306,14 +309,14 @@ const RequestPage = () => {
                     justifyContent="space-between"
                   >
                     <Flex direction="column">
-                      <Text fontSize="sm" color="textTertiary" fontWeight="bold">
+                      <Text textStyle="titleSm" variant="secondary">
                         They receive:
                       </Text>
-                      <Text fontSize="xl">{formattedOutputAmount}</Text>
+                      <Text textStyle="headline">{formattedOutputAmount}</Text>
                     </Flex>
                     <Flex align="center">
                       <Avatar height="32px" width="32px" mr={1} src={outputToken.logoURI} />
-                      <Text fontSize="md" color="textSecondary" fontWeight="bold">
+                      <Text textStyle="bodyMd" variant="secondary">
                         {outputToken.symbol}
                       </Text>
                     </Flex>
@@ -321,7 +324,7 @@ const RequestPage = () => {
 
                   <Flex direction="column" pt="10px" gap="5px">
                     <Flex direction="row" justifyContent="space-between">
-                      <Text color="textSecondary" fontWeight="bold">
+                      <Text textStyle="label" variant="secondary" fontWeight="bold">
                         Swap Rate
                       </Text>
                       <Text fontSize="sm">
@@ -337,7 +340,7 @@ const RequestPage = () => {
                     </Flex>
 
                     <Flex direction="row" justifyContent="space-between">
-                      <Text color="textSecondary" fontWeight="bold">
+                      <Text textStyle="label" variant="secondary" fontWeight="bold">
                         Hopscotch Fee{" "}
                         <Tooltip label="This app currently does not take a fee from transactions. In the future it may to help support development.">
                           <QuestionOutlineIcon boxSize="12px" />
@@ -347,7 +350,7 @@ const RequestPage = () => {
                     </Flex>
 
                     <Flex direction="row" justifyContent="space-between">
-                      <Text color="textSecondary" fontWeight="bold">
+                      <Text textStyle="label" variant="secondary" fontWeight="bold">
                         Network
                       </Text>
                       <Flex align="center">

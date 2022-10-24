@@ -130,7 +130,7 @@ export const colors = {
   negative: "#FF4949",
   positive: "#019267",
   textPrimary: "#1B1D1F",
-  textSecondary: "#3C4242",
+  textSecondary: "rgba(27, 29, 31, 0.6)",
   textTertiary: "#C0C1C1",
   textInteractive: "#0E76FD",
   bgPrimary: "#FFFFFF",

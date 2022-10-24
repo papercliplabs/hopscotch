@@ -1,15 +1,5 @@
 export const pxToRem = (px: number): string => `${px / 16}rem`;
 
-// export const fontSizes = {
-//   "2xs": pxToRem(12),
-//   xs: pxToRem(14),
-//   sm: pxToRem(16),
-//   md: pxToRem(18),
-//   lg: pxToRem(20),
-//   xl: pxToRem(24),
-//   "2xl": pxToRem(40),
-//   "3xl": pxToRem(52),
-// } as const;
 
 export const fontSizes = {
   xs: pxToRem(13),
@@ -19,15 +9,6 @@ export const fontSizes = {
   xl: pxToRem(24),
 } as const;
 
-// export const lineHeights = {
-//   xs: pxToRem(16),
-//   sm: pxToRem(18),
-//   md: pxToRem(22),
-//   lg: pxToRem(24),
-//   xl: pxToRem(28),
-//   "2xl": pxToRem(48),
-//   "3xl": pxToRem(60),
-// } as const;
 
 export const lineHeights = {
   sm: pxToRem(18),
@@ -40,9 +21,8 @@ export const fontWeights = {
   light: 300,
   normal: 400,
   medium: 500,
-  book: 600,
-  semibold: 700,
-  bold: 800,
+  semibold: 600,
+  bold: 700,
 } as const;
 
 export const textStyles = {
@@ -60,39 +40,39 @@ export const textStyles = {
   },
   titleMd: {
     fontSize: "md",
-    fontWeight: "bold",
+    fontWeight: "semibold",
     lineHeight: "md",
     fontFamily: "'Inter Tight', sans-serif",
   },
   titleSm: {
     fontSize: "sm",
-    fontWeight: "bold",
+    fontWeight: "semibold",
     lineHeight: "md",
     fontFamily: "'Inter Tight', sans-serif",
   },
   bodyLg: {
     fontSize: "md",
-    fontWeight: "book",
+    fontWeight: "medium",
     lineHeight: "lg",
     fontFamily: "'Inter', sans-serif",
     lineSpacing: "-0.011em",
   },
   bodyMd: {
     fontSize: "sm",
-    fontWeight: "book",
+    fontWeight: "medium",
     lineHeight: "md",
     fontFamily: "'Inter', sans-serif",
     lineSpacing: "-0.006em",
   },
   bodySm: {
     fontSize: "xs",
-    fontWeight: "book",
+    fontWeight: "medium",
     lineHeight: "md",
     fontFamily: "'Inter Tight', sans-serif",
   },
   label: {
     fontSize: "xs",
-    fontWeight: "medium",
+    fontWeight: "semibold",
     lineHeight: "md",
     fontFamily: "'Inter Tight', sans-serif",
   },
