@@ -165,7 +165,7 @@ const CreateRequest: FC = () => {
             <Flex>
               <NumberInput onChange={(valueString: string) => setTokenAmount(parse(valueString))} value={tokenAmount}>
                 <NumberInputField
-                  placeholder="Enter Amount"
+                  placeholder="Enter an amount"
                   border="none"
                   textAlign="center"
                   p={0}
