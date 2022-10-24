@@ -229,7 +229,7 @@ const RequestPage = () => {
         width="100%"
         backgroundColor="bgSecondary"
         borderRadius="md"
-        padding="3"
+        p={4}
         flexDirection="row"
         justifyContent="space-between"
         maxWidth="400px"

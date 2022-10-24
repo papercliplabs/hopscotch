@@ -3,7 +3,7 @@ import { Text, Flex, Box, Avatar, AvatarProps, TextProps } from "@chakra-ui/reac
 import { useAccount, useEnsAvatar, useEnsName, useNetwork } from "wagmi";
 import { shortAddress } from "@/common/utils";
 import { Length } from "@/common/types";
-
+import DefaultAvatar from "@/public/static/DefaultAvatar.png";
 export const getInitials = (name: string): string => {
   // remove 0x if present
   name = name.replace(/^0x/, "");
@@ -42,6 +42,10 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
     chainId: 1,
   });
 
+  // log
+  console.log("ensAvatarSrc", ensAvatarSrc);
+  console.log("DefaultAvatar", DefaultAvatar);
+
   return (
     <Avatar
       width="72px"
@@ -49,7 +53,7 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
       bg="accent.300"
       name={address}
       getInitials={getInitials}
-      src={ensAvatarSrc ?? ""}
+      src={ensAvatarSrc ?? DefaultAvatar.src}
       {...rest}
     />
   );
