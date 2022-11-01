@@ -4,6 +4,7 @@ import { useAccount, useEnsAvatar, useEnsName, useNetwork } from "wagmi";
 import { shortAddress } from "@/common/utils";
 import { Length } from "@/common/types";
 import DefaultAvatar from "@/public/static/DefaultAvatar.png";
+import ConnectWalletAvatar from "@/public/static/ConnectWalletAvatar.png";
 export const getInitials = (name: string): string => {
   // remove 0x if present
   name = name.replace(/^0x/, "");
@@ -29,7 +30,7 @@ export const EnsName: FC<EnsNameProps> = ({ address, ...props }) => {
   });
 
   return (
-    <Text textStyle="titleLg" mb={2} {...props}>
+    <Text textStyle="titleLg" {...props}>
       {ensName ? ensName : shortAddress(address ?? "", Length.MEDIUM)}
     </Text>
   );
@@ -42,14 +43,10 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
     chainId: 1,
   });
 
-  // log
-  console.log("ensAvatarSrc", ensAvatarSrc);
-  console.log("DefaultAvatar", DefaultAvatar);
-
   return (
     <Avatar
-      width="72px"
-      height="72px"
+      width="48px"
+      height="48px"
       bg="accent.300"
       name={address}
       getInitials={getInitials}
@@ -63,14 +60,14 @@ export const ConnectedAvatar = () => {
   const { isConnected, address } = useAccount();
 
   return isConnected && address ? (
-    <Flex alignItems="center" flexDirection="column">
-      <EnsAvatar address={address} mb={2}/>
+    <Flex alignItems="center" flexDirection="column" gap={2} mt={1}>
+      <EnsAvatar address={address} />
       <EnsName address={address} />
     </Flex>
   ) : (
-    <Flex alignItems="center" flexDirection="column">
-      <Box width="72px" height="72px" borderRadius="full" border="grayDashed" mb={4} />
-      <Text variant="tertiary" textStyle="titleLg" mb={2}>
+    <Flex alignItems="center" flexDirection="column" gap={2} mt={1}>
+      <Avatar src={ConnectWalletAvatar.src} />
+      <Text variant="tertiary" textStyle="titleLg">
         Connect a Wallet
       </Text>
     </Flex>

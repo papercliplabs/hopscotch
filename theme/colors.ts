@@ -106,12 +106,12 @@ const themeColors = {
 
 const gradients = {
   primary: "linear-gradient(135deg, #E013DD 0%, #F41FEC 52.08%, #FF4E82 100%)",
-  brand: "linear-gradient(180deg, #005CB6 0%, #0D88FF 100%)"
+  brand: "linear-gradient(180deg, #005CB6 0%, #0D88FF 100%)",
 };
 
 const borders = {
   dashed: "2px dashed #C0C1C1",
-}
+};
 
 export const colors = {
   // theme colors
@@ -125,8 +125,6 @@ export const colors = {
   brand: createShades("#0D88FF"),
   accent: createShades("#FF03D7"),
 
-
-
   negative: "#FF4949",
   positive: "#019267",
   textPrimary: "#1B1D1F",
@@ -135,6 +133,7 @@ export const colors = {
   textInteractive: "#0E76FD",
   bgPrimary: "#FFFFFF",
   bgSecondary: "#EFF0F3",
+  bgTertiary: "#FAFAFC",
 };
 
 // Not nessesary until we have dark mode
