@@ -16,7 +16,6 @@ import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
 import { useChain } from "@/hooks/useChain";
 import { ConnectedAvatar } from "@/components/EnsAvatar";
 
-
 const CreateRequest: FC = () => {
   const router = useRouter();
   const { ensureUser } = useAuth();
@@ -86,42 +85,50 @@ const CreateRequest: FC = () => {
       </Text>
       <PrimaryCardGrid>
         <GridItem
-          gridRowStart={1}
-          gridColumnStart={1}
           zIndex={1}
           height="100%"
-          padding={4}
-          display={"flex"}
+          width="100%"
           alignItems="center"
           justifyContent="space-between"
           flexDirection="column"
+          padding={4}
+          display={"flex"}
+          gridRowStart={1}
+          gridColumnStart={1}
         >
-          <ConnectedAvatar />
-          <Text textStyle="titleSm" variant="interactive" mb={4}>
-            Create a request
-          </Text>
+          <Flex direction="column" align="center" width="100%">
+            <ConnectedAvatar />
+            <Text textStyle="titleSm" variant="interactive" mb={4}>
+              Create a request
+            </Text>
+          </Flex>
+
           <Flex
             width="100%"
             backgroundColor="bgSecondary"
             borderRadius="md"
-            padding={6}
+            padding={4}
             flexDirection="column"
             alignItems="center"
             justifyContent="space-between"
           >
-            <Flex>
-              <NumberInput onChange={(valueString: string) => setTokenAmount(parse(valueString))} value={tokenAmount}>
-                <NumberInputField
-                  placeholder="Enter an amount"
-                  border="none"
-                  textAlign="center"
-                  p={0}
-                  fontSize="xl"
-                  lineHeight="xl"
-                  fontWeight="bold"
-                />
-              </NumberInput>
-            </Flex>
+            <NumberInput onChange={(valueString: string) => setTokenAmount(parse(valueString))} value={tokenAmount}>
+              <NumberInputField
+                _focusVisible={{
+                  borderWidth: "1.75px",
+                  borderColor: "primary",
+                  borderRadius: "xs",
+                  backgroundColor: "bgTertiary",
+                }}
+                outline="none"
+                placeholder="Enter an amount"
+                borderWidth="0px"
+                textAlign="center"
+                fontSize="xl"
+                lineHeight="xl"
+                fontWeight="bold"
+              />
+            </NumberInput>
             <Text textStyle="bodyMedium" color="textTertiary">
               ${tokenAmountUsd ? formatNumber(tokenAmountUsd, 2, false) : "--"}
             </Text>
@@ -130,42 +137,44 @@ const CreateRequest: FC = () => {
               <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={false} />
             </Flex>
           </Flex>
-          <Flex flexDirection="row" width="100%" justifyContent="space-between" alignItems="center">
-            <Flex flexDirection="row">
+
+          <Flex direction="column" width="100%" gap={4}>
+            <Flex flexDirection="row" width="100%" justifyContent="space-between" alignItems="center">
               <Text textStyle="label" variant="secondary">
                 Network
               </Text>
+
+              <Flex align="center">
+                <Image
+                  src={activeChain?.iconUrlSync}
+                  alt={activeChain?.name}
+                  width={16}
+                  height={16}
+                  layout="fixed"
+                  objectFit="contain"
+                  className="rounded-full"
+                />
+                <Text pl="4px" textStyle="label" variant="secondary">
+                  {activeChain?.name}
+                </Text>
+              </Flex>
             </Flex>
 
-            <Flex align="center">
-              <Image
-                src={activeChain?.iconUrlSync}
-                alt={activeChain?.name}
-                width={16}
-                height={16}
-                layout="fixed"
-                objectFit="contain"
-                className="rounded-full"
-              />
-              <Text pl="4px" textStyle="label" variant="secondary">
-                {activeChain?.name}
-              </Text>
+            <Flex width="100%">
+              <Button
+                colorScheme="brand"
+                type="submit"
+                width="100%"
+                height="48px"
+                size="lg"
+                onClick={() => {
+                  onClickFunction && onClickFunction();
+                }}
+                isDisabled={onClickFunction == undefined}
+              >
+                {buttonText}
+              </Button>
             </Flex>
-          </Flex>
-          <Flex width="100%">
-            <Button
-              colorScheme="brand"
-              type="submit"
-              width="100%"
-              minHeight="48px"
-              size="lg"
-              onClick={() => {
-                onClickFunction && onClickFunction();
-              }}
-              isDisabled={onClickFunction == undefined}
-            >
-              {buttonText}
-            </Button>
           </Flex>
         </GridItem>
       </PrimaryCardGrid>

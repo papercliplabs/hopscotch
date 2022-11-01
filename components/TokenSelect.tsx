@@ -1,6 +1,7 @@
 import { FC, ReactNode, useMemo, useState } from "react";
 import {
   Avatar,
+  AvatarBadge,
   Button,
   CloseButton,
   Flex,
@@ -13,13 +14,15 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
+import Image from "next/image";
 
 import { Token } from "@/common/types";
 import { useTokenList } from "@/hooks/useTokenList";
 import { NestedPortal } from "./NestedPortal";
 import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import { NetworkSelect } from "./NetworkSelect";
-import { formatTokenBalance } from "@/common/utils";
+import { formatNumber, formatTokenBalance } from "@/common/utils";
+import { useChain } from "@/hooks/useChain";
 
 interface SlideMenuProps {
   isOpen: boolean;
@@ -78,6 +81,7 @@ export default function TokenSelect({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState("");
   const handleSearchChange = (event: any) => setSearch(event?.target?.value);
+  const activeChain = useChain();
 
   const tokenList = useTokenList();
   const filteredTokenList = useMemo(() => {
@@ -98,34 +102,31 @@ export default function TokenSelect({
         color: "black",
         backgroundColor: "white",
         children: token.symbol,
-        rightIcon: <ChevronDownIcon />,
         leftIcon: <Avatar height={8} width={8} src={token.logoURI} />,
-        onClick: () => onOpen(),
-        isDisabled: isDisabled,
+        boxShadow: "md",
       }
     : {
         color: "white",
         colorScheme: "brand",
         children: "Choose Token",
-        rightIcon: <ChevronDownIcon />,
-        onClick: () => onOpen(),
-        isDisabled: isDisabled,
       };
 
   const buttonItems = useMemo(() => {
     return filteredTokenList.map((tokenDetails, index) => {
-      const { name, address, symbol, balance, decimals, logoURI } = tokenDetails;
+      const { name, address, symbol, balance, balanceUsd, decimals, logoURI } = tokenDetails;
       const isSelected = address === token?.address;
       return (
         <Flex
           key={address}
           flexDirection="row"
           alignItems="center"
+          boxSizing="border-box"
           justifyContent="space-between"
           width="100%"
           cursor="pointer"
           paddingY={2}
-          paddingX={4}
+          paddingX={2}
+          borderRadius="xs"
           backgroundColor={isSelected ? "blackAlpha.50" : "transparent"}
           _hover={{
             backgroundColor: "blackAlpha.50",
@@ -135,22 +136,45 @@ export default function TokenSelect({
             onClose();
           }}
         >
-          <Flex>
-            <Avatar height={12} width={12} mr={4} src={logoURI} />
-            <Flex direction="column">
-              <Text as="b">{symbol}</Text>
-              <Text>{name}</Text>
-            </Flex>
+          <Flex align="center">
+            <Avatar height="32px" width="32px" mr={4} src={logoURI}>
+              <AvatarBadge borderWidth={2}>
+                <Image
+                  src={activeChain?.iconUrlSync}
+                  alt={activeChain?.name}
+                  width="14px"
+                  height="14px"
+                  layout="fixed"
+                  objectFit="contain"
+                  className="rounded-full"
+                />
+              </AvatarBadge>
+            </Avatar>
+            <Text textStyle="titleMd">{name}</Text>
           </Flex>
-          <Text>{balance ? formatTokenBalance(balance, decimals, 4) : ""}</Text>
+          <Flex direction="column" align="end">
+            <Text textStyle="bodyLg">
+              {balance ? formatTokenBalance(balance, decimals, 4) : "--"} {symbol}
+            </Text>
+            <Text textStyle="bodyMd" variant="secondary">
+              {balanceUsd ? "$" + formatNumber(balanceUsd, 2) : "--"}
+            </Text>
+          </Flex>
         </Flex>
       );
     });
-  }, [filteredTokenList, setToken, onClose]);
+  }, [filteredTokenList, setToken, onClose, activeChain]);
 
   return (
     <>
-      <Button {...buttonProps} />
+      <Button
+        rightIcon={<ChevronDownIcon boxSize="24px" />}
+        onClick={() => onOpen()}
+        isDisabled={isDisabled}
+        borderRadius="md"
+        height="48px"
+        {...buttonProps}
+      />
       <NestedPortal>
         <SlideMenu title="Choose Token" isOpen={isOpen} onClose={onClose}>
           <Grid templateRows="auto auto minmax(0, 1fr)" rowGap={2} width="100%" height="100%" templateColumns="1fr">
@@ -160,15 +184,15 @@ export default function TokenSelect({
                   <SearchIcon color="black" />
                 </InputLeftElement>
                 <Input
-                  placeholder="Search"
+                  placeholder="Search token"
                   value={search}
                   onChange={handleSearchChange}
                   borderRadius="full"
                   backgroundColor="bgSecondary"
                   color="grey"
-                  textStyle="titleLg"
+                  textStyle="titleSm"
                   fontSize="lg"
-                  fontWeight={800}
+                  // fontWeight={800}
                   lineHeight="120%"
                   letterSpacing="0"
                 />
@@ -181,10 +205,15 @@ export default function TokenSelect({
               flexDirection="column"
               borderRadius="lg"
               backgroundColor="bgSecondary"
-              paddingY={4}
+              paddingY={2}
               overflowY="scroll"
+              sx={{
+                "scrollbar-width": "none",
+              }}
             >
-              <Stack width="100%">{buttonItems}</Stack>
+              <Stack width="100%" padding={2}>
+                {buttonItems}
+              </Stack>
             </GridItem>
           </Grid>
         </SlideMenu>

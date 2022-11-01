@@ -38,8 +38,8 @@ const theme = extendTheme({
   textStyles,
   semanticTokens,
   borders: {
-    "grayDashed": "4px dashed #ABACAE",
-  }
+    grayDashed: "4px dashed #ABACAE",
+  },
 });
 
 export { theme };
