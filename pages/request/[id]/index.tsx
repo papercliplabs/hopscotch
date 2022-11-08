@@ -273,7 +273,7 @@ const RequestPage = () => {
           <Flex direction="column" justifyContent="space-between" height="100%" gap="16px">
             {paid ? (
               <Flex direction="column" align="center" justify="center" height="100%">
-                <Image src={circleCheckImage} />
+                <Image src={circleCheckImage} alt="check"/>
                 <Text textStyle="titleLg" mt={6}>
                   Request Paid!
                 </Text>
