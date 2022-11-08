@@ -452,7 +452,7 @@ const RequestPage = () => {
                     openLink(transactionExplorerLink, true);
                   }}
                 >
-                  View on {requestedChain?.blockExplorers?.default.name}
+                  View transaction
                 </Button>
               )}
             </Flex>
