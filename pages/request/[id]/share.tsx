@@ -47,7 +47,7 @@ const ShareRequestPage: FC = () => {
       title: "Link copied!",
       duration: 5000,
       isClosable: true,
-      position: "top-right",
+      position: "bottom",
     });
   };
 
