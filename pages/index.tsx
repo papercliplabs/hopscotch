@@ -49,7 +49,7 @@ const CreateRequest: FC = () => {
         });
 
         const requestId = insertData?.insert_request_one?.id;
-        router.push(`/request/${requestId}`);
+        router.push(`/request/${requestId}/share`);
       }
     } else {
       console.log("Invalid data");

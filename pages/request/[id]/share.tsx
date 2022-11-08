@@ -20,6 +20,7 @@ import { useRequestData } from "@/hooks/useRequestData";
 import { useToken } from "@/hooks/useTokenList";
 import { formatTokenBalance } from "@/common/utils";
 import { LinkIcon } from "@chakra-ui/icons";
+import Link from "next/link";
 
 const trimSchemeFromUrl = (url: string) => {
   return url.replace(/(^\w+:|^)\/\//, "");
@@ -35,7 +36,8 @@ const ShareRequestPage: FC = () => {
 
   // get url server side safe nextjs
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${origin}/request/${requestId}`;
+  const path = `/request/${requestId}`;
+  const url = `${origin}${path}`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(url);
@@ -65,9 +67,7 @@ const ShareRequestPage: FC = () => {
               Payment request link for {formattedOutputAmount} {outputToken?.symbol} has been created!
             </Text>
             <Box
-              onClick={copyToClipboard}
               bg="bgSecondary"
-              cursor="pointer"
               borderRadius="sm"
               py={4}
               px={2}
@@ -76,15 +76,18 @@ const ShareRequestPage: FC = () => {
               justifyContent="space-between"
               width="100%"
             >
-              <Text
-                textStyle="bodyLg"
-                variant="secondary"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                whiteSpace="nowrap"
-              >
-                {trimSchemeFromUrl(url)}
-              </Text>
+              <Link passHref href={path}>
+                <Text
+                  as="a"
+                  textStyle="bodyLg"
+                  variant="secondary"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                >
+                  {trimSchemeFromUrl(url)}
+                </Text>
+              </Link>
             </Box>
 
             <Text textStyle="bodySm" color="textTertiary" mt={4}>
