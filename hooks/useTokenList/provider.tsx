@@ -7,6 +7,7 @@ import { BigNumber, ethers } from "ethers";
 import { AddressZero } from "@ethersproject/constants";
 import { wagmiClient } from "@/pages/_app";
 import { getSupportedChainIds } from "@/common/utils";
+import { concat, flow, uniqBy } from "lodash/fp";
 
 type TokenListProviderInterface = {
   tokens: Token[];
@@ -165,7 +166,11 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     let ret: Token[] = [];
 
     // Append native tokens and balances
-    const baseTokensExtended = [...baseTokens].concat(NATIVE_TOKENS);
+    const baseTokensExtended = flow(
+      concat(baseTokens),
+      uniqBy("address"),
+    )(NATIVE_TOKENS);
+
     const balancesExtended = balances ? [...balances].concat(nativeTokenBalances) : undefined;
 
     for (let i = 0; i < baseTokensExtended.length; i++) {
