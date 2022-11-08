@@ -1,5 +1,16 @@
 import { FC, useMemo, useState } from "react";
-import { Button, Text, Flex, Box, GridItem, NumberInputField, NumberInput, BoxProps, useToast } from "@chakra-ui/react";
+import {
+  Button,
+  Text,
+  Flex,
+  Box,
+  GridItem,
+  NumberInputField,
+  NumberInput,
+  BoxProps,
+  useToast,
+  Center,
+} from "@chakra-ui/react";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 
 import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
@@ -8,6 +19,7 @@ import { useRouter } from "next/router";
 import { useRequestData } from "@/hooks/useRequestData";
 import { useToken } from "@/hooks/useTokenList";
 import { formatTokenBalance } from "@/common/utils";
+import { LinkIcon } from "@chakra-ui/icons";
 
 const trimSchemeFromUrl = (url: string) => {
   return url.replace(/(^\w+:|^)\/\//, "");
@@ -24,7 +36,6 @@ const ShareRequestPage: FC = () => {
   // get url server side safe nextjs
   const origin = typeof window !== "undefined" ? window.location.origin : "";
   const url = `${origin}/request/${requestId}`;
-
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(url);
@@ -45,15 +56,11 @@ const ShareRequestPage: FC = () => {
         Get paid in any token.
       </Text>
       <PrimaryCard>
-        <Flex
-          height="100%"
-          width="100%"
-          alignItems="center"
-          justifyContent="space-between"
-          flexDirection="column"
-          padding={4}
-        >
-            <Image src={circleCheckImage} alt="check" />
+        <Flex alignItems="center" justifyContent="space-between" flexDirection="column" padding={4} height="100%">
+          <Center flexDirection="column" width="100%" flexGrow="1">
+            <Box mb={5}>
+              <Image height={60} width={60} src={circleCheckImage} alt="check" />
+            </Box>
             <Text textStyle="titleLg" mb={4} textAlign="center">
               Payment request link for {formattedOutputAmount} {outputToken?.symbol} has been created!
             </Text>
@@ -68,7 +75,6 @@ const ShareRequestPage: FC = () => {
               alignItems="center"
               justifyContent="space-between"
               width="100%"
-
             >
               <Text
                 textStyle="bodyLg"
@@ -84,10 +90,11 @@ const ShareRequestPage: FC = () => {
             <Text textStyle="bodySm" color="textTertiary" mt={4}>
               Copy the link and share it with anyone
             </Text>
-            <Button width="100%" colorScheme="brand" onClick={copyToClipboard}>
-              Copy
-            </Button>
-          </Flex>
+          </Center>
+          <Button width="100%" colorScheme="brand" size="lg" onClick={copyToClipboard} leftIcon={<LinkIcon />}>
+            Copy
+          </Button>
+        </Flex>
       </PrimaryCard>
     </Flex>
   );
