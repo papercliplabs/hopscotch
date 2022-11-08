@@ -30,7 +30,7 @@ export const COIN_GECKO_API_PLATFORM_ID = {
 
 export const NATIVE_TOKENS: NativeBaseToken[] = [
   {
-    address: ethers.constants.AddressZero,
+    address: "0x0000000000000000000000000000000000001010",
     chainId: chain.polygon.id,
     name: "Polygon",
     symbol: "MATIC",
@@ -39,7 +39,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
     wrappedAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
   },
   {
-    address: ethers.constants.AddressZero,
+    address: "0x0000000000000000000000000000000000001010",
     chainId: chain.polygonMumbai.id,
     name: "Polygon",
     symbol: "MATIC",
