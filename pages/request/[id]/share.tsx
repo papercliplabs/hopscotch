@@ -21,6 +21,7 @@ import { useToken } from "@/hooks/useTokenList";
 import { formatTokenBalance } from "@/common/utils";
 import { LinkIcon } from "@chakra-ui/icons";
 import Link from "next/link";
+import { useChain } from "@/hooks/useChain";
 
 const trimSchemeFromUrl = (url: string) => {
   return url.replace(/(^\w+:|^)\/\//, "");
@@ -31,6 +32,8 @@ const ShareRequestPage: FC = () => {
   const requestId = query.id as string;
   const toast = useToast();
   const { requestData } = useRequestData(requestId);
+  const requestedChain = useChain(requestData?.chainId);
+
   const outputToken = useToken(requestData?.recipientTokenAddress, requestData?.chainId);
   const formattedOutputAmount = formatTokenBalance(requestData?.recipientTokenAmount, outputToken?.decimals, 6);
 
@@ -63,8 +66,11 @@ const ShareRequestPage: FC = () => {
             <Box mb={5}>
               <Image height={60} width={60} src={circleCheckImage} alt="check" />
             </Box>
-            <Text textStyle="titleLg" mb={4} textAlign="center">
-              Payment request link for {formattedOutputAmount} {outputToken?.symbol} has been created!
+            <Text textStyle="titleLg" textAlign="center" mb={2}>
+              All set!
+            </Text>
+            <Text variant="secondary" textStyle="bodyLg" textAlign="center" mb={4}>
+            Your payment request link was created for <Text fontWeight="bold">{formattedOutputAmount} {outputToken?.symbol} on {requestedChain?.name}.</Text>
             </Text>
             <Box
               bg="bgSecondary"
