@@ -78,7 +78,7 @@ const CreateRequest: FC = () => {
   }, [tokenAmount, selectedToken, address, pendingConfirmation]);
 
   return (
-    <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
+    <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
       <Text textStyle="headline">Send a request.</Text>
       <Text textStyle="headline" variant="gradient" mb={6}>
         Get paid in any token.
@@ -89,7 +89,7 @@ const CreateRequest: FC = () => {
           height="100%"
           width="100%"
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent="center"
           flexDirection="column"
           padding={4}
           display={"flex"}
@@ -108,6 +108,7 @@ const CreateRequest: FC = () => {
             backgroundColor="bgSecondary"
             borderRadius="md"
             padding={4}
+            mb={4}
             flexDirection="column"
             alignItems="center"
             justifyContent="space-between"

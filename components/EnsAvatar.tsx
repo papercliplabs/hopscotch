@@ -60,12 +60,12 @@ export const ConnectedAvatar = () => {
   const { isConnected, address } = useAccount();
 
   return isConnected && address ? (
-    <Flex alignItems="center" flexDirection="column" gap={2} mt={1}>
+    <Flex alignItems="center" flexDirection="column" gap={2} mt={2}>
       <EnsAvatar address={address} />
       <EnsName address={address} />
     </Flex>
   ) : (
-    <Flex alignItems="center" flexDirection="column" gap={2} mt={1}>
+    <Flex alignItems="center" flexDirection="column" gap={2} mt={2}>
       <Avatar src={ConnectWalletAvatar.src} />
       <Text variant="tertiary" textStyle="titleLg">
         Connect a Wallet

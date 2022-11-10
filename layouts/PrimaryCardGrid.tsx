@@ -3,7 +3,7 @@ import { Box, BoxProps, Grid } from "@chakra-ui/react";
 
 import { useNestedPortalRef } from "@/components/NestedPortal";
 
-const HEIGHT = "450px";
+const HEIGHT = "400px";
 const MAX_HEGIHT = "540px";
 
 export interface PrimaryCardGridProps {
@@ -15,7 +15,7 @@ export const PrimaryCard: FC<BoxProps> = (props) => {
     <Box
       backgroundColor="white"
       borderRadius="lg"
-      boxShadow="dark-lg"
+      boxShadow="defaultLg"
       maxWidth="400px"
       height={HEIGHT}
       {...props}
@@ -35,7 +35,7 @@ export const PrimaryCardGrid: FC<PrimaryCardGridProps> = (props) => {
       height={HEIGHT}
       width="100%"
       minH={0}
-      boxShadow="dark-lg"
+      boxShadow="defaultLg"
       borderRadius="lg"
       templateRows={`minmax(${HEIGHT}, ${MAX_HEGIHT}) minmax(${HEIGHT}, ${MAX_HEGIHT})`}
       overflow="hidden"
