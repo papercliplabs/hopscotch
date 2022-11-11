@@ -22,6 +22,7 @@ const styles = {
     "html, body": {
       fontFeatureSettings: `'zero' 1`,
       scrollBehavior: "smooth",
+      background: "bgPrimary"
     },
   },
 };

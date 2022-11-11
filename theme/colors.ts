@@ -131,7 +131,7 @@ export const colors = {
   textSecondary: "rgba(27, 29, 31, 0.6)",
   textTertiary: "#C0C1C1",
   textInteractive: "#0E76FD",
-  bgPrimary: "#FFFFFF",
+  bgPrimary: "#FAFAFC",
   bgSecondary: "#EFF0F3",
   bgTertiary: "#FAFAFC",
 };
