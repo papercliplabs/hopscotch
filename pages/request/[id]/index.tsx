@@ -1,9 +1,22 @@
 import { useRouter } from "next/router";
-import { Avatar, AvatarBadge, Box, Button, Flex, GridItem, Link, Spinner, Text, Tooltip } from "@chakra-ui/react";
+import {
+  Avatar,
+  AvatarBadge,
+  Box,
+  Button,
+  Flex,
+  GridItem,
+  Link,
+  Spinner,
+  Text,
+  Tooltip,
+  useToast,
+} from "@chakra-ui/react";
 import { useAccount, useEnsName, useNetwork, useSwitchNetwork } from "wagmi";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Request_Status_Enum } from "@/graphql/generated/graphql";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
+import { LinkIcon, InfoIcon } from "@chakra-ui/icons";
 
 import { formatNumber, shortAddress, openLink, formatTokenBalance } from "@/common/utils";
 import { ExplorerLinkType, Length, LoadingStatus } from "@/common/types";
@@ -15,7 +28,6 @@ import { useRequestData } from "@/hooks/useRequestData";
 import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
 import TokenSelect from "@/components/TokenSelect";
 import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import circleFailImage from "@/public/static/CircleFail.svg";
 import Image from "next/image";
@@ -23,9 +35,12 @@ import { useTransaction } from "@/hooks/useTransaction";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
 import { useChain } from "@/hooks/useChain";
 import { EnsAvatar } from "@/components/EnsAvatar";
+import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 
 const RequestPage = () => {
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
+  const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState<boolean>(false);
+  const toast = useToast();
 
   const { openConnectModal } = useConnectModal();
   const { switchNetwork } = useSwitchNetwork();
@@ -44,6 +59,23 @@ const RequestPage = () => {
     address: requestData?.recipientAddress,
     chainId: 1,
   });
+
+  // get url server side safe nextjs
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const path = `/request/${requestData?.id}`;
+  const url = `${origin}${path}`;
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(url);
+
+    // show toast notification
+    toast({
+      title: "Link copied!",
+      duration: 5000,
+      isClosable: true,
+      position: "bottom",
+    });
+  };
 
   const {
     swapQuote,
@@ -153,39 +185,73 @@ const RequestPage = () => {
   }, [approveTransation, swapTransaction]);
 
   // Compute the primary button state
-  const { primaryButtonText, primaryButtonOnClickFunction } = useMemo(() => {
+  const { primaryButtonText, primaryButtonOnClickFunction, primaryButtonVariant } = useMemo(() => {
     if (paid) {
       return {
         primaryButtonText: "Create your own request",
         primaryButtonOnClickFunction: () => openLink("../", false),
+        primaryButtonVariant: "primary",
       };
     } else if (failed) {
       return {
-        primaryButtonText: "Try Again",
+        primaryButtonText: "Try again",
         primaryButtonOnClickFunction: retryTransaction,
+        primaryButtonVariant: "primary",
       };
     } else if (!address) {
-      return { primaryButtonText: "Connect Wallet", primaryButtonOnClickFunction: openConnectModal };
+      return {
+        primaryButtonText: "Connect wallet",
+        primaryButtonOnClickFunction: openConnectModal,
+        primaryButtonVariant: "secondary",
+      };
     } else if (!onExpectedChain) {
       return {
-        primaryButtonText: "Switch To " + requestedChain?.name,
+        primaryButtonText: "Switch to " + requestedChain?.name,
         primaryButtonOnClickFunction: () => (switchNetwork ? switchNetwork(requestData?.chainId) : null),
+        primaryButtonVariant: "primary",
       };
     } else if (!inputToken) {
-      return { primaryButtonText: "Choose token", primaryButtonOnClickFunction: undefined };
+      return {
+        primaryButtonText: "Choose token",
+        primaryButtonOnClickFunction: undefined,
+        primaryButtonVariant: "primary",
+      };
     } else if (LoadingStatus.LOADING == swapQuote.quoteStatus) {
-      return { primaryButtonText: "Fetching route", primaryButtonOnClickFunction: undefined };
+      return {
+        primaryButtonText: "Fetching route",
+        primaryButtonOnClickFunction: undefined,
+        primaryButtonVariant: "primary",
+      };
     } else if (LoadingStatus.ERROR == swapQuote.quoteStatus) {
-      return { primaryButtonText: "Route not found", primaryButtonOnClickFunction: undefined };
+      return {
+        primaryButtonText: "Route not found",
+        primaryButtonOnClickFunction: undefined,
+        primaryButtonVariant: "primary",
+      };
     } else if (!hasSufficentFunds) {
-      return { primaryButtonText: "Insufficient funds", primaryButtonOnClickFunction: undefined };
+      return {
+        primaryButtonText: "Insufficient funds",
+        primaryButtonOnClickFunction: undefined,
+        primaryButtonVariant: "primary",
+      };
     } else if (pendingTransactionConfirmation) {
-      return { primaryButtonText: "Confirm In Wallet", primaryButtonOnClickFunction: undefined };
+      return {
+        primaryButtonText: "Confirm in wallet",
+        primaryButtonOnClickFunction: undefined,
+        primaryButtonVariant: "primary",
+      };
     } else if (requiresApproval) {
-      return { primaryButtonText: "Approve", primaryButtonOnClickFunction: approve };
+      return {
+        primaryButtonText: "Approve " + inputToken?.symbol,
+        primaryButtonOnClickFunction: approve,
+        primaryButtonVariant: "primary",
+      };
     } else {
-      let text = "Pay Request";
-      return { primaryButtonText: text, primaryButtonOnClickFunction: executeSwap };
+      return {
+        primaryButtonText: "Pay request",
+        primaryButtonOnClickFunction: executeSwap,
+        primaryButtonVariant: "primary",
+      };
     }
   }, [
     requestData,
@@ -227,19 +293,27 @@ const RequestPage = () => {
   return (
     <Flex direction="column" gap="12px" justifyContent="space-between" height="100%" alignItems="center">
       {isOwner && (
-        <Box
+        <Flex
           width="100%"
-          backgroundColor="#D9FADE"
-          color="#2ABA5A"
+          backgroundColor="#E4F2FF"
+          color="primary"
           borderRadius="md"
           p={4}
           flexDirection="row"
           maxWidth="400px"
+          direction="row"
+          justifyContent="space-between"
+          align="center"
         >
-          <Text textAlign="center" width="100%" textStyle="titleSm">
-            🎁 This is your request, share it with anyone
-          </Text>
-        </Box>
+          <Flex direction="column">
+            <Text textStyle="titleSm">This is your payment request</Text>
+            <Text textStyle="bodySm">Share it with anyone</Text>
+          </Flex>
+
+          <Button variant="primary" size="sm" onClick={copyToClipboard} leftIcon={<LinkIcon />}>
+            Copy Link
+          </Button>
+        </Flex>
       )}
       <Flex
         width="100%"
@@ -251,12 +325,13 @@ const RequestPage = () => {
         align="center"
         maxWidth="400px"
       >
-        <EnsAvatar address={requestData?.recipientAddress} width="32px" height="32px" fontSize="sm" mr={3} />
-        <Flex direction="column">
+        <EnsAvatar address={requestData?.recipientAddress} width="32px" height="32px" fontSize="sm" />
+
+        <Flex direction="column" ml={3}>
           <Text textStyle="titleSm">
             <Text as="span" variant="gradient">
               <Link href={recipientAddressExplorerLink} isExternal>
-                <Tooltip label={requestData?.recipientAddress}>
+                <Tooltip label={requestData?.recipientAddress} p={3} backgroundColor="textPrimary" hasArrow>
                   {recipientEnsName ?? shortAddress(requestData?.recipientAddress, Length.MEDIUM)}
                 </Tooltip>{" "}
               </Link>
@@ -273,7 +348,7 @@ const RequestPage = () => {
           <Flex direction="column" justifyContent="space-between" height="100%" gap="16px">
             {paid ? (
               <Flex direction="column" align="center" justify="center" height="100%">
-                <Image src={circleCheckImage} alt="check"/>
+                <Image src={circleCheckImage} alt="check" />
                 <Text textStyle="titleLg" mt={6}>
                   Request Paid!
                 </Text>
@@ -389,13 +464,34 @@ const RequestPage = () => {
                       </Text>
                     </Flex>
 
-                    <Flex direction="row" justifyContent="space-between">
-                      <Text textStyle="label" variant="secondary" fontWeight="bold">
-                        Hopscotch Fee{" "}
-                        <Tooltip label="This app currently does not take a fee from transactions. In the future it may to help support development.">
-                          <QuestionOutlineIcon boxSize="12px" />
-                        </Tooltip>{" "}
-                      </Text>
+                    <Flex direction="row" justifyContent="space-between" alignItems="center">
+                      <Flex direction="row" boxSizing="border-box">
+                        <Text textStyle="label" variant="secondary" fontWeight="bold">
+                          Hopscotch Fee
+                        </Text>
+                        <Tooltip
+                          label="This app currently does not take a fee from transactions. In the future it may to help support development."
+                          p={3}
+                          boxSize="borderBox"
+                          display="flex"
+                          justifyContent="center"
+                          alignItems="center"
+                          hasArrow
+                          backgroundColor="textPrimary"
+                          isOpen={isFeeTooltipOpen}
+                        >
+                          <InfoIcon
+                            boxSize="13px"
+                            m="auto"
+                            ml={1.5}
+                            color="textSecondary"
+                            onMouseEnter={() => setIsFeeTooltipOpen(true)}
+                            onMouseLeave={() => setIsFeeTooltipOpen(false)}
+                            onClick={() => setIsFeeTooltipOpen(true)}
+                          />
+                        </Tooltip>
+                      </Flex>
+
                       <Text fontSize="sm">Free</Text>
                     </Flex>
 
@@ -426,7 +522,7 @@ const RequestPage = () => {
             <Flex direction="column" gap="8px">
               {!pendingTransaction && (
                 <Button
-                  colorScheme={onExpectedChain ? "brand" : "red"}
+                  variant={onExpectedChain ? primaryButtonVariant : "critical"}
                   type="submit"
                   width="100%"
                   minHeight="48px"
@@ -442,7 +538,7 @@ const RequestPage = () => {
 
               {showEtherscanButton && (
                 <Button
-                  backgroundColor="#E4F2FF"
+                  variant="secondary"
                   color="primary"
                   type="submit"
                   width="100%"
@@ -453,6 +549,7 @@ const RequestPage = () => {
                   }}
                 >
                   View transaction
+                  <Image src={ArrowSquareOutIcon} alt="copy" />
                 </Button>
               )}
             </Flex>

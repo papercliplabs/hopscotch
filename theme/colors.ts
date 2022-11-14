@@ -123,6 +123,7 @@ export const colors = {
   // primary
   primary: "#0D88FF",
   brand: createShades("#0D88FF"),
+  secondary: createShades("#E4F2FF"),
   accent: createShades("#FF03D7"),
 
   negative: "#FF4949",

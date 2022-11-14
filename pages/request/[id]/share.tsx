@@ -10,6 +10,7 @@ import {
   BoxProps,
   useToast,
   Center,
+  Icon,
 } from "@chakra-ui/react";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 
@@ -22,6 +23,7 @@ import { formatTokenBalance } from "@/common/utils";
 import { LinkIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { useChain } from "@/hooks/useChain";
+import CopyIcon from "@/public/static/Copy.svg";
 
 const trimSchemeFromUrl = (url: string) => {
   return url.replace(/(^\w+:|^)\/\//, "");
@@ -61,22 +63,35 @@ const ShareRequestPage: FC = () => {
         Get paid in any token.
       </Text>
       <PrimaryCard>
-        <Flex alignItems="center" justifyContent="space-between" flexDirection="column" padding={4} height="100%">
-          <Center flexDirection="column" width="100%" flexGrow="1">
-            <Box mb={5}>
+        <Flex
+          alignItems="center"
+          justifyContent="space-between"
+          flexDirection="column"
+          padding={4}
+          height="100%"
+          width="100%"
+        >
+          <Flex direction="column" justifyContent="center" alignItems="center" w="100%" flex="1">
+            <Box mb={4}>
               <Image height={60} width={60} src={circleCheckImage} alt="check" />
             </Box>
             <Text textStyle="titleLg" textAlign="center" mb={2}>
               All set!
             </Text>
-            <Text variant="secondary" textStyle="bodyLg" textAlign="center" mb={4}>
-            Your payment request link was created for <Text fontWeight="bold">{formattedOutputAmount} {outputToken?.symbol} on {requestedChain?.name}.</Text>
+            <Text textStyle="bodyLg" variant="secondary" textAlign="center">
+              Your payment request link was created for
             </Text>
+            <Text textStyle="bodyLg" variant="secondary" fontWeight="semibold" textAlign="center">
+              {formattedOutputAmount} {outputToken?.symbol} on {requestedChain?.name}
+            </Text>
+          </Flex>
+
+          <Flex direction="column" justifyContent="flex-end" alignItems="center" w="100%" gap={2}>
             <Box
               bg="bgSecondary"
               borderRadius="sm"
               py={4}
-              px={2}
+              px={4}
               display="flex"
               alignItems="center"
               justifyContent="space-between"
@@ -95,14 +110,19 @@ const ShareRequestPage: FC = () => {
                 </Text>
               </Link>
             </Box>
-
-            <Text textStyle="bodySm" color="textTertiary" mt={4}>
+            <Button
+              width="100%"
+              variant="primary"
+              size="lg"
+              onClick={copyToClipboard}
+              rightIcon={<Image src={CopyIcon} alt="copy" />}
+            >
+              Copy
+            </Button>
+            <Text textStyle="bodyMd" variant="secondary">
               Copy the link and share it with anyone
             </Text>
-          </Center>
-          <Button width="100%" colorScheme="brand" size="lg" onClick={copyToClipboard} leftIcon={<LinkIcon />}>
-            Copy
-          </Button>
+          </Flex>
         </Flex>
       </PrimaryCard>
     </Flex>

@@ -2,6 +2,7 @@ import { FC, ReactNode, useMemo, useState } from "react";
 import {
   Avatar,
   AvatarBadge,
+  Box,
   Button,
   CloseButton,
   Flex,
@@ -52,18 +53,12 @@ const SlideMenu: FC<SlideMenuProps> = ({ title, onClose, isOpen, children }) => 
       p={4}
       borderRadius="inherit"
     >
-      <GridItem
-        position="sticky"
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        p={4}
-        flexDirection="row"
-      >
-        <div></div>
-        <Text textStyle="titleLg">{title}</Text>
-        <CloseButton onClick={() => onClose()} />
-      </GridItem>
+      <Flex position="relative" flexDirection="row" justifyContent="center" alignItems="center" my={4}>
+        <Text textStyle="titleLg" align="center">
+          {title}
+        </Text>
+        <CloseButton onClick={() => onClose()} position="absolute" right="0" />
+      </Flex>
       {children}
     </Grid>
   );
@@ -107,8 +102,8 @@ export default function TokenSelect({
       }
     : {
         color: "white",
-        colorScheme: "brand",
-        children: "Choose Token",
+        variant: "primary",
+        children: "Choose token",
       };
 
   const buttonItems = useMemo(() => {
@@ -157,7 +152,7 @@ export default function TokenSelect({
               {balance ? formatTokenBalance(balance, decimals, 4) : "--"} {symbol}
             </Text>
             <Text textStyle="bodyMd" variant="secondary">
-              {balanceUsd ? "$" + formatNumber(balanceUsd, 2) : "--"}
+              {balanceUsd != undefined ? "$" + formatNumber(balanceUsd, 2) : "--"}
             </Text>
           </Flex>
         </Flex>
