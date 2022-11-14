@@ -1,9 +1,22 @@
 import { useRouter } from "next/router";
-import { Avatar, AvatarBadge, Box, Button, Flex, GridItem, Link, Spinner, Text, Tooltip } from "@chakra-ui/react";
+import {
+  Avatar,
+  AvatarBadge,
+  Box,
+  Button,
+  Flex,
+  GridItem,
+  Link,
+  Spinner,
+  Text,
+  Tooltip,
+  useToast,
+} from "@chakra-ui/react";
 import { useAccount, useEnsName, useNetwork, useSwitchNetwork } from "wagmi";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Request_Status_Enum } from "@/graphql/generated/graphql";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
+import { LinkIcon } from "@chakra-ui/icons";
 
 import { formatNumber, shortAddress, openLink, formatTokenBalance } from "@/common/utils";
 import { ExplorerLinkType, Length, LoadingStatus } from "@/common/types";
@@ -26,6 +39,7 @@ import { EnsAvatar } from "@/components/EnsAvatar";
 
 const RequestPage = () => {
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
+  const toast = useToast();
 
   const { openConnectModal } = useConnectModal();
   const { switchNetwork } = useSwitchNetwork();
@@ -44,6 +58,23 @@ const RequestPage = () => {
     address: requestData?.recipientAddress,
     chainId: 1,
   });
+
+  // get url server side safe nextjs
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const path = `/request/${requestData?.id}`;
+  const url = `${origin}${path}`;
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(url);
+
+    // show toast notification
+    toast({
+      title: "Link copied!",
+      duration: 5000,
+      isClosable: true,
+      position: "bottom",
+    });
+  };
 
   const {
     swapQuote,
@@ -227,19 +258,27 @@ const RequestPage = () => {
   return (
     <Flex direction="column" gap="12px" justifyContent="space-between" height="100%" alignItems="center">
       {isOwner && (
-        <Box
+        <Flex
           width="100%"
-          backgroundColor="#D9FADE"
-          color="#2ABA5A"
+          backgroundColor="#E4F2FF"
+          color="primary"
           borderRadius="md"
           p={4}
           flexDirection="row"
           maxWidth="400px"
+          direction="row"
+          justifyContent="space-between"
+          align="center"
         >
-          <Text textAlign="center" width="100%" textStyle="titleSm">
-            🎁 This is your request, share it with anyone
-          </Text>
-        </Box>
+          <Flex direction="column">
+            <Text textStyle="titleSm">This is your payment request</Text>
+            <Text textStyle="bodySm">Share it with anyone</Text>
+          </Flex>
+
+          <Button colorScheme="brand" size="sm" onClick={copyToClipboard} leftIcon={<LinkIcon />}>
+            Copy Link
+          </Button>
+        </Flex>
       )}
       <Flex
         width="100%"
@@ -273,7 +312,7 @@ const RequestPage = () => {
           <Flex direction="column" justifyContent="space-between" height="100%" gap="16px">
             {paid ? (
               <Flex direction="column" align="center" justify="center" height="100%">
-                <Image src={circleCheckImage} alt="check"/>
+                <Image src={circleCheckImage} alt="check" />
                 <Text textStyle="titleLg" mt={6}>
                   Request Paid!
                 </Text>

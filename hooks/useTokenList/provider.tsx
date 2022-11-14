@@ -9,6 +9,8 @@ import { wagmiClient } from "@/pages/_app";
 import { getSupportedChainIds } from "@/common/utils";
 import { concat, flow, uniqBy } from "lodash/fp";
 
+const PAGE_SIZE = 200;
+
 type TokenListProviderInterface = {
   tokens: Token[];
 };
@@ -76,24 +78,36 @@ export default function TokenListProvider({ children }: { children: ReactNode })
           const coinGeckoPlatformId = COIN_GECKO_API_PLATFORM_ID[chain.id];
 
           if (coinGeckoPlatformId && addresses.length != 0) {
-            const contractAddressQueryParams =
-              "&contract_addresses=" + addresses.reduce((state, address) => state + "," + address);
-            const currencyQuaryParams = "&vs_currencies=usd";
-            fetch(
-              URLS.COIN_GECKO_API +
-                `/simple/token_price/${coinGeckoPlatformId}?` +
-                contractAddressQueryParams +
-                currencyQuaryParams
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                for (let i = 0; i < indecies.length; i++) {
-                  priceData[indecies[i]] = data[addresses[i].toLowerCase()]?.usd;
-                }
-              })
-              .catch((error) => {
-                console.log("ERROR WITH COINGECKO REQ: ", error);
-              });
+            let pages = addresses.length / PAGE_SIZE;
+            console.log(chain, addresses.length, pages);
+
+            // Get 414 request to big without pageing this
+            for (let page = 0; page < pages; page++) {
+              const contractAddressQueryParams =
+                "&contract_addresses=" +
+                addresses
+                  .slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
+                  .reduce((state, address) => state + "," + address);
+              console.log(addresses.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).length, contractAddressQueryParams);
+
+              const currencyQuaryParams = "&vs_currencies=usd";
+              fetch(
+                URLS.COIN_GECKO_API +
+                  `/simple/token_price/${coinGeckoPlatformId}?` +
+                  contractAddressQueryParams +
+                  currencyQuaryParams
+              )
+                .then((response) => response.json())
+                .then((data) => {
+                  for (let i = 0; i < Object.keys(data).length; i++) {
+                    priceData[indecies[page * PAGE_SIZE + i]] =
+                      data[addresses[page * PAGE_SIZE + i].toLowerCase()]?.usd;
+                  }
+                })
+                .catch((error) => {
+                  console.log("ERROR WITH COINGECKO REQ: ", error);
+                });
+            }
           }
         }
 
@@ -166,10 +180,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     let ret: Token[] = [];
 
     // Append native tokens and balances
-    const baseTokensExtended = flow(
-      concat(baseTokens),
-      uniqBy("address"),
-    )(NATIVE_TOKENS);
+    const baseTokensExtended = flow(concat(baseTokens), uniqBy("address"))(NATIVE_TOKENS);
 
     const balancesExtended = balances ? [...balances].concat(nativeTokenBalances) : undefined;
 

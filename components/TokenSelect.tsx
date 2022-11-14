@@ -97,6 +97,9 @@ export default function TokenSelect({
     return filteredTokenList;
   }, [tokenList, search]);
 
+  console.log(tokenList);
+  console.log(filteredTokenList);
+
   const buttonProps = token
     ? {
         color: "black",
@@ -112,8 +115,10 @@ export default function TokenSelect({
       };
 
   const buttonItems = useMemo(() => {
+    console.log(filteredTokenList);
     return filteredTokenList.map((tokenDetails, index) => {
       const { name, address, symbol, balance, balanceUsd, decimals, logoURI } = tokenDetails;
+      console.log(balanceUsd);
       const isSelected = address === token?.address;
       return (
         <Flex
@@ -157,7 +162,7 @@ export default function TokenSelect({
               {balance ? formatTokenBalance(balance, decimals, 4) : "--"} {symbol}
             </Text>
             <Text textStyle="bodyMd" variant="secondary">
-              {balanceUsd ? "$" + formatNumber(balanceUsd, 2) : "--"}
+              {balanceUsd != undefined ? "$" + formatNumber(balanceUsd, 2) : "--"}
             </Text>
           </Flex>
         </Flex>
