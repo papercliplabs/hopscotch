@@ -32,7 +32,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
   {
     address: "0x0000000000000000000000000000000000001010",
     chainId: chain.polygon.id,
-    name: "Polygon",
+    name: "Matic",
     symbol: "MATIC",
     decimals: 18,
     logoURI: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912",
@@ -41,7 +41,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
   {
     address: "0x0000000000000000000000000000000000001010",
     chainId: chain.polygonMumbai.id,
-    name: "Polygon",
+    name: "Matic",
     symbol: "MATIC",
     decimals: 18,
     logoURI: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912",
@@ -50,7 +50,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
   {
     address: ethers.constants.AddressZero,
     chainId: chain.goerli.id,
-    name: "Ethereum",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     logoURI:
@@ -60,7 +60,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
   {
     address: ethers.constants.AddressZero,
     chainId: chain.mainnet.id,
-    name: "Ethereum",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     logoURI:
@@ -70,7 +70,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
   {
     address: ethers.constants.AddressZero,
     chainId: chain.optimism.id,
-    name: "Ethereum",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     logoURI:
@@ -80,7 +80,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
   {
     address: ethers.constants.AddressZero,
     chainId: chain.arbitrum.id,
-    name: "Ethereum",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     logoURI:

@@ -17,6 +17,7 @@ export const PrimaryCard: FC<BoxProps> = (props) => {
       borderRadius="lg"
       boxShadow="defaultLg"
       maxWidth="400px"
+      width="100%"
       height={HEIGHT}
       {...props}
     />
@@ -39,6 +40,6 @@ export const PrimaryCardGrid: FC<GridProps> = (props) => {
       overflow="hidden"
       ref={containerRef}
       {...props}
-   / >
+    />
   );
 };

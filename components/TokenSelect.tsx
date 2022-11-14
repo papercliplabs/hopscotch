@@ -2,6 +2,7 @@ import { FC, ReactNode, useMemo, useState } from "react";
 import {
   Avatar,
   AvatarBadge,
+  Box,
   Button,
   CloseButton,
   Flex,
@@ -52,18 +53,12 @@ const SlideMenu: FC<SlideMenuProps> = ({ title, onClose, isOpen, children }) => 
       p={4}
       borderRadius="inherit"
     >
-      <GridItem
-        position="sticky"
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        p={4}
-        flexDirection="row"
-      >
-        <div></div>
-        <Text textStyle="titleLg">{title}</Text>
-        <CloseButton onClick={() => onClose()} />
-      </GridItem>
+      <Flex position="relative" flexDirection="row" justifyContent="center" alignItems="center" my={4}>
+        <Text textStyle="titleLg" align="center">
+          {title}
+        </Text>
+        <CloseButton onClick={() => onClose()} position="absolute" right="0" />
+      </Flex>
       {children}
     </Grid>
   );
@@ -97,9 +92,6 @@ export default function TokenSelect({
     return filteredTokenList;
   }, [tokenList, search]);
 
-  console.log(tokenList);
-  console.log(filteredTokenList);
-
   const buttonProps = token
     ? {
         color: "black",
@@ -115,10 +107,8 @@ export default function TokenSelect({
       };
 
   const buttonItems = useMemo(() => {
-    console.log(filteredTokenList);
     return filteredTokenList.map((tokenDetails, index) => {
       const { name, address, symbol, balance, balanceUsd, decimals, logoURI } = tokenDetails;
-      console.log(balanceUsd);
       const isSelected = address === token?.address;
       return (
         <Flex

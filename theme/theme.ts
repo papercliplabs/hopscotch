@@ -22,14 +22,15 @@ const styles = {
     "html, body": {
       fontFeatureSettings: `'zero' 1`,
       scrollBehavior: "smooth",
-      background: "bgPrimary"
+      backgroundColor: "bgPrimary",
     },
   },
 };
 
 const theme = extendTheme({
   shadows: {
-    defaultLg: "0px 270px 108px rgba(0, 0, 0, 0.01), 0px 152px 91px rgba(0, 0, 0, 0.03), 0px 68px 68px rgba(0, 0, 0, 0.04), 0px 17px 37px rgba(0, 0, 0, 0.05), 0px 0px 0px rgba(0, 0, 0, 0.05);",
+    defaultLg:
+      "0px 270px 108px rgba(0, 0, 0, 0.01), 0px 152px 91px rgba(0, 0, 0, 0.03), 0px 68px 68px rgba(0, 0, 0, 0.04), 0px 17px 37px rgba(0, 0, 0, 0.05), 0px 0px 0px rgba(0, 0, 0, 0.05);",
   },
   fonts,
   radii,

@@ -9,7 +9,7 @@ import { wagmiClient } from "@/pages/_app";
 import { getSupportedChainIds } from "@/common/utils";
 import { concat, flow, uniqBy } from "lodash/fp";
 
-const PAGE_SIZE = 200;
+const PAGE_SIZE = 150;
 
 type TokenListProviderInterface = {
   tokens: Token[];
@@ -28,7 +28,6 @@ export default function TokenListProvider({ children }: { children: ReactNode })
   const [nativeTokenBalances, setNativeTokenBalances] = useState<BigNumber[]>([]);
 
   const { address } = useAccount();
-  const provider = useProvider();
 
   ////
   // Fetch base tokens
@@ -43,9 +42,21 @@ export default function TokenListProvider({ children }: { children: ReactNode })
           .then((data) => {
             let tokens = data.tokens as Array<BaseToken>;
 
-            // Filter for only chains we are on
+            // Filter for only chains we are on, remove duplicates, and remove native tokens
             const supportedChainIds = getSupportedChainIds();
-            let supportedTokens = tokens.filter((token) => supportedChainIds.includes(token.chainId));
+            const supportedTokens: BaseToken[] = [];
+            for (let id of supportedChainIds) {
+              let addresses: string[] = [];
+              const tokensForChain = tokens.filter((token) => token.chainId == id);
+              const nativeToken = NATIVE_TOKENS.find((token) => token.chainId == id);
+
+              for (let token of tokensForChain) {
+                // Filter duplicates, and also native token
+                if (!addresses.includes(token.address) && !(nativeToken?.address == token.address)) {
+                  supportedTokens.push(token);
+                }
+              }
+            }
 
             setBaseTokens(supportedTokens);
           });
@@ -79,7 +90,6 @@ export default function TokenListProvider({ children }: { children: ReactNode })
 
           if (coinGeckoPlatformId && addresses.length != 0) {
             let pages = addresses.length / PAGE_SIZE;
-            console.log(chain, addresses.length, pages);
 
             // Get 414 request to big without pageing this
             for (let page = 0; page < pages; page++) {
@@ -88,7 +98,6 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                 addresses
                   .slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
                   .reduce((state, address) => state + "," + address);
-              console.log(addresses.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).length, contractAddressQueryParams);
 
               const currencyQuaryParams = "&vs_currencies=usd";
               fetch(
@@ -123,6 +132,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
   ////
   const readBalanceContractData = useMemo(() => {
     if (address != undefined) {
+      console.log("NEW CONTRACT DATA");
       return baseTokens.map((token) => {
         return {
           addressOrName: token.address,
@@ -137,7 +147,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     }
   }, [baseTokens, address]);
 
-  const { data: balanceResults } = useContractReads({
+  const { data: balanceResults, error } = useContractReads({
     contracts: readBalanceContractData,
     enabled: readBalanceContractData.length != 0 && address != undefined,
   });
@@ -159,7 +169,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
   ////
   useEffect(() => {
     async function getNativeTokenBalances() {
-      if (address && typeof wagmiClient.config.provider === "function" && nativeTokenBalances.length == 0) {
+      if (address && typeof wagmiClient.config.provider === "function") {
         let nativeBalances: BigNumber[] = [];
         for (const chain of SUPPORTED_CHAINS) {
           const provider = wagmiClient.config.provider({ chainId: chain.id });
@@ -171,7 +181,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     }
 
     getNativeTokenBalances();
-  }, [nativeTokenBalances, setNativeTokenBalances, address, wagmiClient.config.provider]);
+  }, [setNativeTokenBalances, address, wagmiClient.config.provider]);
 
   ////
   // Construct tokens
@@ -180,7 +190,9 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     let ret: Token[] = [];
 
     // Append native tokens and balances
-    const baseTokensExtended = flow(concat(baseTokens), uniqBy("address"))(NATIVE_TOKENS);
+    const baseTokensExtended = [...baseTokens].concat(
+      NATIVE_TOKENS.filter((token) => SUPPORTED_CHAINS.map((chain) => chain.id).find((id) => id == token.chainId))
+    );
 
     const balancesExtended = balances ? [...balances].concat(nativeTokenBalances) : undefined;
 

@@ -24,8 +24,6 @@ export function useChain(customChainId: number | undefined = undefined): UseChai
   const chainId = customChainId ?? connectedChain?.id ?? SUPPORTED_CHAINS[0].id;
   const rainbowKitChain = rainbowkitChainsById[chainId] as Chain;
 
-  console.log("RAINBOW KIT CHAIN", chainId, rainbowKitChain);
-
   // iconUrl is a promise so we must resolve it
   useEffect(() => {
     const iconUrl = rainbowKitChain?.iconUrl;

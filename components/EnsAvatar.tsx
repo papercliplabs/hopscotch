@@ -5,7 +5,7 @@ import { shortAddress } from "@/common/utils";
 import { Length } from "@/common/types";
 import DefaultAvatar from "@/public/static/DefaultAvatar.png";
 import ConnectWalletAvatar from "@/public/static/ConnectWalletAvatar.svg";
-import { AvatarContext } from "@papercliplabs/rainbowkit";
+import { AvatarContext, emojiAvatarForAddress } from "@papercliplabs/rainbowkit";
 export const getInitials = (name: string): string => {
   // remove 0x if present
   name = name.replace(/^0x/, "");
@@ -44,32 +44,33 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
     chainId: 1,
   });
 
-  const AvatarComponent = useContext(AvatarContext);
+  const { color: backgroundColor, emoji } = useMemo(() => emojiAvatarForAddress(address), [address]);
 
   return (
     <Flex
       alignItems="center"
       justify="center"
-      borderRadius="full"
-      overflow="hidden"
+      borderRadius="100%"
       justifyContent="center"
       userSelect="none"
+      width="46px"
+      height="46px"
+      flexShrink={0}
+      backgroundColor={backgroundColor}
+      {...rest}
     >
       {ensAvatarSrc ? (
         <Avatar
-          width="48px"
-          height="48px"
+          width="100%"
+          height="100%"
           bg="accent.300"
           name={address}
           getInitials={getInitials}
           boxShadow="xl"
-          src={ensAvatarSrc ?? DefaultAvatar.src}
-          {...rest}
+          src={ensAvatarSrc}
         />
       ) : (
-        // This is all that is needed in theory, but odd behavior with end image...
-        // So, for now just use when ensAvatarSrc is not defined
-        <AvatarComponent address={address} ensImage={ensAvatarSrc} size={48} />
+        <>{emoji}</>
       )}
     </Flex>
   );

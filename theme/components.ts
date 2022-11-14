@@ -1,3 +1,5 @@
+import { textStyles } from "./typography";
+
 const buttonDisabledProps = {
   backgroundColor: "#EFF0F3",
   color: "rgba(27, 29, 31, 0.3)",
@@ -16,6 +18,7 @@ export const components = {
       _disabled: {
         ...buttonDisabledProps,
       },
+      ...textStyles.titleLg,
     },
     variants: {
       primary: {

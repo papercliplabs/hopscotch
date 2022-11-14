@@ -24,7 +24,7 @@
     "@graphql-tools/load-files": "6.0.18",
     "@graphql-tools/merge": "6.0.18",
     "@graphql-tools/schema": "6.0.18",
-    "@papercliplabs/rainbowkit": "^0.7.1",
+    "@papercliplabs/rainbowkit": "^0.7.2",
     "@rehooks/local-storage": "^2.4.4",
     "@types/lodash": "^4.14.176",
     "@uniswap/sdk": "^3.0.3",

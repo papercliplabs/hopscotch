@@ -16,7 +16,7 @@ import { useAccount, useEnsName, useNetwork, useSwitchNetwork } from "wagmi";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Request_Status_Enum } from "@/graphql/generated/graphql";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
-import { LinkIcon } from "@chakra-ui/icons";
+import { LinkIcon, InfoIcon } from "@chakra-ui/icons";
 
 import { formatNumber, shortAddress, openLink, formatTokenBalance } from "@/common/utils";
 import { ExplorerLinkType, Length, LoadingStatus } from "@/common/types";
@@ -28,7 +28,6 @@ import { useRequestData } from "@/hooks/useRequestData";
 import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
 import TokenSelect from "@/components/TokenSelect";
 import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import circleFailImage from "@/public/static/CircleFail.svg";
 import Image from "next/image";
@@ -40,6 +39,7 @@ import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 
 const RequestPage = () => {
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
+  const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState<boolean>(false);
   const toast = useToast();
 
   const { openConnectModal } = useConnectModal();
@@ -52,8 +52,6 @@ const RequestPage = () => {
 
   const requestedChain = useChain(requestData?.chainId);
   const onExpectedChain = useIsOnExpectedChain(requestData?.chainId);
-
-  console.log("REQUESTED", requestedChain);
 
   const outputToken = useToken(requestData?.recipientTokenAddress, requestData?.chainId);
 
@@ -327,12 +325,13 @@ const RequestPage = () => {
         align="center"
         maxWidth="400px"
       >
-        <EnsAvatar address={requestData?.recipientAddress} width="32px" height="32px" fontSize="sm" mr={3} />
-        <Flex direction="column">
+        <EnsAvatar address={requestData?.recipientAddress} width="32px" height="32px" fontSize="sm" />
+
+        <Flex direction="column" ml={3}>
           <Text textStyle="titleSm">
             <Text as="span" variant="gradient">
               <Link href={recipientAddressExplorerLink} isExternal>
-                <Tooltip label={requestData?.recipientAddress}>
+                <Tooltip label={requestData?.recipientAddress} p={3} backgroundColor="textPrimary" hasArrow>
                   {recipientEnsName ?? shortAddress(requestData?.recipientAddress, Length.MEDIUM)}
                 </Tooltip>{" "}
               </Link>
@@ -465,13 +464,34 @@ const RequestPage = () => {
                       </Text>
                     </Flex>
 
-                    <Flex direction="row" justifyContent="space-between">
-                      <Text textStyle="label" variant="secondary" fontWeight="bold">
-                        Hopscotch Fee{" "}
-                        <Tooltip label="This app currently does not take a fee from transactions. In the future it may to help support development.">
-                          <QuestionOutlineIcon boxSize="12px" />
-                        </Tooltip>{" "}
-                      </Text>
+                    <Flex direction="row" justifyContent="space-between" alignItems="center">
+                      <Flex direction="row" boxSizing="border-box">
+                        <Text textStyle="label" variant="secondary" fontWeight="bold">
+                          Hopscotch Fee
+                        </Text>
+                        <Tooltip
+                          label="This app currently does not take a fee from transactions. In the future it may to help support development."
+                          p={3}
+                          boxSize="borderBox"
+                          display="flex"
+                          justifyContent="center"
+                          alignItems="center"
+                          hasArrow
+                          backgroundColor="textPrimary"
+                          isOpen={isFeeTooltipOpen}
+                        >
+                          <InfoIcon
+                            boxSize="13px"
+                            m="auto"
+                            ml={1.5}
+                            color="textSecondary"
+                            onMouseEnter={() => setIsFeeTooltipOpen(true)}
+                            onMouseLeave={() => setIsFeeTooltipOpen(false)}
+                            onClick={() => setIsFeeTooltipOpen(true)}
+                          />
+                        </Tooltip>
+                      </Flex>
+
                       <Text fontSize="sm">Free</Text>
                     </Flex>
 

@@ -29,8 +29,6 @@ const CreateRequest: FC = () => {
   const activeChain = useChain();
   const { address } = useAccount();
 
-  console.log("ADDRESS", address);
-
   async function createRequest() {
     if (selectedToken != undefined && tokenAmount != "" && activeChain) {
       const tokenAmountRaw = ethers.utils.parseUnits(tokenAmount, selectedToken.decimals);
@@ -76,7 +74,7 @@ const CreateRequest: FC = () => {
     } else if (!address) {
       return { buttonText: "Connect wallet", onClickFunction: openConnectModal, buttonVariant: "secondary" };
     } else if (selectedToken == undefined) {
-      return { buttonText: "Select token", onClickFunction: undefined, buttonVariant: "primary" };
+      return { buttonText: "Choose a token", onClickFunction: undefined, buttonVariant: "primary" };
     } else if (tokenAmount == "") {
       return { buttonText: "Enter token amount", onClickFunction: undefined, buttonVariant: "primary" };
     } else if (pendingConfirmation) {
@@ -121,31 +119,38 @@ const CreateRequest: FC = () => {
             flexDirection="column"
             alignItems="center"
             justifyContent="space-between"
+            gap="16px"
           >
-            <NumberInput onChange={(valueString: string) => setTokenAmount(parse(valueString))} value={tokenAmount}>
-              <NumberInputField
-                _focusVisible={{
-                  borderWidth: "1.75px",
-                  borderColor: "primary",
-                  borderRadius: "xs",
-                  backgroundColor: "bgTertiary",
-                }}
-                outline="none"
-                placeholder="Enter an amount"
-                borderWidth="0px"
-                textAlign="center"
-                fontSize="xl"
-                lineHeight="xl"
-                fontWeight="bold"
-              />
-            </NumberInput>
-            <Text textStyle="bodyMedium" color="textTertiary" width="100%" align="center">
-              ${tokenAmountUsd ? formatNumber(tokenAmountUsd, 2, false) : "--"}
-            </Text>
-
-            <Flex flexDirection="column" justifyContent="center" mt={2}>
-              <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={activeChain?.unsupported} />
+            <Flex direction="column" gap="8px">
+              <NumberInput
+                height="48px"
+                onChange={(valueString: string) => setTokenAmount(parse(valueString))}
+                value={tokenAmount}
+              >
+                <NumberInputField
+                  _focusVisible={{
+                    borderWidth: "1.75px",
+                    borderColor: "primary",
+                    borderRadius: "xs",
+                    backgroundColor: "bgTertiary",
+                  }}
+                  outline="none"
+                  placeholder="Enter an amount"
+                  borderWidth="0px"
+                  textAlign="center"
+                  fontSize="xl"
+                  lineHeight="xl"
+                  fontWeight="bold"
+                  height="100%"
+                  width="100%"
+                  p={0}
+                />
+              </NumberInput>
+              <Text textStyle="bodyMd" color="textSecondary" width="100%" align="center">
+                ${tokenAmountUsd ? formatNumber(tokenAmountUsd, 2, false) : "--"}
+              </Text>
             </Flex>
+            <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={activeChain?.unsupported} />
           </Flex>
 
           <Flex direction="column" width="100%" gap={4}>
