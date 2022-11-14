@@ -110,8 +110,8 @@ export default function TokenSelect({
       }
     : {
         color: "white",
-        colorScheme: "brand",
-        children: "Choose Token",
+        variant: "primary",
+        children: "Choose token",
       };
 
   const buttonItems = useMemo(() => {

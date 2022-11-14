@@ -4,10 +4,12 @@ import { useNetwork } from "wagmi";
 import { SUPPORTED_CHAINS } from "@/common/constants";
 import { Chain } from "@/common/types";
 import { useRainbowKitChainsById } from "@papercliplabs/rainbowkit";
+import WarningIcon from "@/public/static/Warning.svg";
 
 export interface UseChain extends Chain {
   connected: boolean;
   iconUrlSync: string;
+  unsupported: boolean;
 }
 
 /**
@@ -22,6 +24,8 @@ export function useChain(customChainId: number | undefined = undefined): UseChai
   const chainId = customChainId ?? connectedChain?.id ?? SUPPORTED_CHAINS[0].id;
   const rainbowKitChain = rainbowkitChainsById[chainId] as Chain;
 
+  console.log("RAINBOW KIT CHAIN", chainId, rainbowKitChain);
+
   // iconUrl is a promise so we must resolve it
   useEffect(() => {
     const iconUrl = rainbowKitChain?.iconUrl;
@@ -31,14 +35,16 @@ export function useChain(customChainId: number | undefined = undefined): UseChai
         setIconUrlSync(url);
       });
     } else {
-      setIconUrlSync(iconUrl ?? "");
+      setIconUrlSync(connectedChain?.unsupported ? WarningIcon.src : iconUrl ?? "");
     }
   }, [rainbowKitChain]);
 
   return useMemo(() => {
     return {
       ...rainbowKitChain,
+      name: rainbowKitChain != undefined ? rainbowKitChain.name : "Unsupported network",
       connected: !!connectedChain,
+      unsupported: rainbowKitChain == undefined,
       iconUrlSync,
     };
   }, [rainbowKitChain, connectedChain, iconUrlSync]);

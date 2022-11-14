@@ -36,6 +36,7 @@ import { useTransaction } from "@/hooks/useTransaction";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
 import { useChain } from "@/hooks/useChain";
 import { EnsAvatar } from "@/components/EnsAvatar";
+import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 
 const RequestPage = () => {
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
@@ -51,6 +52,8 @@ const RequestPage = () => {
 
   const requestedChain = useChain(requestData?.chainId);
   const onExpectedChain = useIsOnExpectedChain(requestData?.chainId);
+
+  console.log("REQUESTED", requestedChain);
 
   const outputToken = useToken(requestData?.recipientTokenAddress, requestData?.chainId);
 
@@ -184,39 +187,73 @@ const RequestPage = () => {
   }, [approveTransation, swapTransaction]);
 
   // Compute the primary button state
-  const { primaryButtonText, primaryButtonOnClickFunction } = useMemo(() => {
+  const { primaryButtonText, primaryButtonOnClickFunction, primaryButtonVariant } = useMemo(() => {
     if (paid) {
       return {
         primaryButtonText: "Create your own request",
         primaryButtonOnClickFunction: () => openLink("../", false),
+        primaryButtonVariant: "primary",
       };
     } else if (failed) {
       return {
-        primaryButtonText: "Try Again",
+        primaryButtonText: "Try again",
         primaryButtonOnClickFunction: retryTransaction,
+        primaryButtonVariant: "primary",
       };
     } else if (!address) {
-      return { primaryButtonText: "Connect Wallet", primaryButtonOnClickFunction: openConnectModal };
+      return {
+        primaryButtonText: "Connect wallet",
+        primaryButtonOnClickFunction: openConnectModal,
+        primaryButtonVariant: "secondary",
+      };
     } else if (!onExpectedChain) {
       return {
-        primaryButtonText: "Switch To " + requestedChain?.name,
+        primaryButtonText: "Switch to " + requestedChain?.name,
         primaryButtonOnClickFunction: () => (switchNetwork ? switchNetwork(requestData?.chainId) : null),
+        primaryButtonVariant: "primary",
       };
     } else if (!inputToken) {
-      return { primaryButtonText: "Choose token", primaryButtonOnClickFunction: undefined };
+      return {
+        primaryButtonText: "Choose token",
+        primaryButtonOnClickFunction: undefined,
+        primaryButtonVariant: "primary",
+      };
     } else if (LoadingStatus.LOADING == swapQuote.quoteStatus) {
-      return { primaryButtonText: "Fetching route", primaryButtonOnClickFunction: undefined };
+      return {
+        primaryButtonText: "Fetching route",
+        primaryButtonOnClickFunction: undefined,
+        primaryButtonVariant: "primary",
+      };
     } else if (LoadingStatus.ERROR == swapQuote.quoteStatus) {
-      return { primaryButtonText: "Route not found", primaryButtonOnClickFunction: undefined };
+      return {
+        primaryButtonText: "Route not found",
+        primaryButtonOnClickFunction: undefined,
+        primaryButtonVariant: "primary",
+      };
     } else if (!hasSufficentFunds) {
-      return { primaryButtonText: "Insufficient funds", primaryButtonOnClickFunction: undefined };
+      return {
+        primaryButtonText: "Insufficient funds",
+        primaryButtonOnClickFunction: undefined,
+        primaryButtonVariant: "primary",
+      };
     } else if (pendingTransactionConfirmation) {
-      return { primaryButtonText: "Confirm In Wallet", primaryButtonOnClickFunction: undefined };
+      return {
+        primaryButtonText: "Confirm in wallet",
+        primaryButtonOnClickFunction: undefined,
+        primaryButtonVariant: "primary",
+      };
     } else if (requiresApproval) {
-      return { primaryButtonText: "Approve", primaryButtonOnClickFunction: approve };
+      return {
+        primaryButtonText: "Approve " + inputToken?.symbol,
+        primaryButtonOnClickFunction: approve,
+        primaryButtonVariant: "primary",
+      };
     } else {
-      let text = "Pay Request";
-      return { primaryButtonText: text, primaryButtonOnClickFunction: executeSwap };
+      return {
+        primaryButtonText: "Pay request",
+        primaryButtonOnClickFunction: executeSwap,
+        primaryButtonVariant: "primary",
+      };
     }
   }, [
     requestData,
@@ -275,7 +312,7 @@ const RequestPage = () => {
             <Text textStyle="bodySm">Share it with anyone</Text>
           </Flex>
 
-          <Button colorScheme="brand" size="sm" onClick={copyToClipboard} leftIcon={<LinkIcon />}>
+          <Button variant="primary" size="sm" onClick={copyToClipboard} leftIcon={<LinkIcon />}>
             Copy Link
           </Button>
         </Flex>
@@ -465,7 +502,7 @@ const RequestPage = () => {
             <Flex direction="column" gap="8px">
               {!pendingTransaction && (
                 <Button
-                  colorScheme={onExpectedChain ? "brand" : "red"}
+                  variant={onExpectedChain ? primaryButtonVariant : "critical"}
                   type="submit"
                   width="100%"
                   minHeight="48px"
@@ -481,7 +518,7 @@ const RequestPage = () => {
 
               {showEtherscanButton && (
                 <Button
-                  backgroundColor="#E4F2FF"
+                  variant="secondary"
                   color="primary"
                   type="submit"
                   width="100%"
@@ -492,6 +529,7 @@ const RequestPage = () => {
                   }}
                 >
                   View transaction
+                  <Image src={ArrowSquareOutIcon} alt="copy" />
                 </Button>
               )}
             </Flex>

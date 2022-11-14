@@ -1,7 +1,7 @@
 import { FC, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { Button, Text, Flex, Box, GridItem, NumberInputField, NumberInput } from "@chakra-ui/react";
-import { useConnectModal } from "@papercliplabs/rainbowkit";
+import { useConnectModal, useChainModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import Image from "next/image";
@@ -21,12 +21,15 @@ const CreateRequest: FC = () => {
   const { ensureUser } = useAuth();
   const [insertRequest] = useInsertRequestMutation();
   const { openConnectModal } = useConnectModal();
+  const { openChainModal } = useChainModal();
   const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(false);
 
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
   const [tokenAmount, setTokenAmount] = useState<string>("");
   const activeChain = useChain();
   const { address } = useAccount();
+
+  console.log("ADDRESS", address);
 
   async function createRequest() {
     if (selectedToken != undefined && tokenAmount != "" && activeChain) {
@@ -63,19 +66,25 @@ const CreateRequest: FC = () => {
   const parse = (val: string) => val.replace(/^\$/, "");
 
   // Compute the button state
-  const { buttonText, onClickFunction } = useMemo(() => {
-    if (!address) {
-      return { buttonText: "Connect Wallet", onClickFunction: openConnectModal };
+  const { buttonText, onClickFunction, buttonVariant } = useMemo(() => {
+    if (activeChain.unsupported) {
+      return {
+        buttonText: "Wrong network",
+        onClickFunction: () => (openChainModal ? openChainModal() : null),
+        buttonVariant: "critical",
+      };
+    } else if (!address) {
+      return { buttonText: "Connect wallet", onClickFunction: openConnectModal, buttonVariant: "secondary" };
     } else if (selectedToken == undefined) {
-      return { buttonText: "Select Token", onClickFunction: undefined };
+      return { buttonText: "Select token", onClickFunction: undefined, buttonVariant: "primary" };
     } else if (tokenAmount == "") {
-      return { buttonText: "Enter Token Amount", onClickFunction: undefined };
+      return { buttonText: "Enter token amount", onClickFunction: undefined, buttonVariant: "primary" };
     } else if (pendingConfirmation) {
-      return { buttonText: "Confirm In Wallet", onClickFunction: undefined };
+      return { buttonText: "Waiting for signature", onClickFunction: undefined, buttonVariant: "primary" };
     } else {
-      return { buttonText: "Create Request", onClickFunction: createRequest };
+      return { buttonText: "Get a link", onClickFunction: createRequest, buttonVariant: "primary" };
     }
-  }, [tokenAmount, selectedToken, address, pendingConfirmation]);
+  }, [tokenAmount, selectedToken, address, pendingConfirmation, activeChain.unsupported]);
 
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
@@ -89,7 +98,7 @@ const CreateRequest: FC = () => {
           height="100%"
           width="100%"
           alignItems="center"
-          justifyContent="center"
+          justifyContent="space-between"
           flexDirection="column"
           padding={4}
           display={"flex"}
@@ -130,12 +139,12 @@ const CreateRequest: FC = () => {
                 fontWeight="bold"
               />
             </NumberInput>
-            <Text textStyle="bodyMedium" color="textTertiary">
+            <Text textStyle="bodyMedium" color="textTertiary" width="100%" align="center">
               ${tokenAmountUsd ? formatNumber(tokenAmountUsd, 2, false) : "--"}
             </Text>
 
             <Flex flexDirection="column" justifyContent="center" mt={2}>
-              <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={false} />
+              <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={activeChain?.unsupported} />
             </Flex>
           </Flex>
 
@@ -163,7 +172,6 @@ const CreateRequest: FC = () => {
 
             <Flex width="100%">
               <Button
-                colorScheme="brand"
                 type="submit"
                 width="100%"
                 height="48px"
@@ -172,6 +180,7 @@ const CreateRequest: FC = () => {
                   onClickFunction && onClickFunction();
                 }}
                 isDisabled={onClickFunction == undefined}
+                variant={buttonVariant}
               >
                 {buttonText}
               </Button>

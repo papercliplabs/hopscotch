@@ -1,10 +1,11 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useContext, useMemo, useState } from "react";
 import { Text, Flex, Box, Avatar, AvatarProps, TextProps } from "@chakra-ui/react";
 import { useAccount, useEnsAvatar, useEnsName, useNetwork } from "wagmi";
 import { shortAddress } from "@/common/utils";
 import { Length } from "@/common/types";
 import DefaultAvatar from "@/public/static/DefaultAvatar.png";
-import ConnectWalletAvatar from "@/public/static/ConnectWalletAvatar.png";
+import ConnectWalletAvatar from "@/public/static/ConnectWalletAvatar.svg";
+import { AvatarContext } from "@papercliplabs/rainbowkit";
 export const getInitials = (name: string): string => {
   // remove 0x if present
   name = name.replace(/^0x/, "");
@@ -43,16 +44,34 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
     chainId: 1,
   });
 
+  const AvatarComponent = useContext(AvatarContext);
+
   return (
-    <Avatar
-      width="48px"
-      height="48px"
-      bg="accent.300"
-      name={address}
-      getInitials={getInitials}
-      src={ensAvatarSrc ?? DefaultAvatar.src}
-      {...rest}
-    />
+    <Flex
+      alignItems="center"
+      justify="center"
+      borderRadius="full"
+      overflow="hidden"
+      justifyContent="center"
+      userSelect="none"
+    >
+      {ensAvatarSrc ? (
+        <Avatar
+          width="48px"
+          height="48px"
+          bg="accent.300"
+          name={address}
+          getInitials={getInitials}
+          boxShadow="xl"
+          src={ensAvatarSrc ?? DefaultAvatar.src}
+          {...rest}
+        />
+      ) : (
+        // This is all that is needed in theory, but odd behavior with end image...
+        // So, for now just use when ensAvatarSrc is not defined
+        <AvatarComponent address={address} ensImage={ensAvatarSrc} size={48} />
+      )}
+    </Flex>
   );
 };
 
@@ -66,7 +85,7 @@ export const ConnectedAvatar = () => {
     </Flex>
   ) : (
     <Flex alignItems="center" flexDirection="column" gap={2} mt={2}>
-      <Avatar src={ConnectWalletAvatar.src} />
+      <Avatar boxShadow="xl" src={ConnectWalletAvatar.src} />
       <Text variant="tertiary" textStyle="titleLg">
         Connect a Wallet
       </Text>

@@ -10,6 +10,7 @@ import {
   BoxProps,
   useToast,
   Center,
+  Icon,
 } from "@chakra-ui/react";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 
@@ -22,6 +23,7 @@ import { formatTokenBalance } from "@/common/utils";
 import { LinkIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { useChain } from "@/hooks/useChain";
+import CopyIcon from "@/public/static/Copy.svg";
 
 const trimSchemeFromUrl = (url: string) => {
   return url.replace(/(^\w+:|^)\/\//, "");
@@ -36,7 +38,6 @@ const ShareRequestPage: FC = () => {
 
   const outputToken = useToken(requestData?.recipientTokenAddress, requestData?.chainId);
   const formattedOutputAmount = formatTokenBalance(requestData?.recipientTokenAmount, outputToken?.decimals, 6);
-  const requestedChain = useChain(requestData?.chainId);
 
   // get url server side safe nextjs
   const origin = typeof window !== "undefined" ? window.location.origin : "";
@@ -77,12 +78,6 @@ const ShareRequestPage: FC = () => {
             <Text textStyle="titleLg" textAlign="center" mb={2}>
               All set!
             </Text>
-            <Text variant="secondary" textStyle="bodyLg" textAlign="center" mb={4}>
-              Your payment request link was created for{" "}
-              <Text fontWeight="bold">
-                {formattedOutputAmount} {outputToken?.symbol} on {requestedChain?.name}.
-              </Text>
-            </Text>
             <Text textStyle="bodyLg" variant="secondary" textAlign="center">
               Your payment request link was created for
             </Text>
@@ -115,7 +110,13 @@ const ShareRequestPage: FC = () => {
                 </Text>
               </Link>
             </Box>
-            <Button width="100%" colorScheme="brand" size="lg" onClick={copyToClipboard} leftIcon={<LinkIcon />}>
+            <Button
+              width="100%"
+              variant="primary"
+              size="lg"
+              onClick={copyToClipboard}
+              rightIcon={<Image src={CopyIcon} alt="copy" />}
+            >
               Copy
             </Button>
             <Text textStyle="bodyMd" variant="secondary">
