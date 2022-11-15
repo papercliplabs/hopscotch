@@ -92,6 +92,10 @@ export function shortAddress(address: string, length: Length): string {
   }
 }
 
+export function getNativeTokenAddress(chainId: number): string | undefined {
+  return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.address;
+}
+
 /**
  * Get the wrapped token address for chain
  * @param chian chain to get the wrapped token address for

@@ -17,7 +17,7 @@ import { V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
 import { LoadingStatus, Token } from "@/common/types";
 import { useToken } from "./useTokenList";
 import { AddressZero, Zero } from "@ethersproject/constants";
-import { getWrappedTokenAddress } from "@/common/utils";
+import { getNativeTokenAddress, getWrappedTokenAddress } from "@/common/utils";
 
 export enum SwapType {
   SWAP,
@@ -64,14 +64,18 @@ export function useExactOutputSwap(
   const [quoteStatus, setQuoteStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
   const [transcationRequest, setTranscationRequest] = useState<TransactionRequest>({});
 
+  const { id: chainId } = useChain();
+
   const [inputIsNative, outputIsNative] = useMemo(() => {
-    return [AddressZero == inputTokenAddress, AddressZero == outputTokenAddress];
-  }, [inputTokenAddress, outputTokenAddress]);
+    const nativeTokenAddress = getNativeTokenAddress(chainId);
+    return [nativeTokenAddress == inputTokenAddress, nativeTokenAddress == outputTokenAddress];
+  }, [inputTokenAddress, outputTokenAddress, chainId]);
+
+  console.log("NAT", inputIsNative, outputIsNative);
 
   const provider = useProvider();
   const { data: signer } = useSigner();
   const { address } = useAccount();
-  const { id: chainId } = useChain();
   const inputToken = useUniswapToken(inputIsNative ? getWrappedTokenAddress(chainId) : inputTokenAddress, chainId);
   const outputToken = useUniswapToken(outputIsNative ? getWrappedTokenAddress(chainId) : outputTokenAddress, chainId);
 

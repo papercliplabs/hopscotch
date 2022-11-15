@@ -44,6 +44,10 @@ export default function TokenListProvider({ children }: { children: ReactNode })
 
             // Filter for only chains we are on, remove duplicates, and remove native tokens
             const supportedChainIds = getSupportedChainIds();
+
+            // Weird bug with useContractReads putting lower chains first, so just order by chainId
+            supportedChainIds.sort((a, b) => (a < b ? -1 : 1));
+
             const supportedTokens: BaseToken[] = [];
             for (let id of supportedChainIds) {
               let addresses: string[] = [];
@@ -131,8 +135,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
   // Fetch token balances
   ////
   const readBalanceContractData = useMemo(() => {
-    if (address != undefined) {
-      console.log("NEW CONTRACT DATA");
+    if (address != undefined && baseTokens != undefined && baseTokens.length > 0) {
       return baseTokens.map((token) => {
         return {
           addressOrName: token.address,
@@ -147,6 +150,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     }
   }, [baseTokens, address]);
 
+  // Weird bug where this will reorder by chainId
   const { data: balanceResults, error } = useContractReads({
     contracts: readBalanceContractData,
     enabled: readBalanceContractData.length != 0 && address != undefined,
