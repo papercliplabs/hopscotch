@@ -127,7 +127,7 @@ export const colors = {
   accent: createShades("#FF03D7"),
 
   negative: "#FF4949",
-  positive: "#019267",
+  positive: "#3CCF4E",
   textPrimary: "#1B1D1F",
   textSecondary: "rgba(27, 29, 31, 0.6)",
   textTertiary: "#C0C1C1",
