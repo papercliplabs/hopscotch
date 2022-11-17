@@ -47,6 +47,7 @@ const ShareRequestPage: FC = () => {
       duration: 5000,
       status: "success",
       position: "bottom",
+      variant: "subtle",
     });
   };
 

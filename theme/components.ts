@@ -1,4 +1,24 @@
 import { textStyles } from "./typography";
+import { alertAnatomy } from '@chakra-ui/anatomy'
+import { createMultiStyleConfigHelpers } from '@chakra-ui/react'
+
+const { definePartsStyle, defineMultiStyleConfig } =
+  createMultiStyleConfigHelpers(alertAnatomy.keys)
+
+const baseStyle = definePartsStyle({
+  icon: {
+    color: "positive"
+  },
+  container: {
+    width: "fit-content",
+    color: "white",
+    bg: "rgba(27, 29, 31, 0.7)",
+    py: 3,
+    px: 4,
+  },
+})
+
+export const alertTheme = defineMultiStyleConfig({ baseStyle })
 
 const buttonDisabledProps = {
   backgroundColor: "#EFF0F3",
@@ -7,6 +27,7 @@ const buttonDisabledProps = {
 };
 
 export const components = {
+  Alert: alertTheme,
   Button: {
     baseStyle: {
       borderRadius: "full",
