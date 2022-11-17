@@ -4,13 +4,7 @@ import {
   Text,
   Flex,
   Box,
-  GridItem,
-  NumberInputField,
-  NumberInput,
-  BoxProps,
   useToast,
-  Center,
-  Icon,
 } from "@chakra-ui/react";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 
@@ -51,7 +45,7 @@ const ShareRequestPage: FC = () => {
     toast({
       title: "Link copied!",
       duration: 5000,
-      isClosable: true,
+      status: "success",
       position: "bottom",
     });
   };
