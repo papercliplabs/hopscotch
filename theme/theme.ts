@@ -29,6 +29,7 @@ const styles = {
 
 const theme = extendTheme({
   shadows: {
+    defaultSm: "0px 20px 8px rgba(14, 118, 253, 0.01), 0px 11px 7px rgba(14, 118, 253, 0.03), 0px 5px 5px rgba(14, 118, 253, 0.04), 0px 1px 3px rgba(14, 118, 253, 0.05), 0px 0px 0px rgba(14, 118, 253, 0.05)",
     defaultLg:
       "0px 270px 108px rgba(0, 0, 0, 0.01), 0px 152px 91px rgba(0, 0, 0, 0.03), 0px 68px 68px rgba(0, 0, 0, 0.04), 0px 17px 37px rgba(0, 0, 0, 0.05), 0px 0px 0px rgba(0, 0, 0, 0.05);",
   },

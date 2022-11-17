@@ -66,7 +66,7 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
           bg="accent.300"
           name={address}
           getInitials={getInitials}
-          boxShadow="xl"
+          boxShadow="defaultSm"
           src={ensAvatarSrc}
         />
       ) : (
@@ -86,7 +86,7 @@ export const ConnectedAvatar = () => {
     </Flex>
   ) : (
     <Flex alignItems="center" flexDirection="column" gap={2} mt={2}>
-      <Avatar boxShadow="xl" src={ConnectWalletAvatar.src} />
+      <Avatar boxShadow="defaultSm" src={ConnectWalletAvatar.src} />
       <Text variant="tertiary" textStyle="titleLg">
         Connect a Wallet
       </Text>
