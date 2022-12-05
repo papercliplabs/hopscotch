@@ -12,7 +12,7 @@ import { FEE_BIPS } from "@/common/constants";
 import { Token } from "@/common/types";
 import { formatNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
-import { PrimaryCard, PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
+import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import { useChain } from "@/hooks/useChain";
 import { ConnectedAvatar } from "@/components/EnsAvatar";
 

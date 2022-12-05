@@ -13,7 +13,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useAccount, useEnsName, useNetwork, useSwitchNetwork } from "wagmi";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Request_Status_Enum } from "@/graphql/generated/graphql";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
 import { LinkIcon, InfoIcon } from "@chakra-ui/icons";
@@ -25,7 +25,7 @@ import { useApproveErc20ForSwap } from "@/hooks/useApproveTokenForSwap";
 import { useExactOutputSwap } from "@/hooks/useExactOutputSwap";
 import { useToken } from "@/hooks/useTokenList";
 import { useRequestData } from "@/hooks/useRequestData";
-import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
+import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import TokenSelect from "@/components/TokenSelect";
 import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
@@ -41,6 +41,7 @@ const RequestPage = () => {
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
   const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState<boolean>(false);
   const toast = useToast();
+  const ref = useRef(null);
 
   const { openConnectModal } = useConnectModal();
   const { switchNetwork } = useSwitchNetwork();
@@ -343,11 +344,19 @@ const RequestPage = () => {
           </Text>
         </Flex>
       </Flex>
-      <PrimaryCardGrid>
-        <GridItem gridRowStart={1} gridColumnStart={1} zIndex={1} height="100%" margin={0} padding={4}>
-          <Flex direction="column" justifyContent="space-between" height="100%" gap="16px">
+      <PrimaryCard
+        ref={ref}
+        position="relative"
+        height="100%"
+        width="100%"
+        alignItems="center"
+        justifyContent="space-between"
+        flexDirection="column"
+        padding={4}
+        display={"flex"}
+      >
             {paid ? (
-              <Flex direction="column" align="center" justify="center" height="100%">
+              <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
                 <Image src={circleCheckImage} alt="check" />
                 <Text textStyle="titleLg" mt={6}>
                   Request Paid!
@@ -357,7 +366,7 @@ const RequestPage = () => {
                 </Text>
               </Flex>
             ) : pendingTransaction ? (
-              <Flex direction="column" align="center" justify="center" height="100%">
+              <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
                 <Spinner thickness="4px" speed="1.0s" emptyColor="gray.200" color="blue.500" boxSize="80px" mb={6} />
                 <Text textStyle="titleLg">{pendingTransactionMessage}</Text>
                 <Text textStyle="bodyMd" variant="secondary">
@@ -365,7 +374,7 @@ const RequestPage = () => {
                 </Text>
               </Flex>
             ) : failed ? (
-              <Flex direction="column" align="center" justify="center" height="100%">
+              <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
                 <Image src={circleFailImage} />
                 <Text textStyle="titleLg" mt={6}>
                   {failedMessage}
@@ -376,7 +385,7 @@ const RequestPage = () => {
               </Flex>
             ) : (
               <>
-                <Flex direction="column" flexGrow={1} justifyContent="space-between">
+                <Flex direction="column" flexGrow={1} justifyContent="space-between" width="100%">
                   <Text textStyle="titleLg" align="center">
                     You Pay
                   </Text>
@@ -405,7 +414,7 @@ const RequestPage = () => {
                       </Flex>
 
                       <Flex flexDirection="column" justifyContent="center">
-                        <TokenSelect token={inputToken} setToken={setInputToken} isDisabled={!onExpectedChain} />
+                        <TokenSelect portalRef={ref} token={inputToken} setToken={setInputToken} isDisabled={!onExpectedChain} />
                       </Flex>
                     </Flex>
                     <Flex
@@ -444,7 +453,7 @@ const RequestPage = () => {
                     </Flex>
                   </Flex>
 
-                  <Flex direction="column" pt="10px" gap="5px">
+                  <Flex direction="column" pt="10px" gap="5px" mt={2}>
                     <Flex direction="row" justifyContent="space-between">
                       <Text textStyle="label" variant="secondary" fontWeight="bold">
                         Swap Rate
@@ -519,7 +528,7 @@ const RequestPage = () => {
               </>
             )}
 
-            <Flex direction="column" gap="8px">
+            <Flex direction="column" gap="8px" width="100%" mt={4}>
               {!pendingTransaction && (
                 <Button
                   variant={onExpectedChain ? primaryButtonVariant : "critical"}
@@ -553,9 +562,7 @@ const RequestPage = () => {
                 </Button>
               )}
             </Flex>
-          </Flex>
-        </GridItem>
-      </PrimaryCardGrid>
+      </PrimaryCard>
     </Flex>
   );
 };
