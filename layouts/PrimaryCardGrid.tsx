@@ -18,14 +18,11 @@ export const PrimaryCard = forwardRef<BoxProps, "div">((props, ref) => {
       boxShadow="defaultLg"
       maxWidth="400px"
       width="100%"
-      // height={HEIGHT}
       ref={ref}
       {...props}
     />
   );
 });
-
-
 
 export const PrimaryCardGrid: FC<GridProps> = (props) => {
   const containerRef = useNestedPortalRef();

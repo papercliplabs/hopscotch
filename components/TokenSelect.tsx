@@ -55,7 +55,7 @@ const SlideMenu: FC<SlideMenuProps> = ({ title, onClose, isOpen, children }) => 
   return (
     <Fade in={isOpen}>
       <ParentOverlay p={4} pointerEvents={isOpen ? "inherit" : "none"}>
-        <Flex position="relative" flexDirection="row" justifyContent="center" alignItems="center" my={4}>
+        <Flex position="relative" flexDirection="row" justifyContent="center" alignItems="center" mb={4}>
           <Text textStyle="titleLg" align="center">
             {title}
           </Text>
