@@ -57,15 +57,14 @@ const ShareRequestPage: FC = () => {
       <Text textStyle="headline" variant="gradient" mb={6}>
         Get paid in any token.
       </Text>
-      <PrimaryCard>
-        <Flex
-          alignItems="center"
-          justifyContent="space-between"
-          flexDirection="column"
-          padding={4}
-          height="100%"
-          width="100%"
-        >
+      <PrimaryCard
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        flexDirection="column"
+        padding={4}
+        width="100%"
+      >
           <Flex direction="column" justifyContent="center" alignItems="center" w="100%" flex="1">
             <Box mb={4}>
               <Image height={60} width={60} src={circleCheckImage} alt="check" />
@@ -118,7 +117,6 @@ const ShareRequestPage: FC = () => {
               Copy the link and share it with anyone
             </Text>
           </Flex>
-        </Flex>
       </PrimaryCard>
     </Flex>
   );
