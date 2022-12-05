@@ -178,7 +178,7 @@ export default function TokenSelect({
       />
       <Portal containerRef={portalRef}>
         <SlideMenu title="Choose Token" isOpen={isOpen} onClose={onClose}>
-          <Grid templateRows="auto auto minmax(0, 1fr)" rowGap={2} width="100%" height="100%" templateColumns="1fr">
+          <Grid templateRows="auto auto minmax(0, 1fr)" rowGap={2} width="100%"  height="calc(100% - 40px)" templateColumns="1fr">
             <GridItem>
               <InputGroup>
                 <InputLeftElement pointerEvents="none">
