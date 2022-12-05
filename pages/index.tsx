@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { Button, Text, Flex, Box, GridItem, NumberInputField, NumberInput } from "@chakra-ui/react";
 import { useConnectModal, useChainModal } from "@papercliplabs/rainbowkit";
@@ -12,7 +12,7 @@ import { FEE_BIPS } from "@/common/constants";
 import { Token } from "@/common/types";
 import { formatNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
-import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
+import { PrimaryCard, PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
 import { useChain } from "@/hooks/useChain";
 import { ConnectedAvatar } from "@/components/EnsAvatar";
 
@@ -84,25 +84,26 @@ const CreateRequest: FC = () => {
     }
   }, [tokenAmount, selectedToken, address, pendingConfirmation, activeChain.unsupported]);
 
+  const ref = useRef(null);
+
+
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
       <Text textStyle="headline">Send a request.</Text>
       <Text textStyle="headline" variant="gradient" mb={6}>
         Get paid in any token.
       </Text>
-      <PrimaryCardGrid>
-        <GridItem
-          zIndex={1}
-          height="100%"
-          width="100%"
-          alignItems="center"
-          justifyContent="space-between"
-          flexDirection="column"
-          padding={4}
-          display={"flex"}
-          gridRowStart={1}
-          gridColumnStart={1}
-        >
+      <PrimaryCard
+        ref={ref}
+        position="relative"
+        height="100%"
+        width="100%"
+        alignItems="center"
+        justifyContent="space-between"
+        flexDirection="column"
+        padding={4}
+        display={"flex"}
+      >
           <Flex direction="column" align="center" width="100%">
             <ConnectedAvatar />
             <Text textStyle="titleSm" variant="interactive" mb={4}>
@@ -150,7 +151,7 @@ const CreateRequest: FC = () => {
                 ${tokenAmountUsd ? formatNumber(tokenAmountUsd, 2, false) : "--"}
               </Text>
             </Flex>
-            <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={activeChain?.unsupported} />
+            <TokenSelect portalRef={ref} token={selectedToken} setToken={setSelectedToken} isDisabled={activeChain?.unsupported} />
           </Flex>
 
           <Flex direction="column" width="100%" gap={4}>
@@ -191,8 +192,7 @@ const CreateRequest: FC = () => {
               </Button>
             </Flex>
           </Flex>
-        </GridItem>
-      </PrimaryCardGrid>
+      </PrimaryCard>
     </Flex>
   );
 };

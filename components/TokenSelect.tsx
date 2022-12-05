@@ -3,14 +3,17 @@ import {
   Avatar,
   AvatarBadge,
   Box,
+  BoxProps,
   Button,
   CloseButton,
+  Fade,
   Flex,
   Grid,
   GridItem,
   Input,
   InputGroup,
   InputLeftElement,
+  Portal,
   Stack,
   Text,
   useDisclosure,
@@ -25,6 +28,21 @@ import { NetworkSelect } from "./NetworkSelect";
 import { formatNumber, formatTokenBalance } from "@/common/utils";
 import { useChain } from "@/hooks/useChain";
 
+const ParentOverlay: FC<BoxProps> = (props) => (
+  <Box
+    position="absolute"
+    top={0}
+    left={0}
+    right={0}
+    bottom={0}
+    zIndex={100}
+    overflow="hidden"
+    bg="rgb(255, 255, 255, 1)"
+    borderRadius="md"
+    {...props}
+  />
+);
+
 interface SlideMenuProps {
   isOpen: boolean;
   title: string;
@@ -34,33 +52,18 @@ interface SlideMenuProps {
 
 const SlideMenu: FC<SlideMenuProps> = ({ title, onClose, isOpen, children }) => {
   // slide in or out
-  const transform = isOpen ? "translateY(0%)" : "translateY(100%)";
-  const transition = "transform 0.25s linear";
-
   return (
-    <Grid
-      backgroundColor="rgb(255, 255, 255, 1)"
-      width="100%"
-      height="100%"
-      templateColumns="1fr"
-      templateRows="auto minmax(0, 1fr)"
-      overflow="hidden"
-      gridRowStart={1}
-      gridColumnStart={1}
-      zIndex={100}
-      transition={transition}
-      transform={transform}
-      p={4}
-      borderRadius="inherit"
-    >
-      <Flex position="relative" flexDirection="row" justifyContent="center" alignItems="center" my={4}>
-        <Text textStyle="titleLg" align="center">
-          {title}
-        </Text>
-        <CloseButton onClick={() => onClose()} position="absolute" right="0" />
-      </Flex>
-      {children}
-    </Grid>
+    <Fade in={isOpen}>
+      <ParentOverlay p={4} pointerEvents={isOpen ? "inherit" : "none"}>
+        <Flex position="relative" flexDirection="row" justifyContent="center" alignItems="center" my={4}>
+          <Text textStyle="titleLg" align="center">
+            {title}
+          </Text>
+          <CloseButton onClick={() => onClose()} position="absolute" right="0" />
+        </Flex>
+        {children}
+      </ParentOverlay>
+    </Fade>
   );
 };
 
@@ -68,10 +71,13 @@ export default function TokenSelect({
   setToken,
   token,
   isDisabled,
+  portalRef,
 }: {
   token?: Token;
   setToken: (token: Token | undefined) => void;
   isDisabled: boolean;
+  portalRef?: React.RefObject<HTMLDivElement>;
+
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState("");
@@ -164,13 +170,13 @@ export default function TokenSelect({
     <>
       <Button
         rightIcon={<ChevronDownIcon boxSize="24px" />}
-        onClick={() => onOpen()}
+        onClick={(e) => onOpen()}
         isDisabled={isDisabled}
         borderRadius="md"
         height="48px"
         {...buttonProps}
       />
-      <NestedPortal>
+      <Portal containerRef={portalRef}>
         <SlideMenu title="Choose Token" isOpen={isOpen} onClose={onClose}>
           <Grid templateRows="auto auto minmax(0, 1fr)" rowGap={2} width="100%" height="100%" templateColumns="1fr">
             <GridItem>
@@ -212,7 +218,7 @@ export default function TokenSelect({
             </GridItem>
           </Grid>
         </SlideMenu>
-      </NestedPortal>
+      </Portal>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { Box, BoxProps, Grid, GridProps } from "@chakra-ui/react";
+import { Box, BoxProps, Grid, GridProps, forwardRef } from "@chakra-ui/react";
 
 import { useNestedPortalRef } from "@/components/NestedPortal";
 
@@ -10,7 +10,7 @@ export interface PrimaryCardGridProps {
   children: ReactNode;
 }
 
-export const PrimaryCard: FC<BoxProps> = (props) => {
+export const PrimaryCard = forwardRef<BoxProps, "div">((props, ref) => {
   return (
     <Box
       backgroundColor="white"
@@ -18,11 +18,14 @@ export const PrimaryCard: FC<BoxProps> = (props) => {
       boxShadow="defaultLg"
       maxWidth="400px"
       width="100%"
-      height={HEIGHT}
+      // height={HEIGHT}
+      ref={ref}
       {...props}
     />
   );
-};
+});
+
+
 
 export const PrimaryCardGrid: FC<GridProps> = (props) => {
   const containerRef = useNestedPortalRef();
