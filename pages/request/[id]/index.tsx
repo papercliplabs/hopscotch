@@ -23,6 +23,7 @@ import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import circleFailImage from "@/public/static/CircleFail.svg";
 import Image from "next/image";
+import { colors } from "@/theme/colors";
 
 const RequestPage = () => {
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
@@ -280,8 +281,8 @@ const RequestPage = () => {
 
   return (
     <Fade in delay={1}>
-    <Flex direction="column" gap="12px" justifyContent="space-between" height="100%" alignItems="center">
-      {isOwner && (
+      <Flex direction="column" gap="12px" justifyContent="space-between" height="100%" alignItems="center">
+        {isOwner && (
           <Flex
             width="100%"
             backgroundColor="#E4F2FF"
@@ -303,7 +304,7 @@ const RequestPage = () => {
               Copy Link
             </Button>
           </Flex>
-      )}
+        )}
         <Flex
           width="100%"
           backgroundColor="bgSecondary"
@@ -355,12 +356,15 @@ const RequestPage = () => {
           ) : pendingTransaction ? (
             <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
               <Spinner
-                thickness="4px"
+                thickness="8px"
                 speed="1.0s"
-                emptyColor="gray.200"
+                emptyColor="bgPrimary"
                 color="textInteractive"
                 boxSize="80px"
                 mb={6}
+                style={{
+                  borderTopColor: colors.bgPrimary,
+                }}
               />
               <Text textStyle="titleLg">{pendingTransactionMessage}</Text>
               <Text textStyle="bodyMd" variant="secondary">
@@ -400,7 +404,10 @@ const RequestPage = () => {
                           <Spinner
                             thickness="2px"
                             speed="0.65s"
-                            emptyColor="gray.200"
+                            emptyColor="bgPrimary"
+                            style={{
+                              borderTopColor: colors.bgPrimary,
+                            }}
                             color="textInteractive"
                             size="sm"
                           />
@@ -469,7 +476,10 @@ const RequestPage = () => {
                           <Spinner
                             thickness="2px"
                             speed="0.65s"
-                            emptyColor="gray.200"
+                            emptyColor="bgPrimary"
+                            style={{
+                              borderTopColor: colors.bgPrimary,
+                            }}
                             color="textInteractive"
                             size="sm"
                           />
@@ -574,7 +584,7 @@ const RequestPage = () => {
             )}
           </Flex>
         </PrimaryCard>
-    </Flex>
+      </Flex>
     </Fade>
   );
 };
