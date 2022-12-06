@@ -1,6 +1,6 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { Button, Text, Flex, Box, GridItem, NumberInputField, NumberInput } from "@chakra-ui/react";
+import { Button, Text, Flex, Fade, Center, Spinner, NumberInputField, NumberInput } from "@chakra-ui/react";
 import { useConnectModal, useChainModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
@@ -12,14 +12,69 @@ import { FEE_BIPS } from "@/common/constants";
 import { Token } from "@/common/types";
 import { formatNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
-import { PrimaryCardGrid } from "@/layouts/PrimaryCardGrid";
+import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import { useChain } from "@/hooks/useChain";
 import { ConnectedAvatar } from "@/components/EnsAvatar";
+import { ParentOverlay } from "@/components/ParentOverlay";
+import { colors } from "@/theme/colors";
+
+interface CreatingRequestOverlayProps {
+  isOpen?: boolean;
+}
+
+const CreatingRequestOverlay: FC<CreatingRequestOverlayProps> = (props) => {
+  const { isOpen = false } = props;
+  return (
+    <Fade in={isOpen}>
+      <ParentOverlay p={4} pointerEvents={isOpen ? "inherit" : "none"}>
+        <Center display="flex" flexDirection="column" height="100%">
+          <Spinner
+            thickness="8px"
+            speed="1.0s"
+            emptyColor="bgPrimary"
+            color="textInteractive"
+            boxSize="72px"
+            mb={4}
+            style={{
+              borderTopColor: colors.bgPrimary,
+            }}
+          />
+          <Text textStyle="titleLg" mb={1}>
+            Creating request
+          </Text>
+          <Text textStyle="bodyMd">Please wait...</Text>
+        </Center>
+      </ParentOverlay>
+    </Fade>
+  );
+};
 
 const CreateRequest: FC = () => {
+  const MODAL_MINIMUM_DISPLAY_TIME = 2000;
   const router = useRouter();
   const { ensureUser } = useAuth();
-  const [insertRequest] = useInsertRequestMutation();
+
+  const [insertRequest, { loading: insertRequestLoading }] = useInsertRequestMutation({
+    onCompleted: (data: any) => {
+      const requestId = data?.insert_request_one?.id;
+      setTimeout(() => {
+        router.push(`/request/${requestId}/share`);
+      }, MODAL_MINIMUM_DISPLAY_TIME);
+    },
+  });
+
+  // a modal is open state dependant on insertRequestLoading but we want to show the modal for a minimum amount of time
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  useMemo(() => {
+    if (insertRequestLoading) {
+      setModalIsOpen(true);
+    } else {
+      setTimeout(() => {
+        setModalIsOpen(false);
+      }, MODAL_MINIMUM_DISPLAY_TIME);
+    }
+  }, [insertRequestLoading]);
+
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
   const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(false);
@@ -48,9 +103,6 @@ const CreateRequest: FC = () => {
             },
           },
         });
-
-        const requestId = insertData?.insert_request_one?.id;
-        router.push(`/request/${requestId}/share`);
       }
     } else {
       console.log("Invalid data");
@@ -84,15 +136,18 @@ const CreateRequest: FC = () => {
     }
   }, [tokenAmount, selectedToken, address, pendingConfirmation, activeChain.unsupported]);
 
+  const ref = useRef(null);
+
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
       <Text textStyle="headline">Send a request.</Text>
       <Text textStyle="headline" variant="gradient" mb={6}>
         Get paid in any token.
       </Text>
-      <PrimaryCardGrid>
-        <GridItem
-          zIndex={1}
+      <Fade in delay={1}>
+        <PrimaryCard
+          ref={ref}
+          position="relative"
           height="100%"
           width="100%"
           alignItems="center"
@@ -100,8 +155,6 @@ const CreateRequest: FC = () => {
           flexDirection="column"
           padding={4}
           display={"flex"}
-          gridRowStart={1}
-          gridColumnStart={1}
         >
           <Flex direction="column" align="center" width="100%">
             <ConnectedAvatar />
@@ -150,7 +203,12 @@ const CreateRequest: FC = () => {
                 ${tokenAmountUsd ? formatNumber(tokenAmountUsd, 2, false) : "--"}
               </Text>
             </Flex>
-            <TokenSelect token={selectedToken} setToken={setSelectedToken} isDisabled={activeChain?.unsupported} />
+            <TokenSelect
+              portalRef={ref}
+              token={selectedToken}
+              setToken={setSelectedToken}
+              isDisabled={activeChain?.unsupported}
+            />
           </Flex>
 
           <Flex direction="column" width="100%" gap={4}>
@@ -191,8 +249,9 @@ const CreateRequest: FC = () => {
               </Button>
             </Flex>
           </Flex>
-        </GridItem>
-      </PrimaryCardGrid>
+          <CreatingRequestOverlay isOpen={modalIsOpen} />
+        </PrimaryCard>
+      </Fade>
     </Flex>
   );
 };

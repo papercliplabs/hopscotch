@@ -1,23 +1,16 @@
-import { FC, useMemo, useState } from "react";
-import {
-  Button,
-  Text,
-  Flex,
-  Box,
-  useToast,
-} from "@chakra-ui/react";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
+import { Box, Button, Fade, Flex, Text, useToast } from "@chakra-ui/react";
+import { FC } from "react";
 
-import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
-import Image from "next/image";
-import { useRouter } from "next/router";
+import { formatTokenBalance } from "@/common/utils";
+import { useChain } from "@/hooks/useChain";
 import { useRequestData } from "@/hooks/useRequestData";
 import { useToken } from "@/hooks/useTokenList";
-import { formatTokenBalance } from "@/common/utils";
-import { LinkIcon } from "@chakra-ui/icons";
-import Link from "next/link";
-import { useChain } from "@/hooks/useChain";
+import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import CopyIcon from "@/public/static/Copy.svg";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const trimSchemeFromUrl = (url: string) => {
   return url.replace(/(^\w+:|^)\/\//, "");
@@ -57,14 +50,13 @@ const ShareRequestPage: FC = () => {
       <Text textStyle="headline" variant="gradient" mb={6}>
         Get paid in any token.
       </Text>
-      <PrimaryCard>
-        <Flex
+      <Fade in delay={1}>
+        <PrimaryCard
+          display="flex"
           alignItems="center"
           justifyContent="space-between"
           flexDirection="column"
           padding={4}
-          height="100%"
-          width="100%"
         >
           <Flex direction="column" justifyContent="center" alignItems="center" w="100%" flex="1">
             <Box mb={4}>
@@ -118,8 +110,8 @@ const ShareRequestPage: FC = () => {
               Copy the link and share it with anyone
             </Text>
           </Flex>
-        </Flex>
-      </PrimaryCard>
+        </PrimaryCard>
+      </Fade>
     </Flex>
   );
 };
