@@ -1,8 +1,5 @@
-import { FC, ReactNode } from "react";
-import { Box, BoxProps, Grid, GridProps, forwardRef } from "@chakra-ui/react";
-
-const HEIGHT = "434px";
-const MAX_HEGIHT = "540px";
+import { Box, BoxProps, forwardRef } from "@chakra-ui/react";
+import { ReactNode } from "react";
 
 export interface PrimaryCardGridProps {
   children: ReactNode;
@@ -14,9 +11,8 @@ export const PrimaryCard = forwardRef<BoxProps, "div">((props, ref) => {
       backgroundColor="white"
       borderRadius="lg"
       boxShadow="defaultLg"
-      minHeight={HEIGHT}
-      maxWidth="400px"
-      width="100%"
+      minHeight="434px"
+      width="400px"
       ref={ref}
       {...props}
     />

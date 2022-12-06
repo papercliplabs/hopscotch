@@ -1,41 +1,28 @@
-import { useRouter } from "next/router";
-import {
-  Avatar,
-  AvatarBadge,
-  Box,
-  Button,
-  Flex,
-  GridItem,
-  Link,
-  Spinner,
-  Text,
-  Tooltip,
-  useToast,
-} from "@chakra-ui/react";
-import { useAccount, useEnsName, useNetwork, useSwitchNetwork } from "wagmi";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Request_Status_Enum } from "@/graphql/generated/graphql";
+import { InfoIcon, LinkIcon } from "@chakra-ui/icons";
+import { Avatar, AvatarBadge, Button, Fade, Flex, Link, Spinner, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
-import { LinkIcon, InfoIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useAccount, useEnsName, useSwitchNetwork } from "wagmi";
 
-import { formatNumber, shortAddress, openLink, formatTokenBalance } from "@/common/utils";
-import { ExplorerLinkType, Length, LoadingStatus } from "@/common/types";
-import { Token } from "@/common/types";
-import { useApproveErc20ForSwap } from "@/hooks/useApproveTokenForSwap";
-import { useExactOutputSwap } from "@/hooks/useExactOutputSwap";
-import { useToken } from "@/hooks/useTokenList";
-import { useRequestData } from "@/hooks/useRequestData";
-import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
+import { ExplorerLinkType, Length, LoadingStatus, Token } from "@/common/types";
+import { formatNumber, formatTokenBalance, openLink, shortAddress } from "@/common/utils";
+import { EnsAvatar } from "@/components/EnsAvatar";
 import TokenSelect from "@/components/TokenSelect";
+import { useApproveErc20ForSwap } from "@/hooks/useApproveTokenForSwap";
+import { useChain } from "@/hooks/useChain";
+import { useExactOutputSwap } from "@/hooks/useExactOutputSwap";
+import { useExplorerLink } from "@/hooks/useExplorerLink";
 import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
+import { useRequestData } from "@/hooks/useRequestData";
+import { useToken } from "@/hooks/useTokenList";
+import { useTransaction } from "@/hooks/useTransaction";
+import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
+import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import circleFailImage from "@/public/static/CircleFail.svg";
 import Image from "next/image";
-import { useTransaction } from "@/hooks/useTransaction";
-import { useExplorerLink } from "@/hooks/useExplorerLink";
-import { useChain } from "@/hooks/useChain";
-import { EnsAvatar } from "@/components/EnsAvatar";
-import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 
 const RequestPage = () => {
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
@@ -292,278 +279,303 @@ const RequestPage = () => {
   const swapRate = formatNumber(Number(formattedQuoteAmount) / Number(formattedOutputAmount));
 
   return (
+    <Fade in delay={1}>
     <Flex direction="column" gap="12px" justifyContent="space-between" height="100%" alignItems="center">
       {isOwner && (
+          <Flex
+            width="100%"
+            backgroundColor="#E4F2FF"
+            color="primary"
+            borderRadius="md"
+            p={4}
+            flexDirection="row"
+            maxWidth="400px"
+            direction="row"
+            justifyContent="space-between"
+            align="center"
+          >
+            <Flex direction="column">
+              <Text textStyle="titleSm">This is your payment request</Text>
+              <Text textStyle="bodySm">Share it with anyone</Text>
+            </Flex>
+
+            <Button variant="primary" size="sm" onClick={copyToClipboard} leftIcon={<LinkIcon />}>
+              Copy Link
+            </Button>
+          </Flex>
+      )}
         <Flex
           width="100%"
-          backgroundColor="#E4F2FF"
-          color="primary"
+          backgroundColor="bgSecondary"
           borderRadius="md"
           p={4}
           flexDirection="row"
-          maxWidth="400px"
-          direction="row"
           justifyContent="space-between"
           align="center"
+          maxWidth="400px"
         >
-          <Flex direction="column">
-            <Text textStyle="titleSm">This is your payment request</Text>
-            <Text textStyle="bodySm">Share it with anyone</Text>
-          </Flex>
+          <EnsAvatar address={requestData?.recipientAddress} width="32px" height="32px" fontSize="sm" />
 
-          <Button variant="primary" size="sm" onClick={copyToClipboard} leftIcon={<LinkIcon />}>
-            Copy Link
-          </Button>
-        </Flex>
-      )}
-      <Flex
-        width="100%"
-        backgroundColor="bgSecondary"
-        borderRadius="md"
-        p={4}
-        flexDirection="row"
-        justifyContent="space-between"
-        align="center"
-        maxWidth="400px"
-      >
-        <EnsAvatar address={requestData?.recipientAddress} width="32px" height="32px" fontSize="sm" />
-
-        <Flex direction="column" ml={3}>
-          <Text textStyle="titleSm">
-            <Text as="span" variant="gradient">
-              <Link href={recipientAddressExplorerLink} isExternal>
-                <Tooltip label={requestData?.recipientAddress} p={3} backgroundColor="textPrimary" hasArrow>
-                  {recipientEnsName ?? shortAddress(requestData?.recipientAddress, Length.MEDIUM)}
-                </Tooltip>{" "}
-              </Link>
+          <Flex direction="column" ml={3}>
+            <Text textStyle="titleSm">
+              <Text as="span" variant="gradient">
+                <Link href={recipientAddressExplorerLink} isExternal>
+                  <Tooltip label={requestData?.recipientAddress} p={3} backgroundColor="textPrimary" hasArrow>
+                    {recipientEnsName ?? shortAddress(requestData?.recipientAddress, Length.MEDIUM)}
+                  </Tooltip>{" "}
+                </Link>
+              </Text>
+              requested {formattedOutputAmount} {outputToken.symbol}
             </Text>
-            requested {formattedOutputAmount} {outputToken.symbol}
-          </Text>
-          <Text variant="secondary" textStyle="bodySm">
-            Choose the token you want to pay with and it will be converted to {outputToken.symbol} before sending.
-          </Text>
+            <Text variant="secondary" textStyle="bodySm">
+              Choose the token you want to pay with and it will be converted to {outputToken.symbol} before sending.
+            </Text>
+          </Flex>
         </Flex>
-      </Flex>
-      <PrimaryCard
-        ref={ref}
-        position="relative"
-        height="100%"
-        width="100%"
-        alignItems="center"
-        justifyContent="space-between"
-        flexDirection="column"
-        padding={4}
-        display={"flex"}
-      >
-            {paid ? (
-              <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
-                <Image src={circleCheckImage} alt="check" />
-                <Text textStyle="titleLg" mt={6}>
-                  Request Paid!
+        <PrimaryCard
+          ref={ref}
+          position="relative"
+          height="100%"
+          alignItems="center"
+          justifyContent="space-between"
+          flexDirection="column"
+          padding={4}
+          display={"flex"}
+        >
+          {paid ? (
+            <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
+              <Image src={circleCheckImage} alt="check" />
+              <Text textStyle="titleLg" mt={6}>
+                Request Paid!
+              </Text>
+              <Text textStyle="bodyMd" variant="secondary">
+                The request has been paid.
+              </Text>
+            </Flex>
+          ) : pendingTransaction ? (
+            <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
+              <Spinner
+                thickness="4px"
+                speed="1.0s"
+                emptyColor="gray.200"
+                color="textInteractive"
+                boxSize="80px"
+                mb={6}
+              />
+              <Text textStyle="titleLg">{pendingTransactionMessage}</Text>
+              <Text textStyle="bodyMd" variant="secondary">
+                Please wait...
+              </Text>
+            </Flex>
+          ) : failed ? (
+            <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
+              <Image src={circleFailImage} />
+              <Text textStyle="titleLg" mt={6}>
+                {failedMessage}
+              </Text>
+              <Text textStyle="bodyMd" variant="secondary">
+                An error occured, please try again.
+              </Text>
+            </Flex>
+          ) : (
+            <>
+              <Flex direction="column" flexGrow={1} justifyContent="space-between" width="100%">
+                <Text textStyle="titleLg" align="center">
+                  You Pay
                 </Text>
-                <Text textStyle="bodyMd" variant="secondary">
-                  The request has been paid.
-                </Text>
-              </Flex>
-            ) : pendingTransaction ? (
-              <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
-                <Spinner thickness="4px" speed="1.0s" emptyColor="gray.200" color="textInteractive" boxSize="80px" mb={6} />
-                <Text textStyle="titleLg">{pendingTransactionMessage}</Text>
-                <Text textStyle="bodyMd" variant="secondary">
-                  Please wait...
-                </Text>
-              </Flex>
-            ) : failed ? (
-              <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
-                <Image src={circleFailImage} />
-                <Text textStyle="titleLg" mt={6}>
-                  {failedMessage}
-                </Text>
-                <Text textStyle="bodyMd" variant="secondary">
-                  An error occured, please try again.
-                </Text>
-              </Flex>
-            ) : (
-              <>
-                <Flex direction="column" flexGrow={1} justifyContent="space-between" width="100%">
-                  <Text textStyle="titleLg" align="center">
-                    You Pay
-                  </Text>
-                  <Flex direction="column" gap="3px">
-                    <Flex
-                      width="100%"
-                      backgroundColor="bgSecondary"
-                      borderTopRadius="md"
-                      paddingX={4}
-                      paddingY={6}
-                      flexDirection="row"
-                      justifyContent="space-between"
-                      mt="10px"
-                    >
-                      <Flex direction="column" flex="1">
-                        <Text textStyle="headline">
-                          {quoteLoading ? (
-                            <Spinner thickness="2px" speed="0.65s" emptyColor="gray.200" color="textInteractive" size="sm" />
-                          ) : (
-                            formattedQuoteAmount
-                          )}
-                        </Text>
-                        <Text textStyle="bodyMd" variant="secondary">
-                          ${inputTokenUsdAmount}
-                        </Text>
-                      </Flex>
-
-                      <Flex flexDirection="column" justifyContent="center">
-                        <TokenSelect portalRef={ref} token={inputToken} setToken={setInputToken} isDisabled={!onExpectedChain} />
-                      </Flex>
-                    </Flex>
-                    <Flex
-                      width="100%"
-                      backgroundColor="bgSecondary"
-                      borderBottomRadius="md"
-                      padding={4}
-                      flexDirection="row"
-                      justifyContent="space-between"
-                    >
-                      <Flex direction="column">
-                        <Text textStyle="titleSm" variant="secondary">
-                          They receive:
-                        </Text>
-                        <Text textStyle="headline">{formattedOutputAmount}</Text>
-                        <Text textStyle="bodyMd" variant="secondary">
-                          ${outputTokenUsdAmount}
-                        </Text>
-                      </Flex>
-                      <Flex align="center">
-                        <Avatar height="32px" width="32px" mr={2} src={outputToken.logoURI}>
-                          <AvatarBadge borderWidth={2}>
-                            <Image
-                              src={requestedChain?.iconUrlSync}
-                              alt={requestedChain?.name}
-                              width="14px"
-                              height="14px"
-                              layout="fixed"
-                              objectFit="contain"
-                              className="rounded-full"
-                            />
-                          </AvatarBadge>
-                        </Avatar>
-                        <Text textStyle="titleLg">{outputToken.symbol}</Text>
-                      </Flex>
-                    </Flex>
-                  </Flex>
-
-                  <Flex direction="column" pt="10px" gap="5px" mt={2}>
-                    <Flex direction="row" justifyContent="space-between">
-                      <Text textStyle="label" variant="secondary" fontWeight="bold">
-                        Swap Rate
-                      </Text>
-                      <Text fontSize="sm">
-                        {inputToken && outputToken ? (
-                          quoteLoading ? (
-                            <Spinner thickness="2px" speed="0.65s" emptyColor="gray.200" color="textInteractive" size="sm" />
-                          ) : (
-                            <>
-                              1 {outputToken.symbol} = {swapRate} {inputToken.symbol}
-                            </>
-                          )
+                <Flex direction="column" gap="3px">
+                  <Flex
+                    width="100%"
+                    backgroundColor="bgSecondary"
+                    borderTopRadius="md"
+                    paddingX={4}
+                    paddingY={6}
+                    flexDirection="row"
+                    justifyContent="space-between"
+                    mt="10px"
+                  >
+                    <Flex direction="column" flex="1">
+                      <Text textStyle="headline">
+                        {quoteLoading ? (
+                          <Spinner
+                            thickness="2px"
+                            speed="0.65s"
+                            emptyColor="gray.200"
+                            color="textInteractive"
+                            size="sm"
+                          />
                         ) : (
-                          "--"
+                          formattedQuoteAmount
                         )}
                       </Text>
-                    </Flex>
-
-                    <Flex direction="row" justifyContent="space-between" alignItems="center">
-                      <Flex direction="row" boxSizing="border-box">
-                        <Text textStyle="label" variant="secondary" fontWeight="bold">
-                          Hopscotch Fee
-                        </Text>
-                        <Tooltip
-                          label="This app currently does not take a fee from transactions. In the future it may to help support development."
-                          p={3}
-                          boxSize="borderBox"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          hasArrow
-                          backgroundColor="textPrimary"
-                          isOpen={isFeeTooltipOpen}
-                        >
-                          <InfoIcon
-                            boxSize="13px"
-                            m="auto"
-                            ml={1.5}
-                            color="textSecondary"
-                            onMouseEnter={() => setIsFeeTooltipOpen(true)}
-                            onMouseLeave={() => setIsFeeTooltipOpen(false)}
-                            onClick={() => setIsFeeTooltipOpen(true)}
-                          />
-                        </Tooltip>
-                      </Flex>
-
-                      <Text fontSize="sm">Free</Text>
-                    </Flex>
-
-                    <Flex direction="row" justifyContent="space-between">
-                      <Text textStyle="label" variant="secondary" fontWeight="bold">
-                        Network
+                      <Text textStyle="bodyMd" variant="secondary">
+                        ${inputTokenUsdAmount}
                       </Text>
-                      <Flex align="center">
-                        <Image
-                          src={requestedChain?.iconUrlSync}
-                          alt={requestedChain?.name}
-                          width={16}
-                          height={16}
-                          layout="fixed"
-                          objectFit="contain"
-                          className="rounded-full"
-                        />
-                        <Text fontSize="sm" pl="4px">
-                          {requestedChain?.name}
-                        </Text>
-                      </Flex>
+                    </Flex>
+
+                    <Flex flexDirection="column" justifyContent="center">
+                      <TokenSelect
+                        portalRef={ref}
+                        token={inputToken}
+                        setToken={setInputToken}
+                        isDisabled={!onExpectedChain}
+                      />
+                    </Flex>
+                  </Flex>
+                  <Flex
+                    width="100%"
+                    backgroundColor="bgSecondary"
+                    borderBottomRadius="md"
+                    padding={4}
+                    flexDirection="row"
+                    justifyContent="space-between"
+                  >
+                    <Flex direction="column">
+                      <Text textStyle="titleSm" variant="secondary">
+                        They receive:
+                      </Text>
+                      <Text textStyle="headline">{formattedOutputAmount}</Text>
+                      <Text textStyle="bodyMd" variant="secondary">
+                        ${outputTokenUsdAmount}
+                      </Text>
+                    </Flex>
+                    <Flex align="center">
+                      <Avatar height="32px" width="32px" mr={2} src={outputToken.logoURI}>
+                        <AvatarBadge borderWidth={2}>
+                          <Image
+                            src={requestedChain?.iconUrlSync}
+                            alt={requestedChain?.name}
+                            width="14px"
+                            height="14px"
+                            layout="fixed"
+                            objectFit="contain"
+                            className="rounded-full"
+                          />
+                        </AvatarBadge>
+                      </Avatar>
+                      <Text textStyle="titleLg">{outputToken.symbol}</Text>
                     </Flex>
                   </Flex>
                 </Flex>
-              </>
+
+                <Flex direction="column" pt="10px" gap="5px" mt={2}>
+                  <Flex direction="row" justifyContent="space-between">
+                    <Text textStyle="label" variant="secondary" fontWeight="bold">
+                      Swap Rate
+                    </Text>
+                    <Text fontSize="sm">
+                      {inputToken && outputToken ? (
+                        quoteLoading ? (
+                          <Spinner
+                            thickness="2px"
+                            speed="0.65s"
+                            emptyColor="gray.200"
+                            color="textInteractive"
+                            size="sm"
+                          />
+                        ) : (
+                          <>
+                            1 {outputToken.symbol} = {swapRate} {inputToken.symbol}
+                          </>
+                        )
+                      ) : (
+                        "--"
+                      )}
+                    </Text>
+                  </Flex>
+
+                  <Flex direction="row" justifyContent="space-between" alignItems="center">
+                    <Flex direction="row" boxSizing="border-box">
+                      <Text textStyle="label" variant="secondary" fontWeight="bold">
+                        Hopscotch Fee
+                      </Text>
+                      <Tooltip
+                        label="This app currently does not take a fee from transactions. In the future it may to help support development."
+                        p={3}
+                        boxSize="borderBox"
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        hasArrow
+                        backgroundColor="textPrimary"
+                        isOpen={isFeeTooltipOpen}
+                      >
+                        <InfoIcon
+                          boxSize="13px"
+                          m="auto"
+                          ml={1.5}
+                          color="textSecondary"
+                          onMouseEnter={() => setIsFeeTooltipOpen(true)}
+                          onMouseLeave={() => setIsFeeTooltipOpen(false)}
+                          onClick={() => setIsFeeTooltipOpen(true)}
+                        />
+                      </Tooltip>
+                    </Flex>
+
+                    <Text fontSize="sm">Free</Text>
+                  </Flex>
+
+                  <Flex direction="row" justifyContent="space-between">
+                    <Text textStyle="label" variant="secondary" fontWeight="bold">
+                      Network
+                    </Text>
+                    <Flex align="center">
+                      <Image
+                        src={requestedChain?.iconUrlSync}
+                        alt={requestedChain?.name}
+                        width={16}
+                        height={16}
+                        layout="fixed"
+                        objectFit="contain"
+                        className="rounded-full"
+                      />
+                      <Text fontSize="sm" pl="4px">
+                        {requestedChain?.name}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </>
+          )}
+
+          <Flex direction="column" gap="8px" width="100%" mt={4}>
+            {!pendingTransaction && (
+              <Button
+                variant={onExpectedChain ? primaryButtonVariant : "critical"}
+                type="submit"
+                width="100%"
+                minHeight="48px"
+                size="lg"
+                onClick={() => {
+                  primaryButtonOnClickFunction && primaryButtonOnClickFunction();
+                }}
+                isDisabled={primaryButtonOnClickFunction == undefined}
+              >
+                {primaryButtonText}
+              </Button>
             )}
 
-            <Flex direction="column" gap="8px" width="100%" mt={4}>
-              {!pendingTransaction && (
-                <Button
-                  variant={onExpectedChain ? primaryButtonVariant : "critical"}
-                  type="submit"
-                  width="100%"
-                  minHeight="48px"
-                  size="lg"
-                  onClick={() => {
-                    primaryButtonOnClickFunction && primaryButtonOnClickFunction();
-                  }}
-                  isDisabled={primaryButtonOnClickFunction == undefined}
-                >
-                  {primaryButtonText}
-                </Button>
-              )}
-
-              {showEtherscanButton && (
-                <Button
-                  variant="secondary"
-                  color="primary"
-                  type="submit"
-                  width="100%"
-                  minHeight="48px"
-                  size="lg"
-                  onClick={() => {
-                    openLink(transactionExplorerLink, true);
-                  }}
-                >
-                  View transaction
-                  <Image src={ArrowSquareOutIcon} alt="copy" />
-                </Button>
-              )}
-            </Flex>
-      </PrimaryCard>
+            {showEtherscanButton && (
+              <Button
+                variant="secondary"
+                color="primary"
+                type="submit"
+                width="100%"
+                minHeight="48px"
+                size="lg"
+                onClick={() => {
+                  openLink(transactionExplorerLink, true);
+                }}
+              >
+                View transaction
+                <Image src={ArrowSquareOutIcon} alt="copy" />
+              </Button>
+            )}
+          </Flex>
+        </PrimaryCard>
     </Flex>
+    </Fade>
   );
 };
 
