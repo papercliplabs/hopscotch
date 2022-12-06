@@ -367,7 +367,7 @@ const RequestPage = () => {
               </Flex>
             ) : pendingTransaction ? (
               <Flex direction="column" alignItems="center" justifyContent="center" flex="1">
-                <Spinner thickness="4px" speed="1.0s" emptyColor="gray.200" color="blue.500" boxSize="80px" mb={6} />
+                <Spinner thickness="4px" speed="1.0s" emptyColor="gray.200" color="textInteractive" boxSize="80px" mb={6} />
                 <Text textStyle="titleLg">{pendingTransactionMessage}</Text>
                 <Text textStyle="bodyMd" variant="secondary">
                   Please wait...
@@ -403,7 +403,7 @@ const RequestPage = () => {
                       <Flex direction="column" flex="1">
                         <Text textStyle="headline">
                           {quoteLoading ? (
-                            <Spinner thickness="2px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="sm" />
+                            <Spinner thickness="2px" speed="0.65s" emptyColor="gray.200" color="textInteractive" size="sm" />
                           ) : (
                             formattedQuoteAmount
                           )}
@@ -461,7 +461,7 @@ const RequestPage = () => {
                       <Text fontSize="sm">
                         {inputToken && outputToken ? (
                           quoteLoading ? (
-                            <Spinner thickness="2px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="sm" />
+                            <Spinner thickness="2px" speed="0.65s" emptyColor="gray.200" color="textInteractive" size="sm" />
                           ) : (
                             <>
                               1 {outputToken.symbol} = {swapRate} {inputToken.symbol}

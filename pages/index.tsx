@@ -1,6 +1,6 @@
 import { FC, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { Button, Text, Flex, Box, GridItem, NumberInputField, NumberInput } from "@chakra-ui/react";
+import { Button, Text, Flex, Fade, Center, Spinner, NumberInputField, NumberInput } from "@chakra-ui/react";
 import { useConnectModal, useChainModal } from "@papercliplabs/rainbowkit";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
@@ -15,6 +15,37 @@ import TokenSelect from "@/components/TokenSelect";
 import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import { useChain } from "@/hooks/useChain";
 import { ConnectedAvatar } from "@/components/EnsAvatar";
+import { ParentOverlay } from "@/components/ParentOverlay";
+import { colors } from "@/theme/colors";
+
+interface CreatingRequestOverlayProps {
+  isOpen?: boolean;
+}
+
+const CreatingRequestOverlay: FC<CreatingRequestOverlayProps> = (props) => {
+  const { isOpen = false } = props;
+  return (
+    <Fade in={isOpen}>
+    <ParentOverlay p={4}>
+      <Center display="flex" flexDirection="column" height="100%">
+        <Spinner
+          thickness="8px"
+          speed="1.0s"
+          emptyColor="bgPrimary"
+          color="textInteractive"
+          boxSize="72px"
+          mb={4}
+          style={{
+            borderTopColor: colors.bgPrimary,
+          }}
+          />
+        <Text textStyle="titleLg" mb={1}>Creating request</Text>
+        <Text textStyle="bodyMd">Please wait...</Text>
+      </Center>
+    </ParentOverlay>
+    </Fade>
+  );
+};
 
 const CreateRequest: FC = () => {
   const router = useRouter();
@@ -192,6 +223,7 @@ const CreateRequest: FC = () => {
               </Button>
             </Flex>
           </Flex>
+      <CreatingRequestOverlay isOpen={true} />
       </PrimaryCard>
     </Flex>
   );

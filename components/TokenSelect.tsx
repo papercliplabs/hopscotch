@@ -22,26 +22,11 @@ import Image from "next/image";
 
 import { Token } from "@/common/types";
 import { useTokenList } from "@/hooks/useTokenList";
-import { NestedPortal } from "./NestedPortal";
 import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import { NetworkSelect } from "./NetworkSelect";
 import { formatNumber, formatTokenBalance } from "@/common/utils";
 import { useChain } from "@/hooks/useChain";
-
-const ParentOverlay: FC<BoxProps> = (props) => (
-  <Box
-    position="absolute"
-    top={0}
-    left={0}
-    right={0}
-    bottom={0}
-    zIndex={100}
-    overflow="hidden"
-    bg="rgb(255, 255, 255, 1)"
-    borderRadius="md"
-    {...props}
-  />
-);
+import { ParentOverlay } from "@/components/ParentOverlay";
 
 interface SlideMenuProps {
   isOpen: boolean;
