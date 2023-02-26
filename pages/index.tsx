@@ -1,13 +1,9 @@
 import { FC, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import { Button, Text, Flex, Fade, Center, Spinner, NumberInputField, NumberInput } from "@chakra-ui/react";
+import { Button, Text, Flex, Fade, NumberInputField, NumberInput } from "@chakra-ui/react";
 import { useConnectModal, useChainModal } from "@papercliplabs/rainbowkit";
-import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 
-import { useInsertRequestMutation } from "@/graphql/generated/graphql";
-import { useAuth } from "@/providers/auth";
 import { FEE_BIPS } from "@/common/constants";
 import { Token } from "@/common/types";
 import { formatNumber } from "@/common/utils";
@@ -15,99 +11,22 @@ import TokenSelect from "@/components/TokenSelect";
 import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import { useChain } from "@/hooks/useChain";
 import { ConnectedAvatar } from "@/components/EnsAvatar";
-import { ParentOverlay } from "@/components/ParentOverlay";
-import { colors } from "@/theme/colors";
+import { useCreateRequest } from "@/hooks/useCreateRequest";
+import { useRequestData } from "@/hooks/useRequestData";
 
-interface CreatingRequestOverlayProps {
-  isOpen?: boolean;
-}
-
-const CreatingRequestOverlay: FC<CreatingRequestOverlayProps> = (props) => {
-  const { isOpen = false } = props;
-  return (
-    <Fade in={isOpen}>
-      <ParentOverlay p={4} pointerEvents={isOpen ? "inherit" : "none"}>
-        <Center display="flex" flexDirection="column" height="100%">
-          <Spinner
-            thickness="8px"
-            speed="1.0s"
-            emptyColor="bgPrimary"
-            color="textInteractive"
-            boxSize="72px"
-            mb={4}
-            style={{
-              borderTopColor: colors.bgPrimary,
-            }}
-          />
-          <Text textStyle="titleLg" mb={1}>
-            Creating request
-          </Text>
-          <Text textStyle="bodyMd">Please wait...</Text>
-        </Center>
-      </ParentOverlay>
-    </Fade>
-  );
-};
-
-const CreateRequest: FC = () => {
-  const MODAL_MINIMUM_DISPLAY_TIME = 2000;
-  const router = useRouter();
-  const { ensureUser } = useAuth();
-
-  const [insertRequest, { loading: insertRequestLoading }] = useInsertRequestMutation({
-    onCompleted: (data: any) => {
-      const requestId = data?.insert_request_one?.id;
-      setTimeout(() => {
-        router.push(`/request/${requestId}/share`);
-      }, MODAL_MINIMUM_DISPLAY_TIME);
-    },
-  });
-
-  // a modal is open state dependant on insertRequestLoading but we want to show the modal for a minimum amount of time
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-  useMemo(() => {
-    if (insertRequestLoading) {
-      setModalIsOpen(true);
-    } else {
-      setTimeout(() => {
-        setModalIsOpen(false);
-      }, MODAL_MINIMUM_DISPLAY_TIME);
-    }
-  }, [insertRequestLoading]);
-
+function CreateRequest() {
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
-  const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(false);
 
   const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
   const [tokenAmount, setTokenAmount] = useState<string>("");
   const activeChain = useChain();
   const { address } = useAccount();
 
-  async function createRequest() {
-    if (selectedToken != undefined && tokenAmount != "" && activeChain) {
-      const tokenAmountRaw = ethers.utils.parseUnits(tokenAmount, selectedToken.decimals);
-
-      setPendingConfirmation(true);
-      const userId = await ensureUser();
-      setPendingConfirmation(false);
-
-      if (userId != undefined && userId != null) {
-        const { data: insertData } = await insertRequest({
-          variables: {
-            object: {
-              recipient_token_amount: tokenAmountRaw.toString(),
-              recipient_token_address: selectedToken.address,
-              chain_id: activeChain.id,
-              user_id: userId,
-            },
-          },
-        });
-      }
-    } else {
-      console.log("Invalid data");
-    }
-  }
+  const { createRequest, transaction, pendingConfirmation, clearTransaction } = useCreateRequest(
+    selectedToken?.address,
+    tokenAmount
+  );
 
   const tokenAmountUsd =
     selectedToken?.priceUsd && tokenAmount ? selectedToken.priceUsd * parseFloat(tokenAmount) : undefined;
@@ -132,7 +51,7 @@ const CreateRequest: FC = () => {
     } else if (pendingConfirmation) {
       return { buttonText: "Waiting for signature", onClickFunction: undefined, buttonVariant: "primary" };
     } else {
-      return { buttonText: "Get a link", onClickFunction: createRequest, buttonVariant: "primary" };
+      return { buttonText: "Create request", onClickFunction: createRequest, buttonVariant: "primary" };
     }
   }, [tokenAmount, selectedToken, address, pendingConfirmation, activeChain.unsupported]);
 
@@ -249,12 +168,11 @@ const CreateRequest: FC = () => {
               </Button>
             </Flex>
           </Flex>
-          <CreatingRequestOverlay isOpen={modalIsOpen} />
         </PrimaryCard>
       </Fade>
     </Flex>
   );
-};
+}
 
 const Index = () => {
   return <CreateRequest />;

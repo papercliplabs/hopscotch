@@ -1,64 +1,55 @@
-import { Request_Status_Enum, useGetRequestQuery, useUpdateRequestStatusMutation } from "@/graphql/generated/graphql";
-import { BigNumber } from "ethers";
-import { useCallback, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { BigNumber, ethers } from "ethers";
+import { useAccount, useContractRead, useSigner } from "wagmi";
+import { TransactionRequest } from "@ethersproject/providers";
+import { Transaction } from "@papercliplabs/rainbowkit";
+
+import { HOPSCOTCH_ADDRESS } from "@/common/constants";
+import { useSendTransaction } from "./useSendTransaction";
+import HopscotchAbi from "@/abis/hopscotch.json";
 
 export type RequestData = {
-  id: string;
+  id: number;
   recipientAddress: string;
   recipientTokenAddress: string;
   recipientTokenAmount: BigNumber;
-  chainId: number;
-  status: Request_Status_Enum;
-  transactionHash?: string;
+  paid: boolean;
 };
 
-/**
- * Get the request data for a request id
- * @param id id of the request
- * @returns
- *  request data: data for the request, or undefined if loading or not found (TODO: give status also)
- *  updateRequestStatus:  callback to change the request status for the request
- */
-export function useRequestData(id: string): {
+export function useRequestData(
+  chainId?: number, // TODO: make work for multi-chain
+  requestId?: number
+): {
   requestData?: RequestData;
-  updateRequestStatus: (hash: string, newStatus: Request_Status_Enum) => Promise<void>;
+  refetch: () => void;
 } {
-  const { data: requestQuery, loading, error, refetch } = useGetRequestQuery({ variables: { id }, skip: !id });
-  const [updateRequestStatusMutation] = useUpdateRequestStatusMutation();
+  const { data, refetch } = useContractRead({
+    addressOrName: HOPSCOTCH_ADDRESS,
+    contractInterface: HopscotchAbi,
+    functionName: "getRequest",
+    args: [requestId],
+    enabled: requestId != undefined,
+  });
+
+  function refetchInternal(): void {
+    refetch();
+  }
 
   const requestData = useMemo(() => {
-    let ret: RequestData | undefined = undefined;
-
-    if (requestQuery && requestQuery.request_by_pk && requestQuery.request_by_pk.owner) {
-      ret = {
-        id: requestQuery.request_by_pk.id,
-        recipientAddress: requestQuery.request_by_pk.owner.public_key,
-        recipientTokenAddress: requestQuery.request_by_pk.recipient_token_address,
-        recipientTokenAmount: BigNumber.from(requestQuery.request_by_pk.recipient_token_amount),
-        chainId: requestQuery.request_by_pk.chain_id,
-        status: requestQuery.request_by_pk.status,
-        transactionHash: requestQuery.request_by_pk.transaction_hash ?? undefined,
+    let requestData: RequestData | undefined = undefined;
+    if (requestId != undefined && data != undefined && data.length == 4) {
+      requestData = {
+        id: requestId,
+        recipientAddress: data[0],
+        recipientTokenAddress: data[1],
+        recipientTokenAmount: data[2],
+        paid: data[3],
       };
     }
+    return requestData;
+  }, [data]);
 
-    return ret;
-  }, [requestQuery]);
+  console.log(requestData);
 
-  const updateRequestStatus = useCallback(
-    async (hash: string, newStatus: Request_Status_Enum) => {
-      if (id && requestData) {
-        await updateRequestStatusMutation({
-          variables: {
-            id: id,
-            status: newStatus,
-            transactionHash: hash,
-          },
-        });
-        refetch();
-      }
-    },
-    [id, requestData, updateRequestStatusMutation]
-  );
-
-  return { requestData, updateRequestStatus };
+  return { requestData: requestData, refetch: refetchInternal };
 }

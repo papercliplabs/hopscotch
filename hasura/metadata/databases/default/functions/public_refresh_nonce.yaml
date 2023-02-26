@@ -1,5 +1,0 @@
-function:
-  schema: public
-  name: refresh_nonce
-configuration:
-  exposed_as: mutation

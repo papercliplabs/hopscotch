@@ -1,3 +1,0 @@
-INSERT INTO request_status (status)
-VALUES ('PAID'), ('UNPAID'), ('TRANSACTION_PENDING'), ('FAILED')
-ON CONFLICT (status) DO NOTHING;

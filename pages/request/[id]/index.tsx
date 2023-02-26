@@ -1,4 +1,3 @@
-import { Request_Status_Enum } from "@/graphql/generated/graphql";
 import { InfoIcon, LinkIcon } from "@chakra-ui/icons";
 import { Avatar, AvatarBadge, Button, Fade, Flex, Link, Spinner, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
@@ -25,7 +24,7 @@ import circleFailImage from "@/public/static/CircleFail.svg";
 import Image from "next/image";
 import { colors } from "@/theme/colors";
 
-const RequestPage = () => {
+export default function RequestPage() {
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
   const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState<boolean>(false);
   const toast = useToast();
@@ -587,6 +586,4 @@ const RequestPage = () => {
       </Flex>
     </Fade>
   );
-};
-
-export default RequestPage;
+}

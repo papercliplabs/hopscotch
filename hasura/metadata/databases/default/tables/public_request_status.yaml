@@ -1,4 +1,0 @@
-table:
-  schema: public
-  name: request_status
-is_enum: true
