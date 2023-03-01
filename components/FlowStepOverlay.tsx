@@ -1,10 +1,9 @@
-import { colors } from "@/theme/colors";
-import { ArrowBackIcon, ChevronLeftIcon } from "@chakra-ui/icons";
-import { Box, Button, Center, CloseButton, Fade, Flex, Spinner, Text } from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import { Box, Button, Center, Fade, Flex, Text } from "@chakra-ui/react";
 import { ReactElement } from "react";
 import { ParentOverlay } from "./ParentOverlay";
 
-interface ButtonInfo {
+export interface ButtonInfo {
     text: string;
     rightIcon?: ReactElement;
     onClick?: () => void;
@@ -18,6 +17,7 @@ interface FlowStepOverlayProps {
     subtitle?: string;
     body?: string;
     bodyBold?: string;
+    custom?: ReactElement;
     primaryButtonInfo?: ButtonInfo;
     secondaryButtonInfo?: ButtonInfo;
     bottomText?: string;
@@ -31,6 +31,7 @@ export default function FlowStepOverlay({
     subtitle,
     body,
     bodyBold,
+    custom,
     primaryButtonInfo,
     secondaryButtonInfo,
     bottomText,
@@ -54,7 +55,7 @@ export default function FlowStepOverlay({
                     </Flex>
 
                     <Flex direction="column" gap="4px" width="100%" justifyContent="center">
-                        <Flex width="100%" justifyContent="center">
+                        <Flex width="100%" justifyContent="center" pb="8px">
                             {icon}
                         </Flex>
 
@@ -72,6 +73,8 @@ export default function FlowStepOverlay({
                     </Flex>
 
                     <Flex direction="column" width="100%" gap="8px">
+                        {custom}
+
                         {primaryButtonInfo && (
                             <Button
                                 variant="primary"

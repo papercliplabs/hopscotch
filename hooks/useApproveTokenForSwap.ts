@@ -21,61 +21,63 @@ import { useTokenAllowance } from "@/hooks/useTokenAllowance";
  *    clearTransaction: clear the transaction if one exists, this is useful if it failed and requires a retry
  */
 export function useApproveErc20ForSwap(
-  tokenAddress?: string,
-  minimumApprovalAmount?: BigNumber
+    tokenAddress?: string,
+    minimumApprovalAmount?: BigNumber
 ): {
-  requiresApproval?: boolean;
-  transaction?: Transaction;
-  pendingConfirmation: boolean;
-  approve: () => Promise<string>;
-  clearTransaction: () => void;
+    requiresApproval?: boolean;
+    transaction?: Transaction;
+    pendingWalletSignature: boolean;
+    abortPendingSignature: () => void;
+    approve: () => Promise<string>;
+    clearTransaction: () => void;
 } {
-  const [transcationRequest, setTranscationRequest] = useState<TransactionRequest>({});
+    const [transcationRequest, setTranscationRequest] = useState<TransactionRequest>({});
 
-  const { allowance, refetch: refetchAllowance } = useTokenAllowance(tokenAddress, V3_SWAP_ROUTER_ADDRESS);
+    const { allowance, refetch: refetchAllowance } = useTokenAllowance(tokenAddress, V3_SWAP_ROUTER_ADDRESS);
 
-  const { data: signer } = useSigner();
-  const {
-    transaction,
-    pendingConfirmation,
-    sendTransaction: approve,
-    clearTransaction,
-  } = useSendTransaction(transcationRequest, "approve", Object.keys(transcationRequest).length != 0);
+    const { data: signer } = useSigner();
+    const {
+        transaction,
+        pendingWalletSignature,
+        abortPendingSignature,
+        sendTransaction: approve,
+        clearTransaction,
+    } = useSendTransaction(transcationRequest, "approve", Object.keys(transcationRequest).length != 0);
 
-  // Set transaction request
-  useEffect(() => {
-    async function configureTransaction() {
-      let request = {};
+    // Set transaction request
+    useEffect(() => {
+        async function configureTransaction() {
+            let request = {};
 
-      if (signer && tokenAddress) {
-        const contract = new ethers.Contract(tokenAddress, erc20ABI, signer);
-        const address = await signer.getAddress();
+            if (signer && tokenAddress) {
+                const contract = new ethers.Contract(tokenAddress, erc20ABI, signer);
+                const address = await signer.getAddress();
 
-        request = {
-          from: address,
-          to: tokenAddress,
-          data: contract.interface.encodeFunctionData("approve", [V3_SWAP_ROUTER_ADDRESS, MaxUint256]),
-        };
-      }
+                request = {
+                    from: address,
+                    to: tokenAddress,
+                    data: contract.interface.encodeFunctionData("approve", [V3_SWAP_ROUTER_ADDRESS, MaxUint256]),
+                };
+            }
 
-      setTranscationRequest(request);
-    }
+            setTranscationRequest(request);
+        }
 
-    configureTransaction();
-  }, [tokenAddress, signer, setTranscationRequest]);
+        configureTransaction();
+    }, [tokenAddress, signer, setTranscationRequest]);
 
-  // Refetch allowance on tx state change (TODO: this should be callback on tx completion)
-  useEffect(() => {
-    refetchAllowance();
-  }, [transaction]);
+    // Refetch allowance on tx state change (TODO: this should be callback on tx completion)
+    useEffect(() => {
+        refetchAllowance();
+    }, [transaction]);
 
-  const requiresApproval = useMemo(() => {
-    if (minimumApprovalAmount && allowance) {
-      return allowance.lt(minimumApprovalAmount);
-    } else {
-      return undefined;
-    }
-  }, [allowance, minimumApprovalAmount]);
+    const requiresApproval = useMemo(() => {
+        if (minimumApprovalAmount && allowance) {
+            return allowance.lt(minimumApprovalAmount);
+        } else {
+            return undefined;
+        }
+    }, [allowance, minimumApprovalAmount]);
 
-  return { requiresApproval, transaction, pendingConfirmation, approve, clearTransaction };
+    return { requiresApproval, transaction, pendingWalletSignature, abortPendingSignature, approve, clearTransaction };
 }

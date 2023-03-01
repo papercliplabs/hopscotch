@@ -1,10 +1,7 @@
-import { openLink } from "@/common/utils";
 import { colors } from "@/theme/colors";
-import { ArrowBackIcon, ChevronLeftIcon } from "@chakra-ui/icons";
-import { Box, Button, Center, CloseButton, Fade, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
 import { ReactElement } from "react";
 import FlowStepOverlay from "./FlowStepOverlay";
-import { ParentOverlay } from "./ParentOverlay";
 
 interface PendingSignatureOverlayProps {
     isOpen: boolean;

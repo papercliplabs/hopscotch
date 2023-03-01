@@ -3,6 +3,7 @@ import { ReactElement } from "react";
 import FlowStepOverlay from "./FlowStepOverlay";
 import circleFailImage from "@/public/static/CircleFail.svg";
 import Image from "next/image";
+import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 
 interface FailedTransactionOverlayProps {
     isOpen: boolean;
@@ -34,6 +35,7 @@ export default function FailedTransactionOverlay({
             secondaryButtonInfo={{
                 text: "View transaction",
                 onClick: () => openLink(transactionLink, true),
+                rightIcon: <Image src={ArrowSquareOutIcon} alt="copy" />,
             }}
         />
     );

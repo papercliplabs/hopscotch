@@ -1,8 +1,9 @@
 import { openLink } from "@/common/utils";
 import { ReactElement } from "react";
-import FlowStepOverlay from "./FlowStepOverlay";
+import FlowStepOverlay, { ButtonInfo } from "./FlowStepOverlay";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import Image from "next/image";
+import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 
 interface SuccessfulTransactionOverlayProps {
     isOpen: boolean;
@@ -10,6 +11,7 @@ interface SuccessfulTransactionOverlayProps {
     body?: string;
     bodyBold?: string;
     transactionLink?: string;
+    primaryButtonInfo?: ButtonInfo;
     bottomText?: string;
 }
 
@@ -19,8 +21,16 @@ export default function SuccessfulTransactionOverlay({
     body,
     bodyBold,
     transactionLink,
+    primaryButtonInfo,
     bottomText,
 }: SuccessfulTransactionOverlayProps): ReactElement {
+    const secondaryButtonInfo = transactionLink
+        ? {
+              text: "Receipt",
+              onClick: () => openLink(transactionLink, true),
+              rightIcon: <Image src={ArrowSquareOutIcon} alt="copy" />,
+          }
+        : undefined;
     return (
         <FlowStepOverlay
             isOpen={isOpen}
@@ -28,10 +38,8 @@ export default function SuccessfulTransactionOverlay({
             subtitle={subtitle}
             body={body}
             bodyBold={bodyBold}
-            secondaryButtonInfo={{
-                text: "Receipt",
-                onClick: () => openLink(transactionLink, true),
-            }}
+            primaryButtonInfo={primaryButtonInfo}
+            secondaryButtonInfo={secondaryButtonInfo}
             bottomText={bottomText}
         />
     );

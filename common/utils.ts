@@ -14,55 +14,66 @@ import { BigNumber, ethers } from "ethers";
  * @returns nicely formatted number, for example if number is 11023 this will return 1.10K
  */
 export function formatNumber(
-  num: number | string | undefined,
-  decimals: number = 2,
-  trimTrailingZeros: boolean = true
+    num: number | string | undefined,
+    decimals: number = 2,
+    trimTrailingZeros: boolean = true
 ): string {
-  const suffixes = ["", "K", "M", "B", "T"];
+    const suffixes = ["", "K", "M", "B", "T"];
 
-  let formattedNum = num;
+    let formattedNum = num;
 
-  if (formattedNum == undefined || isNaN(Number(num))) {
-    return "--";
-  }
-
-  // If it is represented as a sting, convert to number first
-  if (typeof formattedNum === "string") {
-    formattedNum = parseFloat(formattedNum);
-
-    if (isNaN(formattedNum)) {
-      return num as string; // It isn't a number
+    if (formattedNum == undefined || isNaN(Number(num))) {
+        return "--";
     }
-  }
 
-  let suffixIndex = Math.floor((formattedNum.toFixed(0).toString().length - 1) / 3);
+    // If it is represented as a sting, convert to number first
+    if (typeof formattedNum === "string") {
+        formattedNum = parseFloat(formattedNum);
 
-  // Clamp to max suffix
-  if (suffixIndex >= suffixes.length) {
-    suffixIndex = 0;
-  }
+        if (isNaN(formattedNum)) {
+            return num as string; // It isn't a number
+        }
+    }
 
-  formattedNum /= 10 ** (3 * suffixIndex);
+    let suffixIndex = Math.floor((formattedNum.toFixed(0).toString().length - 1) / 3);
 
-  // +number is clever trick to remove trailing zeros
-  formattedNum = trimTrailingZeros ? +formattedNum.toFixed(decimals) : formattedNum.toFixed(decimals);
-  return formattedNum + suffixes[suffixIndex];
+    // Clamp to max suffix
+    if (suffixIndex >= suffixes.length) {
+        suffixIndex = 0;
+    }
+
+    formattedNum /= 10 ** (3 * suffixIndex);
+
+    // +number is clever trick to remove trailing zeros
+    formattedNum = trimTrailingZeros ? +formattedNum.toFixed(decimals) : formattedNum.toFixed(decimals);
+    return formattedNum + suffixes[suffixIndex];
 }
 
 /**
- * Format a token balance in a human readable way
- * @param tokenBalance token balance (ex 1e6 for 1 USDC)
+ * Format a token amount in a human readable way
+ * @param tokenAmount token balance (ex 1e6 for 1 USDC)
  * @param tokenDecimals number of decimals the token balances uses
  * @param decimalPrecision nunber of decimals to keep
  */
-export function formatTokenBalance(
-  tokenBalance: Optional<BigNumber>,
-  tokenDecimals: Optional<number>,
-  decimalPrecision: number
+export function formatTokenAmount(
+    tokenAmount: Optional<BigNumber>,
+    tokenDecimals: Optional<number>,
+    decimalPrecision: number
 ): string {
-  const tokens = tokenBalance && tokenDecimals ? ethers.utils.formatUnits(tokenBalance, tokenDecimals) : undefined;
+    const tokens = tokenAmount && tokenDecimals ? ethers.utils.formatUnits(tokenAmount, tokenDecimals) : undefined;
 
-  return formatNumber(tokens, decimalPrecision);
+    return formatNumber(tokens, decimalPrecision);
+}
+
+/**
+ * Parse a token amount from a human readable format
+ * @param value
+ * @param tokenDecimals
+ * @returns
+ */
+export function parseTokenAmount(value: Optional<string>, tokenDecimals: Optional<number>): BigNumber {
+    const tokens = value && tokenDecimals ? ethers.utils.parseUnits(value, tokenDecimals) : undefined;
+    return tokens;
 }
 
 /**
@@ -72,28 +83,28 @@ export function formatTokenBalance(
  * @returns shortened address
  */
 export function shortAddress(address: string, length: Length): string {
-  const len = address.length;
-  let keepLen = 12;
-  switch (length) {
-    case Length.SHORT:
-      keepLen = 6;
-      break;
-    case Length.MEDIUM:
-      keepLen = 10;
-      break;
-    case Length.LONG:
-      keepLen = 20;
-      break;
-  }
-  if (len < keepLen) {
-    return address;
-  } else {
-    return address.slice(0, keepLen / 2) + "..." + address.slice(len - Math.max(4, keepLen / 2), len);
-  }
+    const len = address.length;
+    let keepLen = 12;
+    switch (length) {
+        case Length.SHORT:
+            keepLen = 6;
+            break;
+        case Length.MEDIUM:
+            keepLen = 10;
+            break;
+        case Length.LONG:
+            keepLen = 20;
+            break;
+    }
+    if (len < keepLen) {
+        return address;
+    } else {
+        return address.slice(0, keepLen / 2) + "..." + address.slice(len - Math.max(4, keepLen / 2), len);
+    }
 }
 
 export function getNativeTokenAddress(chainId: number): string | undefined {
-  return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.address;
+    return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.address;
 }
 
 /**
@@ -101,21 +112,26 @@ export function getNativeTokenAddress(chainId: number): string | undefined {
  * @param chian chain to get the wrapped token address for
  */
 export function getWrappedTokenAddress(chainId: number): string | undefined {
-  return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.wrappedAddress;
+    return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.wrappedAddress;
 }
 
 export function getSupportedChainIds(): Array<number> {
-  return SUPPORTED_CHAINS.map((chain) => chain.id);
+    return SUPPORTED_CHAINS.map((chain) => chain.id);
 }
 
 export function openLink(url: string | undefined, newTab: boolean): void {
-  if (url) {
-    if (newTab) {
-      window.open(url, "_blank");
+    if (url) {
+        if (newTab) {
+            window.open(url, "_blank");
+        } else {
+            window.open(url, "_self");
+        }
     } else {
-      window.open(url, "_self");
+        console.log("NO URL");
     }
-  } else {
-    console.log("NO URL");
-  }
+}
+
+export function stringToNumber(s: string | undefined): number | undefined {
+    const parsedFloat = parseFloat(s ?? "");
+    return isNaN(parsedFloat) ? undefined : parsedFloat;
 }

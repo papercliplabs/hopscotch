@@ -1,47 +1,45 @@
-import { FC, useMemo, useRef, useState } from "react";
-import { Button, Text, Flex, Fade, NumberInputField, NumberInput, Spinner } from "@chakra-ui/react";
+import { useMemo, useRef, useState } from "react";
+import { Button, Text, Flex, Fade, NumberInputField, NumberInput } from "@chakra-ui/react";
 import { useConnectModal, useChainModal } from "@papercliplabs/rainbowkit";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 
 import { FEE_BIPS } from "@/common/constants";
 import { ExplorerLinkType, Token } from "@/common/types";
-import { formatNumber } from "@/common/utils";
+import { formatNumber, parseTokenAmount, stringToNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
 import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import { useChain } from "@/hooks/useChain";
 import { ConnectedAvatar } from "@/components/EnsAvatar";
 import { useCreateRequest } from "@/hooks/useCreateRequest";
-import { useRequestData } from "@/hooks/useRequestData";
-import FlowStepOverlay from "@/components/FlowStepOverlay";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
-
-import CopyIcon from "@/public/static/Copy.svg";
-import { colors } from "@/theme/colors";
 import PendingTransactionOverlay from "@/components/PendingTransactionOverlay";
 import PendingSignatureOverlay from "@/components/PendingSignatureOverlay";
-import SuccessfulTransactionOverlay from "@/components/SuccessfulTransactionOverlay";
 import FailedTransactionOverlay from "@/components/FailedTransactionOverlay";
+import CopyLinkOverlay from "@/components/CopyLinkOverlay";
 
 function CreateRequest() {
     const { openConnectModal } = useConnectModal();
     const { openChainModal } = useChainModal();
 
     const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
-    const [tokenAmount, setTokenAmount] = useState<string>("");
+    const [tokenAmountHumanReadable, setTokenAmountHumanReadable] = useState<string>("");
     const activeChain = useChain();
     const { address } = useAccount();
+
+    const tokenAmount = useMemo(() => {
+        return parseTokenAmount(tokenAmountHumanReadable, selectedToken?.decimals);
+    }, [tokenAmountHumanReadable, selectedToken]);
 
     const { createRequest, transaction, pendingWalletSignature, abortPendingSignature, clearTransaction } =
         useCreateRequest(selectedToken?.address, tokenAmount);
 
     const transactionExplorerLink = useExplorerLink(transaction?.hash, ExplorerLinkType.TRANSACTION, activeChain);
 
-    console.log(transaction);
-
-    const tokenAmountUsd =
-        selectedToken?.priceUsd && tokenAmount ? selectedToken.priceUsd * parseFloat(tokenAmount) : undefined;
-    const feeAmountUsd = tokenAmountUsd ? (tokenAmountUsd * FEE_BIPS) / 10000 : 0;
+    const tokenAmountHumanReadableUsd =
+        selectedToken?.priceUsd && tokenAmountHumanReadable
+            ? selectedToken.priceUsd * parseFloat(tokenAmountHumanReadable)
+            : undefined;
 
     const parse = (val: string) => val.replace(/^\$/, "");
 
@@ -57,12 +55,12 @@ function CreateRequest() {
             return { buttonText: "Connect wallet", onClickFunction: openConnectModal, buttonVariant: "secondary" };
         } else if (selectedToken == undefined) {
             return { buttonText: "Choose a token", onClickFunction: undefined, buttonVariant: "primary" };
-        } else if (tokenAmount == "") {
+        } else if (tokenAmountHumanReadable == "") {
             return { buttonText: "Enter token amount", onClickFunction: undefined, buttonVariant: "primary" };
         } else {
             return { buttonText: "Create request", onClickFunction: createRequest, buttonVariant: "primary" };
         }
-    }, [tokenAmount, selectedToken, address, activeChain.unsupported]);
+    }, [tokenAmountHumanReadable, selectedToken, address, activeChain.unsupported]);
 
     const ref = useRef(null);
 
@@ -105,8 +103,8 @@ function CreateRequest() {
                         <Flex direction="column" gap="8px">
                             <NumberInput
                                 height="48px"
-                                onChange={(valueString: string) => setTokenAmount(parse(valueString))}
-                                value={tokenAmount}
+                                onChange={(valueString: string) => setTokenAmountHumanReadable(parse(valueString))}
+                                value={tokenAmountHumanReadable}
                             >
                                 <NumberInputField
                                     _focusVisible={{
@@ -128,7 +126,10 @@ function CreateRequest() {
                                 />
                             </NumberInput>
                             <Text textStyle="bodyMd" color="textSecondary" width="100%" align="center">
-                                ${tokenAmountUsd ? formatNumber(tokenAmountUsd, 2, false) : "--"}
+                                $
+                                {tokenAmountHumanReadableUsd
+                                    ? formatNumber(tokenAmountHumanReadableUsd, 2, false)
+                                    : "--"}
                             </Text>
                         </Flex>
                         <TokenSelect
@@ -190,13 +191,12 @@ function CreateRequest() {
                         transactionLink={transactionExplorerLink}
                     />
 
-                    <SuccessfulTransactionOverlay
+                    <CopyLinkOverlay
                         isOpen={transaction?.status == "confirmed"}
-                        subtitle="All set!"
-                        body="Your payment request link was created for"
-                        bodyBold={`${tokenAmount} ${selectedToken?.symbol} on ${activeChain?.name}`}
+                        requestSummary={`${tokenAmountHumanReadable} ${selectedToken?.symbol} on ${activeChain?.name}`}
+                        chainId={activeChain?.id}
+                        requestId={12}
                         transactionLink={transactionExplorerLink}
-                        bottomText="Copy the link and share it with anyone."
                     />
 
                     <FailedTransactionOverlay

@@ -1,10 +1,10 @@
 import { openLink } from "@/common/utils";
 import { colors } from "@/theme/colors";
-import { ArrowBackIcon, ChevronLeftIcon } from "@chakra-ui/icons";
-import { Box, Button, Center, CloseButton, Fade, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
 import { ReactElement } from "react";
 import FlowStepOverlay from "./FlowStepOverlay";
-import { ParentOverlay } from "./ParentOverlay";
+import Image from "next/image";
+import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 
 interface PendingTransactionOverlayProps {
     isOpen: boolean;
@@ -38,6 +38,7 @@ export default function PendingTransactionOverlay({
             secondaryButtonInfo={{
                 text: "View Transaction",
                 onClick: () => openLink(transactionLink, true),
+                rightIcon: <Image src={ArrowSquareOutIcon} alt="copy" />,
             }}
         />
     );
