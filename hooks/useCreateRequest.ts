@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { useSigner } from "wagmi";
 import { TransactionRequest } from "@ethersproject/providers";
@@ -25,20 +25,34 @@ export function useCreateRequest(
 ): {
     transaction?: Transaction;
     pendingWalletSignature: boolean;
+    requestId?: BigNumber;
     abortPendingSignature: () => void;
     createRequest: () => Promise<string>;
     clearTransaction: () => void;
 } {
-    const [transcationRequest, setTranscationRequest] = useState<TransactionRequest>({});
+    const [transactionRequest, setTransactionRequest] = useState<TransactionRequest>({});
+    const [requestId, setRequestId] = useState<string | undefined>(undefined);
 
     const { data: signer } = useSigner();
     const {
         transaction,
+        receipt,
         pendingWalletSignature,
         abortPendingSignature,
         sendTransaction: createRequest,
         clearTransaction,
-    } = useSendTransaction(transcationRequest, "createRequest", Object.keys(transcationRequest).length != 0);
+    } = useSendTransaction(transactionRequest, "createRequest", Object.keys(transactionRequest).length != 0);
+
+    useEffect(() => {
+        if (receipt && receipt.status == 1) {
+            try {
+                const id = BigNumber.from(receipt.logs[0].topics[1]);
+                setRequestId(id);
+            } catch (e) {
+                console.log("UNABLE TO PARSE LOG", e, receipt);
+            }
+        }
+    }, [receipt, setRequestId]);
 
     // Set transaction request
     useEffect(() => {
@@ -57,15 +71,13 @@ export function useCreateRequest(
                         requestTokenAmount,
                     ]),
                 };
-
-                console.log(request, requestTokenAddress, requestTokenAmount);
             }
 
-            setTranscationRequest(request);
+            setTransactionRequest(request);
         }
 
         configureTransaction();
-    }, [signer, requestTokenAddress, requestTokenAmount, setTranscationRequest]);
+    }, [signer, requestTokenAddress, requestTokenAmount, setTransactionRequest]);
 
-    return { transaction, pendingWalletSignature, abortPendingSignature, createRequest, clearTransaction };
+    return { transaction, pendingWalletSignature, requestId, abortPendingSignature, createRequest, clearTransaction };
 }

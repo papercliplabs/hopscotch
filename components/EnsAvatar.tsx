@@ -17,7 +17,7 @@ export const getInitials = (name: string): string => {
 };
 
 export interface EnsAvatarProps extends AvatarProps {
-    address: string;
+    address?: string;
 }
 
 export interface EnsNameProps extends TextProps {
@@ -44,7 +44,7 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
         chainId: 1,
     });
 
-    const { color: backgroundColor, emoji } = useMemo(() => emojiAvatarForAddress(address), [address]);
+    const { color: backgroundColor, emoji } = useMemo(() => emojiAvatarForAddress(address ?? ""), [address]);
 
     return (
         <Flex

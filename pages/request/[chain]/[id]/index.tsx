@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useMemo, useRef, useState } from "react";
+import { ReactElement, useMemo, useRef, useState } from "react";
 import { useAccount, useEnsName, useSwitchNetwork } from "wagmi";
 
 import { UseChain, useChain } from "@/hooks/useChain";
@@ -7,14 +7,14 @@ import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
 import { useRequest } from "@/hooks/useRequest";
 import { useToken } from "@/hooks/useTokenList";
 import { ExplorerLinkType, Length, LoadingStatus, Token } from "@/common/types";
-import { useExactOutputSwap } from "@/hooks/useExactOutputSwap";
+import { usePayRequest } from "@/hooks/usePayRequest";
 import { useApproveErc20ForSwap } from "@/hooks/useApproveTokenForSwap";
-import { Avatar, AvatarBadge, Button, Fade, Flex, Link, Spinner, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { formatNumber, formatTokenAmount, openLink, shortAddress } from "@/common/utils";
+import { Avatar, AvatarBadge, Box, Button, Fade, Flex, Link, Spinner, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { formatNumber, formatTokenAmount, openLink, shortAddress, stringToNumber } from "@/common/utils";
 import { EnsAvatar } from "@/components/EnsAvatar";
 import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import Image from "next/image";
-import { InfoIcon, LinkIcon } from "@chakra-ui/icons";
+import { ArrowDownIcon, InfoIcon, LinkIcon } from "@chakra-ui/icons";
 import { colors } from "@/theme/colors";
 import TokenSelect from "@/components/TokenSelect";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
@@ -25,6 +25,8 @@ import PendingTransactionOverlay from "@/components/PendingTransactionOverlay";
 import FailedTransactionOverlay from "@/components/FailedTransactionOverlay";
 import FlowStepOverlay from "@/components/FlowStepOverlay";
 import SuccessfulTransactionOverlay from "@/components/SuccessfulTransactionOverlay";
+import TokenWithChainIcon from "@/components/TokenWithChainIcon";
+import longArrowDown from "@/public/static/LongArrowDown.svg";
 
 interface RequestFormProps {
     disabled: boolean;
@@ -134,6 +136,30 @@ function RequestForm({
     );
 }
 
+interface ReviewRequestRowProps {
+    leftIcon?: ReactElement;
+    topEntry?: ReactElement;
+    bottomText?: string;
+    rightIcon?: ReactElement;
+}
+
+function ReviewRequestRow({ leftIcon, topEntry, bottomText, rightIcon }: ReviewRequestRowProps) {
+    return (
+        <Flex direction="row" justifyContent="space-between" align="center">
+            <Flex gap="16px">
+                {leftIcon}
+                <Flex direction="column" justifyContent="space-between">
+                    <Text textStyle="titleSm" variant="secondary">
+                        {topEntry}
+                    </Text>
+                    <Text textStyle="titleLg">{bottomText}</Text>
+                </Flex>
+            </Flex>
+            {rightIcon}
+        </Flex>
+    );
+}
+
 interface RequestReviewProps {
     chain?: UseChain;
     inputToken?: Token;
@@ -153,7 +179,36 @@ function ReviewRequest({
     outputTokenAmountHumanReadable,
     recipientAddress,
 }: RequestReviewProps) {
-    return <div>TODO</div>;
+    const recipientExplorerLink = useExplorerLink(recipientAddress, ExplorerLinkType.WALLET_OR_CONTRACT, chain);
+
+    return (
+        <Flex p="16px" border="2px solid #EFF0F3" borderRadius="16px" direction="column" gap="1px">
+            <ReviewRequestRow
+                leftIcon={<EnsAvatar address={senderAddress} />}
+                topEntry={<>You send</>}
+                bottomText={`${inputTokenQuoteAmountHumanReadable} ${inputToken?.symbol}`}
+                rightIcon={<TokenWithChainIcon token={inputToken} chain={chain} size={32} />}
+            />
+            <Box pl="13px">
+                <Image src={longArrowDown} alt="check" />
+            </Box>
+            <ReviewRequestRow
+                leftIcon={<EnsAvatar address={recipientAddress} />}
+                topEntry={
+                    <>
+                        <Text textStyle="titleSm" variant="gradient" display="inline">
+                            <Link href={recipientExplorerLink} isExternal>
+                                {shortAddress(recipientAddress, Length.MEDIUM)}
+                            </Link>{" "}
+                        </Text>
+                        receives
+                    </>
+                }
+                bottomText={`${outputTokenAmountHumanReadable} ${outputToken?.symbol}`}
+                rightIcon={<TokenWithChainIcon token={outputToken} chain={chain} size={32} />}
+            />
+        </Flex>
+    );
 }
 
 export default function RequestPage() {
@@ -173,7 +228,7 @@ export default function RequestPage() {
     const { switchNetwork } = useSwitchNetwork();
 
     // Get the request
-    const request = useRequest(requestChainId, requestId);
+    const request = useRequest(stringToNumber(requestChainId), requestId);
 
     // Parse data from request
     const requestChain = useChain(request?.chainId);
@@ -184,6 +239,8 @@ export default function RequestPage() {
     });
     const onExpectedChain = useIsOnExpectedChain(request?.chainId);
     const isOwner = address == request?.recipientAddress;
+
+    console.log("USE REQ", requestId, request, requestChain, requestToken);
 
     // get url server side safe nextjs
     const origin = typeof window !== "undefined" ? window.location.origin : "";
@@ -215,12 +272,7 @@ export default function RequestPage() {
         abortPendingSignature: abortPendingSwapWalletSignature,
         executeSwap,
         clearTransaction: clearSwapTransaction,
-    } = useExactOutputSwap(
-        inputToken?.address,
-        request?.recipientTokenAddress,
-        request?.recipientTokenAmount,
-        request?.recipientAddress
-    );
+    } = usePayRequest(requestChain.id, request?.requestId, inputToken?.address);
 
     const {
         requiresApproval,
@@ -230,6 +282,8 @@ export default function RequestPage() {
         abortPendingSignature: abortPendingApproveWalletSignature,
         clearTransaction: clearApproveTransaction,
     } = useApproveErc20ForSwap(inputToken?.address, swapQuote.quoteAmount);
+
+    console.log("SWAP QUOTE", swapQuote);
 
     const hasSufficentFunds = useMemo(() => {
         let ret = false;
@@ -323,9 +377,92 @@ export default function RequestPage() {
 
     const quoteLoading = LoadingStatus.LOADING == swapQuote.quoteStatus;
 
-    if (!request) {
+    if (request == undefined) {
         return <div> Request not found</div>;
     }
+
+    const bottomSummary = (
+        <Flex direction="column" pt="10px" gap="5px" mt={2}>
+            <Flex direction="row" justifyContent="space-between">
+                <Text textStyle="label" variant="secondary" fontWeight="bold">
+                    Swap Rate
+                </Text>
+                <Text fontSize="sm">
+                    {inputToken && requestToken ? (
+                        quoteLoading ? (
+                            <Spinner
+                                thickness="2px"
+                                speed="0.65s"
+                                emptyColor="bgPrimary"
+                                style={{
+                                    borderTopColor: colors.bgPrimary,
+                                }}
+                                color="textInteractive"
+                                size="sm"
+                            />
+                        ) : (
+                            <>
+                                1 {requestToken.symbol} = {swapRate} {inputToken.symbol}
+                            </>
+                        )
+                    ) : (
+                        "--"
+                    )}
+                </Text>
+            </Flex>
+
+            <Flex direction="row" justifyContent="space-between" alignItems="center">
+                <Flex direction="row" boxSizing="border-box">
+                    <Text textStyle="label" variant="secondary" fontWeight="bold">
+                        Hopscotch Fee
+                    </Text>
+                    <Tooltip
+                        label="This app currently does not take a fee from transactions. In the future it may to help support development."
+                        p={3}
+                        boxSize="borderBox"
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        hasArrow
+                        backgroundColor="textPrimary"
+                        isOpen={isFeeTooltipOpen}
+                    >
+                        <InfoIcon
+                            boxSize="13px"
+                            m="auto"
+                            ml={1.5}
+                            color="textSecondary"
+                            onMouseEnter={() => setIsFeeTooltipOpen(true)}
+                            onMouseLeave={() => setIsFeeTooltipOpen(false)}
+                            onClick={() => setIsFeeTooltipOpen(true)}
+                        />
+                    </Tooltip>
+                </Flex>
+
+                <Text fontSize="sm">Free</Text>
+            </Flex>
+
+            <Flex direction="row" justifyContent="space-between">
+                <Text textStyle="label" variant="secondary" fontWeight="bold">
+                    Network
+                </Text>
+                <Flex align="center">
+                    <Image
+                        src={requestChain?.iconUrlSync}
+                        alt={requestChain?.name}
+                        width={16}
+                        height={16}
+                        layout="fixed"
+                        objectFit="contain"
+                        className="rounded-full"
+                    />
+                    <Text fontSize="sm" pl="4px">
+                        {requestChain?.name}
+                    </Text>
+                </Flex>
+            </Flex>
+        </Flex>
+    );
 
     return (
         <Fade in delay={1}>
@@ -402,7 +539,6 @@ export default function RequestPage() {
                         <Text textStyle="titleLg" align="center">
                             You Pay
                         </Text>
-
                         <RequestForm
                             disabled={false}
                             quoteLoading={quoteLoading}
@@ -416,101 +552,20 @@ export default function RequestPage() {
                             setInputTokenCallback={setInputToken}
                             portalRef={ref}
                         />
-
-                        <Flex direction="column" pt="10px" gap="5px" mt={2}>
-                            <Flex direction="row" justifyContent="space-between">
-                                <Text textStyle="label" variant="secondary" fontWeight="bold">
-                                    Swap Rate
-                                </Text>
-                                <Text fontSize="sm">
-                                    {inputToken && requestToken ? (
-                                        quoteLoading ? (
-                                            <Spinner
-                                                thickness="2px"
-                                                speed="0.65s"
-                                                emptyColor="bgPrimary"
-                                                style={{
-                                                    borderTopColor: colors.bgPrimary,
-                                                }}
-                                                color="textInteractive"
-                                                size="sm"
-                                            />
-                                        ) : (
-                                            <>
-                                                1 {requestToken.symbol} = {swapRate} {inputToken.symbol}
-                                            </>
-                                        )
-                                    ) : (
-                                        "--"
-                                    )}
-                                </Text>
-                            </Flex>
-
-                            <Flex direction="row" justifyContent="space-between" alignItems="center">
-                                <Flex direction="row" boxSizing="border-box">
-                                    <Text textStyle="label" variant="secondary" fontWeight="bold">
-                                        Hopscotch Fee
-                                    </Text>
-                                    <Tooltip
-                                        label="This app currently does not take a fee from transactions. In the future it may to help support development."
-                                        p={3}
-                                        boxSize="borderBox"
-                                        display="flex"
-                                        justifyContent="center"
-                                        alignItems="center"
-                                        hasArrow
-                                        backgroundColor="textPrimary"
-                                        isOpen={isFeeTooltipOpen}
-                                    >
-                                        <InfoIcon
-                                            boxSize="13px"
-                                            m="auto"
-                                            ml={1.5}
-                                            color="textSecondary"
-                                            onMouseEnter={() => setIsFeeTooltipOpen(true)}
-                                            onMouseLeave={() => setIsFeeTooltipOpen(false)}
-                                            onClick={() => setIsFeeTooltipOpen(true)}
-                                        />
-                                    </Tooltip>
-                                </Flex>
-
-                                <Text fontSize="sm">Free</Text>
-                            </Flex>
-
-                            <Flex direction="row" justifyContent="space-between">
-                                <Text textStyle="label" variant="secondary" fontWeight="bold">
-                                    Network
-                                </Text>
-                                <Flex align="center">
-                                    <Image
-                                        src={requestChain?.iconUrlSync}
-                                        alt={requestChain?.name}
-                                        width={16}
-                                        height={16}
-                                        layout="fixed"
-                                        objectFit="contain"
-                                        className="rounded-full"
-                                    />
-                                    <Text fontSize="sm" pl="4px">
-                                        {requestChain?.name}
-                                    </Text>
-                                </Flex>
-                            </Flex>
-
-                            <Button
-                                variant={onExpectedChain ? primaryButtonVariant : "critical"}
-                                type="submit"
-                                width="100%"
-                                minHeight="48px"
-                                size="lg"
-                                onClick={() => {
-                                    primaryButtonOnClickFunction && primaryButtonOnClickFunction();
-                                }}
-                                isDisabled={primaryButtonOnClickFunction == undefined}
-                            >
-                                {primaryButtonText}
-                            </Button>
-                        </Flex>
+                        {bottomSummary}
+                        <Button
+                            variant={onExpectedChain ? primaryButtonVariant : "critical"}
+                            type="submit"
+                            width="100%"
+                            minHeight="48px"
+                            size="lg"
+                            onClick={() => {
+                                primaryButtonOnClickFunction && primaryButtonOnClickFunction();
+                            }}
+                            isDisabled={primaryButtonOnClickFunction == undefined}
+                        >
+                            {primaryButtonText}
+                        </Button>
                     </Flex>
 
                     <FlowStepOverlay
@@ -518,17 +573,20 @@ export default function RequestPage() {
                         backButtonCallback={() => setPaymentFlowActive(false)}
                         title="Review"
                         custom={
-                            <ReviewRequest
-                                chain={requestChain}
-                                inputToken={inputToken}
-                                inputTokenQuoteAmountHumanReadable={formattedQuoteAmount}
-                                senderAddress={address}
-                                outputToken={requestToken}
-                                outputTokenAmountHumanReadable={formattedOutputAmount}
-                                recipientAddress={request?.recipientAddress}
-                            />
+                            <>
+                                <ReviewRequest
+                                    chain={requestChain}
+                                    inputToken={inputToken}
+                                    inputTokenQuoteAmountHumanReadable={formattedQuoteAmount}
+                                    senderAddress={address}
+                                    outputToken={requestToken}
+                                    outputTokenAmountHumanReadable={formattedOutputAmount}
+                                    recipientAddress={request?.recipientAddress}
+                                />
+                                {bottomSummary}
+                            </>
                         }
-                        primaryButtonInfo={{ text: "Pay request", onClick: () => executeSwap() }}
+                        primaryButtonInfo={{ text: "Pay request", onClick: executeSwap }}
                     />
 
                     <ApproveTokenOverlay

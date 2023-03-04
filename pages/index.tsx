@@ -31,7 +31,7 @@ function CreateRequest() {
         return parseTokenAmount(tokenAmountHumanReadable, selectedToken?.decimals);
     }, [tokenAmountHumanReadable, selectedToken]);
 
-    const { createRequest, transaction, pendingWalletSignature, abortPendingSignature, clearTransaction } =
+    const { createRequest, requestId, transaction, pendingWalletSignature, abortPendingSignature, clearTransaction } =
         useCreateRequest(selectedToken?.address, tokenAmount);
 
     const transactionExplorerLink = useExplorerLink(transaction?.hash, ExplorerLinkType.TRANSACTION, activeChain);
@@ -60,7 +60,7 @@ function CreateRequest() {
         } else {
             return { buttonText: "Create request", onClickFunction: createRequest, buttonVariant: "primary" };
         }
-    }, [tokenAmountHumanReadable, selectedToken, address, activeChain.unsupported]);
+    }, [tokenAmountHumanReadable, selectedToken, address, activeChain.unsupported, createRequest, openConnectModal]);
 
     const ref = useRef(null);
 
@@ -195,7 +195,7 @@ function CreateRequest() {
                         isOpen={transaction?.status == "confirmed"}
                         requestSummary={`${tokenAmountHumanReadable} ${selectedToken?.symbol} on ${activeChain?.name}`}
                         chainId={activeChain?.id}
-                        requestId={12}
+                        requestId={requestId}
                         transactionLink={transactionExplorerLink}
                     />
 

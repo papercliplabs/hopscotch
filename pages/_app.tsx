@@ -20,43 +20,43 @@ import { NestedPortalRefProvider } from "@/components/NestedPortal";
 import "@/styles/fonts.css";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
-  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
-  // publicProvider(),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+    // publicProvider(),
 ]);
 
 const { connectors } = getDefaultWallets({
-  appName: "Hopscotch",
-  chains,
+    appName: "Hopscotch",
+    chains,
 });
 
 export const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
+    autoConnect: true,
+    connectors,
+    provider,
 });
 
 type NextPageWithLayout = NextPage & {
-  NavElement?: () => ReactNode;
+    NavElement?: () => ReactNode;
 };
 
 type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
+    Component: NextPageWithLayout;
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  return (
-    <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains} showRecentTransactions={true}>
-        <TokenListProvider>
-          <ChakraProvider theme={theme}>
-            <NestedPortalRefProvider>
-              <MainLayout>
-                <Component {...pageProps} />
-              </MainLayout>
-            </NestedPortalRefProvider>
-          </ChakraProvider>
-        </TokenListProvider>
-      </RainbowKitProvider>
-    </WagmiConfig>
-  );
+    return (
+        <WagmiConfig client={wagmiClient}>
+            <RainbowKitProvider chains={chains} showRecentTransactions={true}>
+                <TokenListProvider>
+                    <ChakraProvider theme={theme}>
+                        <NestedPortalRefProvider>
+                            <MainLayout>
+                                <Component {...pageProps} />
+                            </MainLayout>
+                        </NestedPortalRefProvider>
+                    </ChakraProvider>
+                </TokenListProvider>
+            </RainbowKitProvider>
+        </WagmiConfig>
+    );
 }

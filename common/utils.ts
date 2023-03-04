@@ -82,7 +82,10 @@ export function parseTokenAmount(value: Optional<string>, tokenDecimals: Optiona
  * @param length the length to shorten the address to
  * @returns shortened address
  */
-export function shortAddress(address: string, length: Length): string {
+export function shortAddress(address: string | undefined, length: Length): string {
+    if (!address) {
+        return "";
+    }
     const len = address.length;
     let keepLen = 12;
     switch (length) {
@@ -103,7 +106,7 @@ export function shortAddress(address: string, length: Length): string {
     }
 }
 
-export function getNativeTokenAddress(chainId: number): string | undefined {
+export function getNativeTokenAddress(chainId?: number): string | undefined {
     return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.address;
 }
 
@@ -111,7 +114,7 @@ export function getNativeTokenAddress(chainId: number): string | undefined {
  * Get the wrapped token address for chain
  * @param chian chain to get the wrapped token address for
  */
-export function getWrappedTokenAddress(chainId: number): string | undefined {
+export function getWrappedTokenAddress(chainId?: number): string | undefined {
     return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.wrappedAddress;
 }
 

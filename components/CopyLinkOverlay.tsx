@@ -10,7 +10,7 @@ import Link from "next/link";
 interface CopyLinkOverlayProps {
     isOpen: boolean;
     requestSummary?: string;
-    requestId?: number;
+    requestId?: string;
     chainId?: number;
     transactionLink?: string;
 }

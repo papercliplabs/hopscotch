@@ -4,8 +4,12 @@ import { TransactionRequest } from "@ethersproject/providers";
 import { Transaction, useAddRecentTransaction } from "@papercliplabs/rainbowkit";
 import { usePrepareSendTransaction, useSendTransaction as useWagmiSendTransaction } from "wagmi";
 
+import { ethers } from "ethers";
+import HopscotchAbi from "@/abis/hopscotch.json";
+
 import { useTransaction } from "./useTransaction";
 import { MIN_SUCCESSFUL_TX_CONFIRMATIONS } from "@/common/constants";
+import { providers } from "ethers/lib/ethers";
 
 /**
  * Hook to send a transaction, all transactions should be sent using this hook
@@ -27,12 +31,14 @@ export function useSendTransaction(
 ): {
     quotedGas?: BigNumber;
     transaction?: Transaction;
+    receipt?: providers.TransactionReceipt;
     pendingWalletSignature: boolean;
     abortPendingSignature: () => void;
     sendTransaction: () => Promise<string>;
     clearTransaction: () => void;
 } {
     const [hash, setHash] = useState<string>("");
+    const [receipt, setReceipt] = useState<providers.TransactionReceipt | undefined>(undefined);
     const [pendingWalletSignature, setPendingWalletSignature] = useState<boolean>(false);
 
     const { error, config: prepareTransactionConfig } = usePrepareSendTransaction({
@@ -51,18 +57,25 @@ export function useSendTransaction(
         console.log("TX FAILED", transaction);
     }
 
+    console.log("REQ", transactionRequest, sendTransactionAsync);
+
     /**
      * Send transaction
      * @returns transaction hash, or INVALID_PARAMS
      */
     const sendTransaction = useCallback(async () => {
         let txHash = "INVALID_PARAMS";
+        let txResponse = undefined;
+        console.log("SEND TXN", error, sendTransactionAsync, transactionRequest);
 
         if (sendTransactionAsync) {
+            setHash("");
+            setReceipt(undefined);
+            console.log("SEND TXN ACT");
             try {
                 setPendingWalletSignature(true);
-                const txResponse = await sendTransactionAsync();
-                console.log("SENDING TXN", transactionRequest);
+                txResponse = await sendTransactionAsync();
+                console.log("tx response", txResponse);
                 txHash = txResponse.hash;
                 addRecentTransaction({
                     hash: txHash,
@@ -74,12 +87,18 @@ export function useSendTransaction(
                 console.log("ERROR SENDING", error);
             } finally {
                 setPendingWalletSignature(false);
+                setHash(txHash);
+            }
+
+            if (txResponse) {
+                const txReceipt = await txResponse.wait();
+                console.log("TX RECEIPT", txReceipt);
+                setReceipt(txReceipt);
             }
         }
 
-        setHash(txHash);
         return txHash;
-    }, [sendTransactionAsync, addRecentTransaction]);
+    }, [sendTransactionAsync, addRecentTransaction, transactionRequest]);
 
     const abortPendingSignature = useCallback(async () => {
         // TODO(spennyp): also want to abort the actual await sendTransactionAsync()
@@ -93,6 +112,7 @@ export function useSendTransaction(
     return {
         quotedGas: prepareTransactionConfig?.request?.gasLimit as BigNumber,
         transaction,
+        receipt,
         pendingWalletSignature,
         abortPendingSignature,
         sendTransaction,

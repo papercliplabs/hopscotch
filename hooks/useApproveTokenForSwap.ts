@@ -5,7 +5,7 @@ import { TransactionRequest } from "@ethersproject/providers";
 import { Transaction } from "@papercliplabs/rainbowkit";
 import { AddressZero, MaxUint256 } from "@ethersproject/constants";
 
-import { V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
+import { HOPSCOTCH_ADDRESS, V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
 import { useSendTransaction } from "./useSendTransaction";
 import { useTokenAllowance } from "@/hooks/useTokenAllowance";
 
@@ -33,7 +33,7 @@ export function useApproveErc20ForSwap(
 } {
     const [transcationRequest, setTranscationRequest] = useState<TransactionRequest>({});
 
-    const { allowance, refetch: refetchAllowance } = useTokenAllowance(tokenAddress, V3_SWAP_ROUTER_ADDRESS);
+    const { allowance, refetch: refetchAllowance } = useTokenAllowance(tokenAddress, HOPSCOTCH_ADDRESS);
 
     const { data: signer } = useSigner();
     const {
@@ -56,7 +56,7 @@ export function useApproveErc20ForSwap(
                 request = {
                     from: address,
                     to: tokenAddress,
-                    data: contract.interface.encodeFunctionData("approve", [V3_SWAP_ROUTER_ADDRESS, MaxUint256]),
+                    data: contract.interface.encodeFunctionData("approve", [HOPSCOTCH_ADDRESS, MaxUint256]),
                 };
             }
 

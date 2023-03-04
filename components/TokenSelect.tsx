@@ -27,6 +27,7 @@ import { NetworkSelect } from "./NetworkSelect";
 import { formatNumber, formatTokenAmount } from "@/common/utils";
 import { useChain } from "@/hooks/useChain";
 import { ParentOverlay } from "@/components/ParentOverlay";
+import TokenWithChainIcon from "./TokenWithChainIcon";
 
 interface SlideMenuProps {
     isOpen: boolean;
@@ -122,19 +123,7 @@ export default function TokenSelect({
                     }}
                 >
                     <Flex align="center">
-                        <Avatar height="32px" width="32px" mr={4} src={logoURI}>
-                            <AvatarBadge borderWidth={2}>
-                                <Image
-                                    src={activeChain?.iconUrlSync}
-                                    alt={activeChain?.name}
-                                    width="14px"
-                                    height="14px"
-                                    layout="fixed"
-                                    objectFit="contain"
-                                    className="rounded-full"
-                                />
-                            </AvatarBadge>
-                        </Avatar>
+                        <TokenWithChainIcon token={tokenDetails} chain={activeChain} size={32} />
                         <Text textStyle="titleMd">{name}</Text>
                     </Flex>
                     <Flex direction="column" align="end">

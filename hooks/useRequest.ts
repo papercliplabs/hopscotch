@@ -8,7 +8,7 @@ import { stringToNumber } from "@/common/utils";
 
 export interface Request {
     chainId: number;
-    requestId: number;
+    requestId: BigNumber;
     recipientAddress: string;
     recipientTokenAddress: string;
     recipientTokenAmount: BigNumber;
@@ -23,27 +23,26 @@ export interface Request {
  *      allowance: allowance tokens for the spender
  *      refetch: callback to refetch the allowance
  */
-export function useRequest(chainId?: string, requestId?: string): Request | undefined {
-    const chainIdInt = stringToNumber(chainId);
+export function useRequest(chainId?: number, requestId?: string): Request | undefined {
     const requestIdInt = stringToNumber(requestId);
 
     const { data, refetch } = useContractRead({
         addressOrName: HOPSCOTCH_ADDRESS,
         contractInterface: HopscotchAbi,
         functionName: "getRequest",
-        chainId: chainIdInt,
+        chainId: chainId,
         args: [requestIdInt],
-        enabled: requestIdInt != undefined && chainIdInt != undefined,
+        enabled: requestIdInt != undefined && chainId != undefined,
     });
 
     const request: Request | undefined = useMemo(() => {
-        if (!data || !requestIdInt || !chainIdInt) {
+        if (!data || requestIdInt == undefined || !chainId) {
             return undefined;
         }
 
         return {
-            chainId: chainIdInt,
-            requestId: requestIdInt,
+            chainId: chainId,
+            requestId: BigNumber.from(requestIdInt),
             recipientAddress: data[0],
             recipientTokenAddress: data[1],
             recipientTokenAmount: data[2],
