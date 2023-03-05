@@ -1,4 +1,3 @@
-import { zeroAddress } from "ethereumjs-util";
 import { ethers } from "ethers";
 import { chain } from "wagmi";
 

@@ -7,7 +7,6 @@ import { BigNumber, ethers } from "ethers";
 import { AddressZero } from "@ethersproject/constants";
 import { wagmiClient } from "@/pages/_app";
 import { getSupportedChainIds } from "@/common/utils";
-import { concat, flow, uniqBy } from "lodash/fp";
 
 const PAGE_SIZE = 150;
 

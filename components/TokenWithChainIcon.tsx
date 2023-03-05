@@ -16,10 +16,8 @@ export default function TokenWithChainIcon({ token, chain, size }: TokenWithChai
                 <Image
                     src={chain?.iconUrlSync || ""}
                     alt={chain?.name}
-                    width={`${size * 0.4}px`}
-                    height={`${size * 0.4}px`}
-                    layout="fixed"
-                    objectFit="contain"
+                    width={size * 0.4}
+                    height={size * 0.4}
                     className="rounded-full"
                 />
             </AvatarBadge>

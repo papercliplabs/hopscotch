@@ -2,7 +2,6 @@ import { Length, Optional } from "./types";
 import { Token as UniswapToken } from "@uniswap/sdk-core";
 import { Chain, useNetwork, useToken } from "wagmi";
 import { Token } from "./types";
-import { add } from "lodash";
 import { NATIVE_TOKENS, SUPPORTED_CHAINS } from "./constants";
 import { BigNumber, ethers } from "ethers";
 

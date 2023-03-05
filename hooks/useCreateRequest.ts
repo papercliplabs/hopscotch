@@ -43,6 +43,8 @@ export function useCreateRequest(
         clearTransaction,
     } = useSendTransaction(transactionRequest, "createRequest", Object.keys(transactionRequest).length != 0);
 
+    console.log("CREATE RECEIPT", receipt);
+
     useEffect(() => {
         if (receipt && receipt.status == 1) {
             try {

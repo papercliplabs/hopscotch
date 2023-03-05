@@ -91,6 +91,7 @@ export function useSendTransaction(
             }
 
             if (txResponse) {
+                console.log("WAITING FOR TX RECEIPT");
                 const txReceipt = await txResponse.wait();
                 console.log("TX RECEIPT", txReceipt);
                 setReceipt(txReceipt);

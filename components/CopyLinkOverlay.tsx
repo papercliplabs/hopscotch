@@ -52,6 +52,8 @@ export default function CopyLinkOverlay({
 }: CopyLinkOverlayProps): ReactElement {
     const toast = useToast();
 
+    console.log("REQ ID", requestId);
+
     // get url server side safe nextjs
     const origin = typeof window !== "undefined" ? window.location.origin : "";
     const path = `/request/${chainId}/${requestId}`;

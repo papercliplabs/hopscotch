@@ -121,10 +121,8 @@ function RequestForm({
                             <Image
                                 src={chain?.iconUrlSync ?? ""}
                                 alt={chain?.name}
-                                width="14px"
-                                height="14px"
-                                layout="fixed"
-                                objectFit="contain"
+                                width={14}
+                                height={14}
                                 className="rounded-full"
                             />
                         </AvatarBadge>
@@ -454,7 +452,6 @@ export default function RequestPage() {
                         height={16}
                         layout="fixed"
                         objectFit="contain"
-                        className="rounded-full"
                     />
                     <Text fontSize="sm" pl="4px">
                         {requestChain?.name}

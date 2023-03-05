@@ -1,9 +1,6 @@
 import { FC, ReactNode, useMemo, useState } from "react";
 import {
     Avatar,
-    AvatarBadge,
-    Box,
-    BoxProps,
     Button,
     CloseButton,
     Fade,
@@ -18,7 +15,6 @@ import {
     Text,
     useDisclosure,
 } from "@chakra-ui/react";
-import Image from "next/image";
 
 import { Token } from "@/common/types";
 import { useTokenList } from "@/hooks/useTokenList";

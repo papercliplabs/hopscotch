@@ -41,7 +41,13 @@ function CreateRequest() {
             ? selectedToken.priceUsd * parseFloat(tokenAmountHumanReadable)
             : undefined;
 
-    const parse = (val: string) => val.replace(/^\$/, "");
+    const parseNumber = (val: string, lastVal: string) => {
+        if (val.match(/^\d{1,}(\.\d{0,20})?$/) || val.length == 0) {
+            return val;
+        } else {
+            return lastVal;
+        }
+    };
 
     // Compute the button state
     const { buttonText, onClickFunction, buttonVariant } = useMemo(() => {
@@ -63,6 +69,8 @@ function CreateRequest() {
     }, [tokenAmountHumanReadable, selectedToken, address, activeChain.unsupported, createRequest, openConnectModal]);
 
     const ref = useRef(null);
+
+    console.log("REQUEST ID", requestId);
 
     return (
         <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
@@ -103,7 +111,9 @@ function CreateRequest() {
                         <Flex direction="column" gap="8px">
                             <NumberInput
                                 height="48px"
-                                onChange={(valueString: string) => setTokenAmountHumanReadable(parse(valueString))}
+                                onChange={(valueString: string) =>
+                                    setTokenAmountHumanReadable(parseNumber(valueString, tokenAmountHumanReadable))
+                                }
                                 value={tokenAmountHumanReadable}
                             >
                                 <NumberInputField
@@ -147,7 +157,7 @@ function CreateRequest() {
                             </Text>
 
                             <Flex align="center">
-                                <Image
+                                {/* <Image
                                     src={activeChain?.iconUrlSync}
                                     alt={activeChain?.name}
                                     width={16}
@@ -155,7 +165,7 @@ function CreateRequest() {
                                     layout="fixed"
                                     objectFit="contain"
                                     className="rounded-full"
-                                />
+                                /> */}
                                 <Text pl="4px" textStyle="label" variant="secondary">
                                     {activeChain?.name}
                                 </Text>
@@ -186,13 +196,16 @@ function CreateRequest() {
                     />
 
                     <PendingTransactionOverlay
-                        isOpen={transaction?.status == "pending"}
+                        isOpen={
+                            transaction?.status == "pending" ||
+                            (transaction?.status == "confirmed" && requestId == undefined)
+                        }
                         title="Create Request"
                         transactionLink={transactionExplorerLink}
                     />
 
                     <CopyLinkOverlay
-                        isOpen={transaction?.status == "confirmed"}
+                        isOpen={transaction?.status == "confirmed" && requestId != undefined}
                         requestSummary={`${tokenAmountHumanReadable} ${selectedToken?.symbol} on ${activeChain?.name}`}
                         chainId={activeChain?.id}
                         requestId={requestId}
