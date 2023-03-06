@@ -1,16 +1,17 @@
 import { openLink } from "@/common/utils";
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 import FlowStepOverlay from "./FlowStepOverlay";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import Image from "next/image";
 import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 import { Box, Text, useToast } from "@chakra-ui/react";
 import Link from "next/link";
+import { BigNumber } from "ethers";
 
 interface CopyLinkOverlayProps {
     isOpen: boolean;
     requestSummary?: string;
-    requestId?: string;
+    requestId?: BigNumber;
     chainId?: number;
     transactionLink?: string;
 }
@@ -27,7 +28,6 @@ function LinkBox({ link }: { link: string }) {
                 alignItems="center"
                 justifyContent="center"
                 width="100%"
-                as="a"
             >
                 <Text
                     textStyle="bodyMd"
@@ -52,12 +52,14 @@ export default function CopyLinkOverlay({
 }: CopyLinkOverlayProps): ReactElement {
     const toast = useToast();
 
-    console.log("REQ ID", requestId);
+    const [requestLink, setRequestLink] = useState<string>("");
 
     // get url server side safe nextjs
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-    const path = `/request/${chainId}/${requestId}`;
-    const requestLink = `${origin}${path}`;
+    useEffect(() => {
+        const origin = typeof window !== "undefined" ? window.location.origin : "";
+        const path = `/request/${chainId}/${requestId}`;
+        setRequestLink(`${origin}${path}`);
+    }, [chainId, requestId, setRequestLink]);
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(requestLink);

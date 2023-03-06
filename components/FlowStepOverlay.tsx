@@ -121,31 +121,3 @@ export default function FlowStepOverlay({
         </Fade>
     );
 }
-
-// /* <FlowStepOverlay
-//                     isOpen={true}
-//                     backButtonCallback={() => console.log("back")}
-//                     title="test"
-//                     icon={
-//                         <Spinner
-//                             thickness="8px"
-//                             speed="1.0s"
-//                             emptyColor="bgPrimary"
-//                             color="textInteractive"
-//                             boxSize="60px"
-//                             style={{
-//                                 borderTopColor: colors.bgPrimary,
-//                             }}
-//                         />
-//                     }
-//                     subtitle="subtitle"
-//                     body="body"
-//                     bodyBold="bodyBold"
-//                     primaryButtonInfo={{
-//                         text: "test",
-//                         rightIcon: <Image src={CopyIcon} alt="copy" />,
-//                         onClick: () => console.log("button_1_click"),
-//                     }}
-//                     secondaryButtonInfo={{ text: "test", onClick: () => console.log("button_1_click") }}
-//                     bottomText="bottom_text"
-//                 /> */

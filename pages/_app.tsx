@@ -18,6 +18,7 @@ import TokenListProvider from "@/hooks/useTokenList/provider";
 import { NestedPortalRefProvider } from "@/components/NestedPortal";
 
 import "@/styles/fonts.css";
+import { useIsMounted } from "@/hooks/useIsMounter";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
@@ -44,6 +45,11 @@ type AppPropsWithLayout = AppProps & {
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+    const isMounted = useIsMounted();
+
+    // Render after hydration as wagmi has issues with autoconnect if not
+    if (!isMounted) return null;
+
     return (
         <WagmiConfig client={wagmiClient}>
             <RainbowKitProvider chains={chains} showRecentTransactions={true}>

@@ -219,7 +219,6 @@ export function usePayRequest(
 
 // Helper to get uniswap token for alpha router
 function useUniswapToken(address?: string, chainId?: number): UniswapToken | undefined {
-    console.log("UNISWAP TOKEN", address, chainId);
     const token = useToken(address, chainId);
 
     return useMemo(() => {

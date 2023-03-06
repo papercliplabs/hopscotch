@@ -36,7 +36,6 @@ export function useToken(address?: string, chainId?: number): Token | undefined 
     const token = useMemo(() => {
         return address ? tokens.find((token) => token.address.toLowerCase() == address.toLowerCase()) : undefined;
     }, [tokens, address]);
-    console.log("USE TOKEN", address, chainId, tokens, token);
 
     return token;
 }

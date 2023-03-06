@@ -70,15 +70,13 @@ function CreateRequest() {
 
     const ref = useRef(null);
 
-    console.log("REQUEST ID", requestId);
-
     return (
         <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
             <Text textStyle="headline">Send a request.</Text>
             <Text textStyle="headline" variant="gradient" mb={6}>
                 Get paid in any token.
             </Text>
-            <Fade in delay={1}>
+            <Fade in delay={0.25}>
                 <PrimaryCard
                     ref={ref}
                     position="relative"
@@ -157,15 +155,7 @@ function CreateRequest() {
                             </Text>
 
                             <Flex align="center">
-                                {/* <Image
-                                    src={activeChain?.iconUrlSync}
-                                    alt={activeChain?.name}
-                                    width={16}
-                                    height={16}
-                                    layout="fixed"
-                                    objectFit="contain"
-                                    className="rounded-full"
-                                /> */}
+                                <Image src={activeChain?.iconUrlSync} alt={activeChain?.name} width={16} height={16} />
                                 <Text pl="4px" textStyle="label" variant="secondary">
                                     {activeChain?.name}
                                 </Text>

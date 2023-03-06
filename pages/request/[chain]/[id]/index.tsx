@@ -238,8 +238,6 @@ export default function RequestPage() {
     const onExpectedChain = useIsOnExpectedChain(request?.chainId);
     const isOwner = address == request?.recipientAddress;
 
-    console.log("USE REQ", requestId, request, requestChain, requestToken);
-
     // get url server side safe nextjs
     const origin = typeof window !== "undefined" ? window.location.origin : "";
     const path = `/request/${request?.chainId}/${request?.requestId}`;
@@ -280,8 +278,6 @@ export default function RequestPage() {
         abortPendingSignature: abortPendingApproveWalletSignature,
         clearTransaction: clearApproveTransaction,
     } = useApproveErc20ForSwap(inputToken?.address, swapQuote.quoteAmount);
-
-    console.log("SWAP QUOTE", swapQuote);
 
     const hasSufficentFunds = useMemo(() => {
         let ret = false;

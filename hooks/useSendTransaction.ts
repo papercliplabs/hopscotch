@@ -57,8 +57,6 @@ export function useSendTransaction(
         console.log("TX FAILED", transaction);
     }
 
-    console.log("REQ", transactionRequest, sendTransactionAsync);
-
     /**
      * Send transaction
      * @returns transaction hash, or INVALID_PARAMS
@@ -71,7 +69,6 @@ export function useSendTransaction(
         if (sendTransactionAsync) {
             setHash("");
             setReceipt(undefined);
-            console.log("SEND TXN ACT");
             try {
                 setPendingWalletSignature(true);
                 txResponse = await sendTransactionAsync();
@@ -91,7 +88,6 @@ export function useSendTransaction(
             }
 
             if (txResponse) {
-                console.log("WAITING FOR TX RECEIPT");
                 const txReceipt = await txResponse.wait();
                 console.log("TX RECEIPT", txReceipt);
                 setReceipt(txReceipt);

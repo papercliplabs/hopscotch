@@ -31,7 +31,7 @@ export function useCreateRequest(
     clearTransaction: () => void;
 } {
     const [transactionRequest, setTransactionRequest] = useState<TransactionRequest>({});
-    const [requestId, setRequestId] = useState<string | undefined>(undefined);
+    const [requestId, setRequestId] = useState<BigNumber | undefined>(undefined);
 
     const { data: signer } = useSigner();
     const {
@@ -42,8 +42,6 @@ export function useCreateRequest(
         sendTransaction: createRequest,
         clearTransaction,
     } = useSendTransaction(transactionRequest, "createRequest", Object.keys(transactionRequest).length != 0);
-
-    console.log("CREATE RECEIPT", receipt);
 
     useEffect(() => {
         if (receipt && receipt.status == 1) {

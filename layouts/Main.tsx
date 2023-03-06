@@ -22,7 +22,6 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
             <Flex as="header" w="100%" py={5} px={7} justifyContent="space-between" alignItems="center">
                 <Link href="/" passHref>
                     <Box
-                        as="a"
                         onClick={() => window.location.reload()}
                         cursor="pointer"
                         transition="transform 0.2s"
