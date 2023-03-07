@@ -1,7 +1,6 @@
 import { Token } from "@/common/types";
 import { UseChain } from "@/hooks/useChain";
-import { Avatar, AvatarBadge } from "@chakra-ui/react";
-import Image from "next/image";
+import { Avatar, AvatarBadge, Img } from "@chakra-ui/react";
 
 interface TokenWithChainIconProps {
     token?: Token;
@@ -13,13 +12,7 @@ export default function TokenWithChainIcon({ token, chain, size }: TokenWithChai
     return (
         <Avatar height={`${size}px`} width={`${size}px`} mr={4} src={token?.logoURI}>
             <AvatarBadge borderWidth={2}>
-                <Image
-                    src={chain?.iconUrlSync || ""}
-                    alt={chain?.name}
-                    width={size * 0.4}
-                    height={size * 0.4}
-                    className="rounded-full"
-                />
+                <Img src={chain?.iconUrlSync || ""} alt={chain?.name ?? ""} boxSize={`${size * 0.4}px`} />
             </AvatarBadge>
         </Avatar>
     );

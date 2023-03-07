@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { BigNumber, ethers } from "ethers";
-import { erc20ABI, useSigner } from "wagmi";
-import { TransactionRequest } from "@ethersproject/providers";
+import { erc20ABI, useSigner, Address } from "wagmi";
 import { Transaction } from "@papercliplabs/rainbowkit";
-import { AddressZero, MaxUint256 } from "@ethersproject/constants";
+import { MaxUint256 } from "@ethersproject/constants";
+import { BigNumber } from "@ethersproject/bignumber";
+import { TransactionRequest } from "@ethersproject/providers";
+import { Contract } from "@ethersproject/contracts";
 
-import { HOPSCOTCH_ADDRESS, V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
+import { HOPSCOTCH_ADDRESS } from "@/common/constants";
 import { useSendTransaction } from "./useSendTransaction";
 import { useTokenAllowance } from "@/hooks/useTokenAllowance";
 
@@ -21,7 +22,7 @@ import { useTokenAllowance } from "@/hooks/useTokenAllowance";
  *    clearTransaction: clear the transaction if one exists, this is useful if it failed and requires a retry
  */
 export function useApproveErc20ForSwap(
-    tokenAddress?: string,
+    tokenAddress?: Address,
     minimumApprovalAmount?: BigNumber
 ): {
     requiresApproval?: boolean;
@@ -50,7 +51,7 @@ export function useApproveErc20ForSwap(
             let request = {};
 
             if (signer && tokenAddress) {
-                const contract = new ethers.Contract(tokenAddress, erc20ABI, signer);
+                const contract = new Contract(tokenAddress, erc20ABI, signer);
                 const address = await signer.getAddress();
 
                 request = {

@@ -1,11 +1,8 @@
-import { useCallback, useState } from "react";
-import { BigNumber, BigNumberish } from "ethers";
+import { useCallback, useMemo, useState } from "react";
 import { TransactionRequest } from "@ethersproject/providers";
 import { Transaction, useAddRecentTransaction } from "@papercliplabs/rainbowkit";
 import { usePrepareSendTransaction, useSendTransaction as useWagmiSendTransaction } from "wagmi";
-
-import { ethers } from "ethers";
-import HopscotchAbi from "@/abis/hopscotch.json";
+import { BigNumber } from "@ethersproject/bignumber";
 
 import { useTransaction } from "./useTransaction";
 import { MIN_SUCCESSFUL_TX_CONFIRMATIONS } from "@/common/constants";
@@ -41,10 +38,17 @@ export function useSendTransaction(
     const [receipt, setReceipt] = useState<providers.TransactionReceipt | undefined>(undefined);
     const [pendingWalletSignature, setPendingWalletSignature] = useState<boolean>(false);
 
+    const wagmiTransactionRequest: TransactionRequest & {
+        to: string;
+    } = useMemo(() => {
+        return { to: transactionRequest.to ?? "", ...transactionRequest };
+    }, [transactionRequest]);
+
     const { error, config: prepareTransactionConfig } = usePrepareSendTransaction({
-        request: transactionRequest,
-        enabled: enableEagerFetch,
+        request: wagmiTransactionRequest,
+        enabled: enableEagerFetch && wagmiTransactionRequest.to != "",
     });
+
     const { sendTransactionAsync, reset } = useWagmiSendTransaction(prepareTransactionConfig);
     const addRecentTransaction = useAddRecentTransaction();
     const transaction = useTransaction(hash);

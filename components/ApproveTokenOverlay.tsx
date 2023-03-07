@@ -31,7 +31,7 @@ export default function ApproveTokenOverlay({
                     <AvatarBadge borderWidth={2}>
                         <Image
                             src={chain?.iconUrlSync ?? ""}
-                            alt={chain?.name}
+                            alt={chain?.name ?? ""}
                             width={26}
                             height={26}
                             className="rounded-full"

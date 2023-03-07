@@ -1,5 +1,5 @@
-import { ethers } from "ethers";
-import { chain } from "wagmi";
+import { AddressZero } from "@ethersproject/constants";
+import { mainnet, goerli, polygon, optimism, arbitrum, polygonMumbai } from "wagmi/chains";
 
 import { NativeBaseToken } from "./types";
 
@@ -10,27 +10,27 @@ export const URLS = {
 
 // Use SUPPORTED_CHAINS[0] as the dedault
 export const SUPPORTED_CHAINS = [
-    chain.polygon,
-    // chain.polygonMumbai,
-    chain.goerli,
-    chain.mainnet,
-    // chain.optimism,
-    // chain.arbitrum,
+    polygon,
+    // polygonMumbai,
+    goerli,
+    mainnet,
+    // optimism,
+    // arbitrum,
 ];
 
 export const COIN_GECKO_API_PLATFORM_ID = {
-    [chain.polygon.id]: "polygon-pos",
-    // [chain.polygonMumbai.id]: undefined,
-    [chain.goerli.id]: undefined,
-    [chain.mainnet.id]: "ethereum",
-    // [chain.optimism.id]: "optimistic-ethereum",
-    // [chain.arbitrum.id]: "arbitrum-one",
+    [polygon.id]: "polygon-pos",
+    // [polygonMumbai.id]: undefined,
+    [goerli.id]: undefined,
+    [mainnet.id]: "ethereum",
+    // [optimism.id]: "optimistic-ethereum",
+    // [arbitrum.id]: "arbitrum-one",
 };
 
 export const NATIVE_TOKENS: NativeBaseToken[] = [
     {
         address: "0x0000000000000000000000000000000000001010",
-        chainId: chain.polygon.id,
+        chainId: polygon.id,
         name: "Matic",
         symbol: "MATIC",
         decimals: 18,
@@ -39,7 +39,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
     },
     {
         address: "0x0000000000000000000000000000000000001010",
-        chainId: chain.polygonMumbai.id,
+        chainId: polygonMumbai.id,
         name: "Matic",
         symbol: "MATIC",
         decimals: 18,
@@ -47,8 +47,8 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         wrappedAddress: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
     },
     {
-        address: ethers.constants.AddressZero,
-        chainId: chain.goerli.id,
+        address: AddressZero,
+        chainId: goerli.id,
         name: "Ether",
         symbol: "ETH",
         decimals: 18,
@@ -57,8 +57,8 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         wrappedAddress: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
     },
     {
-        address: ethers.constants.AddressZero,
-        chainId: chain.mainnet.id,
+        address: AddressZero,
+        chainId: mainnet.id,
         name: "Ether",
         symbol: "ETH",
         decimals: 18,
@@ -67,8 +67,8 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         wrappedAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     },
     {
-        address: ethers.constants.AddressZero,
-        chainId: chain.optimism.id,
+        address: AddressZero,
+        chainId: optimism.id,
         name: "Ether",
         symbol: "ETH",
         decimals: 18,
@@ -77,8 +77,8 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         wrappedAddress: "0x4200000000000000000000000000000000000006",
     },
     {
-        address: ethers.constants.AddressZero,
-        chainId: chain.arbitrum.id,
+        address: AddressZero,
+        chainId: arbitrum.id,
         name: "Ether",
         symbol: "ETH",
         decimals: 18,
@@ -91,6 +91,6 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
 export const FEE_BIPS = 0; // No fee for now
 
 export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
-export const HOPSCOTCH_ADDRESS = "0x3a009c3f8f5ed1979cc9c9f6272339c0d29f7887";
+export const HOPSCOTCH_ADDRESS = "0xDD67309A86Dc5a37D001682345a84fceFfcFdeeB";
 
 export const MIN_SUCCESSFUL_TX_CONFIRMATIONS = 1;

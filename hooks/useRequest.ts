@@ -1,16 +1,15 @@
 import { HOPSCOTCH_ADDRESS } from "@/common/constants";
-import { useContractRead } from "wagmi";
+import { useContractRead, Address } from "wagmi";
 import { BigNumber } from "ethers/lib/ethers";
 
 import HopscotchAbi from "@/abis/hopscotch.json";
 import { useMemo } from "react";
-import { stringToNumber } from "@/common/utils";
 
 export interface Request {
     chainId: number;
     requestId: BigNumber;
-    recipientAddress: string;
-    recipientTokenAddress: string;
+    recipientAddress: Address;
+    recipientTokenAddress: Address;
     recipientTokenAmount: BigNumber;
     paid: boolean;
 }
@@ -23,32 +22,32 @@ export interface Request {
  *      allowance: allowance tokens for the spender
  *      refetch: callback to refetch the allowance
  */
-export function useRequest(chainId?: number, requestId?: string): Request | undefined {
-    const requestIdInt = stringToNumber(requestId);
-
+export function useRequest(chainId?: number, requestId?: BigNumber): Request | undefined {
     const { data, refetch } = useContractRead({
-        addressOrName: HOPSCOTCH_ADDRESS,
-        contractInterface: HopscotchAbi,
+        address: HOPSCOTCH_ADDRESS,
+        abi: HopscotchAbi,
         functionName: "getRequest",
         chainId: chainId,
-        args: [requestIdInt],
-        enabled: requestIdInt != undefined && chainId != undefined,
+        args: [requestId],
+        enabled: requestId != undefined && chainId != undefined,
     });
 
+    console.log("USE REQ RENDERING");
+
     const request: Request | undefined = useMemo(() => {
-        if (!data || requestIdInt == undefined || !chainId) {
+        if (!data || requestId == undefined || !chainId || !Array.isArray(data)) {
             return undefined;
         }
 
         return {
             chainId: chainId,
-            requestId: BigNumber.from(requestIdInt),
+            requestId: requestId,
             recipientAddress: data[0],
             recipientTokenAddress: data[1],
             recipientTokenAmount: data[2],
             paid: data[3],
         };
-    }, [data, requestIdInt]);
+    }, [data, requestId]);
 
     return request;
 }

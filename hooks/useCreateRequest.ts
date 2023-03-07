@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { BigNumber, ethers } from "ethers";
-import { useSigner } from "wagmi";
+import { useEffect, useState } from "react";
+import { useSigner, Address } from "wagmi";
 import { TransactionRequest } from "@ethersproject/providers";
 import { Transaction } from "@papercliplabs/rainbowkit";
+import { BigNumber } from "@ethersproject/bignumber";
+import { Contract } from "@ethersproject/contracts";
 
 import { HOPSCOTCH_ADDRESS } from "@/common/constants";
 import { useSendTransaction } from "./useSendTransaction";
@@ -20,7 +21,7 @@ import HopscotchAbi from "@/abis/hopscotch.json";
  *    clearTransaction: clear the transaction if one exists, this is useful if it failed and requires a retry
  */
 export function useCreateRequest(
-    requestTokenAddress?: string,
+    requestTokenAddress?: Address,
     requestTokenAmount?: BigNumber
 ): {
     transaction?: Transaction;
@@ -60,7 +61,7 @@ export function useCreateRequest(
             let request = {};
 
             if (signer && requestTokenAddress && requestTokenAmount) {
-                const contract = new ethers.Contract(HOPSCOTCH_ADDRESS, HopscotchAbi, signer);
+                const contract = new Contract(HOPSCOTCH_ADDRESS, HopscotchAbi, signer);
                 const address = await signer.getAddress();
 
                 request = {

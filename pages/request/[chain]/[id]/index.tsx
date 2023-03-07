@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { ReactElement, useMemo, useRef, useState } from "react";
-import { useAccount, useEnsName, useSwitchNetwork } from "wagmi";
+import { Address, useAccount, useEnsName, useSwitchNetwork } from "wagmi";
 
 import { UseChain, useChain } from "@/hooks/useChain";
 import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
@@ -27,6 +27,8 @@ import FlowStepOverlay from "@/components/FlowStepOverlay";
 import SuccessfulTransactionOverlay from "@/components/SuccessfulTransactionOverlay";
 import TokenWithChainIcon from "@/components/TokenWithChainIcon";
 import longArrowDown from "@/public/static/LongArrowDown.svg";
+import { BigNumber } from "ethers";
+import { queryByTestId } from "@storybook/testing-library";
 
 interface RequestFormProps {
     disabled: boolean;
@@ -68,22 +70,20 @@ function RequestForm({
                 mt="10px"
             >
                 <Flex direction="column" flex="1">
-                    <Text textStyle="headline">
-                        {quoteLoading ? (
-                            <Spinner
-                                thickness="2px"
-                                speed="0.65s"
-                                emptyColor="bgPrimary"
-                                style={{
-                                    borderTopColor: colors.bgPrimary,
-                                }}
-                                color="textInteractive"
-                                size="sm"
-                            />
-                        ) : (
-                            inputTokenQuoteAmountHumanReadable
-                        )}
-                    </Text>
+                    {quoteLoading ? (
+                        <Spinner
+                            thickness="2px"
+                            speed="0.65s"
+                            emptyColor="bgPrimary"
+                            style={{
+                                borderTopColor: colors.bgPrimary,
+                            }}
+                            color="textInteractive"
+                            size="sm"
+                        />
+                    ) : (
+                        <Text textStyle="headline">{inputTokenQuoteAmountHumanReadable}</Text>
+                    )}
                     <Text textStyle="bodyMd" variant="secondary">
                         ${inputTokenQuoteUsd}
                     </Text>
@@ -120,7 +120,7 @@ function RequestForm({
                         <AvatarBadge borderWidth={2}>
                             <Image
                                 src={chain?.iconUrlSync ?? ""}
-                                alt={chain?.name}
+                                alt={chain?.name ?? ""}
                                 width={14}
                                 height={14}
                                 className="rounded-full"
@@ -147,9 +147,7 @@ function ReviewRequestRow({ leftIcon, topEntry, bottomText, rightIcon }: ReviewR
             <Flex gap="16px">
                 {leftIcon}
                 <Flex direction="column" justifyContent="space-between">
-                    <Text textStyle="titleSm" variant="secondary">
-                        {topEntry}
-                    </Text>
+                    {topEntry}
                     <Text textStyle="titleLg">{bottomText}</Text>
                 </Flex>
             </Flex>
@@ -162,10 +160,10 @@ interface RequestReviewProps {
     chain?: UseChain;
     inputToken?: Token;
     inputTokenQuoteAmountHumanReadable?: string;
-    senderAddress?: string;
+    senderAddress?: Address;
     outputToken?: Token;
     outputTokenAmountHumanReadable?: string;
-    recipientAddress?: string;
+    recipientAddress?: Address;
 }
 
 function ReviewRequest({
@@ -183,7 +181,11 @@ function ReviewRequest({
         <Flex p="16px" border="2px solid #EFF0F3" borderRadius="16px" direction="column" gap="1px">
             <ReviewRequestRow
                 leftIcon={<EnsAvatar address={senderAddress} />}
-                topEntry={<>You send</>}
+                topEntry={
+                    <Text textStyle="titleSm" variant="secondary">
+                        You send
+                    </Text>
+                }
                 bottomText={`${inputTokenQuoteAmountHumanReadable} ${inputToken?.symbol}`}
                 rightIcon={<TokenWithChainIcon token={inputToken} chain={chain} size={32} />}
             />
@@ -218,15 +220,18 @@ export default function RequestPage() {
     const toast = useToast();
 
     const { query } = useRouter();
-    const requestChainId = query.chain as string | undefined;
-    const requestId = query.id as string | undefined;
+    const [requestChainId, requestId] = useMemo(() => {
+        let chainId = typeof query.chain === "string" ? stringToNumber(query.chain) : undefined;
+        let requestId = typeof query.id === "string" ? BigNumber.from(query.id) : undefined;
+        return [chainId, requestId];
+    }, [query]);
 
     const { address } = useAccount();
     const { openConnectModal } = useConnectModal();
     const { switchNetwork } = useSwitchNetwork();
 
     // Get the request
-    const request = useRequest(stringToNumber(requestChainId), requestId);
+    const request = useRequest(requestChainId, requestId);
 
     // Parse data from request
     const requestChain = useChain(request?.chainId);
@@ -352,10 +357,10 @@ export default function RequestPage() {
         address,
         swapQuote,
         hasSufficentFunds,
-        requiresApproval,
         openConnectModal,
-        approve,
-        executeSwap,
+        onExpectedChain,
+        requestChain,
+        switchNetwork,
     ]);
 
     // Format numbers
@@ -381,28 +386,26 @@ export default function RequestPage() {
                 <Text textStyle="label" variant="secondary" fontWeight="bold">
                     Swap Rate
                 </Text>
-                <Text fontSize="sm">
-                    {inputToken && requestToken ? (
-                        quoteLoading ? (
-                            <Spinner
-                                thickness="2px"
-                                speed="0.65s"
-                                emptyColor="bgPrimary"
-                                style={{
-                                    borderTopColor: colors.bgPrimary,
-                                }}
-                                color="textInteractive"
-                                size="sm"
-                            />
-                        ) : (
-                            <>
-                                1 {requestToken.symbol} = {swapRate} {inputToken.symbol}
-                            </>
-                        )
+                {inputToken && requestToken ? (
+                    quoteLoading ? (
+                        <Spinner
+                            thickness="2px"
+                            speed="0.65s"
+                            emptyColor="bgPrimary"
+                            style={{
+                                borderTopColor: colors.bgPrimary,
+                            }}
+                            color="textInteractive"
+                            size="sm"
+                        />
                     ) : (
-                        "--"
-                    )}
-                </Text>
+                        <Text fontSize="sm">
+                            1 {requestToken.symbol} = {swapRate} {inputToken.symbol}
+                        </Text>
+                    )
+                ) : (
+                    <Text fontSize="sm">--</Text>
+                )}
             </Flex>
 
             <Flex direction="row" justifyContent="space-between" alignItems="center">
@@ -441,14 +444,7 @@ export default function RequestPage() {
                     Network
                 </Text>
                 <Flex align="center">
-                    <Image
-                        src={requestChain?.iconUrlSync}
-                        alt={requestChain?.name}
-                        width={16}
-                        height={16}
-                        layout="fixed"
-                        objectFit="contain"
-                    />
+                    <Image src={requestChain?.iconUrlSync} alt={requestChain?.name} width={16} height={16} />
                     <Text fontSize="sm" pl="4px">
                         {requestChain?.name}
                     </Text>

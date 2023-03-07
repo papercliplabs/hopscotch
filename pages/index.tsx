@@ -4,7 +4,6 @@ import { useConnectModal, useChainModal } from "@papercliplabs/rainbowkit";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 
-import { FEE_BIPS } from "@/common/constants";
 import { ExplorerLinkType, Token } from "@/common/types";
 import { formatNumber, parseTokenAmount, stringToNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
@@ -66,7 +65,15 @@ function CreateRequest() {
         } else {
             return { buttonText: "Create request", onClickFunction: createRequest, buttonVariant: "primary" };
         }
-    }, [tokenAmountHumanReadable, selectedToken, address, activeChain.unsupported, createRequest, openConnectModal]);
+    }, [
+        tokenAmountHumanReadable,
+        selectedToken,
+        address,
+        activeChain.unsupported,
+        createRequest,
+        openConnectModal,
+        openChainModal,
+    ]);
 
     const ref = useRef(null);
 
@@ -155,7 +162,14 @@ function CreateRequest() {
                             </Text>
 
                             <Flex align="center">
-                                <Image src={activeChain?.iconUrlSync} alt={activeChain?.name} width={16} height={16} />
+                                {activeChain?.iconUrlSync && (
+                                    <Image
+                                        src={activeChain?.iconUrlSync ?? ""}
+                                        alt={activeChain?.name}
+                                        width={16}
+                                        height={16}
+                                    />
+                                )}
                                 <Text pl="4px" textStyle="label" variant="secondary">
                                     {activeChain?.name}
                                 </Text>

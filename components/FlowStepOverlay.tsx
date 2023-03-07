@@ -55,21 +55,29 @@ export default function FlowStepOverlay({
                     </Flex>
 
                     <Flex direction="column" gap="4px" width="100%" justifyContent="center">
-                        <Flex width="100%" justifyContent="center" pb="8px">
-                            {icon}
-                        </Flex>
+                        {icon && (
+                            <Flex width="100%" justifyContent="center" pb="8px">
+                                {icon}
+                            </Flex>
+                        )}
 
-                        <Text textStyle="titleLg" align="center">
-                            {subtitle}
-                        </Text>
+                        {subtitle && (
+                            <Text textStyle="titleLg" align="center">
+                                {subtitle}
+                            </Text>
+                        )}
 
-                        <Text textStyle="bodyLg" variant="secondary" align="center">
-                            {body}
-                        </Text>
+                        {body && (
+                            <Text textStyle="bodyLg" variant="secondary" align="center">
+                                {body}
+                            </Text>
+                        )}
 
-                        <Text textStyle="bodyLg" variant="secondary" fontWeight="bold" align="center">
-                            {bodyBold}
-                        </Text>
+                        {bodyBold && (
+                            <Text textStyle="bodyLg" variant="secondary" fontWeight="bold" align="center">
+                                {bodyBold}
+                            </Text>
+                        )}
                     </Flex>
 
                     <Flex direction="column" width="100%" gap="8px">

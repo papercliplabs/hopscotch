@@ -6,7 +6,6 @@ import { getDefaultWallets, RainbowKitProvider } from "@papercliplabs/rainbowkit
 import { createClient, configureChains, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { ChakraProvider } from "@chakra-ui/react";
-import { publicProvider } from "wagmi/providers/public";
 
 import { theme } from "@/theme";
 import { MainLayout } from "@/layouts/Main";
@@ -18,7 +17,7 @@ import TokenListProvider from "@/hooks/useTokenList/provider";
 import { NestedPortalRefProvider } from "@/components/NestedPortal";
 
 import "@/styles/fonts.css";
-import { useIsMounted } from "@/hooks/useIsMounter";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),

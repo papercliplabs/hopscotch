@@ -6,7 +6,7 @@ import Image from "next/image";
 import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 import { Box, Text, useToast } from "@chakra-ui/react";
 import Link from "next/link";
-import { BigNumber } from "ethers";
+import { BigNumber } from "@ethersproject/bignumber";
 
 interface CopyLinkOverlayProps {
     isOpen: boolean;

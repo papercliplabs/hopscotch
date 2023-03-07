@@ -1,9 +1,8 @@
 import { Length, Optional } from "./types";
-import { Token as UniswapToken } from "@uniswap/sdk-core";
-import { Chain, useNetwork, useToken } from "wagmi";
-import { Token } from "./types";
 import { NATIVE_TOKENS, SUPPORTED_CHAINS } from "./constants";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "@ethersproject/bignumber";
+import { formatUnits, parseUnits } from "@ethersproject/units";
+import { Address } from "wagmi";
 
 /**
  * Format a number so it can nicely be rendered
@@ -59,7 +58,7 @@ export function formatTokenAmount(
     tokenDecimals: Optional<number>,
     decimalPrecision: number
 ): string {
-    const tokens = tokenAmount && tokenDecimals ? ethers.utils.formatUnits(tokenAmount, tokenDecimals) : undefined;
+    const tokens = tokenAmount && tokenDecimals ? formatUnits(tokenAmount, tokenDecimals) : undefined;
 
     return formatNumber(tokens, decimalPrecision);
 }
@@ -70,8 +69,8 @@ export function formatTokenAmount(
  * @param tokenDecimals
  * @returns
  */
-export function parseTokenAmount(value: Optional<string>, tokenDecimals: Optional<number>): BigNumber {
-    const tokens = value && tokenDecimals ? ethers.utils.parseUnits(value, tokenDecimals) : undefined;
+export function parseTokenAmount(value: Optional<string>, tokenDecimals: Optional<number>): BigNumber | undefined {
+    const tokens = value && tokenDecimals ? parseUnits(value, tokenDecimals) : undefined;
     return tokens;
 }
 
@@ -105,7 +104,7 @@ export function shortAddress(address: string | undefined, length: Length): strin
     }
 }
 
-export function getNativeTokenAddress(chainId?: number): string | undefined {
+export function getNativeTokenAddress(chainId?: number): Address | undefined {
     return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.address;
 }
 
@@ -113,7 +112,7 @@ export function getNativeTokenAddress(chainId?: number): string | undefined {
  * Get the wrapped token address for chain
  * @param chian chain to get the wrapped token address for
  */
-export function getWrappedTokenAddress(chainId?: number): string | undefined {
+export function getWrappedTokenAddress(chainId?: number): Address | undefined {
     return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.wrappedAddress;
 }
 

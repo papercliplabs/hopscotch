@@ -1,27 +1,27 @@
-import { FC, useContext, useMemo, useState } from "react";
-import { Text, Flex, Box, Avatar, AvatarProps, TextProps } from "@chakra-ui/react";
-import { useAccount, useEnsAvatar, useEnsName, useNetwork } from "wagmi";
+import { FC, useMemo } from "react";
+import { Text, Flex, Avatar, AvatarProps, TextProps } from "@chakra-ui/react";
+import { Address, useAccount, useEnsAvatar, useEnsName } from "wagmi";
 import { shortAddress } from "@/common/utils";
 import { Length } from "@/common/types";
-import DefaultAvatar from "@/public/static/DefaultAvatar.png";
 import ConnectWalletAvatar from "@/public/static/ConnectWalletAvatar.svg";
-import { AvatarContext, emojiAvatarForAddress } from "@papercliplabs/rainbowkit";
+import { emojiAvatarForAddress } from "@papercliplabs/rainbowkit";
+
 export const getInitials = (name: string): string => {
     // remove 0x if present
     name = name.replace(/^0x/, "");
 
-    // get first threee letters
+    // get first three letters
     const initials = name.slice(0, 3);
 
     return initials.toUpperCase();
 };
 
 export interface EnsAvatarProps extends AvatarProps {
-    address?: string;
+    address?: Address;
 }
 
 export interface EnsNameProps extends TextProps {
-    address: string;
+    address: Address;
 }
 
 export const EnsName: FC<EnsNameProps> = ({ address, ...props }) => {
@@ -40,7 +40,7 @@ export const EnsName: FC<EnsNameProps> = ({ address, ...props }) => {
 export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
     const { address, ...rest } = props;
     const { data: ensAvatarSrc } = useEnsAvatar({
-        addressOrName: address,
+        address: address,
         chainId: 1,
     });
 

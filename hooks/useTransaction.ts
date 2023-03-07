@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useRecentTransactions, Transaction } from "@papercliplabs/rainbowkit";
-import { useProvider, useTransaction as useWagmiTransaction, useWaitForTransaction } from "wagmi";
+import { useTransaction as useWagmiTransaction, useWaitForTransaction } from "wagmi";
 
 /**
  * Get the transaction corresponding to the hash

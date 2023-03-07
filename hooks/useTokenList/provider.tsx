@@ -1,10 +1,10 @@
 import { useContext, createContext, ReactNode, useEffect, useState, useMemo } from "react";
+import { BigNumber } from "@ethersproject/bignumber";
+import { formatUnits } from "@ethersproject/units";
+import { Address, erc20ABI, useAccount, useContractReads } from "wagmi";
 
 import { BaseToken, Token } from "@/common/types";
-import { erc20ABI, useAccount, useContractReads, useSigner } from "wagmi";
 import { COIN_GECKO_API_PLATFORM_ID, NATIVE_TOKENS, SUPPORTED_CHAINS, URLS } from "@/common/constants";
-import { BigNumber, ethers } from "ethers";
-import { AddressZero } from "@ethersproject/constants";
 import { wagmiClient } from "@/pages/_app";
 import { getSupportedChainIds } from "@/common/utils";
 
@@ -49,7 +49,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
 
                         const supportedTokens: BaseToken[] = [];
                         for (let id of supportedChainIds) {
-                            let addresses: string[] = [];
+                            let addresses: Address[] = [];
                             const tokensForChain = tokens.filter((token) => token.chainId == id);
                             const nativeToken = NATIVE_TOKENS.find((token) => token.chainId == id);
 
@@ -57,7 +57,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                                 // Filter duplicates, and also native token
                                 if (!addresses.includes(token.address) && !(nativeToken?.address == token.address)) {
                                     supportedTokens.push({
-                                        address: token.address.toLowerCase(),
+                                        address: token.address.toLowerCase() as Address,
                                         chainId: token.chainId,
                                         decimals: token.decimals,
                                         logoURI: token.logoURI,
@@ -144,8 +144,8 @@ export default function TokenListProvider({ children }: { children: ReactNode })
         if (address != undefined && baseTokens != undefined && baseTokens.length > 0) {
             return baseTokens.map((token) => {
                 return {
-                    addressOrName: token.address,
-                    contractInterface: erc20ABI,
+                    address: token.address,
+                    abi: erc20ABI,
                     functionName: "balanceOf",
                     args: [address],
                     chainId: token.chainId,
@@ -212,7 +212,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
             const balance = balancesExtended ? balancesExtended[i] : undefined;
             const balanceUsd =
                 balance != undefined && price != undefined
-                    ? Number(ethers.utils.formatUnits(balance, baseToken.decimals)) * price
+                    ? Number(formatUnits(balance, baseToken.decimals)) * price
                     : undefined;
 
             ret.push({

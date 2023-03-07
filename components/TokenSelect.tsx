@@ -133,7 +133,7 @@ export default function TokenSelect({
                 </Flex>
             );
         });
-    }, [filteredTokenList, setToken, onClose, activeChain]);
+    }, [filteredTokenList, setToken, onClose, activeChain, token]);
 
     return (
         <>
@@ -184,7 +184,7 @@ export default function TokenSelect({
                             paddingY={2}
                             overflowY="scroll"
                             sx={{
-                                "scrollbar-width": "none",
+                                scrollbarWidth: "none",
                             }}
                         >
                             <Stack width="100%" padding={2}>
