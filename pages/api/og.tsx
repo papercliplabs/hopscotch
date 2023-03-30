@@ -18,50 +18,50 @@ export default function handler(req: NextRequest) {
     return new ImageResponse(
       (
         <div
+        style={{
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          textAlign: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          flexWrap: 'nowrap',
+          backgroundColor: 'white',
+          backgroundImage: 'radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%), radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)',
+          backgroundSize: '100px 100px',
+        }}
+      >
+        <div
           style={{
-            backgroundColor: 'black',
-            backgroundSize: '150px 150px',
-            height: '100%',
-            width: '100%',
             display: 'flex',
-            textAlign: 'center',
             alignItems: 'center',
             justifyContent: 'center',
-            flexDirection: 'column',
-            flexWrap: 'nowrap',
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              justifyItems: 'center',
-            }}
+          <svg
+            height={80}
+            viewBox="0 0 75 65"
+            fill="black"
+            style={{ margin: '0 75px' }}
           >
-            <img
-              alt="Vercel"
-              height={200}
-              src="data:image/svg+xml,%3Csvg width='116' height='100' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M57.5 0L115 100H0L57.5 0z' /%3E%3C/svg%3E"
-              style={{ margin: '0 30px' }}
-              width={232}
-            />
-          </div>
-          <div
-            style={{
-              fontSize: 60,
-              fontStyle: 'normal',
-              letterSpacing: '-0.025em',
-              color: 'white',
-              marginTop: 30,
-              padding: '0 120px',
-              lineHeight: 1.4,
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-            {title}
-          </div>
+            <path d="M37.59.25l36.95 64H.64l36.95-64z"></path>
+          </svg>
         </div>
+        <div
+          style={{
+            display: 'flex',
+            fontSize: 40,
+            fontStyle: 'normal',
+            color: 'black',
+            marginTop: 30,
+            lineHeight: 1.8,
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <b>Vercel Edge Network {title}</b>
+        </div>
+      </div>
       ),
       {
         width: 1200,

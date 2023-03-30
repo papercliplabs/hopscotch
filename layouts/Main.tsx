@@ -5,6 +5,7 @@ import { ConnectButton } from "@papercliplabs/rainbowkit";
 
 import Logo from "@/public/static/Logo.svg";
 import Link from "next/link";
+import Head from 'next/head'
 
 export interface AccountMenuProps {
     user: { public_key: string; id: string };
@@ -19,6 +20,9 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
     const { children } = props;
     return (
         <>
+            <Head>
+                <title>Hopscotch</title>
+            </Head>
             <Flex as="header" w="100%" py={5} px={7} justifyContent="space-between" alignItems="center">
                 <Link href="/" passHref>
                     <Box
