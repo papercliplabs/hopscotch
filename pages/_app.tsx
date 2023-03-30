@@ -19,6 +19,7 @@ import { NestedPortalRefProvider } from "@/components/NestedPortal";
 
 import "@/styles/fonts.css";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import Head from 'next/head'
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
@@ -51,6 +52,16 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     if (!isMounted) return null;
 
     return (
+        <>
+        <Head>
+            <title>Hopscotch</title>
+            <meta property="og:title" content="APP.tsx" />
+            <meta property="og:site_name" content="hopscotch.cash/APP"/>
+            <meta
+                property="og:image"
+                content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og?title=APP`}
+            />
+        </Head>
         <WagmiConfig client={wagmiClient}>
             <RainbowKitProvider chains={chains} showRecentTransactions={true}>
                 <TokenListProvider>
@@ -64,5 +75,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                 </TokenListProvider>
             </RainbowKitProvider>
         </WagmiConfig>
+        </>
+
     );
 }
