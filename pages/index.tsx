@@ -85,7 +85,7 @@ function CreateRequest() {
                 <meta property="og:site_name" content="hopscotch.cash"/>
                 <meta
                     property="og:image"
-                    content={`http://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og?title=TODO`}
+                    content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og?title=TODO`}
                 />
             </Head>
             <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
