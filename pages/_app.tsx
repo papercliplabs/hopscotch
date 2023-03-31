@@ -46,10 +46,10 @@ type AppPropsWithLayout = AppProps & {
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-    const isMounted = useIsMounted();
+    // const isMounted = useIsMounted();
 
-    // Render after hydration as wagmi has issues with autoconnect if not
-    if (!isMounted) return null;
+    // // Render after hydration as wagmi has issues with autoconnect if not
+    // if (!isMounted) return null;
 
     return (
         <>

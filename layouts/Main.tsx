@@ -22,6 +22,12 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
         <>
             <Head>
                 <title>Hopscotch</title>
+                <meta property="og:title" content="MAIN.tsx" />
+                <meta property="og:site_name" content="hopscotch.cash/main"/>
+                <meta
+                    property="og:image"
+                    content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og?title=MAIN`}
+                />
             </Head>
             <Flex as="header" w="100%" py={5} px={7} justifyContent="space-between" alignItems="center">
                 <Link href="/" passHref>
