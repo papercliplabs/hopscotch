@@ -3,6 +3,7 @@ import { Button, Text, Flex, Fade, NumberInputField, NumberInput } from "@chakra
 import { useConnectModal, useChainModal } from "@papercliplabs/rainbowkit";
 import { useAccount } from "wagmi";
 import Image from "next/image";
+import dynamic from 'next/dynamic';
 
 import { ExplorerLinkType, Token } from "@/common/types";
 import { formatNumber, parseTokenAmount, stringToNumber } from "@/common/utils";
@@ -80,14 +81,6 @@ function CreateRequest() {
 
     return (
         <>
-            <Head>
-                <meta property="og:title" content="Pay me on Hopscotch" />
-                <meta property="og:site_name" content="hopscotch.cash"/>
-                <meta
-                    property="og:image"
-                    content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og?title=TODO`}
-                />
-            </Head>
             <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
                 <Text textStyle="headline">Send a request.</Text>
                 <Text textStyle="headline" variant="gradient" mb={6}>
@@ -240,8 +233,28 @@ function CreateRequest() {
     );
 }
 
+// Wrap CreateRequest with next/dynamic for client-side only rendering
+const DynamicCreateRequest = dynamic(() => Promise.resolve(CreateRequest), { ssr: false });
+
+
 const Index = () => {
-    return <CreateRequest />;
-};
+    return (
+      <>
+        <Head>
+            <meta property="og:title" content="(SERVER) Pay me on Hopscotch" />
+            <meta property="og:site_name" content="hopscotch.cash"/>
+            <meta
+                property="og:image"
+                content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og?title=INDEXBABY`}
+            />
+        </Head>
+        <DynamicCreateRequest />
+      </>
+    );
+  };
+
+export async function getServerSideProps() {
+    return { props: {} };
+}
 
 export default Index;
