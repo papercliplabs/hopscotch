@@ -53,7 +53,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
     return (
         <>
-        <Head>
+        {/* <Head>
             <title>Hopscotch</title>
             <meta property="og:title" content="APP.tsx" />
             <meta property="og:site_name" content="hopscotch.cash/APP"/>
@@ -61,7 +61,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                 property="og:image"
                 content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og?title=APP`}
             />
-        </Head>
+        </Head> */}
         <WagmiConfig client={wagmiClient}>
             <RainbowKitProvider chains={chains} showRecentTransactions={true}>
                 <TokenListProvider>
