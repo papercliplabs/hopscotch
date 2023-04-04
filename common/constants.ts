@@ -1,4 +1,5 @@
 import { AddressZero } from "@ethersproject/constants";
+import { Percent } from "@uniswap/sdk-core";
 import { mainnet, goerli, polygon, optimism, arbitrum, polygonMumbai } from "wagmi/chains";
 
 import { NativeBaseToken } from "./types";
@@ -91,6 +92,6 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
 export const FEE_BIPS = 0; // No fee for now
 
 export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
-export const HOPSCOTCH_ADDRESS = "0xDD67309A86Dc5a37D001682345a84fceFfcFdeeB";
+export const HOPSCOTCH_ADDRESS = "0xfE7f5C628582bC54ED73bBFf76e8F3c62a7c7622";
 
 export const MIN_SUCCESSFUL_TX_CONFIRMATIONS = 1;

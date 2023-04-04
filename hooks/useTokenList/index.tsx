@@ -3,6 +3,8 @@ import { useMemo } from "react";
 import { Token } from "@/common/types";
 import { useTokenListContext } from "./provider";
 import { useChain } from "@/hooks/useChain";
+import { AddressZero } from "@ethersproject/constants";
+import { getNativeTokenAddress } from "@/common/utils";
 
 /**
  * Get list of all supported tokens for the active chain
@@ -32,9 +34,13 @@ export function useTokenList(chainIdOverride?: number): Token[] {
  */
 export function useToken(address?: string, chainId?: number): Token | undefined {
     const tokens = useTokenList(chainId);
+    const { id: activeChainId } = useChain();
 
     const token = useMemo(() => {
-        return address ? tokens.find((token) => token.address.toLowerCase() == address.toLowerCase()) : undefined;
+        const addressInternal = address == AddressZero ? getNativeTokenAddress(chainId ?? activeChainId) : address;
+        return addressInternal
+            ? tokens.find((token) => token.address.toLowerCase() == addressInternal.toLowerCase())
+            : undefined;
     }, [tokens, address]);
 
     return token;
