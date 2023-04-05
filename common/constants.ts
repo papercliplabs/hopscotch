@@ -1,6 +1,6 @@
 import { AddressZero } from "@ethersproject/constants";
 import { Percent } from "@uniswap/sdk-core";
-import { mainnet, goerli, polygon, optimism, arbitrum, polygonMumbai } from "wagmi/chains";
+import { mainnet, goerli, polygon, optimism, arbitrum, sepolia, polygonMumbai, optimismGoerli } from "wagmi/chains";
 
 import { NativeBaseToken } from "./types";
 
@@ -14,8 +14,10 @@ export const SUPPORTED_CHAINS = [
     polygon,
     // polygonMumbai,
     goerli,
-    mainnet,
+    // sepolia,
+    // mainnet,
     // optimism,
+    // optimismGoerli,
     // arbitrum,
 ];
 
@@ -23,6 +25,7 @@ export const COIN_GECKO_API_PLATFORM_ID = {
     [polygon.id]: "polygon-pos",
     // [polygonMumbai.id]: undefined,
     [goerli.id]: undefined,
+    // [sepolia.id]: undefined,
     [mainnet.id]: "ethereum",
     // [optimism.id]: "optimistic-ethereum",
     // [arbitrum.id]: "arbitrum-one",
@@ -55,7 +58,17 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         decimals: 18,
         logoURI:
             "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
-        wrappedAddress: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
+        wrappedAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+    },
+    {
+        address: AddressZero,
+        chainId: sepolia.id,
+        name: "Ether",
+        symbol: "ETH",
+        decimals: 18,
+        logoURI:
+            "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+        wrappedAddress: "0xb16F35c0Ae2912430DAc15764477E179D9B9EbEa",
     },
     {
         address: AddressZero,
@@ -79,6 +92,16 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
     },
     {
         address: AddressZero,
+        chainId: optimismGoerli.id,
+        name: "Ether",
+        symbol: "ETH",
+        decimals: 18,
+        logoURI:
+            "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+        wrappedAddress: "0x4200000000000000000000000000000000000006",
+    },
+    {
+        address: AddressZero,
         chainId: arbitrum.id,
         name: "Ether",
         symbol: "ETH",
@@ -92,6 +115,6 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
 export const FEE_BIPS = 0; // No fee for now
 
 export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
-export const HOPSCOTCH_ADDRESS = "0xfE7f5C628582bC54ED73bBFf76e8F3c62a7c7622";
+export const HOPSCOTCH_ADDRESS = "0x92Ef06DBcCf841194437AfAc61BbcD5E3530fAdB";
 
 export const MIN_SUCCESSFUL_TX_CONFIRMATIONS = 1;
