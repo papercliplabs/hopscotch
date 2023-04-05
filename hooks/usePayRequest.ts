@@ -63,18 +63,24 @@ export function usePayRequest(
         return [request?.recipientTokenAddress, request?.recipientTokenAmount];
     }, [request]);
 
-    const [inputIsNative, outputIsNative, erc20InputTokenAddress, erc20OutputTokenAddress] = useMemo(() => {
+    const inputTokenAddressInternal = useMemo(() => {
         const nativeTokenAddress = getNativeTokenAddress(chainId);
+        return nativeTokenAddress == inputTokenAddress ? AddressZero : inputTokenAddress;
+    }, [inputTokenAddress, chainId]);
+
+    const [inputIsNative, outputIsNative, erc20InputTokenAddress, erc20OutputTokenAddress] = useMemo(() => {
         const wrappedNativeTokenAddress = getWrappedTokenAddress(chainId);
-        const inputIsNative = nativeTokenAddress == inputTokenAddress;
-        const outputIsNative = nativeTokenAddress == outputTokenAddress;
+        const inputIsNative = inputTokenAddressInternal == AddressZero;
+        const outputIsNative = outputTokenAddress == AddressZero;
         const erc20InputTokenAddress = inputIsNative ? wrappedNativeTokenAddress : inputTokenAddress;
         const erc20OutputTokenAddress = outputIsNative ? wrappedNativeTokenAddress : outputTokenAddress;
         return [inputIsNative, outputIsNative, erc20InputTokenAddress, erc20OutputTokenAddress];
-    }, [inputTokenAddress, outputTokenAddress, chainId]);
+    }, [inputTokenAddressInternal, outputTokenAddress, chainId]);
 
     const erc20InputToken = useUniswapToken(erc20InputTokenAddress, chainId);
     const erc20OutputToken = useUniswapToken(erc20OutputTokenAddress, chainId);
+
+    console.log("DEBUG", inputIsNative, outputIsNative, erc20InputToken, erc20OutputToken);
 
     ////
     // Get route quote
@@ -93,6 +99,8 @@ export function usePayRequest(
                 } else {
                     const router = new AlphaRouter({ chainId: chainId, provider: provider as BaseProvider });
 
+                    console.log("INPUT", erc20InputToken);
+
                     const outputCurrencyAmount = CurrencyAmount.fromRawAmount(
                         erc20OutputToken,
                         JSBI.BigInt(outputTokenAmount)
@@ -100,7 +108,7 @@ export function usePayRequest(
 
                     const options: SwapOptionsSwapRouter02 = {
                         recipient: HOPSCOTCH_ADDRESS,
-                        slippageTolerance: new Percent(50, 10_000),
+                        slippageTolerance: new Percent(50, 10_000), // 0.5%,
                         deadline: Math.floor(Date.now() / 1000 + 1800),
                         type: SwapType.SWAP_ROUTER_02,
                     };
@@ -111,6 +119,8 @@ export function usePayRequest(
                         TradeType.EXACT_OUTPUT,
                         options
                     );
+
+                    console.log("ROUTE", route, erc20InputToken, outputCurrencyAmount);
 
                     if (route) {
                         setSwapRoute(route);
@@ -141,24 +151,17 @@ export function usePayRequest(
                 if (erc20InputToken.address != erc20OutputToken.address) {
                     // Swap
                     swapContractAddress = V3_SWAP_ROUTER_ADDRESS;
-                    const routerContract = new Contract(V3_SWAP_ROUTER_ADDRESS, UniswapRouterAbi, signer);
 
-                    const calls = [];
-                    calls.push(swapRoute?.methodParameters?.calldata ?? "0x");
+                    swapContractCallData = swapRoute?.methodParameters?.calldata ?? "0x";
 
-                    // TODO(spennyp): this isn't needed, but want to verify where txn's are all going
-                    // if (inputIsNative) {
-                    //     // If the input is ETH, need to call refund on router to get back any overspend
-                    //     const multi2 = routerContract.interface.encodeFunctionData("refundETH");
-                    //     calls.push(multi2);
-                    // }
-
-                    swapContractCallData = routerContract.interface.encodeFunctionData("multicall", [calls]);
+                    inputTokenAmount = swapRoute
+                        ? BigNumber.from(swapRoute.quote?.quotient?.toString())
+                        : outputTokenAmount;
                 }
 
                 const data = {
                     requestId: requestId,
-                    inputToken: inputTokenAddress,
+                    inputToken: inputTokenAddressInternal,
                     inputTokenAmount: inputTokenAmount,
                     swapContractAddress: swapContractAddress,
                     swapContractCallData: swapContractCallData,
@@ -181,7 +184,16 @@ export function usePayRequest(
         }
 
         configureTransaction();
-    }, [signer, swapRoute, erc20InputToken, erc20OutputToken, outputTokenAmount, address, requestId]);
+    }, [
+        signer,
+        swapRoute,
+        erc20InputToken,
+        erc20OutputToken,
+        outputTokenAmount,
+        address,
+        requestId,
+        inputTokenAddressInternal,
+    ]);
 
     const {
         quotedGas,
