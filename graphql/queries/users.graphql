@@ -1,6 +1,0 @@
-query getUsers {
-  user {
-    id
-    public_key
-  }
-}

@@ -3,9 +3,6 @@
 
 hasura/
 
-graphql/generated/
-*.graphql
-
 .pnp.cjs
 
 __generated__

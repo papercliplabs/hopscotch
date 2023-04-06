@@ -1,263 +1,236 @@
-import { FC, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import { Button, Text, Flex, Fade, Center, Spinner, NumberInputField, NumberInput } from "@chakra-ui/react";
+import { useMemo, useRef, useState } from "react";
+import { Button, Text, Flex, Fade, NumberInputField, NumberInput } from "@chakra-ui/react";
 import { useConnectModal, useChainModal } from "@papercliplabs/rainbowkit";
-import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 
-import { useInsertRequestMutation } from "@/graphql/generated/graphql";
-import { useAuth } from "@/providers/auth";
-import { FEE_BIPS } from "@/common/constants";
-import { Token } from "@/common/types";
-import { formatNumber } from "@/common/utils";
+import { ExplorerLinkType, Token } from "@/common/types";
+import { formatNumber, parseTokenAmount, stringToNumber } from "@/common/utils";
 import TokenSelect from "@/components/TokenSelect";
 import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import { useChain } from "@/hooks/useChain";
 import { ConnectedAvatar } from "@/components/EnsAvatar";
-import { ParentOverlay } from "@/components/ParentOverlay";
-import { colors } from "@/theme/colors";
+import { useCreateRequest } from "@/hooks/useCreateRequest";
+import { useExplorerLink } from "@/hooks/useExplorerLink";
+import PendingTransactionOverlay from "@/components/PendingTransactionOverlay";
+import PendingSignatureOverlay from "@/components/PendingSignatureOverlay";
+import FailedTransactionOverlay from "@/components/FailedTransactionOverlay";
+import CopyLinkOverlay from "@/components/CopyLinkOverlay";
 
-interface CreatingRequestOverlayProps {
-  isOpen?: boolean;
+function CreateRequest() {
+    const { openConnectModal } = useConnectModal();
+    const { openChainModal } = useChainModal();
+
+    const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
+    const [tokenAmountHumanReadable, setTokenAmountHumanReadable] = useState<string>("");
+    const activeChain = useChain();
+    const { address } = useAccount();
+
+    const tokenAmount = useMemo(() => {
+        return parseTokenAmount(tokenAmountHumanReadable, selectedToken?.decimals);
+    }, [tokenAmountHumanReadable, selectedToken]);
+
+    const { createRequest, requestId, transaction, pendingWalletSignature, abortPendingSignature, clearTransaction } =
+        useCreateRequest(selectedToken?.address, tokenAmount);
+
+    const transactionExplorerLink = useExplorerLink(transaction?.hash, ExplorerLinkType.TRANSACTION, activeChain);
+
+    const tokenAmountHumanReadableUsd =
+        selectedToken?.priceUsd && tokenAmountHumanReadable
+            ? selectedToken.priceUsd * parseFloat(tokenAmountHumanReadable)
+            : undefined;
+
+    const parseNumber = (val: string, lastVal: string) => {
+        if (val.match(/^\d{1,}(\.\d{0,20})?$/) || val.length == 0) {
+            return val;
+        } else {
+            return lastVal;
+        }
+    };
+
+    // Compute the button state
+    const { buttonText, onClickFunction, buttonVariant } = useMemo(() => {
+        if (activeChain.unsupported) {
+            return {
+                buttonText: "Wrong network",
+                onClickFunction: () => (openChainModal ? openChainModal() : null),
+                buttonVariant: "critical",
+            };
+        } else if (!address) {
+            return { buttonText: "Connect wallet", onClickFunction: openConnectModal, buttonVariant: "secondary" };
+        } else if (selectedToken == undefined) {
+            return { buttonText: "Choose a token", onClickFunction: undefined, buttonVariant: "primary" };
+        } else if (tokenAmountHumanReadable == "") {
+            return { buttonText: "Enter token amount", onClickFunction: undefined, buttonVariant: "primary" };
+        } else {
+            return { buttonText: "Create request", onClickFunction: createRequest, buttonVariant: "primary" };
+        }
+    }, [
+        tokenAmountHumanReadable,
+        selectedToken,
+        address,
+        activeChain.unsupported,
+        createRequest,
+        openConnectModal,
+        openChainModal,
+    ]);
+
+    const ref = useRef(null);
+
+    return (
+        <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
+            <Text textStyle="headline">Send a request.</Text>
+            <Text textStyle="headline" variant="gradient" mb={6}>
+                Get paid in any token.
+            </Text>
+            <Fade in delay={0.25}>
+                <PrimaryCard
+                    ref={ref}
+                    position="relative"
+                    height="100%"
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    flexDirection="column"
+                    padding={4}
+                    display={"flex"}
+                >
+                    <Flex direction="column" align="center" width="100%">
+                        <ConnectedAvatar />
+                        <Text textStyle="titleSm" variant="interactive" mb={4}>
+                            Create a request
+                        </Text>
+                    </Flex>
+
+                    <Flex
+                        width="100%"
+                        backgroundColor="bgSecondary"
+                        borderRadius="md"
+                        padding={4}
+                        mb={4}
+                        flexDirection="column"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        gap="16px"
+                    >
+                        <Flex direction="column" gap="8px">
+                            <NumberInput
+                                height="48px"
+                                onChange={(valueString: string) =>
+                                    setTokenAmountHumanReadable(parseNumber(valueString, tokenAmountHumanReadable))
+                                }
+                                value={tokenAmountHumanReadable}
+                            >
+                                <NumberInputField
+                                    _focusVisible={{
+                                        borderWidth: "1.75px",
+                                        borderColor: "primary",
+                                        borderRadius: "xs",
+                                        backgroundColor: "bgTertiary",
+                                    }}
+                                    outline="none"
+                                    placeholder="Enter an amount"
+                                    borderWidth="0px"
+                                    textAlign="center"
+                                    fontSize="xl"
+                                    lineHeight="xl"
+                                    fontWeight="bold"
+                                    height="100%"
+                                    width="100%"
+                                    p={0}
+                                />
+                            </NumberInput>
+                            <Text textStyle="bodyMd" color="textSecondary" width="100%" align="center">
+                                $
+                                {tokenAmountHumanReadableUsd
+                                    ? formatNumber(tokenAmountHumanReadableUsd, 2, false)
+                                    : "--"}
+                            </Text>
+                        </Flex>
+                        <TokenSelect
+                            portalRef={ref}
+                            token={selectedToken}
+                            setToken={setSelectedToken}
+                            isDisabled={activeChain?.unsupported}
+                        />
+                    </Flex>
+
+                    <Flex direction="column" width="100%" gap={4}>
+                        <Flex flexDirection="row" width="100%" justifyContent="space-between" alignItems="center">
+                            <Text textStyle="label" variant="secondary">
+                                Network
+                            </Text>
+
+                            <Flex align="center">
+                                {activeChain?.iconUrlSync && (
+                                    <Image
+                                        src={activeChain?.iconUrlSync ?? ""}
+                                        alt={activeChain?.name}
+                                        width={16}
+                                        height={16}
+                                    />
+                                )}
+                                <Text pl="4px" textStyle="label" variant="secondary">
+                                    {activeChain?.name}
+                                </Text>
+                            </Flex>
+                        </Flex>
+
+                        <Flex width="100%">
+                            <Button
+                                type="submit"
+                                width="100%"
+                                height="48px"
+                                size="lg"
+                                onClick={() => {
+                                    onClickFunction && onClickFunction();
+                                }}
+                                isDisabled={onClickFunction == undefined}
+                                variant={buttonVariant}
+                            >
+                                {buttonText}
+                            </Button>
+                        </Flex>
+                    </Flex>
+
+                    <PendingSignatureOverlay
+                        abortSignatureCallback={abortPendingSignature}
+                        isOpen={pendingWalletSignature}
+                        title="Create Request"
+                    />
+
+                    <PendingTransactionOverlay
+                        isOpen={
+                            transaction?.status == "pending" ||
+                            (transaction?.status == "confirmed" && requestId == undefined)
+                        }
+                        title="Create Request"
+                        transactionLink={transactionExplorerLink}
+                    />
+
+                    <CopyLinkOverlay
+                        isOpen={transaction?.status == "confirmed" && requestId != undefined}
+                        requestSummary={`${tokenAmountHumanReadable} ${selectedToken?.symbol} on ${activeChain?.name}`}
+                        chainId={activeChain?.id}
+                        requestId={requestId}
+                        transactionLink={transactionExplorerLink}
+                    />
+
+                    <FailedTransactionOverlay
+                        isOpen={transaction?.status == "failed"}
+                        subtitle="Request creation failed!"
+                        transactionLink={transactionExplorerLink}
+                        actionButtonText="Try again"
+                        actionButtonCallback={() => clearTransaction()}
+                    />
+                </PrimaryCard>
+            </Fade>
+        </Flex>
+    );
 }
 
-const CreatingRequestOverlay: FC<CreatingRequestOverlayProps> = (props) => {
-  const { isOpen = false } = props;
-  return (
-    <Fade in={isOpen}>
-      <ParentOverlay p={4} pointerEvents={isOpen ? "inherit" : "none"}>
-        <Center display="flex" flexDirection="column" height="100%">
-          <Spinner
-            thickness="8px"
-            speed="1.0s"
-            emptyColor="bgPrimary"
-            color="textInteractive"
-            boxSize="72px"
-            mb={4}
-            style={{
-              borderTopColor: colors.bgPrimary,
-            }}
-          />
-          <Text textStyle="titleLg" mb={1}>
-            Creating request
-          </Text>
-          <Text textStyle="bodyMd">Please wait...</Text>
-        </Center>
-      </ParentOverlay>
-    </Fade>
-  );
-};
-
-const CreateRequest: FC = () => {
-  const MODAL_MINIMUM_DISPLAY_TIME = 2000;
-  const router = useRouter();
-  const { ensureUser } = useAuth();
-
-  const [insertRequest, { loading: insertRequestLoading }] = useInsertRequestMutation({
-    onCompleted: (data: any) => {
-      const requestId = data?.insert_request_one?.id;
-      setTimeout(() => {
-        router.push(`/request/${requestId}/share`);
-      }, MODAL_MINIMUM_DISPLAY_TIME);
-    },
-  });
-
-  // a modal is open state dependant on insertRequestLoading but we want to show the modal for a minimum amount of time
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-  useMemo(() => {
-    if (insertRequestLoading) {
-      setModalIsOpen(true);
-    } else {
-      setTimeout(() => {
-        setModalIsOpen(false);
-      }, MODAL_MINIMUM_DISPLAY_TIME);
-    }
-  }, [insertRequestLoading]);
-
-  const { openConnectModal } = useConnectModal();
-  const { openChainModal } = useChainModal();
-  const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(false);
-
-  const [selectedToken, setSelectedToken] = useState<Token | undefined>(undefined);
-  const [tokenAmount, setTokenAmount] = useState<string>("");
-  const activeChain = useChain();
-  const { address } = useAccount();
-
-  async function createRequest() {
-    if (selectedToken != undefined && tokenAmount != "" && activeChain) {
-      const tokenAmountRaw = ethers.utils.parseUnits(tokenAmount, selectedToken.decimals);
-
-      setPendingConfirmation(true);
-      const userId = await ensureUser();
-      setPendingConfirmation(false);
-
-      if (userId != undefined && userId != null) {
-        const { data: insertData } = await insertRequest({
-          variables: {
-            object: {
-              recipient_token_amount: tokenAmountRaw.toString(),
-              recipient_token_address: selectedToken.address,
-              chain_id: activeChain.id,
-              user_id: userId,
-            },
-          },
-        });
-      }
-    } else {
-      console.log("Invalid data");
-    }
-  }
-
-  const tokenAmountUsd =
-    selectedToken?.priceUsd && tokenAmount ? selectedToken.priceUsd * parseFloat(tokenAmount) : undefined;
-  const feeAmountUsd = tokenAmountUsd ? (tokenAmountUsd * FEE_BIPS) / 10000 : 0;
-
-  const parse = (val: string) => val.replace(/^\$/, "");
-
-  // Compute the button state
-  const { buttonText, onClickFunction, buttonVariant } = useMemo(() => {
-    if (activeChain.unsupported) {
-      return {
-        buttonText: "Wrong network",
-        onClickFunction: () => (openChainModal ? openChainModal() : null),
-        buttonVariant: "critical",
-      };
-    } else if (!address) {
-      return { buttonText: "Connect wallet", onClickFunction: openConnectModal, buttonVariant: "secondary" };
-    } else if (selectedToken == undefined) {
-      return { buttonText: "Choose a token", onClickFunction: undefined, buttonVariant: "primary" };
-    } else if (tokenAmount == "") {
-      return { buttonText: "Enter token amount", onClickFunction: undefined, buttonVariant: "primary" };
-    } else if (pendingConfirmation) {
-      return { buttonText: "Waiting for signature", onClickFunction: undefined, buttonVariant: "primary" };
-    } else {
-      return { buttonText: "Get a link", onClickFunction: createRequest, buttonVariant: "primary" };
-    }
-  }, [tokenAmount, selectedToken, address, pendingConfirmation, activeChain.unsupported]);
-
-  const ref = useRef(null);
-
-  return (
-    <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
-      <Text textStyle="headline">Send a request.</Text>
-      <Text textStyle="headline" variant="gradient" mb={6}>
-        Get paid in any token.
-      </Text>
-      <Fade in delay={1}>
-        <PrimaryCard
-          ref={ref}
-          position="relative"
-          height="100%"
-          width="100%"
-          alignItems="center"
-          justifyContent="space-between"
-          flexDirection="column"
-          padding={4}
-          display={"flex"}
-        >
-          <Flex direction="column" align="center" width="100%">
-            <ConnectedAvatar />
-            <Text textStyle="titleSm" variant="interactive" mb={4}>
-              Create a request
-            </Text>
-          </Flex>
-
-          <Flex
-            width="100%"
-            backgroundColor="bgSecondary"
-            borderRadius="md"
-            padding={4}
-            mb={4}
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="space-between"
-            gap="16px"
-          >
-            <Flex direction="column" gap="8px">
-              <NumberInput
-                height="48px"
-                onChange={(valueString: string) => setTokenAmount(parse(valueString))}
-                value={tokenAmount}
-              >
-                <NumberInputField
-                  _focusVisible={{
-                    borderWidth: "1.75px",
-                    borderColor: "primary",
-                    borderRadius: "xs",
-                    backgroundColor: "bgTertiary",
-                  }}
-                  outline="none"
-                  placeholder="Enter an amount"
-                  borderWidth="0px"
-                  textAlign="center"
-                  fontSize="xl"
-                  lineHeight="xl"
-                  fontWeight="bold"
-                  height="100%"
-                  width="100%"
-                  p={0}
-                />
-              </NumberInput>
-              <Text textStyle="bodyMd" color="textSecondary" width="100%" align="center">
-                ${tokenAmountUsd ? formatNumber(tokenAmountUsd, 2, false) : "--"}
-              </Text>
-            </Flex>
-            <TokenSelect
-              portalRef={ref}
-              token={selectedToken}
-              setToken={setSelectedToken}
-              isDisabled={activeChain?.unsupported}
-            />
-          </Flex>
-
-          <Flex direction="column" width="100%" gap={4}>
-            <Flex flexDirection="row" width="100%" justifyContent="space-between" alignItems="center">
-              <Text textStyle="label" variant="secondary">
-                Network
-              </Text>
-
-              <Flex align="center">
-                <Image
-                  src={activeChain?.iconUrlSync}
-                  alt={activeChain?.name}
-                  width={16}
-                  height={16}
-                  layout="fixed"
-                  objectFit="contain"
-                  className="rounded-full"
-                />
-                <Text pl="4px" textStyle="label" variant="secondary">
-                  {activeChain?.name}
-                </Text>
-              </Flex>
-            </Flex>
-
-            <Flex width="100%">
-              <Button
-                type="submit"
-                width="100%"
-                height="48px"
-                size="lg"
-                onClick={() => {
-                  onClickFunction && onClickFunction();
-                }}
-                isDisabled={onClickFunction == undefined}
-                variant={buttonVariant}
-              >
-                {buttonText}
-              </Button>
-            </Flex>
-          </Flex>
-          <CreatingRequestOverlay isOpen={modalIsOpen} />
-        </PrimaryCard>
-      </Fade>
-    </Flex>
-  );
-};
-
 const Index = () => {
-  return <CreateRequest />;
+    return <CreateRequest />;
 };
 
 export default Index;

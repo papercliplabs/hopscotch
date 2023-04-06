@@ -1,7 +1,7 @@
 import { AddressZero, MaxUint256 } from "@ethersproject/constants";
-import { BigNumber } from "ethers";
 import { useMemo } from "react";
-import { erc20ABI, useAccount, useContractRead } from "wagmi";
+import { erc20ABI, useAccount, useContractRead, Address } from "wagmi";
+import { BigNumber } from "@ethersproject/bignumber";
 
 /**
  * Hook to get the token allowance of the spenderAddress for the tokenAddress
@@ -12,29 +12,40 @@ import { erc20ABI, useAccount, useContractRead } from "wagmi";
  *      refetch: callback to refetch the allowance
  */
 export function useTokenAllowance(
-  tokenAddress?: string,
-  spenderAddress?: string
+    tokenAddress?: Address,
+    spenderAddress?: Address
 ): {
-  allowance?: BigNumber;
-  refetch: () => void;
+    allowance?: BigNumber;
+    refetch: () => void;
 } {
-  const { address } = useAccount();
-  const { data: allowance, refetch } = useContractRead({
-    addressOrName: tokenAddress ?? "",
-    contractInterface: erc20ABI,
-    functionName: "allowance",
-    args: [address, spenderAddress],
-    enabled:
-      tokenAddress != undefined && tokenAddress != AddressZero && spenderAddress != undefined && address != undefined,
-  });
+    const { address } = useAccount();
 
-  function refetchInternal(): void {
-    refetch();
-  }
+    const readDataPresent = useMemo(() => {
+        return (
+            tokenAddress != undefined &&
+            tokenAddress != AddressZero &&
+            address != undefined &&
+            spenderAddress != undefined
+        );
+    }, [tokenAddress, address, spenderAddress]);
 
-  const finalAllowance = useMemo(() => {
-    return tokenAddress == AddressZero ? MaxUint256 : allowance;
-  }, [allowance, tokenAddress]);
+    const { data: allowance, refetch } = useContractRead({
+        address: tokenAddress ?? AddressZero,
+        abi: erc20ABI,
+        functionName: "allowance",
+        args: [address ?? AddressZero, spenderAddress ?? AddressZero],
+        enabled: readDataPresent,
+    });
 
-  return { allowance: finalAllowance ? (allowance as unknown as BigNumber) : undefined, refetch: refetchInternal };
+    function refetchInternal(): void {
+        if (readDataPresent) {
+            refetch();
+        }
+    }
+
+    const finalAllowance = useMemo(() => {
+        return tokenAddress == AddressZero ? MaxUint256 : allowance;
+    }, [allowance, tokenAddress]);
+
+    return { allowance: finalAllowance ? (allowance as unknown as BigNumber) : undefined, refetch: refetchInternal };
 }

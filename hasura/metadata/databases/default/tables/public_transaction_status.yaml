@@ -1,4 +1,0 @@
-table:
-  schema: public
-  name: transaction_status
-is_enum: true

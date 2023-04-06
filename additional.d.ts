@@ -1,13 +1,11 @@
 declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      GRAPHQL_ADMIN_API_KEY: string;
-      NEXT_PUBLIC_GRAPHQL_ENDPOINT: string;
-      ACTION_SECRET: string;
-      JWT_SECRET: string;
-      ALCHEMY_ID: string;
+    namespace NodeJS {
+        interface ProcessEnv {
+            ACTION_SECRET: string;
+            JWT_SECRET: string;
+            NEXT_PUBLIC_ALCHEMY_ID: string;
+        }
     }
-  }
 }
 
 export {};
