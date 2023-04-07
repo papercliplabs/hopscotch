@@ -14,7 +14,7 @@ import { formatNumber, formatTokenAmount, openLink, shortAddress, stringToNumber
 import { EnsAvatar } from "@/components/EnsAvatar";
 import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import Image from "next/image";
-import { ArrowDownIcon, InfoIcon, LinkIcon } from "@chakra-ui/icons";
+import { InfoIcon, LinkIcon } from "@chakra-ui/icons";
 import { colors } from "@/theme/colors";
 import TokenSelect from "@/components/TokenSelect";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
