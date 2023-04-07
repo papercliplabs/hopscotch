@@ -7,6 +7,8 @@ import { BaseToken, Token } from "@/common/types";
 import { COIN_GECKO_API_PLATFORM_ID, NATIVE_TOKENS, SUPPORTED_CHAINS, URLS } from "@/common/constants";
 import { wagmiClient } from "@/pages/_app";
 import { getSupportedChainIds } from "@/common/utils";
+import { mapValues, merge, isEmpty } from "lodash/fp";
+
 
 const PAGE_SIZE = 150;
 
@@ -14,7 +16,31 @@ type TokenListProviderInterface = {
     tokens: Token[];
 };
 
+type TokenPriceDict = {
+    [key: string]: number;
+  };
+
+
 const TokenListContext = createContext<TokenListProviderInterface>({ tokens: Array<Token>() });
+
+async function getPriceInfoForAddresses(coinGeckoPlatformId: string, addresses: string[]) {
+    try {
+        const url = new URL(`${URLS.COIN_GECKO_API}/simple/token_price/${coinGeckoPlatformId}`);
+        const urlSearchParams = new URLSearchParams({
+            'contract_addresses': addresses.join(','),
+            'vs_currencies': 'usd',
+        });
+        url.search = urlSearchParams.toString();
+
+        const response = await fetch(url.toString());
+        const data = await response.json();
+        const transformedData = mapValues('usd')(data);
+        return transformedData;
+    } catch (error) {
+        console.error("ERROR WITH COINGECKO REQ: ", error);
+        return {};
+    }
+}
 
 export function useTokenListContext() {
     return useContext(TokenListContext);
@@ -23,7 +49,7 @@ export function useTokenListContext() {
 export default function TokenListProvider({ children }: { children: ReactNode }) {
     const [tokens, setTokens] = useState<Token[]>([]);
     const [baseTokens, setBaseTokens] = useState<BaseToken[]>([]);
-    const [prices, setPrices] = useState<number[]>([]);
+    const [prices, setPrices] = useState<TokenPriceDict>({});
     const [nativeTokenBalances, setNativeTokenBalances] = useState<BigNumber[]>([]);
 
     const { address } = useAccount();
@@ -35,7 +61,6 @@ export default function TokenListProvider({ children }: { children: ReactNode })
         async function checkForBaseList() {
             // Fetch the data if it hasn't been fetched already
             if (baseTokens.length == 0) {
-                console.log("FETCHING_BASE_TOKEN_LIST");
                 fetch(URLS.UNISWAP_TOKEN_LIST)
                     .then((response) => response.json())
                     .then((data) => {
@@ -80,30 +105,12 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     // Fetch token Usd prices (best effort)
     ////
     useEffect(() => {
-        async function getPriceInfoForAddresses(coinGeckoPlatformId: string, addresses: string[]) {
-            try {
-                const contractAddressQueryParams =`&contract_addresses=${addresses.join(",")}`;
-                //  TODO fix this
-                const currencyQuaryParams = "&vs_currencies=usd";
-                const requestUrl = `${URLS.COIN_GECKO_API}/simple/token_price/${coinGeckoPlatformId}?${contractAddressQueryParams}${currencyQuaryParams}`
-                const response = await fetch(requestUrl);
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.log("ERROR WITH COINGECKO REQ: ", error);
-                return [];
-            }
-        }
-
         async function checkForPrices() {
             // Fetch the data if it hasn't been fetched already
-            if (baseTokens.length != 0 && prices.length == 0) {
-                console.log("FETCHING_TOKEN_PRICES", baseTokens, SUPPORTED_CHAINS);
 
-                let newPriceData = {};
+            if (baseTokens.length != 0 && isEmpty(prices)) {
 
-                let priceData: number[] = Array.from({ length: baseTokens.length });
-
+                let priceData = {};
                 for (let chain of SUPPORTED_CHAINS) {
                     let indecies: number[] = [];
                     let addresses: string[] = [];
@@ -123,10 +130,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                         for (let page = 0; page < pages; page++) {
                             const addressChunks = addresses.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
                             const data = await getPriceInfoForAddresses(coinGeckoPlatformId, addressChunks);
-                            for (let i = 0; i < Object.keys(data).length; i++) {
-                                priceData[indecies[page * PAGE_SIZE + i]] =
-                                    data[addresses[page * PAGE_SIZE + i].toLowerCase()]?.usd;
-                            }
+                            priceData = merge(priceData, data);
                         }
                     }
                 }
@@ -209,7 +213,8 @@ export default function TokenListProvider({ children }: { children: ReactNode })
 
         for (let i = 0; i < baseTokensExtended.length; i++) {
             const baseToken = baseTokensExtended[i];
-            const price = prices ? prices[i] : undefined;
+            const address = baseToken.address;
+            const price = prices ? prices[address] : undefined;
             const balance = balancesExtended ? balancesExtended[i] : undefined;
             const balanceUsd =
                 balance != undefined && price != undefined
@@ -223,7 +228,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                 balanceUsd: balanceUsd,
             });
         }
-        console.table(tokensWithPrice);
+        // console.table(tokensWithPrice);
         setTokens(tokensWithPrice);
     }, [baseTokens, balances, prices, nativeTokenBalances]);
 
