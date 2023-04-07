@@ -80,9 +80,8 @@ export default function FlowStepOverlay({
                         )}
                     </Flex>
 
+                    {custom}
                     <Flex direction="column" width="100%" gap="8px">
-                        {custom}
-
                         {primaryButtonInfo && (
                             <Button
                                 variant="primary"

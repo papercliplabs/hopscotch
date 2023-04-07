@@ -4,7 +4,7 @@ import FlowStepOverlay from "./FlowStepOverlay";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import Image from "next/image";
 import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
-import { Box, Text, useToast } from "@chakra-ui/react";
+import { Box, Text, useToast, Button, Flex } from "@chakra-ui/react";
 import Link from "next/link";
 import { BigNumber } from "@ethersproject/bignumber";
 
@@ -74,24 +74,41 @@ export default function CopyLinkOverlay({
         });
     };
 
+    const custom = useMemo(() => {
+        return (
+            <Flex direction="column" justifyContent="space-between" width="100%" flexGrow={1} py="10px">
+                <Button
+                    variant="secondary"
+                    type="submit"
+                    size="sm"
+                    mx="auto"
+                    px="20px"
+                    mt="5px"
+                    onClick={() => openLink(transactionLink, true)}
+                    rightIcon={<Image src={ArrowSquareOutIcon} alt="copy" />}
+                >
+                    View on Explorer
+                </Button>
+                <LinkBox link={requestLink} />
+            </Flex>
+        );
+    }, [requestLink, transactionLink]);
+
     return (
         <FlowStepOverlay
             isOpen={isOpen}
-            icon={<Image src={circleCheckImage} alt="check" />}
-            subtitle="All set!"
-            body="Your payment request link was created for"
-            bodyBold={requestSummary}
-            custom={<LinkBox link={requestLink} />}
+            icon={
+                <Box mt="20px">
+                    <Image src={circleCheckImage} alt="check" />
+                </Box>
+            }
+            subtitle={`Your request link was created for ${requestSummary}.`}
+            custom={custom}
             primaryButtonInfo={{
                 text: "Copy Link",
                 onClick: () => {
                     copyToClipboard();
                 },
-            }}
-            secondaryButtonInfo={{
-                text: "View transaction",
-                onClick: () => openLink(transactionLink, true),
-                rightIcon: <Image src={ArrowSquareOutIcon} alt="copy" />,
             }}
             bottomText="Copy the link and share it with anyone."
         />
