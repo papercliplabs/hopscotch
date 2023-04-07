@@ -28,7 +28,8 @@ import SuccessfulTransactionOverlay from "@/components/SuccessfulTransactionOver
 import TokenWithChainIcon from "@/components/TokenWithChainIcon";
 import longArrowDown from "@/public/static/LongArrowDown.svg";
 import { BigNumber } from "ethers";
-import { queryByTestId } from "@storybook/testing-library";
+import Head from 'next/head'
+import dynamic from 'next/dynamic';
 
 interface RequestFormProps {
     disabled: boolean;
@@ -211,7 +212,7 @@ function ReviewRequest({
     );
 }
 
-export default function RequestPage() {
+function PayRequest() {
     const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
     const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState<boolean>(false);
     const [paymentFlowActive, setPaymentFlowActive] = useState<boolean>(false);
@@ -636,3 +637,29 @@ export default function RequestPage() {
         </Fade>
     );
 }
+
+// Wrap CreateRequest with next/dynamic for client-side only rendering
+const DynamicCreateRequest = dynamic(() => Promise.resolve(PayRequest), { ssr: false });
+
+
+const RequestPage = () => {
+    return (
+      <>
+        <Head>
+            <meta property="og:title" content="Pay me on Hopscotch" />
+            <meta property="og:site_name" content="hopscotch.cash"/>
+            <meta
+                property="og:image"
+                content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og`}
+            />
+        </Head>
+        <DynamicCreateRequest />
+      </>
+    );
+  };
+
+export async function getServerSideProps() {
+    return { props: {} };
+}
+
+export default RequestPage;

@@ -241,11 +241,11 @@ const Index = () => {
     return (
       <>
         <Head>
-            <meta property="og:title" content="(SERVER) Pay me on Hopscotch" />
+            <meta property="og:title" content="Get paid on Hopscotch" />
             <meta property="og:site_name" content="hopscotch.cash"/>
             <meta
                 property="og:image"
-                content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og?title=INDEXBABY`}
+                content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og`}
             />
         </Head>
         <DynamicCreateRequest />
