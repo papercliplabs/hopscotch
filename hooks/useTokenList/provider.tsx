@@ -80,10 +80,28 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     // Fetch token Usd prices (best effort)
     ////
     useEffect(() => {
+        async function getPriceInfoForAddresses(coinGeckoPlatformId: string, addresses: string[]) {
+            try {
+                const contractAddressQueryParams =`&contract_addresses=${addresses.join(",")}`;
+                //  TODO fix this
+                const currencyQuaryParams = "&vs_currencies=usd";
+                const requestUrl = `${URLS.COIN_GECKO_API}/simple/token_price/${coinGeckoPlatformId}?${contractAddressQueryParams}${currencyQuaryParams}`
+                const response = await fetch(requestUrl);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.log("ERROR WITH COINGECKO REQ: ", error);
+                return [];
+            }
+        }
+
         async function checkForPrices() {
             // Fetch the data if it hasn't been fetched already
             if (baseTokens.length != 0 && prices.length == 0) {
-                console.log("FETCHING_TOKEN_PRICES");
+                console.log("FETCHING_TOKEN_PRICES", baseTokens, SUPPORTED_CHAINS);
+
+                let newPriceData = {};
+
                 let priceData: number[] = Array.from({ length: baseTokens.length });
 
                 for (let chain of SUPPORTED_CHAINS) {
@@ -103,29 +121,12 @@ export default function TokenListProvider({ children }: { children: ReactNode })
 
                         // Get 414 request to big without pageing this
                         for (let page = 0; page < pages; page++) {
-                            const contractAddressQueryParams =
-                                "&contract_addresses=" +
-                                addresses
-                                    .slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
-                                    .reduce((state, address) => state + "," + address);
-
-                            const currencyQuaryParams = "&vs_currencies=usd";
-                            fetch(
-                                URLS.COIN_GECKO_API +
-                                    `/simple/token_price/${coinGeckoPlatformId}?` +
-                                    contractAddressQueryParams +
-                                    currencyQuaryParams
-                            )
-                                .then((response) => response.json())
-                                .then((data) => {
-                                    for (let i = 0; i < Object.keys(data).length; i++) {
-                                        priceData[indecies[page * PAGE_SIZE + i]] =
-                                            data[addresses[page * PAGE_SIZE + i].toLowerCase()]?.usd;
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.log("ERROR WITH COINGECKO REQ: ", error);
-                                });
+                            const addressChunks = addresses.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+                            const data = await getPriceInfoForAddresses(coinGeckoPlatformId, addressChunks);
+                            for (let i = 0; i < Object.keys(data).length; i++) {
+                                priceData[indecies[page * PAGE_SIZE + i]] =
+                                    data[addresses[page * PAGE_SIZE + i].toLowerCase()]?.usd;
+                            }
                         }
                     }
                 }
@@ -197,7 +198,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     // Construct tokens
     ////
     useEffect(() => {
-        let ret: Token[] = [];
+        let tokensWithPrice: Token[] = [];
 
         // Append native tokens and balances
         const baseTokensExtended = [...baseTokens].concat(
@@ -215,15 +216,15 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                     ? Number(formatUnits(balance, baseToken.decimals)) * price
                     : undefined;
 
-            ret.push({
+            tokensWithPrice.push({
                 ...baseToken,
                 priceUsd: price,
                 balance: balance,
                 balanceUsd: balanceUsd,
             });
         }
-
-        setTokens(ret);
+        console.table(tokensWithPrice);
+        setTokens(tokensWithPrice);
     }, [baseTokens, balances, prices, nativeTokenBalances]);
 
     return <TokenListContext.Provider value={{ tokens }}>{children}</TokenListContext.Provider>;
