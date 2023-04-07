@@ -2,6 +2,7 @@ import { FC, ReactNode, useMemo, useState } from "react";
 import {
     Avatar,
     Button,
+    Center,
     CloseButton,
     Fade,
     Flex,
@@ -187,9 +188,17 @@ export default function TokenSelect({
                                 scrollbarWidth: "none",
                             }}
                         >
-                            <Stack width="100%" padding={2}>
-                                {buttonItems}
-                            </Stack>
+                            {
+                                buttonItems.length === 0 ? (
+                                    <Text textStyle="titleSm" variant="primary" textAlign="center" mt={4}>
+                                        No results found.
+                                    </Text>
+                                ) : (
+                                    <Stack width="100%" padding={2}>
+                                        {buttonItems}
+                                    </Stack>
+                                )
+                            }
                         </GridItem>
                     </Grid>
                 </SlideMenu>
