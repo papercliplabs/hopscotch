@@ -14,7 +14,7 @@ import { formatNumber, formatTokenAmount, openLink, shortAddress, stringToNumber
 import { EnsAvatar } from "@/components/EnsAvatar";
 import { PrimaryCard } from "@/layouts/PrimaryCardGrid";
 import Image from "next/image";
-import { InfoIcon, LinkIcon } from "@chakra-ui/icons";
+import { ArrowDownIcon, InfoIcon, LinkIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import { colors } from "@/theme/colors";
 import TokenSelect from "@/components/TokenSelect";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
@@ -28,8 +28,10 @@ import SuccessfulTransactionOverlay from "@/components/SuccessfulTransactionOver
 import TokenWithChainIcon from "@/components/TokenWithChainIcon";
 import longArrowDown from "@/public/static/LongArrowDown.svg";
 import { BigNumber } from "ethers";
-import Head from 'next/head'
-import dynamic from 'next/dynamic';
+import Head from "next/head";
+import dynamic from "next/dynamic";
+import { queryByTestId } from "@storybook/testing-library";
+import HowItWorks from "@/components/HowItWorks";
 
 interface RequestFormProps {
     disabled: boolean;
@@ -179,7 +181,7 @@ function ReviewRequest({
     const recipientExplorerLink = useExplorerLink(recipientAddress, ExplorerLinkType.WALLET_OR_CONTRACT, chain);
 
     return (
-        <Flex p="16px" border="2px solid #EFF0F3" borderRadius="16px" direction="column" gap="1px">
+        <Flex p="16px" border="2px solid #EFF0F3" borderRadius="16px" direction="column" gap="1px" width="100%">
             <ReviewRequestRow
                 leftIcon={<EnsAvatar address={senderAddress} />}
                 topEntry={
@@ -216,6 +218,7 @@ function PayRequest() {
     const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
     const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState<boolean>(false);
     const [paymentFlowActive, setPaymentFlowActive] = useState<boolean>(false);
+    const [howItWorksOpen, setHowItWorksOpen] = useState<boolean>(false);
 
     const ref = useRef(null);
     const toast = useToast();
@@ -382,7 +385,7 @@ function PayRequest() {
     }
 
     const bottomSummary = (
-        <Flex direction="column" pt="10px" gap="5px" mt={2}>
+        <Flex direction="column" pt="10px" gap="5px" mt={2} width="100%">
             <Flex direction="row" justifyContent="space-between">
                 <Text textStyle="label" variant="secondary" fontWeight="bold">
                     Swap Rate
@@ -495,7 +498,7 @@ function PayRequest() {
 
                     <Flex direction="column" ml={3}>
                         <Text textStyle="titleSm">
-                            <Text as="span" variant="gradient">
+                            <Text as="span" color="primary">
                                 <Link href={recipientAddressExplorerLink} isExternal>
                                     <Tooltip
                                         label={request?.recipientAddress}
@@ -524,7 +527,18 @@ function PayRequest() {
                     flexDirection="column"
                     padding={4}
                     display={"flex"}
+                    width="100%"
                 >
+                    <Button
+                        variant="ghost"
+                        onClick={() => setHowItWorksOpen(true)}
+                        boxSize="30px"
+                        p={0}
+                        position="absolute"
+                        left={4}
+                    >
+                        <QuestionOutlineIcon boxSize="20px" />
+                    </Button>
                     <Flex direction="column" flexGrow={1} justifyContent="space-between" width="100%">
                         <Text textStyle="titleLg" align="center">
                             You Pay
@@ -557,6 +571,23 @@ function PayRequest() {
                             {primaryButtonText}
                         </Button>
                     </Flex>
+
+                    <HowItWorks
+                        isOpen={howItWorksOpen}
+                        closeCallback={() => setHowItWorksOpen(false)}
+                        stepOneInfo={{
+                            title: "Connect your wallet",
+                            description: "Connect the wallet you want to pay the request with.",
+                        }}
+                        stepTwoInfo={{
+                            title: "Pay with any token",
+                            description: "Choose any available ERC20 token to pay with.",
+                        }}
+                        stepThreeInfo={{
+                            title: "Send it",
+                            description: "Hopscotch will swap and send the tokens in one transaction.",
+                        }}
+                    />
 
                     <FlowStepOverlay
                         isOpen={paymentFlowActive}
@@ -627,6 +658,7 @@ function PayRequest() {
 
                     <SuccessfulTransactionOverlay
                         isOpen={swapTransaction?.status == "confirmed" || request?.paid}
+                        // isOpen={true}
                         subtitle="Request paid!"
                         body="The request has been paid."
                         transactionLink={swapTransactionExplorerLink}
@@ -641,22 +673,18 @@ function PayRequest() {
 // Wrap CreateRequest with next/dynamic for client-side only rendering
 const DynamicCreateRequest = dynamic(() => Promise.resolve(PayRequest), { ssr: false });
 
-
 const RequestPage = () => {
     return (
-      <>
-        <Head>
-            <meta property="og:title" content="Pay me on Hopscotch" />
-            <meta property="og:site_name" content="hopscotch.cash"/>
-            <meta
-                property="og:image"
-                content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL }/api/og`}
-            />
-        </Head>
-        <DynamicCreateRequest />
-      </>
+        <>
+            <Head>
+                <meta property="og:title" content="Pay me on Hopscotch" />
+                <meta property="og:site_name" content="hopscotch.cash" />
+                <meta property="og:image" content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og`} />
+            </Head>
+            <DynamicCreateRequest />
+        </>
     );
-  };
+};
 
 export async function getServerSideProps() {
     return { props: {} };
