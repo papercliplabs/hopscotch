@@ -3,4 +3,13 @@ module.exports = {
   swcMinify: false,
   // compress: false,
   // productionBrowserSourceMaps: true,
+  async redirects() {
+    return [
+      {
+        source: '/request/:path*',
+        destination: '/r/:path*',
+        permanent: true,
+      },
+    ]
+  },
 };

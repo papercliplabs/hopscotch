@@ -250,7 +250,7 @@ function PayRequest() {
 
     // get url server side safe nextjs
     const origin = typeof window !== "undefined" ? window.location.origin : "";
-    const path = `/request/${request?.chainId}/${request?.requestId}`;
+    const path = `/r/${request?.chainId}/${request?.requestId}`;
     const requestLink = `${origin}${path}`;
 
     const copyToClipboard = () => {

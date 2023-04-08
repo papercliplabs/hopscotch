@@ -57,7 +57,7 @@ export default function CopyLinkOverlay({
     // get url server side safe nextjs
     useEffect(() => {
         const origin = typeof window !== "undefined" ? window.location.origin : "";
-        const path = `/request/${chainId}/${requestId}`;
+        const path = `/r/${chainId}/${requestId}`;
         setRequestLink(`${origin}${path}`);
     }, [chainId, requestId, setRequestLink]);
 
