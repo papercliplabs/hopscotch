@@ -498,7 +498,7 @@ function PayRequest() {
 
                     <Flex direction="column" ml={3}>
                         <Text textStyle="titleSm">
-                            <Text as="span" variant="gradient">
+                            <Text as="span" color="primary">
                                 <Link href={recipientAddressExplorerLink} isExternal>
                                     <Tooltip
                                         label={request?.recipientAddress}
@@ -527,6 +527,7 @@ function PayRequest() {
                     flexDirection="column"
                     padding={4}
                     display={"flex"}
+                    width="100%"
                 >
                     <Button
                         variant="ghost"

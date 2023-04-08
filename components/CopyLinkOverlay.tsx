@@ -85,7 +85,7 @@ export default function CopyLinkOverlay({
                     px="20px"
                     mt="5px"
                     onClick={() => openLink(transactionLink, true)}
-                    rightIcon={<Image src={ArrowSquareOutIcon} alt="copy" />}
+                    rightIcon={<Image src={ArrowSquareOutIcon} alt="copy" width={16} height={16} />}
                 >
                     View on Explorer
                 </Button>

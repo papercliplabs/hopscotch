@@ -16,7 +16,7 @@ export function formatNumber(
     decimals: number = 2,
     trimTrailingZeros: boolean = true
 ): string {
-    const suffixes = ["", "K", "M", "B", "T"];
+    const suffixes = ["", "", "M", "B", "T"];
 
     let formattedNum = num;
 
@@ -40,7 +40,10 @@ export function formatNumber(
         suffixIndex = 0;
     }
 
-    formattedNum /= 10 ** (3 * suffixIndex);
+    // Don't format below 1M
+    if (formattedNum > 1e6) {
+        formattedNum /= 10 ** (3 * suffixIndex);
+    }
 
     // +number is clever trick to remove trailing zeros
     formattedNum = trimTrailingZeros ? +formattedNum.toFixed(decimals) : formattedNum.toFixed(decimals);
