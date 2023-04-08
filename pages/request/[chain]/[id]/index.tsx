@@ -468,10 +468,10 @@ function PayRequest() {
                         borderRadius="md"
                         p={4}
                         flexDirection="row"
-                        maxWidth="400px"
                         direction="row"
                         justifyContent="space-between"
                         align="center"
+                        maxWidth="400px"
                     >
                         <Flex direction="column">
                             <Text textStyle="titleSm">This is your payment request</Text>
@@ -528,6 +528,7 @@ function PayRequest() {
                     padding={4}
                     display={"flex"}
                     width="100%"
+                    maxWidth="400px"
                 >
                     <Button
                         variant="ghost"
