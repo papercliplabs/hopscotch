@@ -1,5 +1,5 @@
 import { Length, Optional } from "./types";
-import { NATIVE_TOKENS, SUPPORTED_CHAINS } from "./constants";
+import { NATIVE_TOKENS, NO_AMOUNT_DISPLAY, SUPPORTED_CHAINS } from "./constants";
 import { BigNumber } from "@ethersproject/bignumber";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Address } from "wagmi";
@@ -21,7 +21,7 @@ export function formatNumber(
     let formattedNum = num;
 
     if (formattedNum == undefined || isNaN(Number(num))) {
-        return "--";
+        return NO_AMOUNT_DISPLAY;
     }
 
     // If it is represented as a sting, convert to number first

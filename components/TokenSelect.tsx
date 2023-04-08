@@ -25,6 +25,7 @@ import { formatNumber, formatTokenAmount } from "@/common/utils";
 import { useChain } from "@/hooks/useChain";
 import { ParentOverlay } from "@/components/ParentOverlay";
 import TokenWithChainIcon from "./TokenWithChainIcon";
+import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 
 interface SlideMenuProps {
     isOpen: boolean;
@@ -125,10 +126,10 @@ export default function TokenSelect({
                     </Flex>
                     <Flex direction="column" align="end">
                         <Text textStyle="bodyLg">
-                            {balance ? formatTokenAmount(balance, decimals, 4) : "--"} {symbol}
+                            {balance ? formatTokenAmount(balance, decimals, 4) : NO_AMOUNT_DISPLAY} {symbol}
                         </Text>
                         <Text textStyle="bodyMd" variant="secondary">
-                            {balanceUsd != undefined ? "$" + formatNumber(balanceUsd, 2) : "--"}
+                            {balanceUsd != undefined ? "$" + formatNumber(balanceUsd, 2) : NO_AMOUNT_DISPLAY}
                         </Text>
                     </Flex>
                 </Flex>

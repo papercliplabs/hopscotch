@@ -32,6 +32,7 @@ import Head from "next/head";
 import dynamic from "next/dynamic";
 import { queryByTestId } from "@storybook/testing-library";
 import HowItWorks from "@/components/HowItWorks";
+import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 
 interface RequestFormProps {
     disabled: boolean;
@@ -85,7 +86,7 @@ function RequestForm({
                             size="sm"
                         />
                     ) : (
-                        <Text textStyle="headline">{inputTokenQuoteAmountHumanReadable}</Text>
+                        <Text textStyle="headline" variant={inputTokenQuoteAmountHumanReadable != NO_AMOUNT_DISPLAY ? "primary" : "secondary"}>{inputTokenQuoteAmountHumanReadable}</Text>
                     )}
                     <Text textStyle="bodyMd" variant="secondary">
                         ${inputTokenQuoteUsd}
@@ -408,7 +409,7 @@ function PayRequest() {
                         </Text>
                     )
                 ) : (
-                    <Text fontSize="sm">--</Text>
+                    <Text fontSize="sm">${NO_AMOUNT_DISPLAY}</Text>
                 )}
             </Flex>
 

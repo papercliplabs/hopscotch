@@ -4,6 +4,8 @@ import { mainnet, goerli, polygon, optimism, arbitrum, sepolia, polygonMumbai, o
 
 import { NativeBaseToken } from "./types";
 
+export const NO_AMOUNT_DISPLAY = "--";
+
 export const URLS = {
     UNISWAP_TOKEN_LIST: "https://tokens.uniswap.org",
     COIN_GECKO_API: "https://api.coingecko.com/api/v3",

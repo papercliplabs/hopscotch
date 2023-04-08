@@ -20,6 +20,7 @@ import FailedTransactionOverlay from "@/components/FailedTransactionOverlay";
 import CopyLinkOverlay from "@/components/CopyLinkOverlay";
 import Head from "next/head";
 import HowItWorks from "@/components/HowItWorks";
+import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 
 function CreateRequest() {
     const { openConnectModal } = useConnectModal();
@@ -164,10 +165,9 @@ function CreateRequest() {
                                     />
                                 </NumberInput>
                                 <Text textStyle="bodyMd" color="textSecondary" width="100%" align="center">
-                                    $
                                     {tokenAmountHumanReadableUsd
-                                        ? formatNumber(tokenAmountHumanReadableUsd, 2, false)
-                                        : "--"}
+                                        ? `$${formatNumber(tokenAmountHumanReadableUsd, 2, false)}`
+                                        : NO_AMOUNT_DISPLAY}
                                 </Text>
                             </Flex>
                             <TokenSelect
