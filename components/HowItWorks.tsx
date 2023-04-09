@@ -1,4 +1,4 @@
-import { Box, Button, CloseButton, Center, Fade, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, CloseButton, Center, Fade, Flex, Text, SlideFade } from "@chakra-ui/react";
 import { ReactElement } from "react";
 import { ParentOverlay } from "./ParentOverlay";
 import Image from "next/image";
@@ -45,7 +45,7 @@ export default function HowItWorks({
     stepThreeInfo,
 }: HowItWorksProps): ReactElement {
     return (
-        <Fade in={isOpen}>
+        <SlideFade in={isOpen} offsetY="20px">
             <ParentOverlay p={4} pointerEvents={isOpen ? "inherit" : "none"}>
                 <Center display="flex" flexDirection="column" height="100%" justifyContent="space-between" gap="30px">
                     <Flex justifyContent="space-between" alignItems="center" width="100%">
@@ -94,6 +94,6 @@ export default function HowItWorks({
                     </Flex>
                 </Center>
             </ParentOverlay>
-        </Fade>
+        </SlideFade>
     );
 }
