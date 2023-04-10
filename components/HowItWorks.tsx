@@ -1,6 +1,6 @@
-import { Box, Button, CloseButton, Center, Fade, Flex, Text, SlideFade } from "@chakra-ui/react";
+import { Box, Button, CloseButton, Center, Fade, Flex, Text, SlideFade, Slide } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import { ParentOverlay } from "./ParentOverlay";
+import ParentOverlay from "./ParentOverlay";
 import Image from "next/image";
 
 import oneImg from "@/public/static/one.svg";
@@ -45,55 +45,42 @@ export default function HowItWorks({
     stepThreeInfo,
 }: HowItWorksProps): ReactElement {
     return (
-        <SlideFade in={isOpen} offsetY="20px">
-            <ParentOverlay p={4} pointerEvents={isOpen ? "inherit" : "none"}>
-                <Center display="flex" flexDirection="column" height="100%" justifyContent="space-between" gap="30px">
-                    <Flex justifyContent="space-between" alignItems="center" width="100%">
-                        <Box flexBasis={0} flex={1} />
-                        <Text textStyle="titleLg" justifySelf="center">
-                            How it works
-                        </Text>
-                        <Flex flexBasis={0} flex={1} justifyContent="flex-end">
-                            <Button variant="ghost" onClick={() => closeCallback()} width="40px" p={0}>
-                                <CloseButton />
-                            </Button>
-                        </Flex>
-                    </Flex>
-
-                    <Flex
-                        direction="column"
-                        gap="4px"
-                        width="100%"
-                        justifyContent="space-between"
-                        flexGrow={1}
-                        px="8px"
-                    >
-                        <StepInfo imgSrc={oneImg} title={stepOneInfo.title} description={stepOneInfo.description} />
-                        <StepInfo imgSrc={twoImg} title={stepTwoInfo.title} description={stepTwoInfo.description} />
-                        <StepInfo
-                            imgSrc={threeImg}
-                            title={stepThreeInfo.title}
-                            description={stepThreeInfo.description}
-                        />
-                    </Flex>
-
-                    <Flex direction="column" width="100%" gap="8px">
-                        <Button
-                            variant="secondary"
-                            type="submit"
-                            width="100%"
-                            minHeight="48px"
-                            size="lg"
-                            onClick={() => {
-                                closeCallback();
-                            }}
-                            m={0}
-                        >
-                            Got it
+        <ParentOverlay isOpen={isOpen} slideDirection="bottom">
+            <Center display="flex" flexDirection="column" height="100%" justifyContent="space-between" gap="30px">
+                <Flex justifyContent="space-between" alignItems="center" width="100%">
+                    <Box flexBasis={0} flex={1} />
+                    <Text textStyle="titleLg" justifySelf="center">
+                        How it works
+                    </Text>
+                    <Flex flexBasis={0} flex={1} justifyContent="flex-end">
+                        <Button variant="ghost" onClick={() => closeCallback()} width="40px" p={0}>
+                            <CloseButton />
                         </Button>
                     </Flex>
-                </Center>
-            </ParentOverlay>
-        </SlideFade>
+                </Flex>
+
+                <Flex direction="column" gap="4px" width="100%" justifyContent="space-between" flexGrow={1} px="8px">
+                    <StepInfo imgSrc={oneImg} title={stepOneInfo.title} description={stepOneInfo.description} />
+                    <StepInfo imgSrc={twoImg} title={stepTwoInfo.title} description={stepTwoInfo.description} />
+                    <StepInfo imgSrc={threeImg} title={stepThreeInfo.title} description={stepThreeInfo.description} />
+                </Flex>
+
+                <Flex direction="column" width="100%" gap="8px">
+                    <Button
+                        variant="secondary"
+                        type="submit"
+                        width="100%"
+                        minHeight="48px"
+                        size="lg"
+                        onClick={() => {
+                            closeCallback();
+                        }}
+                        m={0}
+                    >
+                        Got it
+                    </Button>
+                </Flex>
+            </Center>
+        </ParentOverlay>
     );
 }
