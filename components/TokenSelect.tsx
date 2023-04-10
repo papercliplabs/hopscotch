@@ -12,6 +12,7 @@ import {
     InputGroup,
     InputLeftElement,
     Portal,
+    Slide,
     Stack,
     Text,
     useDisclosure,
@@ -23,7 +24,7 @@ import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import { NetworkSelect } from "./NetworkSelect";
 import { formatNumber, formatTokenAmount } from "@/common/utils";
 import { useChain } from "@/hooks/useChain";
-import { ParentOverlay } from "@/components/ParentOverlay";
+import ParentOverlay from "@/components/ParentOverlay";
 import TokenWithChainIcon from "./TokenWithChainIcon";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 
@@ -37,17 +38,15 @@ interface SlideMenuProps {
 const SlideMenu: FC<SlideMenuProps> = ({ title, onClose, isOpen, children }) => {
     // slide in or out
     return (
-        <Fade in={isOpen}>
-            <ParentOverlay p={4} pointerEvents={isOpen ? "inherit" : "none"}>
-                <Flex position="relative" flexDirection="row" justifyContent="center" alignItems="center" mb={4}>
-                    <Text textStyle="titleLg" align="center">
-                        {title}
-                    </Text>
-                    <CloseButton onClick={() => onClose()} position="absolute" right="0" />
-                </Flex>
-                {children}
-            </ParentOverlay>
-        </Fade>
+        <ParentOverlay isOpen={isOpen} slideDirection="bottom">
+            <Flex position="relative" flexDirection="row" justifyContent="center" alignItems="center" mb={4}>
+                <Text textStyle="titleLg" align="center">
+                    {title}
+                </Text>
+                <CloseButton onClick={() => onClose()} position="absolute" right="0" />
+            </Flex>
+            {children}
+        </ParentOverlay>
     );
 };
 
@@ -189,17 +188,15 @@ export default function TokenSelect({
                                 scrollbarWidth: "none",
                             }}
                         >
-                            {
-                                buttonItems.length === 0 ? (
-                                    <Text textStyle="titleSm" variant="primary" textAlign="center" mt={4}>
-                                        No results found.
-                                    </Text>
-                                ) : (
-                                    <Stack width="100%" padding={2}>
-                                        {buttonItems}
-                                    </Stack>
-                                )
-                            }
+                            {buttonItems.length === 0 ? (
+                                <Text textStyle="titleSm" variant="primary" textAlign="center" mt={4}>
+                                    No results found.
+                                </Text>
+                            ) : (
+                                <Stack width="100%" padding={2}>
+                                    {buttonItems}
+                                </Stack>
+                            )}
                         </GridItem>
                     </Grid>
                 </SlideMenu>
