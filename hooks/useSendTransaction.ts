@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { TransactionRequest } from "@ethersproject/providers";
 import { Transaction, useAddRecentTransaction } from "@papercliplabs/rainbowkit";
 import { usePrepareSendTransaction, useSendTransaction as useWagmiSendTransaction } from "wagmi";
@@ -86,6 +86,7 @@ export function useSendTransaction(
             } catch (error) {
                 // Likely user rejected
                 console.log("ERROR SENDING", error);
+                setPendingWalletSignature(false);
             } finally {
                 setPendingWalletSignature(false);
                 setHash(txHash);

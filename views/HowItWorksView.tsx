@@ -1,6 +1,6 @@
 import { Box, Button, CloseButton, Center, Fade, Flex, Text, SlideFade, Slide } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import ParentOverlay from "./ParentOverlay";
+import ParentOverlay from "../layouts/ParentOverlay";
 import Image from "next/image";
 
 import oneImg from "@/public/static/one.svg";
@@ -29,7 +29,7 @@ function StepInfo({ imgSrc, title, description }: StepInfoProps): ReactElement {
     );
 }
 
-interface HowItWorksProps {
+interface HowItWorksViewProps {
     isOpen: boolean;
     closeCallback: () => void;
     stepOneInfo: Omit<StepInfoProps, "imgSrc">;
@@ -37,13 +37,13 @@ interface HowItWorksProps {
     stepThreeInfo: Omit<StepInfoProps, "imgSrc">;
 }
 
-export default function HowItWorks({
+export default function HowItWorksView({
     isOpen,
     closeCallback,
     stepOneInfo,
     stepTwoInfo,
     stepThreeInfo,
-}: HowItWorksProps): ReactElement {
+}: HowItWorksViewProps): ReactElement {
     return (
         <ParentOverlay isOpen={isOpen} slideDirection="bottom">
             <Center display="flex" flexDirection="column" height="100%" justifyContent="space-between" gap="30px">
@@ -53,9 +53,7 @@ export default function HowItWorks({
                         How it works
                     </Text>
                     <Flex flexBasis={0} flex={1} justifyContent="flex-end">
-                        <Button variant="ghost" onClick={() => closeCallback()} width="40px" p={0}>
-                            <CloseButton />
-                        </Button>
+                        <CloseButton onClick={() => closeCallback()} width="40px" height="40px" />
                     </Flex>
                 </Flex>
 

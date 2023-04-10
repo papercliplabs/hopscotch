@@ -15,7 +15,6 @@ import "@fontsource/inter";
 import "@papercliplabs/rainbowkit/styles.css";
 import { SUPPORTED_CHAINS } from "@/common/constants";
 import TokenListProvider from "@/hooks/useTokenList/provider";
-import { NestedPortalRefProvider } from "@/components/NestedPortal";
 
 import "@/styles/fonts.css";
 
@@ -46,20 +45,17 @@ type AppPropsWithLayout = AppProps & {
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
     return (
         <>
-        <WagmiConfig client={wagmiClient}>
-            <RainbowKitProvider chains={chains} showRecentTransactions={true}>
-                <TokenListProvider>
-                    <ChakraProvider theme={theme}>
-                        <NestedPortalRefProvider>
+            <WagmiConfig client={wagmiClient}>
+                <RainbowKitProvider chains={chains} showRecentTransactions={true}>
+                    <TokenListProvider>
+                        <ChakraProvider theme={theme}>
                             <MainLayout>
                                 <Component {...pageProps} />
                             </MainLayout>
-                        </NestedPortalRefProvider>
-                    </ChakraProvider>
-                </TokenListProvider>
-            </RainbowKitProvider>
-        </WagmiConfig>
+                        </ChakraProvider>
+                    </TokenListProvider>
+                </RainbowKitProvider>
+            </WagmiConfig>
         </>
-
     );
 }
