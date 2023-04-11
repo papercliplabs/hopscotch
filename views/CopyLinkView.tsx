@@ -1,6 +1,6 @@
 import { openLink } from "@/common/utils";
 import { ReactElement, useEffect, useMemo, useState } from "react";
-import FlowStepOverlay from "./FlowStepOverlay";
+import FlowStepOverlay from "../layouts/FlowStepOverlay";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import Image from "next/image";
 import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
@@ -8,7 +8,7 @@ import { Box, Text, useToast, Button, Flex } from "@chakra-ui/react";
 import Link from "next/link";
 import { BigNumber } from "@ethersproject/bignumber";
 
-interface CopyLinkOverlayProps {
+interface CopyLinkViewProps {
     isOpen: boolean;
     requestSummary?: string;
     requestId?: BigNumber;
@@ -43,13 +43,13 @@ function LinkBox({ link }: { link: string }) {
     );
 }
 
-export default function CopyLinkOverlay({
+export default function CopyLinkView({
     isOpen,
     requestSummary,
     requestId,
     chainId,
     transactionLink,
-}: CopyLinkOverlayProps): ReactElement {
+}: CopyLinkViewProps): ReactElement {
     const toast = useToast();
 
     const [requestLink, setRequestLink] = useState<string>("");

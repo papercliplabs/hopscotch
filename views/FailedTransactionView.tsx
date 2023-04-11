@@ -1,11 +1,11 @@
 import { openLink } from "@/common/utils";
 import { ReactElement } from "react";
-import FlowStepOverlay from "./FlowStepOverlay";
+import FlowStepOverlay from "../layouts/FlowStepOverlay";
 import circleFailImage from "@/public/static/CircleFail.svg";
 import Image from "next/image";
 import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 
-interface FailedTransactionOverlayProps {
+interface FailedTransactionViewProps {
     isOpen: boolean;
     subtitle?: string;
     transactionLink?: string;
@@ -13,13 +13,13 @@ interface FailedTransactionOverlayProps {
     actionButtonCallback: () => void;
 }
 
-export default function FailedTransactionOverlay({
+export default function FailedTransactionView({
     isOpen,
     subtitle,
     transactionLink,
     actionButtonText,
     actionButtonCallback,
-}: FailedTransactionOverlayProps): ReactElement {
+}: FailedTransactionViewProps): ReactElement {
     return (
         <FlowStepOverlay
             isOpen={isOpen}

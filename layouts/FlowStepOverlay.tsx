@@ -1,7 +1,7 @@
+import ParentOverlay from "@/layouts/ParentOverlay";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, Button, Center, Fade, Flex, Slide, Text } from "@chakra-ui/react";
-import { ReactElement } from "react";
-import ParentOverlay from "./ParentOverlay";
+import { Box, Button, Center, Fade, Flex, Slide, Text, useTimeout, withDelay } from "@chakra-ui/react";
+import { ReactElement, useEffect } from "react";
 
 export interface ButtonInfo {
     text: string;
@@ -22,6 +22,8 @@ interface FlowStepOverlayProps {
     secondaryButtonInfo?: ButtonInfo;
     bottomText?: string;
     slideDirection?: "left" | "right" | "top" | "bottom";
+    compressButtons?: boolean;
+    exitDelaySec?: number;
 }
 
 export default function FlowStepOverlay({
@@ -37,9 +39,11 @@ export default function FlowStepOverlay({
     secondaryButtonInfo,
     bottomText,
     slideDirection,
+    compressButtons,
+    exitDelaySec,
 }: FlowStepOverlayProps): ReactElement {
     return (
-        <ParentOverlay isOpen={isOpen} slideDirection={slideDirection}>
+        <ParentOverlay isOpen={isOpen} slideDirection={slideDirection} exitDelaySec={exitDelaySec}>
             <Center display="flex" flexDirection="column" height="100%" justifyContent="space-between">
                 <Flex justifyContent="space-between" alignItems="center" width="100%">
                     <Flex flexBasis={0} flex={1}>
@@ -82,7 +86,7 @@ export default function FlowStepOverlay({
                 </Flex>
 
                 {custom}
-                <Flex direction="column" width="100%" gap="8px">
+                <Flex direction={compressButtons ? "row-reverse" : "column"} width="100%" gap="8px">
                     {primaryButtonInfo && (
                         <Button
                             variant="primary"
