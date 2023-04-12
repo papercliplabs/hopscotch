@@ -161,8 +161,8 @@ function CreateRequest() {
                                 <Image
                                     src={activeChain?.iconUrlSync ?? ""}
                                     alt={activeChain?.name}
-                                    width={16}
-                                    height={16}
+                                    width={20}
+                                    height={20}
                                 />
                             ),
                         },

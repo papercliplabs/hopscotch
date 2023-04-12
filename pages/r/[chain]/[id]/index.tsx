@@ -443,7 +443,7 @@ function PayRequest() {
                     title: "Network",
                     value: requestChain?.name,
                     valueIcon: (
-                        <Image src={requestChain?.iconUrlSync} alt={requestChain?.name} width={16} height={16} />
+                        <Image src={requestChain?.iconUrlSync} alt={requestChain?.name} width={20} height={20} />
                     ),
                 },
             ]}
@@ -475,8 +475,8 @@ function PayRequest() {
                                 <Image
                                     src={requestChain?.iconUrlSync}
                                     alt={requestChain?.name}
-                                    width={16}
-                                    height={16}
+                                    width={20}
+                                    height={20}
                                 />
                             ),
                         },
