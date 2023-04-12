@@ -44,6 +44,7 @@ export function usePayRequest(
 ): {
     swapQuote: SwapQuote;
     transaction?: Transaction;
+    transactionExplorerLink?: string;
     pendingWalletSignature: boolean;
     abortPendingSignature: () => void;
     executeSwap: () => Promise<string>;
@@ -54,7 +55,6 @@ export function usePayRequest(
     const [transactionRequest, setTransactionRequest] = useState<TransactionRequest>({});
 
     const provider = useProvider({ chainId: chainId });
-    const { data: signer } = useSigner();
     const { address } = useAccount();
 
     const request = useRequest(chainId, requestId);
@@ -80,15 +80,20 @@ export function usePayRequest(
     const erc20InputToken = useUniswapToken(erc20InputTokenAddress, chainId);
     const erc20OutputToken = useUniswapToken(erc20OutputTokenAddress, chainId);
 
-    console.log("DEBUG", inputIsNative, outputIsNative, erc20InputToken, erc20OutputToken);
-
     ////
     // Get route quote
     ////
     useEffect(() => {
         async function getRoute() {
-            console.log("GETTING QUOTE");
-            if (erc20InputToken && erc20OutputToken && outputTokenAmount && address && chainId && provider) {
+            // Prevent re-fetching the same quote
+            const sameQuote =
+                swapQuote.tokenAddressRoute && erc20InputTokenAddress && erc20OutputTokenAddress
+                    ? swapQuote.tokenAddressRoute[0].toLowerCase() == erc20InputTokenAddress.toLowerCase() &&
+                      swapQuote.tokenAddressRoute[swapQuote.tokenAddressRoute.length - 1].toLowerCase() ==
+                          erc20OutputTokenAddress.toLowerCase()
+                    : false;
+
+            if (erc20InputToken && erc20OutputToken && outputTokenAmount && chainId && provider && !sameQuote) {
                 // Set loading, and clear the last quote
                 setQuoteStatus(LoadingStatus.LOADING);
                 setSwapRoute(undefined);
@@ -98,8 +103,6 @@ export function usePayRequest(
                     setQuoteStatus(LoadingStatus.SUCCESS);
                 } else {
                     const router = new AlphaRouter({ chainId: chainId, provider: provider as BaseProvider });
-
-                    console.log("INPUT", erc20InputToken);
 
                     const outputCurrencyAmount = CurrencyAmount.fromRawAmount(
                         erc20OutputToken,
@@ -120,8 +123,6 @@ export function usePayRequest(
                         options
                     );
 
-                    console.log("ROUTE", route, erc20InputToken, outputCurrencyAmount);
-
                     if (route) {
                         setSwapRoute(route);
                         setQuoteStatus(LoadingStatus.SUCCESS);
@@ -133,7 +134,7 @@ export function usePayRequest(
         }
 
         getRoute();
-    }, [provider, erc20InputToken, erc20OutputToken, outputTokenAmount, chainId, address]);
+    }, [provider, erc20InputToken, erc20OutputToken, outputTokenAmount, chainId]);
 
     ////
     // Compute transaction request
@@ -142,10 +143,10 @@ export function usePayRequest(
         console.log("RECOMPUTING REQUEST");
         async function configureTransaction() {
             let request = {};
-            if (signer && erc20InputToken && erc20OutputToken && address && requestId) {
+            if (erc20InputToken && erc20OutputToken && address && requestId) {
                 let swapContractAddress = AddressZero;
                 let swapContractCallData = "0x";
-                const contract = new Contract(HOPSCOTCH_ADDRESS, HopscotchAbi, signer);
+                const contract = new Contract(HOPSCOTCH_ADDRESS, HopscotchAbi);
 
                 let inputTokenAmount = outputTokenAmount; // If native, gets updated below if now
                 if (erc20InputToken.address != erc20OutputToken.address) {
@@ -175,17 +176,13 @@ export function usePayRequest(
                     data: contract.interface.encodeFunctionData("payRequest", [data]),
                     gasLimit: BigNumber.from("500000"),
                 };
-            } else {
-                console.log("FALSE", signer, erc20InputToken, erc20OutputToken, address, requestId);
             }
 
-            console.log("RECOMPUTED REQUEST", request);
             setTransactionRequest(request);
         }
 
         configureTransaction();
     }, [
-        signer,
         swapRoute,
         erc20InputToken,
         erc20OutputToken,
@@ -198,6 +195,7 @@ export function usePayRequest(
     const {
         quotedGas,
         transaction,
+        transactionExplorerLink,
         pendingWalletSignature,
         abortPendingSignature,
         sendTransaction: executeSwap,
@@ -224,7 +222,15 @@ export function usePayRequest(
         return ret;
     }, [quoteStatus, quotedGas, swapRoute, erc20InputToken, erc20OutputToken]);
 
-    return { swapQuote, transaction, pendingWalletSignature, abortPendingSignature, executeSwap, clearTransaction };
+    return {
+        swapQuote,
+        transaction,
+        transactionExplorerLink,
+        pendingWalletSignature,
+        abortPendingSignature,
+        executeSwap,
+        clearTransaction,
+    };
 }
 
 // Helper to get uniswap token for alpha router

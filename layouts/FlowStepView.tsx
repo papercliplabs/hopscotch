@@ -1,7 +1,8 @@
-import ParentOverlay from "@/layouts/ParentOverlay";
+import { Primary } from "@/stories/Button.stories";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, Button, Center, Fade, Flex, Slide, Text, useTimeout, withDelay } from "@chakra-ui/react";
 import { ReactElement, useEffect } from "react";
+import PrimaryCardView from "./PrimaryCardView";
 
 export interface ButtonInfo {
     text: string;
@@ -9,8 +10,7 @@ export interface ButtonInfo {
     onClick?: () => void;
 }
 
-interface FlowStepOverlayProps {
-    isOpen: boolean;
+interface FlowStepViewProps {
     backButtonCallback?: () => void;
     title?: string;
     icon?: ReactElement;
@@ -21,13 +21,10 @@ interface FlowStepOverlayProps {
     primaryButtonInfo?: ButtonInfo;
     secondaryButtonInfo?: ButtonInfo;
     bottomText?: string;
-    slideDirection?: "left" | "right" | "top" | "bottom";
     compressButtons?: boolean;
-    exitDelaySec?: number;
 }
 
-export default function FlowStepOverlay({
-    isOpen,
+export default function FlowStepView({
     backButtonCallback,
     title,
     icon,
@@ -38,12 +35,10 @@ export default function FlowStepOverlay({
     primaryButtonInfo,
     secondaryButtonInfo,
     bottomText,
-    slideDirection,
     compressButtons,
-    exitDelaySec,
-}: FlowStepOverlayProps): ReactElement {
+}: FlowStepViewProps): ReactElement {
     return (
-        <ParentOverlay isOpen={isOpen} slideDirection={slideDirection} exitDelaySec={exitDelaySec}>
+        <PrimaryCardView>
             <Center display="flex" flexDirection="column" height="100%" justifyContent="space-between">
                 <Flex justifyContent="space-between" alignItems="center" width="100%">
                     <Flex flexBasis={0} flex={1}>
@@ -129,6 +124,6 @@ export default function FlowStepOverlay({
                     )}
                 </Flex>
             </Center>
-        </ParentOverlay>
+        </PrimaryCardView>
     );
 }

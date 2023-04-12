@@ -32,8 +32,6 @@ export function useRequest(chainId?: number, requestId?: BigNumber): Request | u
         enabled: requestId != undefined && chainId != undefined,
     });
 
-    console.log("USE REQ RENDERING");
-
     const request: Request | undefined = useMemo(() => {
         if (!data || requestId == undefined || !chainId || !Array.isArray(data)) {
             return undefined;

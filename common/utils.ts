@@ -1,8 +1,9 @@
-import { Length, Optional } from "./types";
+import { ExplorerLinkType, Length, Optional } from "./types";
 import { NATIVE_TOKENS, NO_AMOUNT_DISPLAY, SUPPORTED_CHAINS } from "./constants";
 import { BigNumber } from "@ethersproject/bignumber";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Address } from "wagmi";
+import { Chain } from "wagmi";
 
 /**
  * Format a number so it can nicely be rendered
@@ -138,4 +139,18 @@ export function openLink(url: string | undefined, newTab: boolean): void {
 export function stringToNumber(s: string | undefined): number | undefined {
     const parsedFloat = parseFloat(s ?? "");
     return isNaN(parsedFloat) ? undefined : parsedFloat;
+}
+
+export function getExplorerLink(
+    hashOrAddress: string | undefined,
+    linkType: ExplorerLinkType,
+    chain: Chain | undefined
+): string | undefined {
+    const baseLink = chain?.blockExplorers?.default.url;
+
+    if (baseLink && hashOrAddress) {
+        return baseLink + "/" + linkType + "/" + hashOrAddress;
+    } else {
+        return undefined;
+    }
 }

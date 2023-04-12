@@ -1,4 +1,5 @@
 import { ExplorerLinkType } from "@/common/types";
+import { getExplorerLink } from "@/common/utils";
 import { useChain } from "@/hooks/useChain";
 import { Chain } from "wagmi";
 
@@ -10,16 +11,10 @@ import { Chain } from "wagmi";
  * @return explorer link
  */
 export function useExplorerLink(
-  hashOrAddress: string | undefined,
-  linkType: ExplorerLinkType,
-  customChain: Chain | undefined
+    hashOrAddress: string | undefined,
+    linkType: ExplorerLinkType,
+    customChain: Chain | undefined
 ): string | undefined {
-  const activeChain = useChain();
-  const baseLink = customChain ? customChain.blockExplorers?.default.url : activeChain.blockExplorers?.default.url;
-
-  if (baseLink && hashOrAddress) {
-    return baseLink + "/" + linkType + "/" + hashOrAddress;
-  } else {
-    return undefined;
-  }
+    const activeChain = useChain();
+    return getExplorerLink(hashOrAddress, linkType, customChain ?? activeChain);
 }

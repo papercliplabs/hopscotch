@@ -1,6 +1,6 @@
 import { openLink } from "@/common/utils";
 import { ReactElement, useEffect, useMemo, useState } from "react";
-import FlowStepOverlay from "../layouts/FlowStepOverlay";
+import FlowStepView from "../layouts/FlowStepView";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import Image from "next/image";
 import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
@@ -9,7 +9,6 @@ import Link from "next/link";
 import { BigNumber } from "@ethersproject/bignumber";
 
 interface CopyLinkViewProps {
-    isOpen: boolean;
     requestSummary?: string;
     requestId?: BigNumber;
     chainId?: number;
@@ -44,7 +43,6 @@ function LinkBox({ link }: { link: string }) {
 }
 
 export default function CopyLinkView({
-    isOpen,
     requestSummary,
     requestId,
     chainId,
@@ -95,8 +93,7 @@ export default function CopyLinkView({
     }, [requestLink, transactionLink]);
 
     return (
-        <FlowStepOverlay
-            isOpen={isOpen}
+        <FlowStepView
             icon={
                 <Box mt="20px">
                     <Image src={circleCheckImage} alt="check" />
