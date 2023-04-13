@@ -7,19 +7,18 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { NetworkSelect } from "../components/NetworkSelect";
 import { formatNumber, formatTokenAmount } from "@/common/utils";
 import { UseChain, useChain } from "@/hooks/useChain";
-import ParentOverlay from "@/layouts/ParentOverlay";
 import TokenWithChainIcon from "../components/TokenWithChainIcon";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
+import PrimaryCardView from "@/layouts/PrimaryCardView";
 
 interface TokenSelectViewProps {
-    isOpen: boolean;
     closeCallback: () => void;
     token?: Token;
     setToken: (token: Token | undefined) => void;
     customChain?: UseChain;
 }
 
-export default function TokenSelectView({ isOpen, closeCallback, token, setToken, customChain }: TokenSelectViewProps) {
+export default function TokenSelectView({ closeCallback, token, setToken, customChain }: TokenSelectViewProps) {
     const [search, setSearch] = useState("");
 
     const handleSearchChange = (event: any) => setSearch(event?.target?.value);
@@ -69,7 +68,7 @@ export default function TokenSelectView({ isOpen, closeCallback, token, setToken
                     }}
                 >
                     <Flex align="center">
-                        <TokenWithChainIcon token={tokenDetails} chain={chain} size={32} />
+                        <TokenWithChainIcon token={tokenDetails} chain={chain} size={32} mr={4} />
                         <Text textStyle="titleMd">{name}</Text>
                     </Flex>
                     <Flex direction="column" align="end">
@@ -86,7 +85,7 @@ export default function TokenSelectView({ isOpen, closeCallback, token, setToken
     }, [filteredTokenList, setToken, closeCallback, activeChain, token]);
 
     return (
-        <ParentOverlay isOpen={isOpen} slideDirection="bottom">
+        <PrimaryCardView>
             <Flex position="relative" flexDirection="row" justifyContent="center" alignItems="center" mb={4}>
                 <Text textStyle="titleLg" align="center">
                     Choose Token
@@ -141,6 +140,6 @@ export default function TokenSelectView({ isOpen, closeCallback, token, setToken
                     )}
                 </GridItem>
             </Grid>
-        </ParentOverlay>
+        </PrimaryCardView>
     );
 }

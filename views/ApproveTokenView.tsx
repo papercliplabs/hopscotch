@@ -4,10 +4,9 @@ import { colors } from "@/theme/colors";
 import { Avatar, AvatarBadge, Spinner } from "@chakra-ui/react";
 import Image from "next/image";
 import { ReactElement } from "react";
-import FlowStepOverlay from "../layouts/FlowStepOverlay";
+import FlowStepView from "../layouts/FlowStepView";
 
 interface ApproveTokenViewProps {
-    isOpen: boolean;
     token?: Token;
     chain?: UseChain;
     approveCallback?: () => void;
@@ -15,15 +14,13 @@ interface ApproveTokenViewProps {
 }
 
 export default function ApproveTokenView({
-    isOpen,
     token,
     chain,
     approveCallback,
     backButtonCallback,
 }: ApproveTokenViewProps): ReactElement {
     return (
-        <FlowStepOverlay
-            isOpen={isOpen}
+        <FlowStepView
             title={`Approve ${token?.symbol}`}
             backButtonCallback={backButtonCallback}
             icon={

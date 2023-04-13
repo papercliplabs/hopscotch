@@ -7,6 +7,10 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { useTransaction } from "./useTransaction";
 import { MIN_SUCCESSFUL_TX_CONFIRMATIONS } from "@/common/constants";
 import { providers } from "ethers/lib/ethers";
+import { useExplorerLink } from "./useExplorerLink";
+import { ExplorerLinkType } from "@/common/types";
+import { useChain } from "./useChain";
+import { getExplorerLink } from "@/common/utils";
 
 /**
  * Hook to send a transaction, all transactions should be sent using this hook
@@ -29,6 +33,7 @@ export function useSendTransaction(
     quotedGas?: BigNumber;
     transaction?: Transaction;
     receipt?: providers.TransactionReceipt;
+    transactionExplorerLink?: string;
     pendingWalletSignature: boolean;
     abortPendingSignature: () => void;
     sendTransaction: () => Promise<string>;
@@ -37,6 +42,7 @@ export function useSendTransaction(
     const [hash, setHash] = useState<string>("");
     const [receipt, setReceipt] = useState<providers.TransactionReceipt | undefined>(undefined);
     const [pendingWalletSignature, setPendingWalletSignature] = useState<boolean>(false);
+    const [transactionExplorerLink, setTransactionExplorerLink] = useState<string | undefined>(undefined);
 
     const wagmiTransactionRequest: TransactionRequest & {
         to: string;
@@ -52,6 +58,7 @@ export function useSendTransaction(
     const { sendTransactionAsync, reset } = useWagmiSendTransaction(prepareTransactionConfig);
     const addRecentTransaction = useAddRecentTransaction();
     const transaction = useTransaction(hash);
+    const activeChain = useChain();
 
     if (error) {
         console.log("ERROR_IN_TX_PREPARE", error);
@@ -72,17 +79,18 @@ export function useSendTransaction(
 
         if (sendTransactionAsync) {
             setHash("");
+            setTransactionExplorerLink(undefined);
             setReceipt(undefined);
             try {
                 setPendingWalletSignature(true);
                 txResponse = await sendTransactionAsync();
-                console.log("tx response", txResponse);
                 txHash = txResponse.hash;
                 addRecentTransaction({
                     hash: txHash,
                     description: transactionDescription,
                     confirmations: MIN_SUCCESSFUL_TX_CONFIRMATIONS,
                 });
+                setTransactionExplorerLink(getExplorerLink(txHash, ExplorerLinkType.TRANSACTION, activeChain));
             } catch (error) {
                 // Likely user rejected
                 console.log("ERROR SENDING", error);
@@ -100,7 +108,7 @@ export function useSendTransaction(
         }
 
         return txHash;
-    }, [sendTransactionAsync, addRecentTransaction, transactionRequest]);
+    }, [sendTransactionAsync, addRecentTransaction, transactionRequest, activeChain]);
 
     const abortPendingSignature = useCallback(async () => {
         // TODO(spennyp): also want to abort the actual await sendTransactionAsync()
@@ -109,12 +117,14 @@ export function useSendTransaction(
 
     const clearTransaction = useCallback(() => {
         setHash("");
+        setTransactionExplorerLink(undefined);
     }, [setHash]);
 
     return {
         quotedGas: prepareTransactionConfig?.request?.gasLimit as BigNumber,
         transaction,
         receipt,
+        transactionExplorerLink,
         pendingWalletSignature,
         abortPendingSignature,
         sendTransaction,

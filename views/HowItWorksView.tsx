@@ -1,11 +1,11 @@
 import { Box, Button, CloseButton, Center, Fade, Flex, Text, SlideFade, Slide } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import ParentOverlay from "../layouts/ParentOverlay";
 import Image from "next/image";
 
 import oneImg from "@/public/static/one.svg";
 import twoImg from "@/public/static/two.svg";
 import threeImg from "@/public/static/three.svg";
+import PrimaryCardView from "@/layouts/PrimaryCardView";
 
 export interface StepInfoProps {
     imgSrc: string;
@@ -30,7 +30,6 @@ function StepInfo({ imgSrc, title, description }: StepInfoProps): ReactElement {
 }
 
 interface HowItWorksViewProps {
-    isOpen: boolean;
     closeCallback: () => void;
     stepOneInfo: Omit<StepInfoProps, "imgSrc">;
     stepTwoInfo: Omit<StepInfoProps, "imgSrc">;
@@ -38,14 +37,13 @@ interface HowItWorksViewProps {
 }
 
 export default function HowItWorksView({
-    isOpen,
     closeCallback,
     stepOneInfo,
     stepTwoInfo,
     stepThreeInfo,
 }: HowItWorksViewProps): ReactElement {
     return (
-        <ParentOverlay isOpen={isOpen} slideDirection="bottom">
+        <PrimaryCardView>
             <Center display="flex" flexDirection="column" height="100%" justifyContent="space-between" gap="30px">
                 <Flex justifyContent="space-between" alignItems="center" width="100%">
                     <Box flexBasis={0} flex={1} />
@@ -79,6 +77,6 @@ export default function HowItWorksView({
                     </Button>
                 </Flex>
             </Center>
-        </ParentOverlay>
+        </PrimaryCardView>
     );
 }

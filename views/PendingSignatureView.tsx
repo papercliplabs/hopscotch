@@ -1,22 +1,19 @@
 import { colors } from "@/theme/colors";
 import { Spinner } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import FlowStepOverlay from "../layouts/FlowStepOverlay";
+import FlowStepView from "../layouts/FlowStepView";
 
 interface PendingSignatureViewProps {
-    isOpen: boolean;
     title?: string;
     abortSignatureCallback?: () => void;
 }
 
 export default function PendingSignatureView({
-    isOpen,
     title,
     abortSignatureCallback,
 }: PendingSignatureViewProps): ReactElement {
     return (
-        <FlowStepOverlay
-            isOpen={isOpen}
+        <FlowStepView
             title={title}
             backButtonCallback={abortSignatureCallback}
             icon={
@@ -36,7 +33,6 @@ export default function PendingSignatureView({
             primaryButtonInfo={{
                 text: "Confirm in wallet",
             }}
-            exitDelaySec={0.5}
         />
     );
 }

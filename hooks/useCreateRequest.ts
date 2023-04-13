@@ -29,6 +29,7 @@ export function useCreateRequest(
 ): {
     transaction?: Transaction;
     pendingWalletSignature: boolean;
+    transactionExplorerLink?: string;
     requestId?: BigNumber;
     abortPendingSignature: () => void;
     createRequest: () => Promise<string>;
@@ -45,6 +46,7 @@ export function useCreateRequest(
     const {
         transaction,
         receipt,
+        transactionExplorerLink,
         pendingWalletSignature,
         abortPendingSignature,
         sendTransaction: createRequest,
@@ -90,5 +92,13 @@ export function useCreateRequest(
         configureTransaction();
     }, [signer, requestTokenAddress, requestTokenAmount, setTransactionRequest, nativeTokenAddress]);
 
-    return { transaction, pendingWalletSignature, requestId, abortPendingSignature, createRequest, clearTransaction };
+    return {
+        transaction,
+        pendingWalletSignature,
+        transactionExplorerLink,
+        requestId,
+        abortPendingSignature,
+        createRequest,
+        clearTransaction,
+    };
 }

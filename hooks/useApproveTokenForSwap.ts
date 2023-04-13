@@ -27,6 +27,7 @@ export function useApproveErc20ForSwap(
 ): {
     requiresApproval?: boolean;
     transaction?: Transaction;
+    transactionExplorerLink?: string;
     pendingWalletSignature: boolean;
     abortPendingSignature: () => void;
     approve: () => Promise<string>;
@@ -39,6 +40,7 @@ export function useApproveErc20ForSwap(
     const { data: signer } = useSigner();
     const {
         transaction,
+        transactionExplorerLink,
         pendingWalletSignature,
         abortPendingSignature,
         sendTransaction: approve,
@@ -80,5 +82,13 @@ export function useApproveErc20ForSwap(
         }
     }, [allowance, minimumApprovalAmount]);
 
-    return { requiresApproval, transaction, pendingWalletSignature, abortPendingSignature, approve, clearTransaction };
+    return {
+        requiresApproval,
+        transaction,
+        transactionExplorerLink,
+        pendingWalletSignature,
+        abortPendingSignature,
+        approve,
+        clearTransaction,
+    };
 }

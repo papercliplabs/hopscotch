@@ -2,24 +2,18 @@ import { openLink } from "@/common/utils";
 import { colors } from "@/theme/colors";
 import { Spinner } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import FlowStepOverlay from "../layouts/FlowStepOverlay";
+import FlowStepView from "../layouts/FlowStepView";
 import Image from "next/image";
 import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 
 interface PendingTransactionViewProps {
-    isOpen: boolean;
     title?: string;
     transactionLink?: string;
 }
 
-export default function PendingTransactionView({
-    isOpen,
-    title,
-    transactionLink,
-}: PendingTransactionViewProps): ReactElement {
+export default function PendingTransactionView({ title, transactionLink }: PendingTransactionViewProps): ReactElement {
     return (
-        <FlowStepOverlay
-            isOpen={isOpen}
+        <FlowStepView
             title={title}
             icon={
                 <Spinner
@@ -40,7 +34,6 @@ export default function PendingTransactionView({
                 onClick: () => openLink(transactionLink, true),
                 rightIcon: <Image src={ArrowSquareOutIcon} alt="copy" />,
             }}
-            exitDelaySec={0.5}
         />
     );
 }

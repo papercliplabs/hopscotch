@@ -1,11 +1,7 @@
-import { Box, BoxProps, forwardRef } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-export interface PrimaryCardGridProps {
-    children: ReactNode;
-}
-
-export const PrimaryCard = forwardRef<BoxProps, "div">((props, ref) => {
+export default function PrimaryCard({ children }: { children: ReactNode }) {
     return (
         <Box
             backgroundColor="white"
@@ -21,8 +17,8 @@ export const PrimaryCard = forwardRef<BoxProps, "div">((props, ref) => {
             flexDirection="column"
             padding={4}
             style={{ WebkitTransform: "translate3d(0, 0, 0)" }}
-            ref={ref}
-            {...props}
-        />
+        >
+            {children}
+        </Box>
     );
-});
+}

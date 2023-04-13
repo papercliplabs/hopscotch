@@ -1,12 +1,11 @@
 import { openLink } from "@/common/utils";
 import { ReactElement } from "react";
-import FlowStepOverlay, { ButtonInfo } from "../layouts/FlowStepOverlay";
+import FlowStepView, { ButtonInfo } from "../layouts/FlowStepView";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import Image from "next/image";
 import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 
 interface SuccessfulTransactionViewProps {
-    isOpen: boolean;
     subtitle?: string;
     body?: string;
     bodyBold?: string;
@@ -18,7 +17,6 @@ interface SuccessfulTransactionViewProps {
 }
 
 export default function SuccessfulTransactionView({
-    isOpen,
     subtitle,
     body,
     bodyBold,
@@ -36,8 +34,7 @@ export default function SuccessfulTransactionView({
           }
         : undefined;
     return (
-        <FlowStepOverlay
-            isOpen={isOpen}
+        <FlowStepView
             icon={<Image src={circleCheckImage} alt="check" />}
             subtitle={subtitle}
             body={body}
