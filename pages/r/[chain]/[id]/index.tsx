@@ -136,7 +136,7 @@ function PayRequest() {
     const humanReadableRecipientAddress = recipientEnsName ?? shortAddress(request?.recipientAddress, Length.MEDIUM);
 
     const paidSummary = (
-        <Flex px={8} width="100%">
+        <Flex px={4} width="100%">
             <Box width="100%" py={2} borderBottom="2px" borderTop="2px" style={{ borderColor: colors.bgSecondary }}>
                 <SummaryTable
                     rowGap="9px"
