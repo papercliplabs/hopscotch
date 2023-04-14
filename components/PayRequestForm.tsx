@@ -202,6 +202,7 @@ export default function PayRequestForm({
                                 <TokenSelectButton
                                     selectedToken={payToken}
                                     onClickCallback={() => setTokenSelectOpen(true)}
+                                    customChain={requestChain}
                                 />
                             </Flex>
                         </Flex>

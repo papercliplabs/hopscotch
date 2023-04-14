@@ -28,7 +28,7 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
         return customChain ?? activeChain;
     }, [customChain, activeChain]);
 
-    const tokenList = useTokenList();
+    const tokenList = useTokenList(chain.id);
     const filteredTokenList = useMemo(() => {
         let filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
         filteredTokenList.sort((a, b) => {
