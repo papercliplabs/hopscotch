@@ -4,6 +4,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 
 export interface BaseToken {
     readonly address: Address;
+    readonly wrappedAddress?: Address | undefined;
     readonly chainId: number;
     readonly name: string;
     readonly symbol: string;

@@ -4,7 +4,7 @@ import { formatUnits } from "@ethersproject/units";
 import { Address, erc20ABI, useAccount, useContractReads } from "wagmi";
 
 import { BaseToken, Token } from "@/common/types";
-import { COIN_GECKO_API_PLATFORM_ID, NATIVE_TOKENS, SUPPORTED_CHAINS, URLS } from "@/common/constants";
+import { COIN_GECKO_API_PLATFORM_ID, NATIVE_TOKENS, SUPPORTED_CHAINS, URLS, SUPPORTED_NATIVE_TOKENS } from "@/common/constants";
 import { wagmiClient } from "@/pages/_app";
 import { getSupportedChainIds } from "@/common/utils";
 import { mapValues, merge, isEmpty } from "lodash/fp";
@@ -40,6 +40,24 @@ async function getPriceInfoForAddresses(coinGeckoPlatformId: string, addresses: 
         console.error("ERROR WITH COINGECKO REQ: ", error);
         return {};
     }
+}
+
+const getByKeyCaseInsensitive = (obj, key) => {
+    if (!obj || !key) {
+        return undefined;
+    }
+    const keys = Object.keys(obj);
+    const keyIndex = keys.findIndex((k) => k.toLowerCase() === key.toLowerCase());
+    return obj[keys[keyIndex]];
+};
+
+function getPrice(token: BaseToken, prices: object) {
+    const { address, wrappedAddress } = token;
+
+    const primaryPrice = getByKeyCaseInsensitive(prices, address);
+    const wrappedPrice = getByKeyCaseInsensitive(prices, wrappedAddress);
+
+    return primaryPrice || wrappedPrice;
 }
 
 export function useTokenListContext() {
@@ -112,14 +130,9 @@ export default function TokenListProvider({ children }: { children: ReactNode })
 
                 let priceData = {};
                 for (let chain of SUPPORTED_CHAINS) {
-                    let indecies: number[] = [];
-                    let addresses: string[] = [];
-                    for (let i = 0; i < baseTokens.length; i++) {
-                        if (baseTokens[i].chainId == chain.id) {
-                            indecies.push(i);
-                            addresses.push(baseTokens[i].address);
-                        }
-                    }
+                    const nativeTokenWrappedAddresses = NATIVE_TOKENS.filter(token => token.chainId == chain.id).map((token) => token.wrappedAddress);
+                    const baseTokenAddresses = baseTokens.filter(token => token.chainId == chain.id).map((token) => token.address);
+                    const addresses = [...nativeTokenWrappedAddresses, ...baseTokenAddresses];
 
                     const coinGeckoPlatformId = COIN_GECKO_API_PLATFORM_ID[chain.id];
 
@@ -205,16 +218,15 @@ export default function TokenListProvider({ children }: { children: ReactNode })
         let tokensWithPrice: Token[] = [];
 
         // Append native tokens and balances
-        const baseTokensExtended = [...baseTokens].concat(
-            NATIVE_TOKENS.filter((token) => SUPPORTED_CHAINS.map((chain) => chain.id).find((id) => id == token.chainId))
-        );
+        const baseTokensExtended = [...baseTokens].concat(SUPPORTED_NATIVE_TOKENS);
 
         const balancesExtended = balances ? [...balances].concat(nativeTokenBalances) : undefined;
 
         for (let i = 0; i < baseTokensExtended.length; i++) {
             const baseToken = baseTokensExtended[i];
-            const address = baseToken.address;
-            const price = prices ? prices[address] : undefined;
+            const price = getPrice(baseToken, prices);
+
+            // TODO MERGE
             const balance = balancesExtended ? balancesExtended[i] : undefined;
             const balanceUsd =
                 balance != undefined && price != undefined
@@ -228,7 +240,6 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                 balanceUsd: balanceUsd,
             });
         }
-        // console.table(tokensWithPrice);
         setTokens(tokensWithPrice);
     }, [baseTokens, balances, prices, nativeTokenBalances]);
 

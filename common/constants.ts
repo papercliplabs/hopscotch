@@ -120,3 +120,5 @@ export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc4
 export const HOPSCOTCH_ADDRESS = "0x92Ef06DBcCf841194437AfAc61BbcD5E3530fAdB";
 
 export const MIN_SUCCESSFUL_TX_CONFIRMATIONS = 1;
+
+export const SUPPORTED_NATIVE_TOKENS = NATIVE_TOKENS.filter((token) => SUPPORTED_CHAINS.map((chain) => chain.id).find((id) => id == token.chainId))
