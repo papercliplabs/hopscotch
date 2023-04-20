@@ -1,6 +1,6 @@
 import { openLink } from "@/common/utils";
 import { ReactElement } from "react";
-import FlowStepView, { ButtonInfo } from "../layouts/FlowStepView";
+import FlowStepView, { ButtonInfo } from "@/layouts/FlowStepView";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import Image from "next/image";
 import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";

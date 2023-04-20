@@ -4,11 +4,16 @@ import { formatUnits } from "@ethersproject/units";
 import { Address, erc20ABI, useAccount, useContractReads } from "wagmi";
 
 import { BaseToken, Token } from "@/common/types";
-import { COIN_GECKO_API_PLATFORM_ID, NATIVE_TOKENS, SUPPORTED_CHAINS, URLS, SUPPORTED_NATIVE_TOKENS } from "@/common/constants";
+import {
+    COIN_GECKO_API_PLATFORM_ID,
+    NATIVE_TOKENS,
+    SUPPORTED_CHAINS,
+    URLS,
+    SUPPORTED_NATIVE_TOKENS,
+} from "@/common/constants";
 import { wagmiClient } from "@/pages/_app";
 import { getSupportedChainIds } from "@/common/utils";
 import { mapValues, merge, isEmpty } from "lodash/fp";
-
 
 const PAGE_SIZE = 150;
 
@@ -18,8 +23,7 @@ type TokenListProviderInterface = {
 
 type TokenPriceDict = {
     [key: string]: number;
-  };
-
+};
 
 const TokenListContext = createContext<TokenListProviderInterface>({ tokens: Array<Token>() });
 
@@ -27,14 +31,14 @@ async function getPriceInfoForAddresses(coinGeckoPlatformId: string, addresses: 
     try {
         const url = new URL(`${URLS.COIN_GECKO_API}/simple/token_price/${coinGeckoPlatformId}`);
         const urlSearchParams = new URLSearchParams({
-            'contract_addresses': addresses.join(','),
-            'vs_currencies': 'usd',
+            contract_addresses: addresses.join(","),
+            vs_currencies: "usd",
         });
         url.search = urlSearchParams.toString();
 
         const response = await fetch(url.toString());
         const data = await response.json();
-        const transformedData = mapValues('usd')(data);
+        const transformedData = mapValues("usd")(data);
         return transformedData;
     } catch (error) {
         console.error("ERROR WITH COINGECKO REQ: ", error);
@@ -42,7 +46,7 @@ async function getPriceInfoForAddresses(coinGeckoPlatformId: string, addresses: 
     }
 }
 
-const getByKeyCaseInsensitive = (obj, key) => {
+const getByKeyCaseInsensitive = (obj: any, key: any) => {
     if (!obj || !key) {
         return undefined;
     }
@@ -127,11 +131,14 @@ export default function TokenListProvider({ children }: { children: ReactNode })
             // Fetch the data if it hasn't been fetched already
 
             if (baseTokens.length != 0 && isEmpty(prices)) {
-
                 let priceData = {};
                 for (let chain of SUPPORTED_CHAINS) {
-                    const nativeTokenWrappedAddresses = NATIVE_TOKENS.filter(token => token.chainId == chain.id).map((token) => token.wrappedAddress);
-                    const baseTokenAddresses = baseTokens.filter(token => token.chainId == chain.id).map((token) => token.address);
+                    const nativeTokenWrappedAddresses = NATIVE_TOKENS.filter((token) => token.chainId == chain.id).map(
+                        (token) => token.wrappedAddress
+                    );
+                    const baseTokenAddresses = baseTokens
+                        .filter((token) => token.chainId == chain.id)
+                        .map((token) => token.address);
                     const addresses = [...nativeTokenWrappedAddresses, ...baseTokenAddresses];
 
                     const coinGeckoPlatformId = COIN_GECKO_API_PLATFORM_ID[chain.id];

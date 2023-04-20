@@ -1,13 +1,13 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CloseButton, Flex, Grid, GridItem, Input, InputGroup, InputLeftElement, Stack, Text } from "@chakra-ui/react";
 
 import { Token } from "@/common/types";
 import { useTokenList } from "@/hooks/useTokenList";
 import { SearchIcon } from "@chakra-ui/icons";
-import { NetworkSelect } from "../components/NetworkSelect";
+import { NetworkSelect } from "@/components/NetworkSelect";
 import { formatNumber, formatTokenAmount } from "@/common/utils";
 import { UseChain, useChain } from "@/hooks/useChain";
-import TokenWithChainIcon from "../components/TokenWithChainIcon";
+import TokenWithChainIcon from "@/components/TokenWithChainIcon";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
 
@@ -28,7 +28,7 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
         return customChain ?? activeChain;
     }, [customChain, activeChain]);
 
-    const tokenList = useTokenList();
+    const tokenList = useTokenList(chain.id);
     const filteredTokenList = useMemo(() => {
         let filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
         filteredTokenList.sort((a, b) => {
@@ -82,7 +82,7 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
                 </Flex>
             );
         });
-    }, [filteredTokenList, setToken, closeCallback, activeChain, token]);
+    }, [filteredTokenList, setToken, closeCallback, chain, token]);
 
     return (
         <PrimaryCardView>

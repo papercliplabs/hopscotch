@@ -21,7 +21,7 @@ interface CreateRequestFormProps {
     requestTokenAmountHumanReadable?: string;
     setRequestToken: (token?: Token) => void;
     setRequestTokenAmountHumanReadable: (amount?: string) => void;
-    submit: () => void;
+    submit?: () => void;
 }
 
 export default function CreateRequestForm({
@@ -194,7 +194,7 @@ export default function CreateRequestForm({
             <Slide
                 in={howItWorksOpen}
                 direction="bottom"
-                style={{ padding: "inherit", height: "100%", width: "100%" }}
+                style={{ position: "absolute", padding: "inherit", height: "100%", width: "100%" }}
                 unmountOnExit={true}
             >
                 <HowItWorksView
@@ -217,7 +217,7 @@ export default function CreateRequestForm({
             <Slide
                 in={tokenSelectOpen}
                 direction="bottom"
-                style={{ padding: "inherit", height: "100%", width: "100%" }}
+                style={{ position: "absolute", padding: "inherit", height: "100%", width: "100%" }}
                 unmountOnExit={true}
             >
                 <TokenSelectView

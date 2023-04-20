@@ -47,7 +47,7 @@ interface RequestReviewProps {
     recipientAddress?: Address;
     chain?: UseChain;
     backButtonCallback: () => void;
-    payButtonCallback: () => void;
+    payButtonCallback?: () => void;
 }
 
 export default function ReviewPayRequest({

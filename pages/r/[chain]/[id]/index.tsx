@@ -1,14 +1,14 @@
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAccount, useEnsName } from "wagmi";
 
 import { useChain } from "@/hooks/useChain";
 import { useRequest } from "@/hooks/useRequest";
 import { useToken } from "@/hooks/useTokenList";
 import { ExplorerLinkType, Length, LoadingStatus, Token } from "@/common/types";
-import { usePayRequest } from "@/hooks/usePayRequest";
-import { useApproveErc20ForSwap } from "@/hooks/useApproveTokenForSwap";
-import { Box, Button, Flex, Link, Spinner, Text, Tooltip, useToast } from "@chakra-ui/react";
+import usePayRequest from "@/hooks/transactions/usePayRequest";
+import useApproveErc20 from "@/hooks/transactions/useApproveErc20";
+import { Box, Button, Flex, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { formatNumber, formatTokenAmount, openLink, shortAddress, stringToNumber } from "@/common/utils";
 import { EnsAvatar } from "@/components/EnsAvatar";
 import PrimaryCard from "@/layouts/PrimaryCard";
@@ -26,6 +26,7 @@ import Carousel from "@/components/Carousel";
 import TransactionFlow from "@/components/TransactionFlow";
 import ReviewPayRequest from "@/components/ReviewPayRequest";
 import SuccessfulTransactionView from "@/views/SuccessfulTransactionView";
+import Spinner from "@/components/Spinner";
 
 function PayRequest() {
     const [payToken, setPayToken] = useState<Token | undefined>(undefined);
@@ -75,43 +76,30 @@ function PayRequest() {
         requestChain
     );
 
-    const {
-        swapQuote,
-        transaction: swapTransaction,
-        transactionExplorerLink: swapTransactionExplorerLink,
-        pendingWalletSignature: pendingSwapWalletSignature,
-        abortPendingSignature: abortPendingSwapWalletSignature,
-        executeSwap,
-        clearTransaction: clearSwapTransaction,
-    } = usePayRequest(requestChain.id, request?.requestId, payToken?.address);
+    const payRequestResponse = usePayRequest(requestChain.id, request?.requestId, payToken?.address);
 
-    const {
-        requiresApproval,
-        approve,
-        transaction: approveTransation,
-        transactionExplorerLink: approveTransactionExplorerLink,
-        pendingWalletSignature: pendingApproveWalletSignature,
-        abortPendingSignature: abortPendingApproveWalletSignature,
-        clearTransaction: clearApproveTransaction,
-    } = useApproveErc20ForSwap(payToken?.address, swapQuote.quoteAmount);
+    const approveTransactionResponse = useApproveErc20(payToken?.address, payRequestResponse.swapQuote.quoteAmount);
 
     // Derived
 
-    const formattedQuoteAmount = formatTokenAmount(swapQuote?.quoteAmount, payToken?.decimals, 6);
+    const formattedQuoteAmount = formatTokenAmount(payRequestResponse.swapQuote?.quoteAmount, payToken?.decimals, 6);
     const formattedOutputAmount = formatTokenAmount(request?.recipientTokenAmount, requestToken?.decimals, 6);
 
     const activeViewIndex = useMemo(() => {
         if (paymentFlowActive) {
-            if (requiresApproval) {
+            if (approveTransactionResponse.requiresApproval) {
                 // Need to approve
-                if (approveTransation == undefined && !pendingApproveWalletSignature) {
+                if (
+                    approveTransactionResponse.hash == undefined &&
+                    !approveTransactionResponse?.pendingWalletSignature
+                ) {
                     return 1;
                 } else {
                     return 2;
                 }
             } else {
                 // Already approved
-                if (swapTransaction == undefined && !pendingSwapWalletSignature) {
+                if (payRequestResponse.hash == undefined && !payRequestResponse.pendingWalletSignature) {
                     return 3;
                 } else {
                     return 4;
@@ -120,17 +108,14 @@ function PayRequest() {
         } else {
             return 0;
         }
-    }, [
-        requiresApproval,
-        paymentFlowActive,
-        approveTransation,
-        pendingApproveWalletSignature,
-        swapTransaction,
-        pendingSwapWalletSignature,
-    ]);
+    }, [approveTransactionResponse, paymentFlowActive, payRequestResponse]);
 
     if (request == undefined) {
-        return <div> Request not found</div>;
+        return (
+            <Flex width="100%" direction="column" alignItems="center" justifyContent="center" pt="200px">
+                <Spinner size="120px" />
+            </Flex>
+        );
     }
 
     const humanReadableRecipientAddress = recipientEnsName ?? shortAddress(request?.recipientAddress, Length.MEDIUM);
@@ -175,7 +160,7 @@ function PayRequest() {
         <SuccessfulTransactionView
             subtitle="Paid!"
             body=""
-            transactionLink={swapTransactionExplorerLink}
+            transactionLink={payRequestResponse.explorerLink}
             primaryButtonInfo={{
                 text: "Create request",
                 onClick: () => openLink("../../", false),
@@ -250,8 +235,8 @@ function PayRequest() {
                                 <PayRequestForm
                                     request={request}
                                     payToken={payToken}
-                                    quoteStatus={swapQuote?.quoteStatus}
-                                    payTokenQuoteAmount={swapQuote?.quoteAmount}
+                                    quoteStatus={payRequestResponse.swapQuote?.quoteStatus}
+                                    payTokenQuoteAmount={payRequestResponse.swapQuote?.quoteAmount}
                                     setPayToken={setPayToken}
                                     submit={() => setPaymentFlowActive(true)}
                                     key={0}
@@ -261,39 +246,31 @@ function PayRequest() {
                         <ApproveTokenView
                             token={payToken}
                             chain={requestChain}
-                            approveCallback={approve}
+                            approveCallback={approveTransactionResponse.send}
                             backButtonCallback={() => setPaymentFlowActive(false)}
                             key={1}
                         />,
                         <TransactionFlow
                             title={`Approve ${payToken?.symbol}`}
-                            pendingWalletSignature={pendingApproveWalletSignature}
-                            transaction={approveTransation}
-                            transactionExplorerLink={approveTransactionExplorerLink}
-                            abortSignatureCallback={abortPendingApproveWalletSignature}
-                            retryFailedTransactionCallback={clearApproveTransaction}
+                            transactionResponse={approveTransactionResponse}
                             key={2}
                         />,
                         <ReviewPayRequest
                             payToken={payToken}
-                            payTokenAmount={swapQuote?.quoteAmount}
+                            payTokenAmount={payRequestResponse.swapQuote?.quoteAmount}
                             senderAddress={address}
                             requestToken={requestToken}
                             requestTokenAmount={request?.recipientTokenAmount}
                             recipientAddress={request?.recipientAddress}
                             chain={requestChain}
                             backButtonCallback={() => setPaymentFlowActive(false)}
-                            payButtonCallback={executeSwap}
+                            payButtonCallback={payRequestResponse.send}
                             key={3}
                         />,
                         <TransactionFlow
                             title={`Pay request`}
-                            pendingWalletSignature={pendingSwapWalletSignature}
-                            transaction={swapTransaction}
-                            transactionExplorerLink={swapTransactionExplorerLink}
+                            transactionResponse={payRequestResponse}
                             successfulTransactionView={paidView}
-                            abortSignatureCallback={abortPendingSwapWalletSignature}
-                            retryFailedTransactionCallback={clearSwapTransaction}
                             key={4}
                         />,
                     ]}

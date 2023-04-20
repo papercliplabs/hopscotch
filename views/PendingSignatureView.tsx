@@ -1,7 +1,7 @@
+import Spinner from "@/components/Spinner";
 import { colors } from "@/theme/colors";
-import { Spinner } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import FlowStepView from "../layouts/FlowStepView";
+import FlowStepView from "@/layouts/FlowStepView";
 
 interface PendingSignatureViewProps {
     title?: string;
@@ -16,18 +16,7 @@ export default function PendingSignatureView({
         <FlowStepView
             title={title}
             backButtonCallback={abortSignatureCallback}
-            icon={
-                <Spinner
-                    thickness="8px"
-                    speed="1.0s"
-                    emptyColor="bgPrimary"
-                    color="textInteractive"
-                    boxSize="60px"
-                    style={{
-                        borderTopColor: colors.bgPrimary,
-                    }}
-                />
-            }
+            icon={<Spinner size="80px" />}
             subtitle="Check wallet app"
             body="Confirm transaction in your wallet."
             primaryButtonInfo={{
