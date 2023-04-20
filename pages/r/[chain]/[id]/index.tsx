@@ -8,7 +8,7 @@ import { useToken } from "@/hooks/useTokenList";
 import { ExplorerLinkType, Length, LoadingStatus, Token } from "@/common/types";
 import usePayRequest from "@/hooks/transactions/usePayRequest";
 import useApproveErc20 from "@/hooks/transactions/useApproveErc20";
-import { Box, Button, Flex, Link, Spinner, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { formatNumber, formatTokenAmount, openLink, shortAddress, stringToNumber } from "@/common/utils";
 import { EnsAvatar } from "@/components/EnsAvatar";
 import PrimaryCard from "@/layouts/PrimaryCard";
@@ -26,6 +26,7 @@ import Carousel from "@/components/Carousel";
 import TransactionFlow from "@/components/TransactionFlow";
 import ReviewPayRequest from "@/components/ReviewPayRequest";
 import SuccessfulTransactionView from "@/views/SuccessfulTransactionView";
+import Spinner from "@/components/Spinner";
 
 function PayRequest() {
     const [payToken, setPayToken] = useState<Token | undefined>(undefined);
@@ -110,7 +111,11 @@ function PayRequest() {
     }, [approveTransactionResponse, paymentFlowActive, payRequestResponse]);
 
     if (request == undefined) {
-        return <div> Request not found</div>;
+        return (
+            <Flex width="100%" direction="column" alignItems="center" justifyContent="center" pt="200px">
+                <Spinner size="120px" />
+            </Flex>
+        );
     }
 
     const humanReadableRecipientAddress = recipientEnsName ?? shortAddress(request?.recipientAddress, Length.MEDIUM);

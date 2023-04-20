@@ -15,7 +15,7 @@ export const URLS = {
 export const SUPPORTED_CHAINS = [
     polygon,
     // polygonMumbai,
-    goerli,
+    // goerli,
     // sepolia,
     // mainnet,
     // optimism,

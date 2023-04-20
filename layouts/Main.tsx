@@ -1,10 +1,11 @@
 import { FC, ReactNode } from "react";
-import { Box, Container, Flex } from "@chakra-ui/react";
+import { Box, Button, Container, Flex } from "@chakra-ui/react";
 import Image from "next/image";
-import { ConnectButton } from "@papercliplabs/rainbowkit";
+import { ConnectButton, useConnectModal } from "@papercliplabs/rainbowkit";
 
 import Logo from "@/public/static/Logo.svg";
 import Link from "next/link";
+import { useAccount } from "wagmi";
 
 export interface AccountMenuProps {
     user: { public_key: string; id: string };
@@ -17,6 +18,9 @@ export interface MainLayoutProps {
 
 export const MainLayout: FC<MainLayoutProps> = (props) => {
     const { children } = props;
+    const { address } = useAccount();
+    const { openConnectModal } = useConnectModal();
+
     return (
         <>
             <Flex as="header" w="100%" py={5} px={7} justifyContent="space-between" alignItems="center">
@@ -37,7 +41,13 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
                         />
                     </Box>
                 </Link>
-                <ConnectButton />
+                {address ? (
+                    <ConnectButton />
+                ) : (
+                    <Button variant="secondary" onClick={openConnectModal}>
+                        Connect Wallet
+                    </Button>
+                )}
             </Flex>
             <Flex
                 as="main"

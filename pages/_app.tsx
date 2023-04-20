@@ -17,6 +17,7 @@ import { SUPPORTED_CHAINS } from "@/common/constants";
 import TokenListProvider from "@/hooks/useTokenList/provider";
 
 import "@/styles/fonts.css";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
@@ -43,6 +44,11 @@ type AppPropsWithLayout = AppProps & {
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+    const mounted = useIsMounted();
+    if (!mounted) {
+        return null;
+    }
+
     return (
         <>
             <WagmiConfig client={wagmiClient}>

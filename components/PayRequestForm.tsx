@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useAccount, useSwitchNetwork } from "wagmi";
 import { BigNumber } from "@ethersproject/bignumber";
 import { useConnectModal } from "@papercliplabs/rainbowkit";
-import { Avatar, AvatarBadge, Button, Flex, Slide, Spinner, Text, Tooltip } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Button, Flex, Slide, Text, Tooltip } from "@chakra-ui/react";
 import { InfoIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import Image from "next/image";
 
@@ -19,6 +19,7 @@ import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 import HowItWorksView from "@/views/HowItWorksView";
 import TokenSelectView from "@/views/TokenSelectView";
 import SummaryTable from "./SummaryTable";
+import Spinner from "./Spinner";
 
 interface PayRequestFormProps {
     request?: Request;
@@ -158,7 +159,7 @@ export default function PayRequestForm({
 
                 <Flex direction="column" flexGrow={1} justifyContent="space-between" width="100%" height="100%">
                     <Text textStyle="titleLg" align="center">
-                        You Pay
+                        Pay Request
                     </Text>
                     <Flex direction="column" gap="3px">
                         <Flex
@@ -172,17 +173,13 @@ export default function PayRequestForm({
                             mt="10px"
                         >
                             <Flex direction="column" flex="1">
+                                <Text textStyle="titleSm" variant="secondary">
+                                    Pay with
+                                </Text>
                                 {LoadingStatus.LOADING == quoteStatus ? (
-                                    <Spinner
-                                        thickness="2px"
-                                        speed="0.65s"
-                                        emptyColor="bgPrimary"
-                                        style={{
-                                            borderTopColor: colors.bgPrimary,
-                                        }}
-                                        color="textInteractive"
-                                        size="sm"
-                                    />
+                                    <Flex height="32px" alignItems="center">
+                                        <Spinner size="30px" />
+                                    </Flex>
                                 ) : (
                                     <Text
                                         textStyle="headline"
@@ -215,7 +212,7 @@ export default function PayRequestForm({
                         >
                             <Flex direction="column">
                                 <Text textStyle="titleSm" variant="secondary">
-                                    They receive:
+                                    They receive
                                 </Text>
                                 <Text textStyle="headline">{requestTokenAmountHumanReadable}</Text>
                                 <Text textStyle="bodyMd" variant="secondary">
@@ -248,19 +245,7 @@ export default function PayRequestForm({
                                         : quoteStatus == LoadingStatus.LOADING
                                         ? ""
                                         : NO_AMOUNT_DISPLAY,
-                                valueIcon:
-                                    quoteStatus == LoadingStatus.LOADING ? (
-                                        <Spinner
-                                            thickness="2px"
-                                            speed="0.65s"
-                                            emptyColor="bgPrimary"
-                                            style={{
-                                                borderTopColor: colors.bgPrimary,
-                                            }}
-                                            color="textInteractive"
-                                            size="sm"
-                                        />
-                                    ) : undefined,
+                                valueIcon: quoteStatus == LoadingStatus.LOADING ? <Spinner size="20px" /> : undefined,
                             },
                             {
                                 title: "Hopscotch Fee",

@@ -108,4 +108,21 @@ export const components = {
             },
         },
     },
+    Spinner: {
+        baseStyle: {
+            emptyColor: "bgPrimary",
+            // style={{
+            //     borderTopColor: colors.bgPrimary,
+            // }}
+            // color: "linear-gradient(135deg, #E013DD 0%, #F41FEC 52.08%, #FF4E82 100%)",
+            color: "pink",
+            // backgroundColor: "red",
+            borderTopColor: "bgPrimary",
+        },
+        defaultProps: {
+            size: "xl",
+            speed: "1.45s",
+            thickness: "4px",
+        },
+    },
 };

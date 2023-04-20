@@ -15,7 +15,8 @@ import { Chain } from "wagmi";
 export function formatNumber(
     num: number | string | undefined,
     decimals: number = 2,
-    trimTrailingZeros: boolean = true
+    trimTrailingZeros: boolean = true,
+    commaSeparated: boolean = true
 ): string {
     const suffixes = ["", "", "M", "B", "T"];
 
@@ -46,8 +47,9 @@ export function formatNumber(
         formattedNum /= 10 ** (3 * suffixIndex);
     }
 
-    // +number is clever trick to remove trailing zeros
-    formattedNum = trimTrailingZeros ? +formattedNum.toFixed(decimals) : formattedNum.toFixed(decimals);
+    let nf = new Intl.NumberFormat("en-US", { maximumSignificantDigits: decimals });
+    formattedNum = nf.format(formattedNum);
+
     return formattedNum + suffixes[suffixIndex];
 }
 

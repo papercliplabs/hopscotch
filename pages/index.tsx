@@ -85,10 +85,12 @@ function CreateRequest() {
 
     return (
         <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
-            <Text textStyle="headline">Send a request.</Text>
-            <Text textStyle="headline" variant="gradient" mb={6}>
-                Get paid in any token.
-            </Text>
+            <Flex direction="column" justifyContent="center" alignItems="center" pb={4}>
+                <Text textStyle="headline">Create a request</Text>
+                <Text textStyle="bodyLg" variant="secondary">
+                    You{"'"}ll send this link to get paid.
+                </Text>
+            </Flex>
             <PrimaryCard>
                 <Carousel views={views} activeViewIndex={viewIndex} />
             </PrimaryCard>
