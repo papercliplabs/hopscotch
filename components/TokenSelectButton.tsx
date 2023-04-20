@@ -2,6 +2,8 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Avatar, Button } from "@chakra-ui/react";
 
 import { Token } from "@/common/types";
+import TokenWithChainIcon from "./TokenWithChainIcon";
+import { useChain } from "@/hooks/useChain";
 
 interface TokenSelectButtonProps {
     selectedToken?: Token;
@@ -9,12 +11,13 @@ interface TokenSelectButtonProps {
 }
 
 export default function TokenSelectButton({ selectedToken, onClickCallback }: TokenSelectButtonProps) {
+    const chain = useChain(selectedToken?.chainId);
     const tokenSelectButtonProps = selectedToken
         ? {
               color: "black",
               backgroundColor: "white",
               children: selectedToken.symbol,
-              leftIcon: <Avatar height={8} width={8} src={selectedToken.logoURI} />,
+              leftIcon: <TokenWithChainIcon token={selectedToken} chain={chain} size={32} />,
               boxShadow: "md",
           }
         : {
@@ -22,7 +25,6 @@ export default function TokenSelectButton({ selectedToken, onClickCallback }: To
               variant: "primary",
               children: "Choose token",
           };
-
     return (
         <Button
             rightIcon={<ChevronDownIcon boxSize="24px" />}

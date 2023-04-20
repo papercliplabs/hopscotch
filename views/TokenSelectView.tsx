@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CloseButton, Flex, Grid, GridItem, Input, InputGroup, InputLeftElement, Stack, Text } from "@chakra-ui/react";
 
 import { Token } from "@/common/types";
@@ -28,7 +28,7 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
         return customChain ?? activeChain;
     }, [customChain, activeChain]);
 
-    const tokenList = useTokenList();
+    const tokenList = useTokenList(chain.id);
     const filteredTokenList = useMemo(() => {
         let filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
         filteredTokenList.sort((a, b) => {
@@ -82,7 +82,7 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
                 </Flex>
             );
         });
-    }, [filteredTokenList, setToken, closeCallback, activeChain, token]);
+    }, [filteredTokenList, setToken, closeCallback, chain, token]);
 
     return (
         <PrimaryCardView>

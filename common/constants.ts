@@ -121,4 +121,6 @@ export const HOPSCOTCH_ADDRESS = "0x92Ef06DBcCf841194437AfAc61BbcD5E3530fAdB";
 
 export const MIN_SUCCESSFUL_TX_CONFIRMATIONS = 1;
 
-export const SUPPORTED_NATIVE_TOKENS = NATIVE_TOKENS.filter((token) => SUPPORTED_CHAINS.map((chain) => chain.id).find((id) => id == token.chainId))
+export const SUPPORTED_NATIVE_TOKENS = NATIVE_TOKENS.filter((token) =>
+    SUPPORTED_CHAINS.map((chain) => chain.id).find((id) => id == token.chainId)
+);

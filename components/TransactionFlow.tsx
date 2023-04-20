@@ -6,60 +6,63 @@ import { Fade } from "@chakra-ui/react";
 import FailedTransactionView from "@/views/FailedTransactionView";
 
 import Carousel from "./Carousel";
+import { TransactionReceipt } from "@ethersproject/providers";
+import { TransactionStatus } from "@/hooks/transactions/useSendTransaction";
+import { SendTransactionResponse } from "@/hooks/transactions/useSendTransaction";
 
 interface TransactionFlowProps {
     title?: string;
-    pendingWalletSignature: boolean;
-    transaction?: Transaction;
-    transactionExplorerLink?: string;
+    transactionResponse: SendTransactionResponse;
     successfulTransactionView?: ReactElement;
-    abortSignatureCallback?: () => void;
-    retryFailedTransactionCallback: () => void;
 }
 
 export default function TransactionFlow({
     title,
-    pendingWalletSignature,
-    transaction,
-    transactionExplorerLink,
+    transactionResponse,
     successfulTransactionView,
-    abortSignatureCallback,
-    retryFailedTransactionCallback,
 }: TransactionFlowProps) {
     return (
         <Carousel
             views={[
                 <>
-                    <PendingSignatureView title={title} abortSignatureCallback={abortSignatureCallback} />
+                    <PendingSignatureView title={title} abortSignatureCallback={transactionResponse.reset} />
 
                     <Fade
-                        in={!pendingWalletSignature && transaction != undefined}
+                        in={!transactionResponse.pendingWalletSignature && transactionResponse.hash != undefined}
                         unmountOnExit={true}
                         style={{ padding: "inherit" }}
                     >
-                        <PendingTransactionView title={title} transactionLink={transactionExplorerLink} />
+                        <PendingTransactionView title={title} transactionLink={transactionResponse.explorerLink} />
                     </Fade>
                 </>,
                 <>
                     <Fade
-                        in={transaction?.status == "confirmed" && successfulTransactionView != undefined}
+                        in={
+                            transactionResponse.receipt?.status == TransactionStatus.Successful &&
+                            successfulTransactionView != undefined
+                        }
                         unmountOnExit={true}
                         style={{ padding: "inherit" }}
                     >
                         {successfulTransactionView}
                     </Fade>
-                    <Fade in={transaction?.status == "failed"} unmountOnExit={true} style={{ padding: "inherit" }}>
+                    <Fade
+                        in={transactionResponse.receipt?.status == TransactionStatus.Failed}
+                        unmountOnExit={true}
+                        style={{ padding: "inherit" }}
+                    >
                         <FailedTransactionView
                             subtitle={title + " failed!"}
-                            transactionLink={transactionExplorerLink}
+                            transactionLink={transactionResponse.explorerLink}
                             actionButtonText="Try again"
-                            actionButtonCallback={() => retryFailedTransactionCallback()}
+                            actionButtonCallback={transactionResponse.reset}
                         />
                     </Fade>
                 </>,
             ]}
             activeViewIndex={
-                (transaction?.status == "confirmed" && successfulTransactionView) || transaction?.status == "failed"
+                (transactionResponse.receipt?.status == TransactionStatus.Successful && successfulTransactionView) ||
+                transactionResponse.receipt?.status == TransactionStatus.Failed
                     ? 1
                     : 0
             }

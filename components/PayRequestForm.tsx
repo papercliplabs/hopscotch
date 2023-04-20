@@ -321,7 +321,7 @@ export default function PayRequestForm({
             <Slide
                 in={howItWorksOpen}
                 direction="bottom"
-                style={{ padding: "inherit", height: "100%", width: "100%" }}
+                style={{ position: "absolute", padding: "inherit", height: "100%", width: "100%" }}
                 unmountOnExit={true}
             >
                 <HowItWorksView
@@ -343,7 +343,7 @@ export default function PayRequestForm({
             <Slide
                 in={tokenSelectOpen}
                 direction="bottom"
-                style={{ padding: "inherit", height: "100%", width: "100%" }}
+                style={{ position: "absolute", padding: "inherit", height: "100%", width: "100%" }}
                 unmountOnExit={true}
             >
                 <TokenSelectView
