@@ -1,7 +1,7 @@
 import Spinner from "@/components/Spinner";
 import { colors } from "@/theme/colors";
 import { ReactElement } from "react";
-import FlowStepView from "../layouts/FlowStepView";
+import FlowStepView from "@/layouts/FlowStepView";
 
 interface PendingSignatureViewProps {
     title?: string;

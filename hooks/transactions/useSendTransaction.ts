@@ -2,7 +2,7 @@ import { TransactionRequest, TransactionReceipt } from "@ethersproject/providers
 import { useAddRecentTransaction } from "@papercliplabs/rainbowkit";
 import { useCallback, useState } from "react";
 import { usePrepareSendTransaction, useSendTransaction as useSendTransactionWagmi, useWaitForTransaction } from "wagmi";
-import { useChain } from "../useChain";
+import { useChain } from "@/hooks/useChain";
 import { getExplorerLink } from "@/common/utils";
 import { ExplorerLinkType } from "@/common/types";
 

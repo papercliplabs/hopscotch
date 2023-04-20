@@ -3,7 +3,7 @@ import { BigNumber, Contract } from "ethers";
 import { Address, useAccount, useContractRead } from "wagmi";
 import { MaxUint256 } from "@ethersproject/constants";
 
-import Erc20Abi from "../../abis/Erc20.json";
+import Erc20Abi from "@/abis/erc20.json";
 import { HOPSCOTCH_ADDRESS } from "@/common/constants";
 import useSendTransaction, {
     SendTransactionResponse,

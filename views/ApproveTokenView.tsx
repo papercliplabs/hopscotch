@@ -4,7 +4,7 @@ import { colors } from "@/theme/colors";
 import { Avatar, AvatarBadge, Spinner } from "@chakra-ui/react";
 import Image from "next/image";
 import { ReactElement } from "react";
-import FlowStepView from "../layouts/FlowStepView";
+import FlowStepView from "@/layouts/FlowStepView";
 
 interface ApproveTokenViewProps {
     token?: Token;
