@@ -1,6 +1,7 @@
 import { Primary } from "@/stories/Button.stories";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, Button, Center, Fade, Flex, Slide, Text, useTimeout, withDelay } from "@chakra-ui/react";
+import { ArrowLeft } from "@phosphor-icons/react";
 import { ReactElement, useEffect } from "react";
 import PrimaryCardView from "./PrimaryCardView";
 
@@ -43,8 +44,8 @@ export default function FlowStepView({
                 <Flex justifyContent="space-between" alignItems="center" width="100%">
                     <Flex flexBasis={0} flex={1}>
                         {backButtonCallback && (
-                            <Button variant="ghost" onClick={() => backButtonCallback()} width="40px" p={0}>
-                                <ArrowBackIcon />
+                            <Button variant="ghost" onClick={() => backButtonCallback()} p={0} left={-2}>
+                                <ArrowLeft size={24} weight="bold" />
                             </Button>
                         )}
                     </Flex>

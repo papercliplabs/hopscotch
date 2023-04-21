@@ -96,7 +96,7 @@ export default function ReviewPayRequest({
                 leftIcon={<EnsAvatar address={recipientAddress} />}
                 topEntry={
                     <Text textStyle="titleSm" variant="secondary">
-                        <Text textStyle="titleSm" variant="gradient" display="inline">
+                        <Text textStyle="titleSm" textColor="primary" display="inline">
                             <Link href={recipientExplorerLink} isExternal>
                                 {shortAddress(recipientAddress, Length.MEDIUM)}
                             </Link>
@@ -132,7 +132,7 @@ export default function ReviewPayRequest({
                             alignItems="center"
                             hasArrow
                             backgroundColor="textPrimary"
-                            // isOpen={isFeeTooltipOpen}
+                            isOpen={isFeeTooltipOpen}
                         >
                             <InfoIcon
                                 boxSize="13px"

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CloseButton, Flex, Grid, GridItem, Input, InputGroup, InputLeftElement, Stack, Text } from "@chakra-ui/react";
+import { Button, Flex, Grid, GridItem, Input, InputGroup, InputLeftElement, Stack, Text } from "@chakra-ui/react";
 
 import { Token } from "@/common/types";
 import { useTokenList } from "@/hooks/useTokenList";
@@ -10,6 +10,7 @@ import { UseChain, useChain } from "@/hooks/useChain";
 import TokenWithChainIcon from "@/components/TokenWithChainIcon";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
+import { X } from "@phosphor-icons/react";
 
 interface TokenSelectViewProps {
     closeCallback: () => void;
@@ -72,11 +73,11 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
                         <Text textStyle="titleMd">{name}</Text>
                     </Flex>
                     <Flex direction="column" align="end">
-                        <Text textStyle="bodyLg">
+                        <Text textStyle="bodyLg" textAlign="end">
                             {balance ? formatTokenAmount(balance, decimals, 4) : NO_AMOUNT_DISPLAY} {symbol}
                         </Text>
                         <Text textStyle="bodyMd" variant="secondary">
-                            {balanceUsd != undefined ? "$" + formatNumber(balanceUsd, 2) : NO_AMOUNT_DISPLAY}
+                            {balanceUsd != undefined ? formatNumber(balanceUsd, 2, "$") : NO_AMOUNT_DISPLAY}
                         </Text>
                     </Flex>
                 </Flex>
@@ -90,7 +91,9 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
                 <Text textStyle="titleLg" align="center">
                     Choose Token
                 </Text>
-                <CloseButton onClick={() => closeCallback()} position="absolute" right="0" height="40px" width="40px" />
+                <Button variant="ghost" onClick={() => closeCallback()} position="absolute" p={0} right={-2}>
+                    <X size={24} weight="bold" />
+                </Button>
             </Flex>
             <Grid
                 templateRows="auto auto minmax(0, 1fr)"
@@ -110,6 +113,7 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
                             onChange={handleSearchChange}
                             borderRadius="full"
                             backgroundColor="bgSecondary"
+                            focusBorderColor="primary"
                             color="grey"
                             textStyle="titleSm"
                             fontSize="lg"

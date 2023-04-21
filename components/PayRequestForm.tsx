@@ -20,6 +20,8 @@ import HowItWorksView from "@/views/HowItWorksView";
 import TokenSelectView from "@/views/TokenSelectView";
 import SummaryTable from "./SummaryTable";
 import Spinner from "./Spinner";
+import { formatUnits } from "@ethersproject/units";
+import { Question } from "@phosphor-icons/react";
 
 interface PayRequestFormProps {
     request?: Request;
@@ -67,26 +69,28 @@ export default function PayRequestForm({
         requestTokenAmountHumanReadable,
         requestTokenAmountHumanReadableUsd,
     ] = useMemo(() => {
-        const payTokenAmountHumanReadable = formatTokenAmount(payTokenQuoteAmount, payToken?.decimals, 6);
-        const requestTokenAmountHumanReadable = formatTokenAmount(
-            request?.recipientTokenAmount,
-            requestToken?.decimals,
-            6
-        );
+        const payTokenAmountHumanReadable =
+            payTokenQuoteAmount && payToken?.decimals
+                ? formatUnits(payTokenQuoteAmount, payToken?.decimals)
+                : NO_AMOUNT_DISPLAY;
+        const requestTokenAmountHumanReadable =
+            request?.recipientTokenAmount && requestToken?.decimals
+                ? formatUnits(request.recipientTokenAmount, requestToken.decimals)
+                : NO_AMOUNT_DISPLAY;
         const payTokenAmountHumanReadableUsd =
             payToken?.priceUsd && payTokenAmountHumanReadable != NO_AMOUNT_DISPLAY
-                ? (payToken.priceUsd * parseFloat(payTokenAmountHumanReadable)).toFixed(6)
+                ? payToken.priceUsd * parseFloat(payTokenAmountHumanReadable)
                 : NO_AMOUNT_DISPLAY;
         const requestTokenAmountHumanReadableUsd =
             requestToken?.priceUsd && requestTokenAmountHumanReadable != NO_AMOUNT_DISPLAY
-                ? (requestToken.priceUsd * parseFloat(requestTokenAmountHumanReadable)).toFixed(6)
+                ? requestToken.priceUsd * parseFloat(requestTokenAmountHumanReadable)
                 : NO_AMOUNT_DISPLAY;
 
         return [
-            payTokenAmountHumanReadable,
-            payTokenAmountHumanReadableUsd,
-            requestTokenAmountHumanReadable,
-            requestTokenAmountHumanReadableUsd,
+            formatNumber(payTokenAmountHumanReadable, 6),
+            formatNumber(payTokenAmountHumanReadableUsd, 2, "$"),
+            formatNumber(requestTokenAmountHumanReadable, 6),
+            formatNumber(requestTokenAmountHumanReadableUsd, 2, "$"),
         ];
     }, [payTokenQuoteAmount, payToken, requestToken, request]);
 
@@ -154,7 +158,7 @@ export default function PayRequestForm({
         <>
             <PrimaryCardView>
                 <Button variant="ghost" onClick={() => setHowItWorksOpen(true)} p={0} position="absolute" left={2}>
-                    <QuestionOutlineIcon boxSize="20px" />
+                    <Question size={24} />
                 </Button>
 
                 <Flex direction="column" flexGrow={1} justifyContent="space-between" width="100%" height="100%">
@@ -191,7 +195,7 @@ export default function PayRequestForm({
                                     </Text>
                                 )}
                                 <Text textStyle="bodyMd" variant="secondary">
-                                    ${payTokenAmountHumanReadableUsd}
+                                    {payTokenAmountHumanReadableUsd}
                                 </Text>
                             </Flex>
 
@@ -216,7 +220,7 @@ export default function PayRequestForm({
                                 </Text>
                                 <Text textStyle="headline">{requestTokenAmountHumanReadable}</Text>
                                 <Text textStyle="bodyMd" variant="secondary">
-                                    ${requestTokenAmountHumanReadableUsd}
+                                    {requestTokenAmountHumanReadableUsd}
                                 </Text>
                             </Flex>
                             <Flex align="center">
