@@ -22,6 +22,8 @@ interface TokenSelectViewProps {
 export default function TokenSelectView({ closeCallback, token, setToken, customChain }: TokenSelectViewProps) {
     const [search, setSearch] = useState("");
 
+    console.log("RENDER HERE");
+
     const handleSearchChange = (event: any) => setSearch(event?.target?.value);
     const activeChain = useChain();
 
@@ -32,6 +34,7 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
     const tokenList = useTokenList(chain.id);
     const filteredTokenList = useMemo(() => {
         let filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
+        console.log("SORTING");
         filteredTokenList.sort((a, b) => {
             if (a?.balance != undefined && b.balance != undefined) {
                 return a.balance.gt(b.balance) ? -1 : 1;
@@ -39,17 +42,19 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
                 return 0;
             }
         });
+        console.log("SORTED");
 
         return filteredTokenList;
     }, [tokenList, search]);
 
     const buttonItems = useMemo(() => {
+        console.log("RECOMPUTED");
         return filteredTokenList.map((tokenDetails, index) => {
             const { name, address, symbol, balance, balanceUsd, decimals, logoURI } = tokenDetails;
             const isSelected = address === token?.address;
             return (
                 <Flex
-                    key={address}
+                    key={index}
                     flexDirection="row"
                     alignItems="center"
                     boxSizing="border-box"

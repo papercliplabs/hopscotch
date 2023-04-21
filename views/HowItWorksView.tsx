@@ -1,23 +1,25 @@
 import { Box, Button, Center, Fade, Flex, Text, SlideFade, Slide } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
-import oneImg from "@/public/static/one.svg";
-import twoImg from "@/public/static/two.svg";
-import threeImg from "@/public/static/three.svg";
+import oneImg from "@/public/static/one.png";
+import twoImg from "@/public/static/two.png";
+import threeImg from "@/public/static/three.png";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
 import { X } from "@phosphor-icons/react";
 
 export interface StepInfoProps {
-    imgSrc: string;
+    imgSrc: StaticImageData;
     title: string;
     description: string;
 }
 
 function StepInfo({ imgSrc, title, description }: StepInfoProps): ReactElement {
     return (
-        <Flex direction="row" width="100%" gap="14px" justifyContent="flex-start">
-            <Image src={imgSrc} alt="step" width={40} height={40} className="rounded-full" />
+        <Flex direction="row" width="100%" gap="14px" justifyContent="flex-start" alignItems="center">
+            <Flex width="40px" height="40px">
+                <Image src={imgSrc} alt="step" width={40} height={40} className="rounded-full" placeholder="blur" />
+            </Flex>
             <Flex direction="column" gap="4px" width="100%" justifyContent="center">
                 <Text textStyle="titleMd" justifySelf="center">
                     {title}
