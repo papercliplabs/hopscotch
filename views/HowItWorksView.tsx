@@ -1,4 +1,4 @@
-import { Box, Button, CloseButton, Center, Fade, Flex, Text, SlideFade, Slide } from "@chakra-ui/react";
+import { Box, Button, Center, Fade, Flex, Text, SlideFade, Slide } from "@chakra-ui/react";
 import { ReactElement } from "react";
 import Image from "next/image";
 
@@ -6,6 +6,7 @@ import oneImg from "@/public/static/one.svg";
 import twoImg from "@/public/static/two.svg";
 import threeImg from "@/public/static/three.svg";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
+import { X } from "@phosphor-icons/react";
 
 export interface StepInfoProps {
     imgSrc: string;
@@ -51,7 +52,9 @@ export default function HowItWorksView({
                         How it works
                     </Text>
                     <Flex flexBasis={0} flex={1} justifyContent="flex-end">
-                        <CloseButton onClick={() => closeCallback()} width="40px" height="40px" />
+                        <Button variant="ghost" onClick={() => closeCallback()} p={0} right={-2}>
+                            <X size={24} weight="bold" />
+                        </Button>
                     </Flex>
                 </Flex>
 

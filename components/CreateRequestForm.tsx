@@ -15,6 +15,7 @@ import { Token } from "@/common/types";
 import { useChain } from "@/hooks/useChain";
 import { formatNumber } from "@/common/utils";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
+import { Question } from "@phosphor-icons/react";
 
 interface CreateRequestFormProps {
     requestToken?: Token;
@@ -83,7 +84,7 @@ export default function CreateRequestForm({
         <>
             <PrimaryCardView>
                 <Button variant="ghost" onClick={() => setHowItWorksOpen(true)} p={0} position="absolute" left={2}>
-                    <QuestionOutlineIcon boxSize="20px" />
+                    <Question size={24} />
                 </Button>
 
                 <Flex
@@ -144,7 +145,7 @@ export default function CreateRequestForm({
                             </NumberInput>
                             <Text textStyle="bodyMd" color="textSecondary" width="100%" align="center">
                                 {requestAmountHumanReadableUsd
-                                    ? `$${formatNumber(requestAmountHumanReadableUsd, 2, false)}`
+                                    ? formatNumber(requestAmountHumanReadableUsd, 2, "$")
                                     : NO_AMOUNT_DISPLAY}
                             </Text>
                             <TokenSelectButton

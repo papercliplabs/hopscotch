@@ -3,7 +3,7 @@ import { Text, Flex } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 
 import { Token } from "@/common/types";
-import { parseTokenAmount } from "@/common/utils";
+import { formatNumber, parseTokenAmount } from "@/common/utils";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import { useChain } from "@/hooks/useChain";
 import useCreateRequest from "@/hooks/transactions/useCreateRequest";
@@ -57,7 +57,9 @@ function CreateRequest() {
                 key={1}
             />,
             <CopyLinkView
-                requestSummary={`${requestTokenAmountHumanReadable} ${requestToken?.symbol} on ${requestChain?.name}`}
+                requestSummary={`${formatNumber(requestTokenAmountHumanReadable, 6)} ${requestToken?.symbol} on ${
+                    requestChain?.name
+                }`}
                 chainId={requestChain?.id}
                 requestId={createTransactionResponse.requestId}
                 transactionLink={createTransactionResponse.explorerLink}

@@ -9,7 +9,7 @@ import { ExplorerLinkType, Length, LoadingStatus, Token } from "@/common/types";
 import usePayRequest from "@/hooks/transactions/usePayRequest";
 import useApproveErc20 from "@/hooks/transactions/useApproveErc20";
 import { Box, Button, Flex, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { formatNumber, formatTokenAmount, openLink, shortAddress, stringToNumber } from "@/common/utils";
+import { formatTokenAmount, openLink, shortAddress, stringToNumber } from "@/common/utils";
 import { EnsAvatar } from "@/components/EnsAvatar";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import Image from "next/image";

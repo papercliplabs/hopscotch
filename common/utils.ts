@@ -12,12 +12,7 @@ import { Chain } from "wagmi";
  * @param trimTrailingZeros if the number should have trailing zeros trimmed
  * @returns nicely formatted number, for example if number is 11023 this will return 1.10K
  */
-export function formatNumber(
-    num: number | string | undefined,
-    decimals: number = 2,
-    trimTrailingZeros: boolean = true,
-    commaSeparated: boolean = true
-): string {
+export function formatNumber(num: number | string | undefined, decimals: number = 2, prefix: string = ""): string {
     const suffixes = ["", "", "M", "B", "T"];
 
     let formattedNum = num;
@@ -47,8 +42,12 @@ export function formatNumber(
         formattedNum /= 10 ** (3 * suffixIndex);
     }
 
-    let nf = new Intl.NumberFormat("en-US", { maximumSignificantDigits: decimals });
-    formattedNum = nf.format(formattedNum);
+    if (formattedNum < 10 ** -decimals && formattedNum > 0) {
+        formattedNum = "<" + prefix + 10 ** -decimals;
+    } else {
+        let nf = new Intl.NumberFormat("en-US", { maximumFractionDigits: decimals });
+        formattedNum = prefix + nf.format(formattedNum);
+    }
 
     return formattedNum + suffixes[suffixIndex];
 }
