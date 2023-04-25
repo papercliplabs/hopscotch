@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { Box, Button, Container, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 import Image from "next/image";
 import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
 
@@ -23,7 +23,7 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
 
     return (
         <>
-            <Flex as="header" w="100%" py={5} px={7} justifyContent="space-between" alignItems="center">
+            <Flex as="header" w="100%" py={5} px={7} pb={[0, 8]} justifyContent="space-between" alignItems="center">
                 <Link href="/" passHref>
                     <Box
                         onClick={() => window.location.reload()}
@@ -52,7 +52,6 @@ export const MainLayout: FC<MainLayoutProps> = (props) => {
             <Flex
                 as="main"
                 direction="column"
-                mt={4}
                 p="16px"
                 maxW="100vw"
                 justifyContent="center"

@@ -50,7 +50,7 @@ export const components = {
                         ...buttonDisabledProps,
                     },
                 },
-                boxShadow: "defaultLg",
+                boxShadow: "blueSm",
             },
             secondary: {
                 backgroundColor: "#E4F2FF",

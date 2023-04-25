@@ -1,5 +1,4 @@
 import { Address, Chain as WagmiChain } from "wagmi";
-import { RainbowKitChain } from "@rainbow-me/rainbowkit/dist/components/RainbowKitProvider/RainbowKitChainContext";
 import { BigNumber } from "@ethersproject/bignumber";
 
 export interface BaseToken {

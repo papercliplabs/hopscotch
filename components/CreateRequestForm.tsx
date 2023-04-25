@@ -1,6 +1,5 @@
 import { ReactElement, useMemo, useState } from "react";
 import { Flex, NumberInputField, Text, NumberInput, Button, Fade, Slide } from "@chakra-ui/react";
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import Image from "next/image";
@@ -96,7 +95,7 @@ export default function CreateRequestForm({
                     display={"flex"}
                 >
                     <Flex direction="column" align="center" width="100%">
-                        <ConnectedAvatar />
+                        <ConnectedAvatar diameter={46} />
                         <Text textStyle="titleSm" variant="interactive" mb={4}>
                             Create a request
                         </Text>
@@ -113,7 +112,7 @@ export default function CreateRequestForm({
                         justifyContent="space-between"
                         gap="16px"
                     >
-                        <Flex direction="column" gap="8px" alignItems="center">
+                        <Flex direction="column" gap="8px" alignItems="center" width="100%">
                             <NumberInput
                                 height="48px"
                                 onChange={(valueString) =>
@@ -123,6 +122,7 @@ export default function CreateRequestForm({
                                 }
                                 value={requestTokenAmountHumanReadable}
                                 min={0}
+                                width="100%"
                             >
                                 <NumberInputField
                                     _focusVisible={{

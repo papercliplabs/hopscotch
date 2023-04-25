@@ -86,7 +86,7 @@ function CreateRequest() {
     }, [createTransactionResponse]);
 
     return (
-        <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
+        <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
             <Flex direction="column" justifyContent="center" alignItems="center" pb={4}>
                 <Text textStyle="headline">Create a request</Text>
                 <Text textStyle="bodyLg" variant="secondary">

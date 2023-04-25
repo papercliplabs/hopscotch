@@ -45,7 +45,6 @@ type AppPropsWithLayout = AppProps & {
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-    console.log("CHAINS", SUPPORTED_CHAINS);
     const mounted = useIsMounted();
     if (!mounted) {
         return null;

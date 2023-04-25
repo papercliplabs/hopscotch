@@ -1,12 +1,12 @@
-import { FC, useMemo } from "react";
-import { Text, Flex, Avatar, AvatarProps, TextProps } from "@chakra-ui/react";
+import { FC } from "react";
+import { Text, Flex, Avatar, TextProps } from "@chakra-ui/react";
 import { Address, useAccount, useEnsAvatar, useEnsName } from "wagmi";
 import { shortAddress } from "@/common/utils";
 import { Length } from "@/common/types";
 import ConnectWalletAvatar from "@/public/static/ConnectWalletAvatar.svg";
-import { emojiAvatarForAddress } from "@rainbow-me/rainbowkit";
 import { AvatarComponent } from "@rainbow-me/rainbowkit";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import Image from "next/image";
 
 export const getInitials = (name: string): string => {
     // remove 0x if present
@@ -18,8 +18,9 @@ export const getInitials = (name: string): string => {
     return initials.toUpperCase();
 };
 
-export interface EnsAvatarProps extends AvatarProps {
+export interface EnsAvatarProps {
     address?: Address;
+    diameter?: number;
 }
 
 export interface EnsNameProps extends TextProps {
@@ -40,7 +41,7 @@ export const EnsName: FC<EnsNameProps> = ({ address, ...props }) => {
 };
 
 export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
-    const { address, ...rest } = props;
+    const { address, diameter } = props;
     const { data: ensAvatarSrc } = useEnsAvatar({
         address: address,
         chainId: 1,
@@ -53,10 +54,9 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
             borderRadius="100%"
             justifyContent="center"
             userSelect="none"
-            width="46px"
-            height="46px"
+            width={diameter + "px"}
+            height={diameter + "px"}
             flexShrink={0}
-            {...rest}
         >
             {ensAvatarSrc ? (
                 <Avatar
@@ -69,18 +69,18 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
                     src={ensAvatarSrc}
                 />
             ) : (
-                <Jazzicon diameter={46} seed={jsNumberForAddress(address ?? "0x")} />
+                <Jazzicon diameter={diameter} seed={jsNumberForAddress(address ?? "0x")} />
             )}
         </Flex>
     );
 };
 
-export const ConnectedAvatar = () => {
+export const ConnectedAvatar = ({ diameter }: { diameter: number }) => {
     const { isConnected, address } = useAccount();
 
     return isConnected && address ? (
         <Flex alignItems="center" flexDirection="column" gap={2} mt={2}>
-            <EnsAvatar address={address} />
+            <EnsAvatar address={address} diameter={diameter} />
             <EnsName address={address} />
         </Flex>
     ) : (
@@ -95,7 +95,7 @@ export const ConnectedAvatar = () => {
 
 export const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
     return ensImage ? (
-        <img src={ensImage} width={size} height={size} style={{ borderRadius: size }} />
+        <Image src={ensImage} width={size} height={size} alt="ens image" style={{ borderRadius: size }} />
     ) : (
         <Jazzicon diameter={size} seed={jsNumberForAddress(address)} />
     );

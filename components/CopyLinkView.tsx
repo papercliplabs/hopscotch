@@ -7,6 +7,7 @@ import Link from "next/link";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ArrowSquareOut, CheckCircle } from "@phosphor-icons/react";
 import { colors } from "@/theme/colors";
+import Toast from "@/components/Toast";
 
 interface CopyLinkViewProps {
     requestSummary?: string;
@@ -64,11 +65,9 @@ export default function CopyLinkView({
 
         // show toast notification
         toast({
-            title: "Link copied!",
             duration: 5000,
-            status: "success",
             position: "bottom",
-            variant: "subtle",
+            render: () => <Toast msg="Link Copied!" />,
         });
     };
 

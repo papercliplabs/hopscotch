@@ -25,8 +25,8 @@ interface ReviewRequestRowProps {
 
 function ReviewRequestRow({ leftIcon, topEntry, bottomText, rightIcon }: ReviewRequestRowProps) {
     return (
-        <Flex direction="row" justifyContent="space-between" align="center">
-            <Flex gap="16px">
+        <Flex direction="row" justifyContent="space-between" alignItems="center">
+            <Flex gap="16px" alignItems="center">
                 {leftIcon}
                 <Flex direction="column" justifyContent="space-between">
                     {topEntry}
@@ -80,7 +80,7 @@ export default function ReviewPayRequest({
     const payRequestBody = (
         <Flex p="16px" border="2px solid #EFF0F3" borderRadius="16px" direction="column" gap="1px" width="100%">
             <ReviewRequestRow
-                leftIcon={<EnsAvatar address={senderAddress} />}
+                leftIcon={<EnsAvatar address={senderAddress} diameter={40} />}
                 topEntry={
                     <Text textStyle="titleSm" variant="secondary">
                         You send
@@ -89,11 +89,11 @@ export default function ReviewPayRequest({
                 bottomText={`${payTokenQuoteAmountHumanReadable} ${payToken?.symbol}`}
                 rightIcon={<TokenWithChainIcon token={payToken} chain={chain} size={32} />}
             />
-            <Box pl="13px" py={1}>
+            <Box pl="11px" py={1}>
                 <Image src={longArrowDown} alt="check" />
             </Box>
             <ReviewRequestRow
-                leftIcon={<EnsAvatar address={recipientAddress} />}
+                leftIcon={<EnsAvatar address={recipientAddress} diameter={40} />}
                 topEntry={
                     <Text textStyle="titleSm" variant="secondary">
                         <Text textStyle="titleSm" textColor="primary" display="inline">
