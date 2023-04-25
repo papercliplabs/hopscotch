@@ -3,8 +3,8 @@ import { colors } from "@/theme/colors";
 import { ReactElement } from "react";
 import FlowStepView from "@/layouts/FlowStepView";
 import Image from "next/image";
-import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 import Spinner from "@/components/Spinner";
+import { ArrowSquareOut } from "@phosphor-icons/react";
 
 interface PendingTransactionViewProps {
     title?: string;
@@ -21,7 +21,7 @@ export default function PendingTransactionView({ title, transactionLink }: Pendi
             secondaryButtonInfo={{
                 text: "View Transaction",
                 onClick: () => openLink(transactionLink, true),
-                rightIcon: <Image src={ArrowSquareOutIcon} alt="copy" />,
+                rightIcon: <ArrowSquareOut size={24} weight="bold" />,
             }}
         />
     );

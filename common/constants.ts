@@ -1,6 +1,16 @@
 import { AddressZero } from "@ethersproject/constants";
 import { Percent } from "@uniswap/sdk-core";
-import { mainnet, goerli, polygon, optimism, arbitrum, sepolia, polygonMumbai, optimismGoerli } from "wagmi/chains";
+import {
+    localhost,
+    mainnet,
+    goerli,
+    polygon,
+    optimism,
+    arbitrum,
+    sepolia,
+    polygonMumbai,
+    optimismGoerli,
+} from "wagmi/chains";
 
 import { NativeBaseToken } from "./types";
 
@@ -13,6 +23,7 @@ export const URLS = {
 
 // Use SUPPORTED_CHAINS[0] as the dedault
 export const SUPPORTED_CHAINS = [
+    // localhost,
     polygon,
     // polygonMumbai,
     // goerli,
@@ -24,6 +35,7 @@ export const SUPPORTED_CHAINS = [
 ];
 
 export const COIN_GECKO_API_PLATFORM_ID = {
+    [localhost.id]: undefined,
     [polygon.id]: "polygon-pos",
     // [polygonMumbai.id]: undefined,
     [goerli.id]: undefined,
@@ -35,12 +47,22 @@ export const COIN_GECKO_API_PLATFORM_ID = {
 
 export const NATIVE_TOKENS: NativeBaseToken[] = [
     {
+        // Assuming forking polygon
+        address: "0x0000000000000000000000000000000000001010",
+        chainId: localhost.id,
+        name: "Matic",
+        symbol: "MATIC",
+        decimals: 18,
+        logoURI: "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912",
+        wrappedAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+    },
+    {
         address: "0x0000000000000000000000000000000000001010",
         chainId: polygon.id,
         name: "Matic",
         symbol: "MATIC",
         decimals: 18,
-        logoURI: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912",
+        logoURI: "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912",
         wrappedAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
     },
     {
@@ -49,7 +71,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         name: "Matic",
         symbol: "MATIC",
         decimals: 18,
-        logoURI: "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912",
+        logoURI: "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912",
         wrappedAddress: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
     },
     {
@@ -118,8 +140,6 @@ export const FEE_BIPS = 0; // No fee for now
 
 export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
 export const HOPSCOTCH_ADDRESS = "0x92Ef06DBcCf841194437AfAc61BbcD5E3530fAdB";
-
-export const MIN_SUCCESSFUL_TX_CONFIRMATIONS = 1;
 
 export const SUPPORTED_NATIVE_TOKENS = NATIVE_TOKENS.filter((token) =>
     SUPPORTED_CHAINS.map((chain) => chain.id).find((id) => id == token.chainId)

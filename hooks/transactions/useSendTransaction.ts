@@ -1,12 +1,12 @@
 import { TransactionRequest, TransactionReceipt } from "@ethersproject/providers";
-import { useAddRecentTransaction } from "@papercliplabs/rainbowkit";
+import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { useCallback, useState } from "react";
 import { usePrepareSendTransaction, useSendTransaction as useSendTransactionWagmi, useWaitForTransaction } from "wagmi";
 import { useChain } from "@/hooks/useChain";
 import { getExplorerLink } from "@/common/utils";
 import { ExplorerLinkType } from "@/common/types";
 
-import { UseChain } from "@/hooks/useChain";
+import { Chain } from "@/hooks/useChain";
 
 export enum TransactionStatus {
     Failed = 0,
@@ -28,7 +28,7 @@ export default function useSendTransaction(
     enableEagerFetch?: boolean,
     description?: string
 ): SendTransactionResponse {
-    const [txChain, setTxChain] = useState<UseChain | undefined>(undefined); // Latch the chain id the tx was made on
+    const [txChain, setTxChain] = useState<Chain | undefined>(undefined); // Latch the chain id the tx was made on
 
     const activeChain = useChain();
     const addRecentTransaction = useAddRecentTransaction();
@@ -68,6 +68,8 @@ export default function useSendTransaction(
             sendTransaction();
         }
     }, [reset, sendTransaction, setTxChain, activeChain]);
+
+    console.log("SEND", transactionRequest, enableEagerFetch, prepareConfig);
 
     return {
         pendingWalletSignature: isLoading,

@@ -6,7 +6,7 @@ import { useTokenList } from "@/hooks/useTokenList";
 import { SearchIcon } from "@chakra-ui/icons";
 import { NetworkSelect } from "@/components/NetworkSelect";
 import { formatNumber, formatTokenAmount } from "@/common/utils";
-import { UseChain, useChain } from "@/hooks/useChain";
+import { Chain, useChain } from "@/hooks/useChain";
 import TokenWithChainIcon from "@/components/TokenWithChainIcon";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
@@ -16,13 +16,11 @@ interface TokenSelectViewProps {
     closeCallback: () => void;
     token?: Token;
     setToken: (token: Token | undefined) => void;
-    customChain?: UseChain;
+    customChain?: Chain;
 }
 
 export default function TokenSelectView({ closeCallback, token, setToken, customChain }: TokenSelectViewProps) {
     const [search, setSearch] = useState("");
-
-    console.log("RENDER HERE");
 
     const handleSearchChange = (event: any) => setSearch(event?.target?.value);
     const activeChain = useChain();
@@ -34,7 +32,6 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
     const tokenList = useTokenList(chain.id);
     const filteredTokenList = useMemo(() => {
         let filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
-        console.log("SORTING");
         filteredTokenList.sort((a, b) => {
             if (a?.balance != undefined && b.balance != undefined) {
                 return a.balance.gt(b.balance) ? -1 : 1;
@@ -42,7 +39,6 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
                 return 0;
             }
         });
-        console.log("SORTED");
 
         return filteredTokenList;
     }, [tokenList, search]);

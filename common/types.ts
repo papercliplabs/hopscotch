@@ -1,5 +1,4 @@
 import { Address, Chain as WagmiChain } from "wagmi";
-import { RainbowKitChain } from "@papercliplabs/rainbowkit/dist/components/RainbowKitProvider/RainbowKitChainContext";
 import { BigNumber } from "@ethersproject/bignumber";
 
 export interface BaseToken {
@@ -21,8 +20,6 @@ export interface Token extends BaseToken {
     balance?: BigNumber;
     balanceUsd?: number;
 }
-
-export type Chain = WagmiChain & RainbowKitChain;
 
 export type Optional<T> = T | undefined;
 

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useAccount, useSwitchNetwork } from "wagmi";
 import { BigNumber } from "@ethersproject/bignumber";
-import { useConnectModal } from "@papercliplabs/rainbowkit";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Avatar, AvatarBadge, Button, Flex, Slide, Text, Tooltip } from "@chakra-ui/react";
 import { InfoIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import Image from "next/image";
@@ -16,8 +16,8 @@ import { useToken } from "@/hooks/useTokenList";
 import TokenSelectButton from "./TokenSelectButton";
 import { formatNumber, formatTokenAmount } from "@/common/utils";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
-import HowItWorksView from "@/views/HowItWorksView";
-import TokenSelectView from "@/views/TokenSelectView";
+import HowItWorks from "@/components/HowItWorks";
+import TokenSelectView from "@/components/TokenSelectView";
 import SummaryTable from "./SummaryTable";
 import Spinner from "./Spinner";
 import { formatUnits } from "@ethersproject/units";
@@ -227,7 +227,7 @@ export default function PayRequestForm({
                                 <Avatar height="32px" width="32px" mr={2} src={requestToken?.logoURI}>
                                     <AvatarBadge borderWidth={2}>
                                         <Image
-                                            src={requestChain?.iconUrlSync ?? ""}
+                                            src={requestChain?.iconUri ?? ""}
                                             alt={requestChain?.name ?? ""}
                                             width={14}
                                             height={14}
@@ -283,7 +283,7 @@ export default function PayRequestForm({
                                 value: requestChain?.name,
                                 valueIcon: (
                                     <Image
-                                        src={requestChain?.iconUrlSync}
+                                        src={requestChain?.iconUri}
                                         alt={requestChain?.name}
                                         width={16}
                                         height={16}
@@ -313,7 +313,7 @@ export default function PayRequestForm({
                 style={{ position: "absolute", padding: "inherit", height: "100%", width: "100%" }}
                 unmountOnExit={true}
             >
-                <HowItWorksView
+                <HowItWorks
                     closeCallback={() => setHowItWorksOpen(false)}
                     stepOneInfo={{
                         title: "Connect your wallet",

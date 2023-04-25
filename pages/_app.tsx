@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 
-import { getDefaultWallets, RainbowKitProvider } from "@papercliplabs/rainbowkit";
+import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { createClient, configureChains, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -12,12 +12,13 @@ import { theme } from "@/theme";
 import { MainLayout } from "@/layouts/Main";
 
 import "@fontsource/inter";
-import "@papercliplabs/rainbowkit/styles.css";
+import "@rainbow-me/rainbowkit/styles.css";
 import { SUPPORTED_CHAINS } from "@/common/constants";
 import TokenListProvider from "@/hooks/useTokenList/provider";
 
 import "@/styles/fonts.css";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import { CustomAvatar } from "@/components/EnsAvatar";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
@@ -52,7 +53,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     return (
         <>
             <WagmiConfig client={wagmiClient}>
-                <RainbowKitProvider chains={chains} showRecentTransactions={true}>
+                <RainbowKitProvider chains={chains} showRecentTransactions={true} avatar={CustomAvatar}>
                     <TokenListProvider>
                         <ChakraProvider theme={theme}>
                             <MainLayout>

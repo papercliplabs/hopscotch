@@ -5,7 +5,7 @@ import { Box, Flex, Link, Text, Tooltip } from "@chakra-ui/react";
 import Image from "next/image";
 
 import { ExplorerLinkType, Length, Token } from "@/common/types";
-import { UseChain } from "@/hooks/useChain";
+import { Chain } from "@/hooks/useChain";
 import FlowStepView from "@/layouts/FlowStepView";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
 import { EnsAvatar } from "./EnsAvatar";
@@ -25,8 +25,8 @@ interface ReviewRequestRowProps {
 
 function ReviewRequestRow({ leftIcon, topEntry, bottomText, rightIcon }: ReviewRequestRowProps) {
     return (
-        <Flex direction="row" justifyContent="space-between" align="center">
-            <Flex gap="16px">
+        <Flex direction="row" justifyContent="space-between" alignItems="center">
+            <Flex gap="16px" alignItems="center">
                 {leftIcon}
                 <Flex direction="column" justifyContent="space-between">
                     {topEntry}
@@ -45,7 +45,7 @@ interface RequestReviewProps {
     requestToken?: Token;
     requestTokenAmount?: BigNumber;
     recipientAddress?: Address;
-    chain?: UseChain;
+    chain?: Chain;
     backButtonCallback: () => void;
     payButtonCallback?: () => void;
 }
@@ -80,7 +80,7 @@ export default function ReviewPayRequest({
     const payRequestBody = (
         <Flex p="16px" border="2px solid #EFF0F3" borderRadius="16px" direction="column" gap="1px" width="100%">
             <ReviewRequestRow
-                leftIcon={<EnsAvatar address={senderAddress} />}
+                leftIcon={<EnsAvatar address={senderAddress} diameter={40} />}
                 topEntry={
                     <Text textStyle="titleSm" variant="secondary">
                         You send
@@ -89,11 +89,11 @@ export default function ReviewPayRequest({
                 bottomText={`${payTokenQuoteAmountHumanReadable} ${payToken?.symbol}`}
                 rightIcon={<TokenWithChainIcon token={payToken} chain={chain} size={32} />}
             />
-            <Box pl="13px" py={1}>
+            <Box pl="11px" py={1}>
                 <Image src={longArrowDown} alt="check" />
             </Box>
             <ReviewRequestRow
-                leftIcon={<EnsAvatar address={recipientAddress} />}
+                leftIcon={<EnsAvatar address={recipientAddress} diameter={40} />}
                 topEntry={
                     <Text textStyle="titleSm" variant="secondary">
                         <Text textStyle="titleSm" textColor="primary" display="inline">
@@ -150,11 +150,7 @@ export default function ReviewPayRequest({
                 {
                     title: "Network",
                     value: chain?.name,
-                    valueIcon: chain ? (
-                        <Image src={chain?.iconUrlSync} alt={chain?.name} width={16} height={16} />
-                    ) : (
-                        <></>
-                    ),
+                    valueIcon: chain ? <Image src={chain?.iconUri} alt={chain?.name} width={16} height={16} /> : <></>,
                 },
             ]}
             rowGap="8px"

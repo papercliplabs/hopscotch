@@ -16,17 +16,18 @@ import Image from "next/image";
 import { LinkIcon } from "@chakra-ui/icons";
 import { colors } from "@/theme/colors";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
-import ApproveTokenView from "@/views/ApproveTokenView";
+import ApproveTokenView from "@/components/ApproveTokenView";
 import { BigNumber } from "ethers";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import SummaryTable from "@/components/SummaryTable";
 import PayRequestForm from "@/components/PayRequestForm";
 import Carousel from "@/components/Carousel";
-import TransactionFlow from "@/components/TransactionFlow";
+import TransactionFlow from "@/components/transactions/TransactionFlow";
 import ReviewPayRequest from "@/components/ReviewPayRequest";
-import SuccessfulTransactionView from "@/views/SuccessfulTransactionView";
+import SuccessfulTransactionView from "@/components/transactions/SuccessfulTransactionView";
 import Spinner from "@/components/Spinner";
+import Toast from "@/components/Toast";
 
 function PayRequest() {
     const [payToken, setPayToken] = useState<Token | undefined>(undefined);
@@ -63,10 +64,9 @@ function PayRequest() {
 
         // show toast notification
         toast({
-            title: "Link copied!",
             duration: 5000,
-            isClosable: true,
             position: "bottom",
+            render: () => <Toast msg="Link Copied!" />,
         });
     };
 
@@ -142,12 +142,7 @@ function PayRequest() {
                             title: "Network",
                             value: requestChain?.name,
                             valueIcon: (
-                                <Image
-                                    src={requestChain?.iconUrlSync}
-                                    alt={requestChain?.name}
-                                    width={16}
-                                    height={16}
-                                />
+                                <Image src={requestChain?.iconUri} alt={requestChain?.name} width={16} height={16} />
                             ),
                         },
                     ]}
@@ -206,7 +201,7 @@ function PayRequest() {
                 align="center"
                 maxWidth="400px"
             >
-                <EnsAvatar address={request?.recipientAddress} width="32px" height="32px" fontSize="sm" />
+                <EnsAvatar address={request?.recipientAddress} diameter={32} />
 
                 <Flex direction="column" ml={3}>
                     <Text textStyle="titleSm">

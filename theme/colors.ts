@@ -135,6 +135,9 @@ export const colors = {
     bgPrimary: "#FAFAFC",
     bgSecondary: "#EFF0F3",
     bgTertiary: "#FAFAFC",
+
+    success: "#3CCF4E",
+    critical: "#FF4949",
 };
 
 // Not nessesary until we have dark mode

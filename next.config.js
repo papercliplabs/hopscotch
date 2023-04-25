@@ -3,6 +3,9 @@ module.exports = {
   swcMinify: false,
   // compress: false,
   // productionBrowserSourceMaps: true,
+  images: {
+    domains: ['assets.coingecko.com'],
+  },
   async redirects() {
     return [
       {

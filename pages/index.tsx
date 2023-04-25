@@ -7,10 +7,10 @@ import { formatNumber, parseTokenAmount } from "@/common/utils";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import { useChain } from "@/hooks/useChain";
 import useCreateRequest from "@/hooks/transactions/useCreateRequest";
-import CopyLinkView from "@/views/CopyLinkView";
+import CopyLinkView from "@/components/CopyLinkView";
 import Head from "next/head";
 import CreateRequestForm from "@/components/CreateRequestForm";
-import TransactionFlow from "@/components/TransactionFlow";
+import TransactionFlow from "@/components/transactions/TransactionFlow";
 import Carousel from "@/components/Carousel";
 
 enum CreateRequestView {
@@ -86,7 +86,7 @@ function CreateRequest() {
     }, [createTransactionResponse]);
 
     return (
-        <Flex flexDirection="column" alignItems="center" justifyContent="space-between" mt={4}>
+        <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
             <Flex direction="column" justifyContent="center" alignItems="center" pb={4}>
                 <Text textStyle="headline">Create a request</Text>
                 <Text textStyle="bodyLg" variant="secondary">
