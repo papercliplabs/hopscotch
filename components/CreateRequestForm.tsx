@@ -1,14 +1,14 @@
 import { ReactElement, useMemo, useState } from "react";
 import { Flex, NumberInputField, Text, NumberInput, Button, Fade, Slide } from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { useChainModal, useConnectModal } from "@papercliplabs/rainbowkit";
+import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 
 import PrimaryCardView from "@/layouts/PrimaryCardView";
-import HowItWorksView from "@/views/HowItWorksView";
+import HowItWorks from "@/components/HowItWorks";
 import TokenSelectButton from "./TokenSelectButton";
-import TokenSelectView from "@/views/TokenSelectView";
+import TokenSelectView from "@/components/TokenSelectView";
 import SummaryTable from "./SummaryTable";
 import { ConnectedAvatar } from "./EnsAvatar";
 import { Token } from "@/common/types";
@@ -163,7 +163,7 @@ export default function CreateRequestForm({
                                     value: activeChain?.name,
                                     valueIcon: (
                                         <Image
-                                            src={activeChain?.iconUrlSync ?? ""}
+                                            src={activeChain?.iconUri ?? ""}
                                             alt={activeChain?.name}
                                             width={16}
                                             height={16}
@@ -198,7 +198,7 @@ export default function CreateRequestForm({
                 style={{ position: "absolute", padding: "inherit", height: "100%", width: "100%" }}
                 unmountOnExit={true}
             >
-                <HowItWorksView
+                <HowItWorks
                     closeCallback={() => setHowItWorksOpen(false)}
                     stepOneInfo={{
                         title: "Create a link",

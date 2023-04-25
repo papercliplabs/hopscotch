@@ -1,12 +1,10 @@
 import { ReactElement } from "react";
-import { Transaction } from "@papercliplabs/rainbowkit";
-import PendingTransactionView from "@/views/PendingTransactionView";
-import PendingSignatureView from "@/views/PendingSignatureView";
+import PendingTransactionView from "@/components/transactions/PendingTransactionView";
+import PendingSignatureView from "@/components/transactions/PendingSignatureView";
 import { Fade } from "@chakra-ui/react";
-import FailedTransactionView from "@/views/FailedTransactionView";
+import FailedTransactionView from "@/components/transactions/FailedTransactionView";
 
-import Carousel from "./Carousel";
-import { TransactionReceipt } from "@ethersproject/providers";
+import Carousel from "../Carousel";
 import { TransactionStatus } from "@/hooks/transactions/useSendTransaction";
 import { SendTransactionResponse } from "@/hooks/transactions/useSendTransaction";
 

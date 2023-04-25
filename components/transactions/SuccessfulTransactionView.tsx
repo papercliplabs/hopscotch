@@ -3,7 +3,8 @@ import { ReactElement } from "react";
 import FlowStepView, { ButtonInfo } from "@/layouts/FlowStepView";
 import circleCheckImage from "@/public/static/CircleCheck.svg";
 import Image from "next/image";
-import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
+import { ArrowSquareOut, CheckCircle } from "@phosphor-icons/react";
+import { colors } from "@/theme/colors";
 
 interface SuccessfulTransactionViewProps {
     subtitle?: string;
@@ -30,12 +31,12 @@ export default function SuccessfulTransactionView({
         ? {
               text: "Receipt",
               onClick: () => openLink(transactionLink, true),
-              rightIcon: <Image src={ArrowSquareOutIcon} alt="copy" />,
+              rightIcon: <ArrowSquareOut size={24} weight="bold" />,
           }
         : undefined;
     return (
         <FlowStepView
-            icon={<Image src={circleCheckImage} alt="check" />}
+            icon={<CheckCircle size={70} weight="fill" color={colors.success} />}
             subtitle={subtitle}
             body={body}
             bodyBold={bodyBold}

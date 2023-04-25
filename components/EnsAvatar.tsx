@@ -4,7 +4,9 @@ import { Address, useAccount, useEnsAvatar, useEnsName } from "wagmi";
 import { shortAddress } from "@/common/utils";
 import { Length } from "@/common/types";
 import ConnectWalletAvatar from "@/public/static/ConnectWalletAvatar.svg";
-import { emojiAvatarForAddress } from "@papercliplabs/rainbowkit";
+import { emojiAvatarForAddress } from "@rainbow-me/rainbowkit";
+import { AvatarComponent } from "@rainbow-me/rainbowkit";
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 export const getInitials = (name: string): string => {
     // remove 0x if present
@@ -44,8 +46,6 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
         chainId: 1,
     });
 
-    const { color: backgroundColor, emoji } = useMemo(() => emojiAvatarForAddress(address ?? ""), [address]);
-
     return (
         <Flex
             alignItems="center"
@@ -56,7 +56,6 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
             width="46px"
             height="46px"
             flexShrink={0}
-            backgroundColor={backgroundColor}
             {...rest}
         >
             {ensAvatarSrc ? (
@@ -70,7 +69,7 @@ export const EnsAvatar: FC<EnsAvatarProps> = (props) => {
                     src={ensAvatarSrc}
                 />
             ) : (
-                <>{emoji}</>
+                <Jazzicon diameter={46} seed={jsNumberForAddress(address ?? "0x")} />
             )}
         </Flex>
     );
@@ -91,5 +90,13 @@ export const ConnectedAvatar = () => {
                 Connect a Wallet
             </Text>
         </Flex>
+    );
+};
+
+export const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
+    return ensImage ? (
+        <img src={ensImage} width={size} height={size} style={{ borderRadius: size }} />
+    ) : (
+        <Jazzicon diameter={size} seed={jsNumberForAddress(address)} />
     );
 };

@@ -1,9 +1,8 @@
 import { openLink } from "@/common/utils";
 import { ReactElement } from "react";
 import FlowStepView from "@/layouts/FlowStepView";
-import circleFailImage from "@/public/static/CircleFail.svg";
-import Image from "next/image";
-import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
+import { ArrowSquareOut, WarningCircle } from "@phosphor-icons/react";
+import { colors } from "@/theme/colors";
 
 interface FailedTransactionViewProps {
     subtitle?: string;
@@ -20,7 +19,7 @@ export default function FailedTransactionView({
 }: FailedTransactionViewProps): ReactElement {
     return (
         <FlowStepView
-            icon={<Image src={circleFailImage} alt="check" />}
+            icon={<WarningCircle size={70} weight="fill" color={colors.critical} />}
             subtitle={subtitle}
             body="An error occurred, please try again."
             primaryButtonInfo={{
@@ -32,7 +31,7 @@ export default function FailedTransactionView({
             secondaryButtonInfo={{
                 text: "View transaction",
                 onClick: () => openLink(transactionLink, true),
-                rightIcon: <Image src={ArrowSquareOutIcon} alt="copy" />,
+                rightIcon: <ArrowSquareOut size={24} weight="bold" />,
             }}
         />
     );

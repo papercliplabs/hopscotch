@@ -16,7 +16,7 @@ export function useTokenList(chainIdOverride?: number): Token[] {
     const { id: activeChainId } = useChain();
 
     const chainId = useMemo(() => {
-        return chainIdOverride ?? activeChainId;
+        return chainIdOverride ?? activeChainId == 1337 ? 137 : chainIdOverride ?? activeChainId;
     }, [activeChainId, chainIdOverride]);
 
     const filteredTokens = useMemo(() => {
@@ -37,7 +37,10 @@ export function useToken(address?: string, chainId?: number): Token | undefined 
     const { id: activeChainId } = useChain();
 
     const token = useMemo(() => {
-        const addressInternal = address == AddressZero ? getNativeTokenAddress(chainId ?? activeChainId) : address;
+        const addressInternal =
+            address == AddressZero
+                ? getNativeTokenAddress(chainId ?? activeChainId == 1337 ? 137 : chainId ?? activeChainId)
+                : address;
         return addressInternal
             ? tokens.find((token) => token.address.toLowerCase() == addressInternal.toLowerCase())
             : undefined;

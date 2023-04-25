@@ -6,7 +6,7 @@ import { useTokenList } from "@/hooks/useTokenList";
 import { SearchIcon } from "@chakra-ui/icons";
 import { NetworkSelect } from "@/components/NetworkSelect";
 import { formatNumber, formatTokenAmount } from "@/common/utils";
-import { UseChain, useChain } from "@/hooks/useChain";
+import { Chain, useChain } from "@/hooks/useChain";
 import TokenWithChainIcon from "@/components/TokenWithChainIcon";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
@@ -16,7 +16,7 @@ interface TokenSelectViewProps {
     closeCallback: () => void;
     token?: Token;
     setToken: (token: Token | undefined) => void;
-    customChain?: UseChain;
+    customChain?: Chain;
 }
 
 export default function TokenSelectView({ closeCallback, token, setToken, customChain }: TokenSelectViewProps) {

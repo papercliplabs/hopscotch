@@ -7,10 +7,10 @@ import { formatNumber, parseTokenAmount } from "@/common/utils";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import { useChain } from "@/hooks/useChain";
 import useCreateRequest from "@/hooks/transactions/useCreateRequest";
-import CopyLinkView from "@/views/CopyLinkView";
+import CopyLinkView from "@/components/CopyLinkView";
 import Head from "next/head";
 import CreateRequestForm from "@/components/CreateRequestForm";
-import TransactionFlow from "@/components/TransactionFlow";
+import TransactionFlow from "@/components/transactions/TransactionFlow";
 import Carousel from "@/components/Carousel";
 
 enum CreateRequestView {

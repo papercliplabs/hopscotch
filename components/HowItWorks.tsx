@@ -1,24 +1,22 @@
 import { Box, Button, Center, Fade, Flex, Text, SlideFade, Slide } from "@chakra-ui/react";
 import { ReactElement } from "react";
 import Image, { StaticImageData } from "next/image";
+import { NumberCircleOne, X, NumberCircleTwo, NumberCircleThree } from "@phosphor-icons/react";
 
-import oneImg from "@/public/static/one.png";
-import twoImg from "@/public/static/two.png";
-import threeImg from "@/public/static/three.png";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
-import { X } from "@phosphor-icons/react";
+import { colors } from "@/theme/colors";
 
 export interface StepInfoProps {
-    imgSrc: StaticImageData;
+    icon: ReactElement;
     title: string;
     description: string;
 }
 
-function StepInfo({ imgSrc, title, description }: StepInfoProps): ReactElement {
+function StepInfo({ icon, title, description }: StepInfoProps): ReactElement {
     return (
-        <Flex direction="row" width="100%" gap="14px" justifyContent="flex-start" alignItems="center">
+        <Flex direction="row" width="100%" gap="14px" justifyContent="flex-start">
             <Flex width="40px" height="40px">
-                <Image src={imgSrc} alt="step" width={40} height={40} className="rounded-full" placeholder="blur" />
+                {icon}
             </Flex>
             <Flex direction="column" gap="4px" width="100%" justifyContent="center">
                 <Text textStyle="titleMd" justifySelf="center">
@@ -32,19 +30,19 @@ function StepInfo({ imgSrc, title, description }: StepInfoProps): ReactElement {
     );
 }
 
-interface HowItWorksViewProps {
+interface HowItWorksProps {
     closeCallback: () => void;
-    stepOneInfo: Omit<StepInfoProps, "imgSrc">;
-    stepTwoInfo: Omit<StepInfoProps, "imgSrc">;
-    stepThreeInfo: Omit<StepInfoProps, "imgSrc">;
+    stepOneInfo: Omit<StepInfoProps, "icon">;
+    stepTwoInfo: Omit<StepInfoProps, "icon">;
+    stepThreeInfo: Omit<StepInfoProps, "icon">;
 }
 
-export default function HowItWorksView({
+export default function HowItWorks({
     closeCallback,
     stepOneInfo,
     stepTwoInfo,
     stepThreeInfo,
-}: HowItWorksViewProps): ReactElement {
+}: HowItWorksProps): ReactElement {
     return (
         <PrimaryCardView>
             <Center display="flex" flexDirection="column" height="100%" justifyContent="space-between" gap="30px">
@@ -61,9 +59,21 @@ export default function HowItWorksView({
                 </Flex>
 
                 <Flex direction="column" gap="4px" width="100%" justifyContent="space-between" flexGrow={1} px="8px">
-                    <StepInfo imgSrc={oneImg} title={stepOneInfo.title} description={stepOneInfo.description} />
-                    <StepInfo imgSrc={twoImg} title={stepTwoInfo.title} description={stepTwoInfo.description} />
-                    <StepInfo imgSrc={threeImg} title={stepThreeInfo.title} description={stepThreeInfo.description} />
+                    <StepInfo
+                        icon={<NumberCircleOne size={32.5} color={colors.primary} />}
+                        title={stepOneInfo.title}
+                        description={stepOneInfo.description}
+                    />
+                    <StepInfo
+                        icon={<NumberCircleTwo size={32.5} color={colors.primary} />}
+                        title={stepTwoInfo.title}
+                        description={stepTwoInfo.description}
+                    />
+                    <StepInfo
+                        icon={<NumberCircleThree size={32.5} color={colors.primary} />}
+                        title={stepThreeInfo.title}
+                        description={stepThreeInfo.description}
+                    />
                 </Flex>
 
                 <Flex direction="column" width="100%" gap="8px">

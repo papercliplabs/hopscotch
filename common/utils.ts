@@ -109,6 +109,10 @@ export function shortAddress(address: string | undefined, length: Length): strin
     }
 }
 
+export function getNativeTokenLogoUri(chainId?: number): string | undefined {
+    return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.logoURI;
+}
+
 export function getNativeTokenAddress(chainId?: number): Address | undefined {
     return NATIVE_TOKENS.find((token) => token.chainId == chainId)?.address;
 }

@@ -16,16 +16,16 @@ import Image from "next/image";
 import { LinkIcon } from "@chakra-ui/icons";
 import { colors } from "@/theme/colors";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
-import ApproveTokenView from "@/views/ApproveTokenView";
+import ApproveTokenView from "@/components/ApproveTokenView";
 import { BigNumber } from "ethers";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import SummaryTable from "@/components/SummaryTable";
 import PayRequestForm from "@/components/PayRequestForm";
 import Carousel from "@/components/Carousel";
-import TransactionFlow from "@/components/TransactionFlow";
+import TransactionFlow from "@/components/transactions/TransactionFlow";
 import ReviewPayRequest from "@/components/ReviewPayRequest";
-import SuccessfulTransactionView from "@/views/SuccessfulTransactionView";
+import SuccessfulTransactionView from "@/components/transactions/SuccessfulTransactionView";
 import Spinner from "@/components/Spinner";
 
 function PayRequest() {
@@ -121,7 +121,7 @@ function PayRequest() {
     const humanReadableRecipientAddress = recipientEnsName ?? shortAddress(request?.recipientAddress, Length.MEDIUM);
 
     const paidSummary = (
-        <Flex px={4} width="100%">
+        <Flex px={0} width="100%">
             <Box width="100%" py={2} borderBottom="2px" borderTop="2px" style={{ borderColor: colors.bgSecondary }}>
                 <SummaryTable
                     rowGap="9px"
@@ -142,12 +142,7 @@ function PayRequest() {
                             title: "Network",
                             value: requestChain?.name,
                             valueIcon: (
-                                <Image
-                                    src={requestChain?.iconUrlSync}
-                                    alt={requestChain?.name}
-                                    width={16}
-                                    height={16}
-                                />
+                                <Image src={requestChain?.iconUri} alt={requestChain?.name} width={16} height={16} />
                             ),
                         },
                     ]}

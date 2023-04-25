@@ -3,7 +3,7 @@ import { useAccount, useProvider, useSigner, Address } from "wagmi";
 import { CurrencyAmount, TradeType, Percent, Token as UniswapToken } from "@uniswap/sdk-core";
 import { JSBI } from "@uniswap/sdk";
 import { AlphaRouter, SwapRoute, SwapOptionsSwapRouter02, SwapType } from "@uniswap/smart-order-router";
-import { Transaction } from "@papercliplabs/rainbowkit";
+import { Transaction } from "@rainbow-me/rainbowkit";
 import { TransactionRequest } from "@ethersproject/providers";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Contract } from "@ethersproject/contracts";

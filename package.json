@@ -23,8 +23,8 @@
         "@ethersproject/providers": "^5.7.2",
         "@ethersproject/units": "^5.7.0",
         "@fontsource/inter": "^4.5.7",
-        "@papercliplabs/rainbowkit": "^0.11.2",
         "@phosphor-icons/react": "^2.0.8",
+        "@rainbow-me/rainbowkit": "^0.12.9",
         "@rehooks/local-storage": "^2.4.4",
         "@uniswap/sdk": "^3.0.3",
         "@uniswap/sdk-core": "^3.2.0",
@@ -37,8 +37,9 @@
         "next": "^13.2.3",
         "react": "18.2.0",
         "react-dom": "18.2.0",
+        "react-jazzicon": "^1.0.4",
         "sharp": "^0.32.0",
-        "wagmi": "^0.11.0"
+        "wagmi": "^0.12.12"
     },
     "devDependencies": {
         "@babel/core": "^7.17.9",

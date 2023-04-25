@@ -1,5 +1,5 @@
 import { Token } from "@/common/types";
-import { UseChain } from "@/hooks/useChain";
+import { Chain } from "@/hooks/useChain";
 import { colors } from "@/theme/colors";
 import { Avatar, AvatarBadge, Spinner } from "@chakra-ui/react";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import FlowStepView from "@/layouts/FlowStepView";
 
 interface ApproveTokenViewProps {
     token?: Token;
-    chain?: UseChain;
+    chain?: Chain;
     approveCallback?: () => void;
     backButtonCallback?: () => void;
 }
@@ -27,7 +27,7 @@ export default function ApproveTokenView({
                 <Avatar height="60px" width="60px" mr={4} src={token?.logoURI}>
                     <AvatarBadge borderWidth={2}>
                         <Image
-                            src={chain?.iconUrlSync ?? ""}
+                            src={chain?.iconUri ?? ""}
                             alt={chain?.name ?? ""}
                             width={26}
                             height={26}

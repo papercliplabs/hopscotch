@@ -88,6 +88,8 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                     .then((data) => {
                         let tokens = data.tokens as Array<BaseToken>;
 
+                        console.log("REQ", tokens);
+
                         // Filter for only chains we are on, remove duplicates, and remove native tokens
                         const supportedChainIds = getSupportedChainIds();
 
@@ -97,7 +99,11 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                         const supportedTokens: BaseToken[] = [];
                         for (let id of supportedChainIds) {
                             let addresses: Address[] = [];
-                            const tokensForChain = tokens.filter((token) => token.chainId == id);
+                            console.log("id", id);
+                            const isTestNet = id == 1337;
+                            const tokensForChain = tokens.filter(
+                                (token) => token.chainId == id || (isTestNet && token.chainId == 137)
+                            );
                             const nativeToken = NATIVE_TOKENS.find((token) => token.chainId == id);
 
                             for (let token of tokensForChain) {
@@ -107,7 +113,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                                         address: token.address.toLowerCase() as Address,
                                         chainId: token.chainId,
                                         decimals: token.decimals,
-                                        logoURI: token.logoURI,
+                                        logoURI: token.logoURI.replace("thumb", "small"), // Use higher resolution images from coin gecko
                                         name: token.name,
                                         symbol: token.symbol,
                                     });

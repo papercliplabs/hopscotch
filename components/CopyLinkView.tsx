@@ -1,12 +1,12 @@
 import { openLink } from "@/common/utils";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 import FlowStepView from "@/layouts/FlowStepView";
-import circleCheckImage from "@/public/static/CircleCheck.svg";
 import Image from "next/image";
-import ArrowSquareOutIcon from "@/public/static/ArrowSquareOut.svg";
 import { Box, Text, useToast, Button, Flex } from "@chakra-ui/react";
 import Link from "next/link";
 import { BigNumber } from "@ethersproject/bignumber";
+import { ArrowSquareOut, CheckCircle } from "@phosphor-icons/react";
+import { colors } from "@/theme/colors";
 
 interface CopyLinkViewProps {
     requestSummary?: string;
@@ -83,7 +83,7 @@ export default function CopyLinkView({
                     px="20px"
                     mt="5px"
                     onClick={() => openLink(transactionLink, true)}
-                    rightIcon={<Image src={ArrowSquareOutIcon} alt="copy" width={16} height={16} />}
+                    rightIcon={<ArrowSquareOut size={16} weight="bold" />}
                 >
                     View on Explorer
                 </Button>
@@ -95,8 +95,8 @@ export default function CopyLinkView({
     return (
         <FlowStepView
             icon={
-                <Box mt="20px">
-                    <Image src={circleCheckImage} alt="check" />
+                <Box mt="47px">
+                    <CheckCircle size={70} weight="fill" color={colors.success} />
                 </Box>
             }
             subtitle={`Your request link was created for ${requestSummary}.`}

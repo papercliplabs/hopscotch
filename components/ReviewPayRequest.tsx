@@ -5,7 +5,7 @@ import { Box, Flex, Link, Text, Tooltip } from "@chakra-ui/react";
 import Image from "next/image";
 
 import { ExplorerLinkType, Length, Token } from "@/common/types";
-import { UseChain } from "@/hooks/useChain";
+import { Chain } from "@/hooks/useChain";
 import FlowStepView from "@/layouts/FlowStepView";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
 import { EnsAvatar } from "./EnsAvatar";
@@ -45,7 +45,7 @@ interface RequestReviewProps {
     requestToken?: Token;
     requestTokenAmount?: BigNumber;
     recipientAddress?: Address;
-    chain?: UseChain;
+    chain?: Chain;
     backButtonCallback: () => void;
     payButtonCallback?: () => void;
 }
@@ -150,11 +150,7 @@ export default function ReviewPayRequest({
                 {
                     title: "Network",
                     value: chain?.name,
-                    valueIcon: chain ? (
-                        <Image src={chain?.iconUrlSync} alt={chain?.name} width={16} height={16} />
-                    ) : (
-                        <></>
-                    ),
+                    valueIcon: chain ? <Image src={chain?.iconUri} alt={chain?.name} width={16} height={16} /> : <></>,
                 },
             ]}
             rowGap="8px"

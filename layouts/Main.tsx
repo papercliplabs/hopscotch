@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { Box, Button, Container, Flex } from "@chakra-ui/react";
 import Image from "next/image";
-import { ConnectButton, useConnectModal } from "@papercliplabs/rainbowkit";
+import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
 
 import Logo from "@/public/static/Logo.svg";
 import Link from "next/link";
