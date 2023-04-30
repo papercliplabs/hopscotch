@@ -177,5 +177,5 @@ export async function fetchEnsInfo(address?: Address): Promise<EnsInfo> {
 
 export function getDefaultLinearGradientForAddress(address?: Address) {
     const number = Math.ceil(jsNumberForAddress(address ?? "") % 0xffffff);
-    return `linear-gradient(45deg, #${number.toString(16).padStart(6, 0)}, #FFFFFF)`;
+    return `linear-gradient(45deg, #${number.toString(16).padStart(6, "0")}, #FFFFFF)`;
 }
