@@ -1,7 +1,7 @@
 import { ReactElement, useMemo, useState } from "react";
 import { Flex, NumberInputField, Text, NumberInput, Button, Fade, Slide } from "@chakra-ui/react";
 import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
-import { useAccount } from "wagmi";
+import { useAccount, Address } from "wagmi";
 import Image from "next/image";
 
 import PrimaryCardView from "@/layouts/PrimaryCardView";
@@ -19,7 +19,7 @@ import { Question } from "@phosphor-icons/react";
 interface CreateRequestFormProps {
     requestToken?: Token;
     requestTokenAmountHumanReadable?: string;
-    setRequestToken: (token?: Token) => void;
+    setRequestTokenAddress: (address?: Address) => void;
     setRequestTokenAmountHumanReadable: (amount?: string) => void;
     submit?: () => void;
 }
@@ -27,7 +27,7 @@ interface CreateRequestFormProps {
 export default function CreateRequestForm({
     requestToken,
     requestTokenAmountHumanReadable,
-    setRequestToken,
+    setRequestTokenAddress,
     setRequestTokenAmountHumanReadable,
     submit,
 }: CreateRequestFormProps): ReactElement {
@@ -48,7 +48,7 @@ export default function CreateRequestForm({
     const { buttonText, onClickFunction, buttonVariant } = useMemo(() => {
         if (activeChain.unsupported) {
             return {
-                buttonText: "Wrong network",
+                buttonText: "Unsupported network",
                 onClickFunction: () => (openChainModal ? openChainModal() : null),
                 buttonVariant: "critical",
             };
@@ -224,7 +224,7 @@ export default function CreateRequestForm({
                 <TokenSelectView
                     closeCallback={() => setTokenSelectOpen(false)}
                     token={requestToken}
-                    setToken={setRequestToken}
+                    setTokenAddress={setRequestTokenAddress}
                 />
             </Slide>
         </>

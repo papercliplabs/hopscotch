@@ -1,6 +1,6 @@
 import { ReactElement, useMemo, useState } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
-import { Address } from "wagmi";
+import { Address, useSwitchNetwork } from "wagmi";
 import { Box, Flex, Link, Text, Tooltip } from "@chakra-ui/react";
 import Image from "next/image";
 
@@ -15,6 +15,7 @@ import { formatTokenAmount, shortAddress } from "@/common/utils";
 import SummaryTable from "./SummaryTable";
 import { InfoIcon } from "@chakra-ui/icons";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
+import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
 
 interface ReviewRequestRowProps {
     leftIcon?: ReactElement;
@@ -64,6 +65,8 @@ export default function ReviewPayRequest({
     const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState<boolean>(false);
 
     const recipientExplorerLink = useExplorerLink(recipientAddress, ExplorerLinkType.WALLET_OR_CONTRACT, chain);
+    const onExpectedChain = useIsOnExpectedChain(chain?.id);
+    const { switchNetwork } = useSwitchNetwork();
 
     const [payTokenQuoteAmountHumanReadable, requestTokenAmountHumanReadable] = useMemo(() => {
         return [
@@ -157,6 +160,17 @@ export default function ReviewPayRequest({
         />
     );
 
+    const buttonInfo = onExpectedChain
+        ? {
+              text: "Pay request",
+              onClick: payButtonCallback,
+          }
+        : {
+              text: "Switch to " + chain?.name,
+              onClick: () => switchNetwork?.(chain?.id),
+              critical: true,
+          };
+
     return (
         <FlowStepView
             backButtonCallback={backButtonCallback}
@@ -167,7 +181,7 @@ export default function ReviewPayRequest({
                     {bottomSummary}
                 </Flex>
             }
-            primaryButtonInfo={{ text: "Pay request", onClick: payButtonCallback }}
+            primaryButtonInfo={buttonInfo}
         />
     );
 }

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Text, Flex } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
+import { Address } from "wagmi";
 
-import { Token } from "@/common/types";
 import { formatNumber, parseTokenAmount } from "@/common/utils";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import { useChain } from "@/hooks/useChain";
@@ -12,6 +12,7 @@ import Head from "next/head";
 import CreateRequestForm from "@/components/CreateRequestForm";
 import TransactionFlow from "@/components/transactions/TransactionFlow";
 import Carousel from "@/components/Carousel";
+import { useToken } from "@/hooks/useTokenList";
 
 enum CreateRequestView {
     InputForm = 0,
@@ -20,10 +21,12 @@ enum CreateRequestView {
 }
 
 function CreateRequest() {
-    const [requestToken, setRequestToken] = useState<Token | undefined>(undefined);
+    const [requestTokenAddress, setRequestTokenAddress] = useState<Address | undefined>(undefined);
     const [requestTokenAmountHumanReadable, setRequestTokenAmountHumanReadable] = useState<string | undefined>(
         undefined
     );
+
+    const requestToken = useToken(requestTokenAddress);
 
     const requestTokenAmount = useMemo(() => {
         return requestTokenAmountHumanReadable && requestToken
@@ -37,7 +40,7 @@ function CreateRequest() {
     // Reset selected when chain changes
     const activeChain = useChain();
     useEffect(() => {
-        setRequestToken(undefined);
+        setRequestTokenAddress(undefined);
     }, [activeChain.id]);
 
     const views = useMemo(() => {
@@ -45,7 +48,7 @@ function CreateRequest() {
             <CreateRequestForm
                 requestToken={requestToken}
                 requestTokenAmountHumanReadable={requestTokenAmountHumanReadable}
-                setRequestToken={setRequestToken}
+                setRequestTokenAddress={setRequestTokenAddress}
                 setRequestTokenAmountHumanReadable={setRequestTokenAmountHumanReadable}
                 submit={createTransactionResponse.send}
                 key={0}
@@ -69,7 +72,7 @@ function CreateRequest() {
     }, [
         requestToken,
         requestTokenAmountHumanReadable,
-        setRequestToken,
+        setRequestTokenAddress,
         setRequestTokenAmountHumanReadable,
         createTransactionResponse,
         requestChain,

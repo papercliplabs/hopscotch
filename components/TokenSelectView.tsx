@@ -11,15 +11,16 @@ import TokenWithChainIcon from "@/components/TokenWithChainIcon";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
 import { X } from "@phosphor-icons/react";
+import { Address } from "wagmi";
 
 interface TokenSelectViewProps {
     closeCallback: () => void;
     token?: Token;
-    setToken: (token: Token | undefined) => void;
+    setTokenAddress: (address: Address | undefined) => void;
     customChain?: Chain;
 }
 
-export default function TokenSelectView({ closeCallback, token, setToken, customChain }: TokenSelectViewProps) {
+export default function TokenSelectView({ closeCallback, token, setTokenAddress, customChain }: TokenSelectViewProps) {
     const [search, setSearch] = useState("");
 
     const handleSearchChange = (event: any) => setSearch(event?.target?.value);
@@ -65,7 +66,7 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
                         backgroundColor: "blackAlpha.50",
                     }}
                     onClick={() => {
-                        setToken(tokenDetails);
+                        setTokenAddress(address);
                         closeCallback();
                     }}
                 >
@@ -84,7 +85,7 @@ export default function TokenSelectView({ closeCallback, token, setToken, custom
                 </Flex>
             );
         });
-    }, [filteredTokenList, setToken, closeCallback, chain, token]);
+    }, [filteredTokenList, setTokenAddress, closeCallback, chain, token]);
 
     return (
         <PrimaryCardView>
