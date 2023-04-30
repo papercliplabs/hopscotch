@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Text, Flex } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { Address } from "wagmi";
+import { ethers } from "ethers";
 
-import { formatNumber, parseTokenAmount } from "@/common/utils";
+import { formatNumber, getDefaultLinearGradientForAddress, parseTokenAmount } from "@/common/utils";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import { useChain } from "@/hooks/useChain";
 import useCreateRequest from "@/hooks/transactions/useCreateRequest";
@@ -13,6 +14,7 @@ import CreateRequestForm from "@/components/CreateRequestForm";
 import TransactionFlow from "@/components/transactions/TransactionFlow";
 import Carousel from "@/components/Carousel";
 import { useToken } from "@/hooks/useTokenList";
+import { fetchEnsAddress, fetchEnsAvatar } from "@wagmi/core";
 
 enum CreateRequestView {
     InputForm = 0,
@@ -107,12 +109,13 @@ function CreateRequest() {
 const DynamicCreateRequest = dynamic(() => Promise.resolve(CreateRequest), { ssr: false });
 
 const Index = () => {
+    const g = getDefaultLinearGradientForAddress("0x5303B22B50470478Aa1E989efaf1003e6B2A309f");
     return (
         <>
             <Head>
                 <meta property="og:title" content="Get paid on Hopscotch" />
                 <meta property="og:site_name" content="hopscotch.cash" />
-                <meta property="og:image" content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og`} />
+                {/* <meta property="og:image" content={LoggedOut.sr} /> */}
             </Head>
             <DynamicCreateRequest />
         </>

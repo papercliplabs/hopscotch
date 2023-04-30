@@ -48,7 +48,6 @@ export default function PayRequestForm({
 
     const { address } = useAccount();
     const requestChain = useChain(request?.chainId);
-    console.log("----> REQ CHAIN", requestChain);
 
     const onExpectedChain = useIsOnExpectedChain(request?.chainId);
 
@@ -61,10 +60,8 @@ export default function PayRequestForm({
             ret = payToken.balance.gte(payTokenQuoteAmount);
         }
 
-        console.log("HAS SUFF", payToken, payTokenQuoteAmount, address);
-
         return ret;
-    }, [payToken, payTokenQuoteAmount, address]);
+    }, [payToken, payTokenQuoteAmount]);
 
     const [
         payTokenAmountHumanReadable,

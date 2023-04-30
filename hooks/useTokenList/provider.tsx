@@ -88,8 +88,6 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                     .then((data) => {
                         let tokens = data.tokens as Array<BaseToken>;
 
-                        console.log("REQ", tokens);
-
                         // Filter for only chains we are on, remove duplicates, and remove native tokens
                         const supportedChainIds = getSupportedChainIds();
 
@@ -99,7 +97,6 @@ export default function TokenListProvider({ children }: { children: ReactNode })
                         const supportedTokens: BaseToken[] = [];
                         for (let id of supportedChainIds) {
                             let addresses: Address[] = [];
-                            console.log("id", id);
                             const isTestNet = id == 1337;
                             const tokensForChain = tokens.filter(
                                 (token) => token.chainId == id || (isTestNet && token.chainId == 137)

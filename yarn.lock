@@ -5351,7 +5351,7 @@
     abitype "^0.3.0"
     eventemitter3 "^4.0.7"
 
-"@wagmi/core@0.10.10":
+"@wagmi/core@0.10.10", "@wagmi/core@^0.10.10":
   version "0.10.10"
   resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.10.10.tgz#025299d484fb7de7980cad863c61ed6cfc481291"
   integrity sha512-oghQIASk+QfrRku2m36NJTZnj5gpJNqfID5G3kZlBReWr01iOFbGfTVcS6Pcu2X3rsR2lmky8Tu5DWLXdKeGZg==

@@ -1,20 +1,22 @@
 import { ReactElement, useMemo, useState } from "react";
-import { Flex, NumberInputField, Text, NumberInput, Button, Fade, Slide } from "@chakra-ui/react";
+import { Flex, NumberInputField, Text, NumberInput, Button, Fade, Slide, Avatar } from "@chakra-ui/react";
 import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount, Address } from "wagmi";
 import Image from "next/image";
+import ConnectWalletAvatar from "@/public/static/ConnectWalletAvatar.svg";
 
 import PrimaryCardView from "@/layouts/PrimaryCardView";
 import HowItWorks from "@/components/HowItWorks";
 import TokenSelectButton from "./TokenSelectButton";
 import TokenSelectView from "@/components/TokenSelectView";
 import SummaryTable from "./SummaryTable";
-import { ConnectedAvatar } from "./EnsAvatar";
+import { WalletAvatar } from "./WalletAvatar";
 import { Token } from "@/common/types";
 import { useChain } from "@/hooks/useChain";
 import { formatNumber } from "@/common/utils";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 import { Question } from "@phosphor-icons/react";
+import { useEnsInfoOrDefaults } from "@/hooks/useEnsInfoOrDefaults";
 
 interface CreateRequestFormProps {
     requestToken?: Token;
@@ -36,8 +38,10 @@ export default function CreateRequestForm({
 
     const { openConnectModal } = useConnectModal();
     const { openChainModal } = useChainModal();
-    const { address } = useAccount();
+    const { isConnected, address } = useAccount();
     const activeChain = useChain();
+
+    const { name: walletName } = useEnsInfoOrDefaults(address);
 
     const requestAmountHumanReadableUsd = useMemo(() => {
         return requestToken?.priceUsd && requestTokenAmountHumanReadable
@@ -95,7 +99,19 @@ export default function CreateRequestForm({
                     display={"flex"}
                 >
                     <Flex direction="column" align="center" width="100%">
-                        <ConnectedAvatar diameter={46} />
+                        {isConnected && address ? (
+                            <Flex alignItems="center" flexDirection="column" gap={2} mt={2}>
+                                <WalletAvatar address={address} size={46} />
+                                <Text textStyle="titleLg">{walletName}</Text>
+                            </Flex>
+                        ) : (
+                            <Flex alignItems="center" flexDirection="column" gap={2} mt={2}>
+                                <Avatar boxShadow="defaultSm" src={ConnectWalletAvatar.src} />
+                                <Text variant="tertiary" textStyle="titleLg">
+                                    Connect a Wallet
+                                </Text>
+                            </Flex>
+                        )}
                         <Text textStyle="titleSm" variant="interactive" mb={4}>
                             Create a request
                         </Text>

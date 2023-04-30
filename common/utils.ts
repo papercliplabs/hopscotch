@@ -4,6 +4,9 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Address } from "wagmi";
 import { Chain } from "wagmi";
+import { ethers } from "ethers";
+import { jsNumberForAddress } from "react-jazzicon";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * Format a number so it can nicely be rendered
@@ -158,4 +161,21 @@ export function getExplorerLink(
     } else {
         return undefined;
     }
+}
+
+export interface EnsInfo {
+    name?: string;
+    backgroundImg?: string;
+}
+
+export async function fetchEnsInfo(address?: Address): Promise<EnsInfo> {
+    const provider = new ethers.providers.AlchemyProvider("mainnet", process.env.NEXT_PUBLIC_ALCHEMY_ID);
+    const name = await provider.lookupAddress(address ?? AddressZero);
+    const image = await provider.getAvatar(name ?? "");
+    return { name: name ?? undefined, backgroundImg: image ? `url(${image})` : undefined };
+}
+
+export function getDefaultLinearGradientForAddress(address?: Address) {
+    const number = Math.ceil(jsNumberForAddress(address ?? "") % 0xffffff);
+    return `linear-gradient(45deg, #${number.toString(16).padStart(6, "0")}, #FFFFFF)`;
 }

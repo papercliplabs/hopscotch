@@ -8,7 +8,7 @@ import { ExplorerLinkType, Length, Token } from "@/common/types";
 import { Chain } from "@/hooks/useChain";
 import FlowStepView from "@/layouts/FlowStepView";
 import { useExplorerLink } from "@/hooks/useExplorerLink";
-import { EnsAvatar } from "./EnsAvatar";
+import { WalletAvatar } from "@/components/WalletAvatar";
 import TokenWithChainIcon from "./TokenWithChainIcon";
 import longArrowDown from "@/public/static/LongArrowDown.svg";
 import { formatTokenAmount, shortAddress } from "@/common/utils";
@@ -83,7 +83,7 @@ export default function ReviewPayRequest({
     const payRequestBody = (
         <Flex p="16px" border="2px solid #EFF0F3" borderRadius="16px" direction="column" gap="1px" width="100%">
             <ReviewRequestRow
-                leftIcon={<EnsAvatar address={senderAddress} diameter={40} />}
+                leftIcon={<WalletAvatar address={senderAddress} size={40} />}
                 topEntry={
                     <Text textStyle="titleSm" variant="secondary">
                         You send
@@ -96,7 +96,7 @@ export default function ReviewPayRequest({
                 <Image src={longArrowDown} alt="check" />
             </Box>
             <ReviewRequestRow
-                leftIcon={<EnsAvatar address={recipientAddress} diameter={40} />}
+                leftIcon={<WalletAvatar address={recipientAddress} size={40} />}
                 topEntry={
                     <Text textStyle="titleSm" variant="secondary">
                         <Text textStyle="titleSm" textColor="primary" display="inline">
