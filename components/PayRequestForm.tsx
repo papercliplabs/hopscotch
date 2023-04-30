@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
-import { useAccount, useSwitchNetwork } from "wagmi";
+import { useAccount, Address, useSwitchNetwork } from "wagmi";
 import { BigNumber } from "@ethersproject/bignumber";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Avatar, AvatarBadge, Button, Flex, Slide, Text, Tooltip } from "@chakra-ui/react";
-import { InfoIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
+import { InfoIcon } from "@chakra-ui/icons";
 import Image from "next/image";
 
 import { LoadingStatus, Token } from "@/common/types";
@@ -11,10 +11,9 @@ import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
 import { Request } from "@/hooks/useRequest";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
 import { useChain } from "@/hooks/useChain";
-import { colors } from "@/theme/colors";
 import { useToken } from "@/hooks/useTokenList";
 import TokenSelectButton from "./TokenSelectButton";
-import { formatNumber, formatTokenAmount } from "@/common/utils";
+import { formatNumber } from "@/common/utils";
 import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 import HowItWorks from "@/components/HowItWorks";
 import TokenSelectView from "@/components/TokenSelectView";
@@ -28,7 +27,7 @@ interface PayRequestFormProps {
     payToken?: Token;
     quoteStatus?: LoadingStatus;
     payTokenQuoteAmount?: BigNumber;
-    setPayToken: (token?: Token) => void;
+    setPayTokenAddress: (address?: Address) => void;
     submit: () => void;
 }
 
@@ -37,7 +36,7 @@ export default function PayRequestForm({
     payToken,
     quoteStatus,
     payTokenQuoteAmount,
-    setPayToken,
+    setPayTokenAddress,
     submit,
 }: PayRequestFormProps) {
     const [howItWorksOpen, setHowItWorksOpen] = useState<boolean>(false);
@@ -49,6 +48,8 @@ export default function PayRequestForm({
 
     const { address } = useAccount();
     const requestChain = useChain(request?.chainId);
+    console.log("----> REQ CHAIN", requestChain);
+
     const onExpectedChain = useIsOnExpectedChain(request?.chainId);
 
     const requestToken = useToken(request?.recipientTokenAddress);
@@ -60,8 +61,10 @@ export default function PayRequestForm({
             ret = payToken.balance.gte(payTokenQuoteAmount);
         }
 
+        console.log("HAS SUFF", payToken, payTokenQuoteAmount, address);
+
         return ret;
-    }, [payToken, payTokenQuoteAmount]);
+    }, [payToken, payTokenQuoteAmount, address]);
 
     const [
         payTokenAmountHumanReadable,
@@ -338,7 +341,7 @@ export default function PayRequestForm({
                 <TokenSelectView
                     closeCallback={() => setTokenSelectOpen(false)}
                     token={payToken}
-                    setToken={setPayToken}
+                    setTokenAddress={setPayTokenAddress}
                     customChain={requestChain}
                 />
             </Slide>

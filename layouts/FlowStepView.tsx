@@ -9,6 +9,7 @@ export interface ButtonInfo {
     text: string;
     rightIcon?: ReactElement;
     onClick?: () => void;
+    critical?: boolean;
 }
 
 interface FlowStepViewProps {
@@ -85,7 +86,7 @@ export default function FlowStepView({
                 <Flex direction={compressButtons ? "row-reverse" : "column"} width="100%" gap="8px">
                     {primaryButtonInfo && (
                         <Button
-                            variant="primary"
+                            variant={primaryButtonInfo.critical ? "critical" : "primary"}
                             type="submit"
                             width="100%"
                             minHeight="48px"
@@ -102,7 +103,7 @@ export default function FlowStepView({
 
                     {secondaryButtonInfo && (
                         <Button
-                            variant="secondary"
+                            variant={secondaryButtonInfo.critical ? "critical" : "secondary"}
                             type="submit"
                             width="100%"
                             minHeight="48px"

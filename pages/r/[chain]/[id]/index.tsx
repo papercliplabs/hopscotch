@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import { useAccount, useEnsName } from "wagmi";
+import { useAccount, useEnsName, Address } from "wagmi";
 
 import { useChain } from "@/hooks/useChain";
 import { useRequest } from "@/hooks/useRequest";
@@ -30,7 +30,7 @@ import Spinner from "@/components/Spinner";
 import Toast from "@/components/Toast";
 
 function PayRequest() {
-    const [payToken, setPayToken] = useState<Token | undefined>(undefined);
+    const [payTokenAddress, setPayTokenAddress] = useState<Address | undefined>(undefined);
     const [paymentFlowActive, setPaymentFlowActive] = useState<boolean>(false);
 
     const toast = useToast();
@@ -47,6 +47,11 @@ function PayRequest() {
 
     // Parse data from request
     const requestChain = useChain(request?.chainId);
+
+    const payToken = useToken(payTokenAddress, requestChain.id);
+
+    console.log("!!!!!!REQ CHAIN", requestChain);
+
     const requestToken = useToken(request?.recipientTokenAddress, request?.chainId);
     const { data: recipientEnsName } = useEnsName({
         address: request?.recipientAddress,
@@ -232,7 +237,7 @@ function PayRequest() {
                                     payToken={payToken}
                                     quoteStatus={payRequestResponse.swapQuote?.quoteStatus}
                                     payTokenQuoteAmount={payRequestResponse.swapQuote?.quoteAmount}
-                                    setPayToken={setPayToken}
+                                    setPayTokenAddress={setPayTokenAddress}
                                     submit={() => setPaymentFlowActive(true)}
                                     key={0}
                                 />

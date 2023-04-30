@@ -5,6 +5,8 @@ import { Avatar, AvatarBadge, Spinner } from "@chakra-ui/react";
 import Image from "next/image";
 import { ReactElement } from "react";
 import FlowStepView from "@/layouts/FlowStepView";
+import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
+import { useSwitchNetwork } from "wagmi";
 
 interface ApproveTokenViewProps {
     token?: Token;
@@ -19,6 +21,20 @@ export default function ApproveTokenView({
     approveCallback,
     backButtonCallback,
 }: ApproveTokenViewProps): ReactElement {
+    const onExpectedChain = useIsOnExpectedChain(chain?.id);
+    const { switchNetwork } = useSwitchNetwork();
+
+    const buttonInfo = onExpectedChain
+        ? {
+              text: `Approve my ${token?.symbol}`,
+              onClick: approveCallback,
+          }
+        : {
+              text: "Switch to " + chain?.name,
+              onClick: () => switchNetwork?.(chain?.id),
+              critical: true,
+          };
+
     return (
         <FlowStepView
             title={`Approve ${token?.symbol}`}
@@ -38,10 +54,7 @@ export default function ApproveTokenView({
             }
             subtitle={`Before you pay with ${token?.symbol}, you need to approve it first.`}
             body={`You only need to approve ${token?.symbol} once.`}
-            primaryButtonInfo={{
-                text: `Approve my ${token?.symbol}`,
-                onClick: approveCallback,
-            }}
+            primaryButtonInfo={buttonInfo}
         />
     );
 }
