@@ -18,7 +18,7 @@ import TokenListProvider from "@/hooks/useTokenList/provider";
 
 import "@/styles/fonts.css";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import { CustomAvatar } from "@/components/EnsAvatar";
+import { CustomAvatar } from "@/components/WalletAvatar";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),

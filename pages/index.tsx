@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Text, Flex } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { Address } from "wagmi";
+import { ethers } from "ethers";
 
-import { formatNumber, parseTokenAmount } from "@/common/utils";
+import { formatNumber, getDefaultLinearGradientForAddress, parseTokenAmount } from "@/common/utils";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import { useChain } from "@/hooks/useChain";
 import useCreateRequest from "@/hooks/transactions/useCreateRequest";
@@ -13,6 +14,7 @@ import CreateRequestForm from "@/components/CreateRequestForm";
 import TransactionFlow from "@/components/transactions/TransactionFlow";
 import Carousel from "@/components/Carousel";
 import { useToken } from "@/hooks/useTokenList";
+import { fetchEnsAddress, fetchEnsAvatar } from "@wagmi/core";
 
 enum CreateRequestView {
     InputForm = 0,
@@ -88,6 +90,32 @@ function CreateRequest() {
         }
     }, [createTransactionResponse]);
 
+    useEffect(() => {
+        async function t() {
+            // const avatarUrl = await fetchEnsAvatar({
+            //     address: "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
+            //     chainId: 1,
+            // });
+            // console.log("FETCHED AVATAR URL", avatarUrl);
+
+            // const provider = ethers.getDefaultProvider(ethers.providers.getNetwork(1));
+            const address = "0x5303B22B50470478Aa1E989efaf1003e6B2A309c";
+
+            // const ensName = await provider.lookupAddress(address);
+
+            // const ensResolver = await provider.getResolver(ensName ?? "");
+            // // You can fetch any key stored in their ENS profile.
+            // const twitterHandle = await ensResolver?.getText("com.twitter");
+
+            const provider = new ethers.providers.AlchemyProvider("mainnet", process.env.NEXT_PUBLIC_ALCHEMY_ID);
+            const ensName = await provider.lookupAddress(address);
+            const ensAvatarUrl = await provider.getAvatar(ensName ?? "");
+            console.log("ENS", ensName, ensAvatarUrl);
+        }
+
+        t();
+    }, []);
+
     return (
         <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
             <Flex direction="column" justifyContent="center" alignItems="center" pb={4}>
@@ -107,12 +135,14 @@ function CreateRequest() {
 const DynamicCreateRequest = dynamic(() => Promise.resolve(CreateRequest), { ssr: false });
 
 const Index = () => {
+    const g = getDefaultLinearGradientForAddress("0x5303B22B50470478Aa1E989efaf1003e6B2A309f");
+    console.log("GRAD", g);
     return (
         <>
             <Head>
                 <meta property="og:title" content="Get paid on Hopscotch" />
                 <meta property="og:site_name" content="hopscotch.cash" />
-                <meta property="og:image" content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og`} />
+                {/* <meta property="og:image" content={LoggedOut.sr} /> */}
             </Head>
             <DynamicCreateRequest />
         </>

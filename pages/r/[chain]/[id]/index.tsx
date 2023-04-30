@@ -1,16 +1,16 @@
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAccount, useEnsName, Address } from "wagmi";
 
 import { useChain } from "@/hooks/useChain";
-import { useRequest } from "@/hooks/useRequest";
+import { useRequest, Request } from "@/hooks/useRequest";
 import { useToken } from "@/hooks/useTokenList";
-import { ExplorerLinkType, Length, LoadingStatus, Token } from "@/common/types";
+import { ExplorerLinkType, Length } from "@/common/types";
 import usePayRequest from "@/hooks/transactions/usePayRequest";
 import useApproveErc20 from "@/hooks/transactions/useApproveErc20";
 import { Box, Button, Flex, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { formatTokenAmount, openLink, shortAddress, stringToNumber } from "@/common/utils";
-import { EnsAvatar } from "@/components/EnsAvatar";
+import { WalletAvatar } from "@/components/WalletAvatar";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import Image from "next/image";
 import { LinkIcon } from "@chakra-ui/icons";
@@ -19,7 +19,6 @@ import { useExplorerLink } from "@/hooks/useExplorerLink";
 import ApproveTokenView from "@/components/ApproveTokenView";
 import { BigNumber } from "ethers";
 import Head from "next/head";
-import dynamic from "next/dynamic";
 import SummaryTable from "@/components/SummaryTable";
 import PayRequestForm from "@/components/PayRequestForm";
 import Carousel from "@/components/Carousel";
@@ -28,29 +27,19 @@ import ReviewPayRequest from "@/components/ReviewPayRequest";
 import SuccessfulTransactionView from "@/components/transactions/SuccessfulTransactionView";
 import Spinner from "@/components/Spinner";
 import Toast from "@/components/Toast";
+import { useEnsInfoOrDefaults } from "@/hooks/useEnsInfoOrDefaults";
 
-function PayRequest() {
+function PayRequest({ request }: { request: Request | undefined }) {
     const [payTokenAddress, setPayTokenAddress] = useState<Address | undefined>(undefined);
     const [paymentFlowActive, setPaymentFlowActive] = useState<boolean>(false);
 
     const toast = useToast();
     const { address } = useAccount();
 
-    // Get the request
-    const { query } = useRouter();
-    const [requestChainId, requestId] = useMemo(() => {
-        let chainId = typeof query.chain === "string" ? stringToNumber(query.chain) : undefined;
-        let requestId = typeof query.id === "string" ? BigNumber.from(query.id) : undefined;
-        return [chainId, requestId];
-    }, [query]);
-    const request = useRequest(requestChainId, requestId);
-
     // Parse data from request
     const requestChain = useChain(request?.chainId);
 
     const payToken = useToken(payTokenAddress, requestChain.id);
-
-    console.log("!!!!!!REQ CHAIN", requestChain);
 
     const requestToken = useToken(request?.recipientTokenAddress, request?.chainId);
     const { data: recipientEnsName } = useEnsName({
@@ -206,7 +195,7 @@ function PayRequest() {
                 align="center"
                 maxWidth="400px"
             >
-                <EnsAvatar address={request?.recipientAddress} diameter={32} />
+                <WalletAvatar address={request?.recipientAddress} size={32} />
 
                 <Flex direction="column" ml={3}>
                     <Text textStyle="titleSm">
@@ -281,24 +270,33 @@ function PayRequest() {
     );
 }
 
-// Wrap CreateRequest with next/dynamic for client-side only rendering
-const DynamicCreateRequest = dynamic(() => Promise.resolve(PayRequest), { ssr: false });
-
 const RequestPage = () => {
+    // Get the request
+    const { query } = useRouter();
+    const [requestChainId, requestId] = useMemo(() => {
+        let chainId = typeof query.chain === "string" ? stringToNumber(query.chain) : undefined;
+        let requestId = typeof query.id === "string" ? BigNumber.from(query.id) : undefined;
+        return [chainId, requestId];
+    }, [query]);
+    const request = useRequest(requestChainId, requestId);
+
+    const { name, backgroundImg } = useEnsInfoOrDefaults(request?.recipientAddress);
+
     return (
         <>
             <Head>
-                <meta property="og:title" content="Pay me on Hopscotch" />
+                <meta property="og:title" content={"Pay me on Hopscotch"} />
                 <meta property="og:site_name" content="hopscotch.cash" />
-                <meta property="og:image" content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og`} />
+                <meta
+                    property="og:image"
+                    content={`http://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?name=${encodeURIComponent(
+                        name ?? ""
+                    )}&background=${encodeURIComponent(backgroundImg ?? "")}`}
+                />
             </Head>
-            <DynamicCreateRequest />
+            <PayRequest request={request} />
         </>
     );
 };
-
-export async function getServerSideProps() {
-    return { props: {} };
-}
 
 export default RequestPage;
