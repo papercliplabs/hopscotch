@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { useAccount, useEnsName, Address } from "wagmi";
+import dynamic from "next/dynamic";
 
 import { useChain } from "@/hooks/useChain";
 import { useRequest, Request } from "@/hooks/useRequest";
@@ -270,6 +271,9 @@ function PayRequest({ request }: { request: Request | undefined }) {
     );
 }
 
+// Wrap PayRequest with next/dynamic for client-side only rendering
+const DynamicPayRequest = dynamic(() => Promise.resolve(PayRequest), { ssr: false });
+
 const RequestPage = () => {
     // Get the request
     const { query } = useRouter();
@@ -299,7 +303,7 @@ const RequestPage = () => {
                 <meta name="twitter:title" content={ogImgTitle} />
                 <meta property="twitter:image" content={ogImgContent} />
             </Head>
-            <PayRequest request={request} />
+            <DynamicPayRequest request={request} />
         </>
     );
 };
