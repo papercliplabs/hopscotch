@@ -282,17 +282,22 @@ const RequestPage = () => {
 
     const { name, backgroundImg } = useEnsInfoOrDefaults(request?.recipientAddress);
 
+    const ogImgTitle = "Pay me on Hopscotch";
+    const ogImgName = "hopscotch.cash";
+    const ogImgContent = `http://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?name=${encodeURIComponent(
+        name ?? ""
+    )}&background=${encodeURIComponent(backgroundImg ?? "")}`;
+
     return (
         <>
             <Head>
-                <meta property="og:title" content={"Pay me on Hopscotch"} />
-                <meta property="og:site_name" content="hopscotch.cash" />
-                <meta
-                    property="og:image"
-                    content={`http://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?name=${encodeURIComponent(
-                        name ?? ""
-                    )}&background=${encodeURIComponent(backgroundImg ?? "")}`}
-                />
+                <title>Hopscotch</title>
+                <meta property="og:title" content={ogImgTitle} />
+                <meta property="og:site_name" content={ogImgName} />
+                <meta property="og:image" content={ogImgContent} />
+
+                <meta name="twitter:title" content={ogImgTitle} />
+                <meta property="twitter:image" content={ogImgContent} />
             </Head>
             <PayRequest request={request} />
         </>

@@ -16,6 +16,7 @@ export function WalletAvatar({ address, size }: { address?: Address; size?: numb
             backgroundRepeat="no-repeat"
             backgroundSize="100%"
             borderRadius="100%"
+            flexShrink={0}
         />
     );
 }

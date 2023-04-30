@@ -12,7 +12,6 @@ export function useEnsInfoOrDefaults(address?: Address): EnsInfo {
     useEffect(() => {
         async function fetch() {
             if (address != lastAddress) {
-                console.log("REFETCHING");
                 // Set to defaults
                 setName(shortAddress(address?.toLowerCase(), Length.MEDIUM));
                 setBackgroundImg(getDefaultLinearGradientForAddress(address));

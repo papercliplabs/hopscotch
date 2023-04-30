@@ -90,32 +90,6 @@ function CreateRequest() {
         }
     }, [createTransactionResponse]);
 
-    useEffect(() => {
-        async function t() {
-            // const avatarUrl = await fetchEnsAvatar({
-            //     address: "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
-            //     chainId: 1,
-            // });
-            // console.log("FETCHED AVATAR URL", avatarUrl);
-
-            // const provider = ethers.getDefaultProvider(ethers.providers.getNetwork(1));
-            const address = "0x5303B22B50470478Aa1E989efaf1003e6B2A309c";
-
-            // const ensName = await provider.lookupAddress(address);
-
-            // const ensResolver = await provider.getResolver(ensName ?? "");
-            // // You can fetch any key stored in their ENS profile.
-            // const twitterHandle = await ensResolver?.getText("com.twitter");
-
-            const provider = new ethers.providers.AlchemyProvider("mainnet", process.env.NEXT_PUBLIC_ALCHEMY_ID);
-            const ensName = await provider.lookupAddress(address);
-            const ensAvatarUrl = await provider.getAvatar(ensName ?? "");
-            console.log("ENS", ensName, ensAvatarUrl);
-        }
-
-        t();
-    }, []);
-
     return (
         <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
             <Flex direction="column" justifyContent="center" alignItems="center" pb={4}>
@@ -136,7 +110,6 @@ const DynamicCreateRequest = dynamic(() => Promise.resolve(CreateRequest), { ssr
 
 const Index = () => {
     const g = getDefaultLinearGradientForAddress("0x5303B22B50470478Aa1E989efaf1003e6B2A309f");
-    console.log("GRAD", g);
     return (
         <>
             <Head>
