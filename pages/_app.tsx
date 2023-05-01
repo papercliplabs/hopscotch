@@ -45,10 +45,10 @@ type AppPropsWithLayout = AppProps & {
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-    const mounted = useIsMounted();
-    if (!mounted) {
-        return null;
-    }
+    // const mounted = useIsMounted();
+    // if (!mounted) {
+    //     return null;
+    // }
 
     return (
         <>
