@@ -285,6 +285,7 @@ const RequestPage = () => {
     const request = useRequest(requestChainId, requestId);
 
     const { name, backgroundImg } = useEnsInfoOrDefaults(request?.recipientAddress);
+    // const { name, backgroundImg } = useEnsInfoOrDefaults("0x5303B22B50470478Aa1E989efaf1003e6B2A309c");
 
     const ogImgTitle = "Pay me on Hopscotch";
     const ogImgName = "hopscotch.cash";

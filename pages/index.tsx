@@ -109,7 +109,6 @@ function CreateRequest() {
 const DynamicCreateRequest = dynamic(() => Promise.resolve(CreateRequest), { ssr: false });
 
 const Index = () => {
-    const g = getDefaultLinearGradientForAddress("0x5303B22B50470478Aa1E989efaf1003e6B2A309f");
     return (
         <>
             <Head>
