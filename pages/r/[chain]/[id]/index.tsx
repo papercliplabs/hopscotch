@@ -10,7 +10,16 @@ import { ExplorerLinkType, Length } from "@/common/types";
 import usePayRequest from "@/hooks/transactions/usePayRequest";
 import useApproveErc20 from "@/hooks/transactions/useApproveErc20";
 import { Box, Button, Flex, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { fetchRequest, Request, formatTokenAmount, openLink, shortAddress, stringToNumber } from "@/common/utils";
+import {
+    fetchRequest,
+    Request,
+    formatTokenAmount,
+    openLink,
+    shortAddress,
+    stringToNumber,
+    fetchEnsInfo,
+    getDefaultLinearGradientForAddress,
+} from "@/common/utils";
 import { WalletAvatar } from "@/components/WalletAvatar";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import Image from "next/image";
@@ -274,28 +283,20 @@ function PayRequest({ request }: { request: Request }) {
 // Wrap PayRequest with next/dynamic for client-side only rendering
 const DynamicPayRequest = dynamic(() => Promise.resolve(PayRequest), { ssr: false });
 
-const RequestPage = (request: Request) => {
-    console.log("DATA HERE", request);
+interface RequestPageProps {
+    request: Request;
+    walletName: string;
+    walletBackgroundImg: string;
+}
 
-    // Get the request
-    // const { query } = useRouter();
-    // const [requestChainId, requestId] = useMemo(() => {
-    //     let chainId = typeof query.chain === "string" ? stringToNumber(query.chain) : undefined;
-    //     let requestId = typeof query.id === "string" ? BigNumber.from(query.id) : undefined;
-    //     return [chainId, requestId];
-    // }, [query]);
-    // const request = useRequest(requestChainId, requestId);
-
-    const { name, backgroundImg } = useEnsInfoOrDefaults(request?.recipientAddress);
-    // const { name, backgroundImg } = useEnsInfoOrDefaults("0x5303B22B50470478Aa1E989efaf1003e6B2A309c");
-
+export default function RequestPage({ request, walletName, walletBackgroundImg }: RequestPageProps) {
     const ogImgTitle = "Pay me on Hopscotch";
     const ogImgName = "hopscotch.cash";
     const ogImgContent = `http://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?name=${encodeURIComponent(
-        name ?? ""
-    )}&background=${encodeURIComponent(backgroundImg ?? "")}`;
+        walletName
+    )}&background=${encodeURIComponent(walletBackgroundImg)}`;
 
-    // fetchRequest(requestId, requestChainId);
+    console.log("HERE", request, walletName, walletBackgroundImg);
 
     return (
         <>
@@ -311,16 +312,20 @@ const RequestPage = (request: Request) => {
             <DynamicPayRequest request={request} />
         </>
     );
-};
+}
 
 export async function getServerSideProps(context: any) {
     const requestChainId = stringToNumber(context.query?.chain);
     const requestId = BigNumber.from(context.query?.id ?? "0");
     const request = await fetchRequest(requestId, requestChainId);
 
+    const { name: ensName, backgroundImg: ensBackgroundImg } = await fetchEnsInfo(request?.recipientAddress);
+
     return {
-        props: JSON.parse(JSON.stringify(request)),
+        props: {
+            request: JSON.parse(JSON.stringify(request)),
+            walletName: ensName ?? shortAddress(request?.recipientAddress, Length.MEDIUM),
+            walletBackgroundImg: ensBackgroundImg ?? getDefaultLinearGradientForAddress(request?.recipientAddress),
+        },
     };
 }
-
-export default RequestPage;
