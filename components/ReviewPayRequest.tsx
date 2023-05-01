@@ -4,10 +4,10 @@ import { Address, useSwitchNetwork } from "wagmi";
 import { Box, Flex, Link, Text, Tooltip } from "@chakra-ui/react";
 import Image from "next/image";
 
-import { ExplorerLinkType, Length, Token } from "@/common/types";
+import { Length, Token } from "@/common/types";
 import { Chain } from "@/hooks/useChain";
 import FlowStepView from "@/layouts/FlowStepView";
-import { useExplorerLink } from "@/hooks/useExplorerLink";
+import { ExplorerLinkType, useExplorerLink } from "@/hooks/useExplorerLink";
 import { WalletAvatar } from "@/components/WalletAvatar";
 import TokenWithChainIcon from "./TokenWithChainIcon";
 import longArrowDown from "@/public/static/LongArrowDown.svg";

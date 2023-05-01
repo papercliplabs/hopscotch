@@ -1,11 +1,6 @@
 import { ImageResponse } from "@vercel/og";
 import { NextRequest, NextResponse } from "next/server";
 import { colors } from "@/theme/colors";
-import { Flex, Text } from "@chakra-ui/react";
-// import { EnsAvatar } from "@/components/WalletAvatar";
-import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
-import { fetchEnsInfo } from "@/common/utils";
-import { fontSizes, textStyles } from "@/theme/typography";
 
 export const config = {
     runtime: "edge",

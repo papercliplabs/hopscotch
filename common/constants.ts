@@ -1,5 +1,4 @@
 import { AddressZero } from "@ethersproject/constants";
-import { Percent } from "@uniswap/sdk-core";
 import {
     localhost,
     mainnet,

@@ -3,10 +3,9 @@ import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { useCallback, useState } from "react";
 import { usePrepareSendTransaction, useSendTransaction as useSendTransactionWagmi, useWaitForTransaction } from "wagmi";
 import { useChain } from "@/hooks/useChain";
-import { getExplorerLink } from "@/common/utils";
-import { ExplorerLinkType } from "@/common/types";
 
 import { Chain } from "@/hooks/useChain";
+import { ExplorerLinkType, getExplorerLink } from "@/hooks/useExplorerLink";
 
 export enum TransactionStatus {
     Failed = 0,

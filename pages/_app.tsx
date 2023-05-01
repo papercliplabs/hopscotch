@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 
@@ -17,7 +17,6 @@ import { SUPPORTED_CHAINS } from "@/common/constants";
 import TokenListProvider from "@/hooks/useTokenList/provider";
 
 import "@/styles/fonts.css";
-import { useIsMounted } from "@/hooks/useIsMounted";
 import { CustomAvatar } from "@/components/WalletAvatar";
 
 const { chains, provider } = configureChains(SUPPORTED_CHAINS, [
@@ -31,7 +30,7 @@ const { connectors } = getDefaultWallets({
 });
 
 export const wagmiClient = createClient({
-    autoConnect: true,
+    autoConnect: false, // Disabled autoConnect due to hydration issue with WAGMI, do it manually below
     connectors,
     provider,
 });
@@ -45,10 +44,10 @@ type AppPropsWithLayout = AppProps & {
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-    const mounted = useIsMounted();
-    if (!mounted) {
-        return null;
-    }
+    useEffect(() => {
+        // Manually trigger autoconnect after mounted
+        wagmiClient.autoConnect();
+    }, []);
 
     return (
         <>

@@ -1,4 +1,4 @@
-import { Address, Chain as WagmiChain } from "wagmi";
+import { Address } from "wagmi";
 import { BigNumber } from "@ethersproject/bignumber";
 
 export interface BaseToken {
@@ -37,10 +37,4 @@ export enum LoadingStatus {
     LOADING,
     ERROR,
     SUCCESS,
-}
-
-export enum ExplorerLinkType {
-    TOKEN = "token",
-    WALLET_OR_CONTRACT = "address",
-    TRANSACTION = "tx",
 }

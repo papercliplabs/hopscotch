@@ -4,6 +4,7 @@ import { BigNumber } from "ethers/lib/ethers";
 
 import HopscotchAbi from "@/abis/hopscotch.json";
 import { useMemo } from "react";
+import { readContract } from "@wagmi/core";
 
 export interface Request {
     chainId: number;
@@ -12,6 +13,29 @@ export interface Request {
     recipientTokenAddress: Address;
     recipientTokenAmount: BigNumber;
     paid: boolean;
+}
+
+export async function fetchRequest(requestId?: BigNumber, chainId?: number): Promise<Request | undefined> {
+    if (requestId && chainId) {
+        const data = (await readContract({
+            address: HOPSCOTCH_ADDRESS,
+            abi: HopscotchAbi,
+            chainId: chainId ?? 1,
+            functionName: "getRequest",
+            args: [requestId],
+        })) as Array<any>;
+
+        return {
+            chainId: chainId,
+            requestId: requestId,
+            recipientAddress: data[0],
+            recipientTokenAddress: data[1],
+            recipientTokenAmount: data[2],
+            paid: data[3],
+        };
+    } else {
+        return undefined;
+    }
 }
 
 /**

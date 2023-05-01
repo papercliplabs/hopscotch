@@ -1,7 +1,25 @@
-import { ExplorerLinkType } from "@/common/types";
-import { getExplorerLink } from "@/common/utils";
 import { useChain } from "@/hooks/useChain";
 import { Chain } from "wagmi";
+
+export enum ExplorerLinkType {
+    TOKEN = "token",
+    WALLET_OR_CONTRACT = "address",
+    TRANSACTION = "tx",
+}
+
+export function getExplorerLink(
+    hashOrAddress: string | undefined,
+    linkType: ExplorerLinkType,
+    chain: Chain | undefined
+): string | undefined {
+    const baseLink = chain?.blockExplorers?.default.url;
+
+    if (baseLink && hashOrAddress) {
+        return baseLink + "/" + linkType + "/" + hashOrAddress;
+    } else {
+        return undefined;
+    }
+}
 
 /**
  * Helper to get an explorer link for a hash or address
