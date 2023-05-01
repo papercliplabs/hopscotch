@@ -8,7 +8,7 @@ import Image from "next/image";
 
 import { LoadingStatus, Token } from "@/common/types";
 import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
-import { Request } from "@/hooks/useRequest";
+import { Request } from "@/common/utils";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
 import { useChain } from "@/hooks/useChain";
 import { useToken } from "@/hooks/useTokenList";

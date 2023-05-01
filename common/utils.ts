@@ -3,7 +3,7 @@ import { HOPSCOTCH_ADDRESS, NATIVE_TOKENS, NO_AMOUNT_DISPLAY, SUPPORTED_CHAINS }
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Address } from "wagmi";
 import { Chain } from "wagmi";
-import { Contract, BigNumber } from "ethers";
+import { Contract, BigNumber, ethers } from "ethers";
 import { jsNumberForAddress } from "react-jazzicon";
 import { AddressZero } from "@ethersproject/constants";
 
