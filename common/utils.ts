@@ -176,8 +176,8 @@ export async function fetchEnsInfo(address?: Address): Promise<EnsInfo> {
     // const name = await provider.lookupAddress(address ?? AddressZero);
     // const image = await provider.getAvatar(name ?? "");
 
-    const name = await fetchEnsName({ address: address ?? AddressZero, chainId: 1 });
-    const image = await fetchEnsAvatar({ address: address ?? AddressZero, chainId: 1 });
+    const name = undefined; //await fetchEnsName({ address: address ?? AddressZero, chainId: 1 });
+    const image = undefined; // await fetchEnsAvatar({ address: address ?? AddressZero, chainId: 1 });
 
     return { name: name ?? undefined, backgroundImg: image ? `url(${image})` : undefined };
 }
