@@ -8,7 +8,6 @@ import Image from "next/image";
 
 import { LoadingStatus, Token } from "@/common/types";
 import { useIsOnExpectedChain } from "@/hooks/useIsOnExpectedChain";
-import { Request } from "@/hooks/useRequest";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
 import { useChain } from "@/hooks/useChain";
 import { useToken } from "@/hooks/useTokenList";
@@ -21,6 +20,7 @@ import SummaryTable from "./SummaryTable";
 import Spinner from "./Spinner";
 import { formatUnits } from "@ethersproject/units";
 import { Question } from "@phosphor-icons/react";
+import { Request } from "@/hooks/useRequest";
 
 interface PayRequestFormProps {
     request?: Request;

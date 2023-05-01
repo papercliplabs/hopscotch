@@ -1,12 +1,8 @@
-import { ExplorerLinkType, Length, Optional } from "./types";
+import { Length, Optional } from "./types";
 import { NATIVE_TOKENS, NO_AMOUNT_DISPLAY, SUPPORTED_CHAINS } from "./constants";
-import { BigNumber } from "@ethersproject/bignumber";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Address } from "wagmi";
-import { Chain } from "wagmi";
-import { ethers } from "ethers";
-import { jsNumberForAddress } from "react-jazzicon";
-import { AddressZero } from "@ethersproject/constants";
+import { BigNumber } from "ethers";
 
 /**
  * Format a number so it can nicely be rendered
@@ -147,35 +143,4 @@ export function openLink(url: string | undefined, newTab: boolean): void {
 export function stringToNumber(s: string | undefined): number | undefined {
     const parsedFloat = parseFloat(s ?? "");
     return isNaN(parsedFloat) ? undefined : parsedFloat;
-}
-
-export function getExplorerLink(
-    hashOrAddress: string | undefined,
-    linkType: ExplorerLinkType,
-    chain: Chain | undefined
-): string | undefined {
-    const baseLink = chain?.blockExplorers?.default.url;
-
-    if (baseLink && hashOrAddress) {
-        return baseLink + "/" + linkType + "/" + hashOrAddress;
-    } else {
-        return undefined;
-    }
-}
-
-export interface EnsInfo {
-    name?: string;
-    backgroundImg?: string;
-}
-
-export async function fetchEnsInfo(address?: Address): Promise<EnsInfo> {
-    const provider = new ethers.providers.AlchemyProvider("mainnet", process.env.NEXT_PUBLIC_ALCHEMY_ID);
-    const name = await provider.lookupAddress(address ?? AddressZero);
-    const image = await provider.getAvatar(name ?? "");
-    return { name: name ?? undefined, backgroundImg: image ? `url(${image})` : undefined };
-}
-
-export function getDefaultLinearGradientForAddress(address?: Address) {
-    const number = Math.ceil(jsNumberForAddress(address ?? "") % 0xffffff);
-    return `linear-gradient(45deg, #${number.toString(16).padStart(6, "0")}, #FFFFFF)`;
 }

@@ -1,12 +1,10 @@
-import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
-import { useAccount, useEnsName, Address } from "wagmi";
-import dynamic from "next/dynamic";
+import { useAccount, Address } from "wagmi";
 
 import { useChain } from "@/hooks/useChain";
-import { useRequest, Request } from "@/hooks/useRequest";
+import { fetchRequest, Request } from "@/hooks/useRequest";
 import { useToken } from "@/hooks/useTokenList";
-import { ExplorerLinkType, Length } from "@/common/types";
+import { Length } from "@/common/types";
 import usePayRequest from "@/hooks/transactions/usePayRequest";
 import useApproveErc20 from "@/hooks/transactions/useApproveErc20";
 import { Box, Button, Flex, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
@@ -16,7 +14,7 @@ import PrimaryCard from "@/layouts/PrimaryCard";
 import Image from "next/image";
 import { LinkIcon } from "@chakra-ui/icons";
 import { colors } from "@/theme/colors";
-import { useExplorerLink } from "@/hooks/useExplorerLink";
+import { ExplorerLinkType, useExplorerLink } from "@/hooks/useExplorerLink";
 import ApproveTokenView from "@/components/ApproveTokenView";
 import { BigNumber } from "ethers";
 import Head from "next/head";
@@ -28,9 +26,9 @@ import ReviewPayRequest from "@/components/ReviewPayRequest";
 import SuccessfulTransactionView from "@/components/transactions/SuccessfulTransactionView";
 import Spinner from "@/components/Spinner";
 import Toast from "@/components/Toast";
-import { useEnsInfoOrDefaults } from "@/hooks/useEnsInfoOrDefaults";
+import { fetchEnsInfo, getDefaultLinearGradientForAddress, useEnsInfoOrDefaults } from "@/hooks/useEnsInfoOrDefaults";
 
-function PayRequest({ request }: { request: Request | undefined }) {
+function PayRequest({ request }: { request: Request }) {
     const [payTokenAddress, setPayTokenAddress] = useState<Address | undefined>(undefined);
     const [paymentFlowActive, setPaymentFlowActive] = useState<boolean>(false);
 
@@ -43,10 +41,7 @@ function PayRequest({ request }: { request: Request | undefined }) {
     const payToken = useToken(payTokenAddress, requestChain.id);
 
     const requestToken = useToken(request?.recipientTokenAddress, request?.chainId);
-    const { data: recipientEnsName } = useEnsName({
-        address: request?.recipientAddress,
-        chainId: 1,
-    });
+    const { name: recipientEnsName } = useEnsInfoOrDefaults(request?.recipientAddress);
     const isOwner = address == request?.recipientAddress;
 
     // get url server side safe nextjs
@@ -271,26 +266,18 @@ function PayRequest({ request }: { request: Request | undefined }) {
     );
 }
 
-// Wrap PayRequest with next/dynamic for client-side only rendering
-const DynamicPayRequest = dynamic(() => Promise.resolve(PayRequest), { ssr: false });
+interface RequestPageProps {
+    request: Request;
+    walletName: string;
+    walletBackgroundImg: string;
+}
 
-const RequestPage = () => {
-    // Get the request
-    const { query } = useRouter();
-    const [requestChainId, requestId] = useMemo(() => {
-        let chainId = typeof query.chain === "string" ? stringToNumber(query.chain) : undefined;
-        let requestId = typeof query.id === "string" ? BigNumber.from(query.id) : undefined;
-        return [chainId, requestId];
-    }, [query]);
-    const request = useRequest(requestChainId, requestId);
-
-    const { name, backgroundImg } = useEnsInfoOrDefaults(request?.recipientAddress);
-
+export default function RequestPage({ request, walletName, walletBackgroundImg }: RequestPageProps) {
     const ogImgTitle = "Pay me on Hopscotch";
     const ogImgName = "hopscotch.cash";
     const ogImgContent = `http://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?name=${encodeURIComponent(
-        name ?? ""
-    )}&background=${encodeURIComponent(backgroundImg ?? "")}`;
+        walletName
+    )}&background=${encodeURIComponent(walletBackgroundImg)}`;
 
     return (
         <>
@@ -303,9 +290,23 @@ const RequestPage = () => {
                 <meta name="twitter:title" content={ogImgTitle} />
                 <meta property="twitter:image" content={ogImgContent} />
             </Head>
-            <DynamicPayRequest request={request} />
+            <PayRequest request={request} />
         </>
     );
-};
+}
 
-export default RequestPage;
+export async function getServerSideProps(context: any) {
+    const requestChainId = stringToNumber(context.query?.chain);
+    const requestId = BigNumber.from(context.query?.id ?? "0");
+    const request = await fetchRequest(requestId, requestChainId);
+
+    const { name: ensName, backgroundImg: ensBackgroundImg } = await fetchEnsInfo(request?.recipientAddress);
+
+    return {
+        props: {
+            request: JSON.parse(JSON.stringify(request)),
+            walletName: ensName ?? shortAddress(request?.recipientAddress, Length.MEDIUM),
+            walletBackgroundImg: ensBackgroundImg ?? getDefaultLinearGradientForAddress(request?.recipientAddress),
+        },
+    };
+}

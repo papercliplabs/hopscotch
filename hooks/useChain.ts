@@ -1,8 +1,7 @@
-import { useNetwork, Chain as WagmiChain, useSwitchNetwork } from "wagmi";
+import { useNetwork, Chain as WagmiChain } from "wagmi";
 
 import { SUPPORTED_CHAINS } from "@/common/constants";
-import WarningIcon from "@/public/static/Warning.svg";
-import { getNativeTokenAddress, getNativeTokenLogoUri } from "@/common/utils";
+import { getNativeTokenLogoUri } from "@/common/utils";
 
 export interface Chain extends WagmiChain {
     iconUri: string;
