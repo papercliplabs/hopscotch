@@ -105,9 +105,6 @@ function CreateRequest() {
     );
 }
 
-// Wrap CreateRequest with next/dynamic for client-side only rendering
-const DynamicCreateRequest = dynamic(() => Promise.resolve(CreateRequest), { ssr: false });
-
 const Index = () => {
     return (
         <>
@@ -116,7 +113,7 @@ const Index = () => {
                 <meta property="og:site_name" content="hopscotch.cash" />
                 {/* <meta property="og:image" content={LoggedOut.sr} /> */}
             </Head>
-            <DynamicCreateRequest />
+            <CreateRequest />
         </>
     );
 };

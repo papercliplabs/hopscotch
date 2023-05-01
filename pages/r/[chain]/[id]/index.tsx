@@ -280,9 +280,6 @@ function PayRequest({ request }: { request: Request }) {
     );
 }
 
-// Wrap PayRequest with next/dynamic for client-side only rendering
-const DynamicPayRequest = dynamic(() => Promise.resolve(PayRequest), { ssr: false });
-
 interface RequestPageProps {
     request: Request;
     walletName: string;
@@ -309,7 +306,7 @@ export default function RequestPage({ request, walletName, walletBackgroundImg }
                 <meta name="twitter:title" content={ogImgTitle} />
                 <meta property="twitter:image" content={ogImgContent} />
             </Head>
-            <DynamicPayRequest request={request} />
+            <PayRequest request={request} />
         </>
     );
 }
