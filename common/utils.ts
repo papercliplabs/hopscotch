@@ -8,7 +8,7 @@ import { jsNumberForAddress } from "react-jazzicon";
 import { AddressZero } from "@ethersproject/constants";
 
 import HopscotchAbi from "@/abis/hopscotch.json";
-import { readContract } from "@wagmi/core";
+import { fetchEnsAddress, fetchEnsAvatar, fetchEnsName, readContract } from "@wagmi/core";
 
 /**
  * Format a number so it can nicely be rendered
@@ -171,9 +171,14 @@ export interface EnsInfo {
 }
 
 export async function fetchEnsInfo(address?: Address): Promise<EnsInfo> {
-    const provider = new ethers.providers.AlchemyProvider("mainnet", process.env.NEXT_PUBLIC_ALCHEMY_ID);
-    const name = await provider.lookupAddress(address ?? AddressZero);
-    const image = await provider.getAvatar(name ?? "");
+    // Removing manual ENS for now, since even with, not sync with rainbow kit
+    // const provider = new ethers.providers.AlchemyProvider("mainnet", process.env.NEXT_PUBLIC_ALCHEMY_ID);
+    // const name = await provider.lookupAddress(address ?? AddressZero);
+    // const image = await provider.getAvatar(name ?? "");
+
+    const name = await fetchEnsName({ address: address ?? AddressZero, chainId: 1 });
+    const image = await fetchEnsAvatar({ address: address ?? AddressZero, chainId: 1 });
+
     return { name: name ?? undefined, backgroundImg: image ? `url(${image})` : undefined };
 }
 
