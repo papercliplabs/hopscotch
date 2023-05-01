@@ -4,13 +4,13 @@ import { useAccount, useEnsName, Address } from "wagmi";
 import dynamic from "next/dynamic";
 
 import { useChain } from "@/hooks/useChain";
-import { useRequest, Request } from "@/hooks/useRequest";
+import { useRequest } from "@/hooks/useRequest";
 import { useToken } from "@/hooks/useTokenList";
 import { ExplorerLinkType, Length } from "@/common/types";
 import usePayRequest from "@/hooks/transactions/usePayRequest";
 import useApproveErc20 from "@/hooks/transactions/useApproveErc20";
 import { Box, Button, Flex, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { formatTokenAmount, openLink, shortAddress, stringToNumber } from "@/common/utils";
+import { fetchRequest, Request, formatTokenAmount, openLink, shortAddress, stringToNumber } from "@/common/utils";
 import { WalletAvatar } from "@/components/WalletAvatar";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import Image from "next/image";
@@ -30,7 +30,7 @@ import Spinner from "@/components/Spinner";
 import Toast from "@/components/Toast";
 import { useEnsInfoOrDefaults } from "@/hooks/useEnsInfoOrDefaults";
 
-function PayRequest({ request }: { request: Request | undefined }) {
+function PayRequest({ request }: { request: Request }) {
     const [payTokenAddress, setPayTokenAddress] = useState<Address | undefined>(undefined);
     const [paymentFlowActive, setPaymentFlowActive] = useState<boolean>(false);
 
@@ -274,15 +274,17 @@ function PayRequest({ request }: { request: Request | undefined }) {
 // Wrap PayRequest with next/dynamic for client-side only rendering
 const DynamicPayRequest = dynamic(() => Promise.resolve(PayRequest), { ssr: false });
 
-const RequestPage = () => {
+const RequestPage = (request: Request) => {
+    console.log("DATA HERE", request);
+
     // Get the request
-    const { query } = useRouter();
-    const [requestChainId, requestId] = useMemo(() => {
-        let chainId = typeof query.chain === "string" ? stringToNumber(query.chain) : undefined;
-        let requestId = typeof query.id === "string" ? BigNumber.from(query.id) : undefined;
-        return [chainId, requestId];
-    }, [query]);
-    const request = useRequest(requestChainId, requestId);
+    // const { query } = useRouter();
+    // const [requestChainId, requestId] = useMemo(() => {
+    //     let chainId = typeof query.chain === "string" ? stringToNumber(query.chain) : undefined;
+    //     let requestId = typeof query.id === "string" ? BigNumber.from(query.id) : undefined;
+    //     return [chainId, requestId];
+    // }, [query]);
+    // const request = useRequest(requestChainId, requestId);
 
     const { name, backgroundImg } = useEnsInfoOrDefaults(request?.recipientAddress);
     // const { name, backgroundImg } = useEnsInfoOrDefaults("0x5303B22B50470478Aa1E989efaf1003e6B2A309c");
@@ -292,6 +294,8 @@ const RequestPage = () => {
     const ogImgContent = `http://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?name=${encodeURIComponent(
         name ?? ""
     )}&background=${encodeURIComponent(backgroundImg ?? "")}`;
+
+    // fetchRequest(requestId, requestChainId);
 
     return (
         <>
@@ -308,5 +312,15 @@ const RequestPage = () => {
         </>
     );
 };
+
+export async function getServerSideProps(context: any) {
+    const requestChainId = stringToNumber(context.query?.chain);
+    const requestId = BigNumber.from(context.query?.id ?? "0");
+    const request = await fetchRequest(requestId, requestChainId);
+
+    return {
+        props: JSON.parse(JSON.stringify(request)),
+    };
+}
 
 export default RequestPage;

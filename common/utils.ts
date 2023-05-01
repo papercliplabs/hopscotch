@@ -1,12 +1,14 @@
 import { ExplorerLinkType, Length, Optional } from "./types";
-import { NATIVE_TOKENS, NO_AMOUNT_DISPLAY, SUPPORTED_CHAINS } from "./constants";
-import { BigNumber } from "@ethersproject/bignumber";
+import { HOPSCOTCH_ADDRESS, NATIVE_TOKENS, NO_AMOUNT_DISPLAY, SUPPORTED_CHAINS } from "./constants";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Address } from "wagmi";
 import { Chain } from "wagmi";
-import { ethers } from "ethers";
+import { Contract, BigNumber } from "ethers";
 import { jsNumberForAddress } from "react-jazzicon";
 import { AddressZero } from "@ethersproject/constants";
+
+import HopscotchAbi from "@/abis/hopscotch.json";
+import { readContract } from "@wagmi/core";
 
 /**
  * Format a number so it can nicely be rendered
@@ -178,4 +180,36 @@ export async function fetchEnsInfo(address?: Address): Promise<EnsInfo> {
 export function getDefaultLinearGradientForAddress(address?: Address) {
     const number = Math.ceil(jsNumberForAddress(address ?? "") % 0xffffff);
     return `linear-gradient(45deg, #${number.toString(16).padStart(6, "0")}, #FFFFFF)`;
+}
+
+export interface Request {
+    chainId: number;
+    requestId: BigNumber;
+    recipientAddress: Address;
+    recipientTokenAddress: Address;
+    recipientTokenAmount: BigNumber;
+    paid: boolean;
+}
+
+export async function fetchRequest(requestId?: BigNumber, chainId?: number): Promise<Request | undefined> {
+    if (requestId && chainId) {
+        const data = (await readContract({
+            address: HOPSCOTCH_ADDRESS,
+            abi: HopscotchAbi,
+            chainId: chainId ?? 1,
+            functionName: "getRequest",
+            args: [requestId],
+        })) as Array<any>;
+
+        return {
+            chainId: chainId,
+            requestId: requestId,
+            recipientAddress: data[0],
+            recipientTokenAddress: data[1],
+            recipientTokenAmount: data[2],
+            paid: data[3],
+        };
+    } else {
+        return undefined;
+    }
 }

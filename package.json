@@ -34,6 +34,7 @@
         "@vercel/og": "^0.4.1",
         "@wagmi/core": "^0.10.10",
         "color": "^4.2.3",
+        "ethers": "^5",
         "framer-motion": "^10.11.4",
         "next": "^13.2.3",
         "react": "18.2.0",

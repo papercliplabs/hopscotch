@@ -4,15 +4,7 @@ import { BigNumber } from "ethers/lib/ethers";
 
 import HopscotchAbi from "@/abis/hopscotch.json";
 import { useMemo } from "react";
-
-export interface Request {
-    chainId: number;
-    requestId: BigNumber;
-    recipientAddress: Address;
-    recipientTokenAddress: Address;
-    recipientTokenAmount: BigNumber;
-    paid: boolean;
-}
+import { Request } from "@/common/utils";
 
 /**
  * Hook to get the token allowance of the spenderAddress for the tokenAddress
