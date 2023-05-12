@@ -12,6 +12,7 @@ import CreateRequestForm from "@/components/CreateRequestForm";
 import TransactionFlow from "@/components/transactions/TransactionFlow";
 import Carousel from "@/components/Carousel";
 import { useToken } from "@/hooks/useTokenList";
+import WarningDisclaimer from "@/components/WarningDisclaimer";
 
 enum CreateRequestView {
     InputForm = 0,
@@ -88,7 +89,7 @@ function CreateRequest() {
     }, [createTransactionResponse]);
 
     return (
-        <Flex flexDirection="column" alignItems="center" justifyContent="space-between">
+        <Flex flexDirection="column" alignItems="center" justifyContent="space-between" gap={4}>
             <Flex direction="column" justifyContent="center" alignItems="center" pb={4}>
                 <Text textStyle="headline">Create a request</Text>
                 <Text textStyle="bodyLg" variant="secondary">
@@ -98,6 +99,7 @@ function CreateRequest() {
             <PrimaryCard>
                 <Carousel views={views} activeViewIndex={viewIndex} />
             </PrimaryCard>
+            <WarningDisclaimer />
         </Flex>
     );
 }
@@ -106,12 +108,14 @@ const Index = () => {
     return (
         <>
             <Head>
+                <title>Hopscotch</title>
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
                 <link rel="manifest" href="/site.webmanifest" />
                 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-                <link rel="shortcut icon" type="image/png" href="/favicon.ico" />
+                <meta name="msapplication-TileColor" content="#da532c" />
+                <meta name="theme-color" content="#ffffff"></meta>
 
                 <meta property="og:title" content="Get paid on Hopscotch" />
                 <meta property="og:site_name" content="hopscotch.cash" />

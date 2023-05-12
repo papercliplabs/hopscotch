@@ -144,3 +144,15 @@ export function stringToNumber(s: string | undefined): number | undefined {
     const parsedFloat = parseFloat(s ?? "");
     return isNaN(parsedFloat) ? undefined : parsedFloat;
 }
+
+// Parse JSON serialized BigNumber back to BigNumber
+export function parseJsonWithBigNumber(key: any, value: any) {
+    let result = value;
+    if (typeof value === "object" && value !== null && value.hasOwnProperty("type")) {
+        switch (value.type) {
+            case "BigNumber":
+                result = BigNumber.from(value.hex);
+        }
+    }
+    return result;
+}

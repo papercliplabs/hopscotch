@@ -27,6 +27,14 @@ const styles = {
     },
 };
 
+const breakpoints = {
+    xs: pxToRem(330),
+    sm: pxToRem(480),
+    md: pxToRem(768),
+    lg: pxToRem(992),
+    xl: pxToRem(1280),
+};
+
 const theme = extendTheme({
     shadows: {
         defaultSm: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
@@ -44,6 +52,7 @@ const theme = extendTheme({
     fontWeights,
     textStyles,
     semanticTokens,
+    breakpoints,
     borders: {
         grayDashed: "4px dashed #ABACAE",
     },

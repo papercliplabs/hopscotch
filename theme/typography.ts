@@ -65,7 +65,7 @@ export const textStyles = {
     bodySm: {
         fontSize: "xs",
         fontWeight: "medium",
-        lineHeight: "md",
+        lineHeight: "sm",
         fontFamily: "'Inter Tight', sans-serif",
     },
     label: {
