@@ -186,7 +186,7 @@ export default function PayRequestForm({
                                     </Flex>
                                 ) : (
                                     <Text
-                                        textStyle="headline"
+                                        textStyle={["titleMd", "headline"]}
                                         variant={
                                             payTokenAmountHumanReadable != NO_AMOUNT_DISPLAY ? "primary" : "secondary"
                                         }
@@ -218,7 +218,7 @@ export default function PayRequestForm({
                                 <Text textStyle="titleSm" variant="secondary">
                                     They receive
                                 </Text>
-                                <Text textStyle="headline">{requestTokenAmountHumanReadable}</Text>
+                                <Text textStyle={["titleMd", "headline"]}>{requestTokenAmountHumanReadable}</Text>
                                 <Text textStyle="bodyMd" variant="secondary">
                                     {requestTokenAmountHumanReadableUsd}
                                 </Text>
@@ -235,7 +235,7 @@ export default function PayRequestForm({
                                         />
                                     </AvatarBadge>
                                 </Avatar>
-                                <Text textStyle="titleLg">{requestToken?.symbol}</Text>
+                                <Text textStyle={["titleSm", "titleLg"]}>{requestToken?.symbol}</Text>
                             </Flex>
                         </Flex>
                     </Flex>

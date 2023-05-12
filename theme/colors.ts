@@ -102,6 +102,9 @@ const themeColors = {
         800: "rgba(255,255,255,0.8)",
         900: "rgba(255,255,255,0.9)",
     },
+    warningAlpha: {
+        100: "rgba(255,127,63,0.1)",
+    },
 };
 
 const gradients = {
@@ -138,6 +141,7 @@ export const colors = {
 
     success: "#3CCF4E",
     critical: "#FF4949",
+    warning: "#FF7F3F",
 };
 
 // Not nessesary until we have dark mode

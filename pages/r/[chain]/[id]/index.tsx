@@ -8,7 +8,7 @@ import { Length } from "@/common/types";
 import usePayRequest from "@/hooks/transactions/usePayRequest";
 import useApproveErc20 from "@/hooks/transactions/useApproveErc20";
 import { Box, Button, Flex, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { formatTokenAmount, openLink, shortAddress, stringToNumber } from "@/common/utils";
+import { formatTokenAmount, openLink, parseJsonWithBigNumber, shortAddress, stringToNumber } from "@/common/utils";
 import { WalletAvatar } from "@/components/WalletAvatar";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import Image from "next/image";
@@ -27,6 +27,7 @@ import SuccessfulTransactionView from "@/components/transactions/SuccessfulTrans
 import Spinner from "@/components/Spinner";
 import Toast from "@/components/Toast";
 import { fetchEnsInfo, getDefaultLinearGradientForAddress, useEnsInfoOrDefaults } from "@/hooks/useEnsInfoOrDefaults";
+import WarningDisclaimer from "@/components/WarningDisclaimer";
 
 function PayRequest({ request }: { request: Request }) {
     const [payTokenAddress, setPayTokenAddress] = useState<Address | undefined>(undefined);
@@ -188,7 +189,7 @@ function PayRequest({ request }: { request: Request }) {
                 p={4}
                 flexDirection="row"
                 justifyContent="space-between"
-                align="center"
+                align="top"
                 maxWidth="400px"
             >
                 <WalletAvatar address={request?.recipientAddress} size={32} />
@@ -262,22 +263,26 @@ function PayRequest({ request }: { request: Request }) {
                     activeViewIndex={activeViewIndex}
                 />
             </PrimaryCard>
+            <WarningDisclaimer />
         </Flex>
     );
 }
 
 interface RequestPageProps {
-    request: Request;
+    requestJsonObject: Object;
     walletName: string;
     walletBackgroundImg: string;
 }
 
-export default function RequestPage({ request, walletName, walletBackgroundImg }: RequestPageProps) {
+export default function RequestPage({ requestJsonObject, walletName, walletBackgroundImg }: RequestPageProps) {
     const ogImgTitle = "Pay me on Hopscotch";
     const ogImgName = "hopscotch.cash";
     const ogImgContent = `http://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?name=${encodeURIComponent(
         walletName
     )}&background=${encodeURIComponent(walletBackgroundImg)}`;
+
+    // Parse data so we have correct BigNumber types
+    const request = JSON.parse(JSON.stringify(requestJsonObject), parseJsonWithBigNumber) as Request;
 
     return (
         <>
@@ -288,7 +293,8 @@ export default function RequestPage({ request, walletName, walletBackgroundImg }
                 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
                 <link rel="manifest" href="/site.webmanifest" />
                 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-                <link rel="shortcut icon" type="image/png" href="/favicon.ico" />
+                <meta name="msapplication-TileColor" content="#da532c" />
+                <meta name="theme-color" content="#ffffff"></meta>
 
                 <meta property="og:title" content={ogImgTitle} />
                 <meta property="og:site_name" content={ogImgName} />
@@ -311,7 +317,7 @@ export async function getServerSideProps(context: any) {
 
     return {
         props: {
-            request: JSON.parse(JSON.stringify(request)),
+            requestJsonObject: JSON.parse(JSON.stringify(request)),
             walletName: ensName ?? shortAddress(request?.recipientAddress, Length.MEDIUM),
             walletBackgroundImg: ensBackgroundImg ?? getDefaultLinearGradientForAddress(request?.recipientAddress),
         },
