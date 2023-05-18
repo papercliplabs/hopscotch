@@ -40,7 +40,7 @@ export default async function handler(req: NextRequest) {
                 >
                     <div
                         style={{
-                            padding: "12px",
+                            padding: "48px",
                             display: "flex",
                             width: "100%",
                             justifyContent: "flex-start",
@@ -78,6 +78,7 @@ export default async function handler(req: NextRequest) {
                             display: "flex",
                             paddingBottom: 0,
                             marginBottom: 0,
+                            border: "8px solid white",
                         }}
                     />
                     <div

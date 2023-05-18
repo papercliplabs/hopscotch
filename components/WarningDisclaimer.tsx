@@ -1,29 +1,21 @@
-import { colors } from "@/theme/colors";
-import { Box, Flex, Text } from "@chakra-ui/react";
-import { Warning } from "@phosphor-icons/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 export default function WarningDisclaimer() {
     return (
         <Flex
             width="100%"
-            backgroundColor="warningAlpha.100"
+            backgroundColor="warning"
             color="textSecondary"
-            borderRadius="md"
-            p={4}
+            borderRadius="12px"
+            p={2}
             flexDirection="row"
             direction="row"
-            justifyContent="space-between"
+            justifyContent="center"
             align="top"
             maxWidth="400px"
             gap={4}
         >
-            <Box width="32px">
-                <Warning size={32} color={colors.warning} weight="fill" />
-            </Box>
-            <Text textStyle="bodySm">
-                This is experimental software, currently in beta. Please be aware that there may be some risks
-                associated with using it.
-            </Text>
+            <Text textStyle="titleSm">Hopscotch is currently in beta.</Text>
         </Flex>
     );
 }
