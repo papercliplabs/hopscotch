@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Text, Flex } from "@chakra-ui/react";
 import { Address } from "wagmi";
+import va from "@vercel/analytics";
 
 import { formatNumber, parseTokenAmount } from "@/common/utils";
 import PrimaryCard from "@/layouts/PrimaryCard";
@@ -50,7 +51,10 @@ function CreateRequest() {
                 requestTokenAmountHumanReadable={requestTokenAmountHumanReadable}
                 setRequestTokenAddress={setRequestTokenAddress}
                 setRequestTokenAmountHumanReadable={setRequestTokenAmountHumanReadable}
-                submit={createTransactionResponse.send}
+                submit={() => {
+                    va.track("Initiated Create");
+                    createTransactionResponse.send?.();
+                }}
                 key={0}
             />,
             <TransactionFlow
