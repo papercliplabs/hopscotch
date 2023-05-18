@@ -29,6 +29,7 @@ import Spinner from "@/components/Spinner";
 import Toast from "@/components/Toast";
 import { fetchEnsInfo, getDefaultLinearGradientForAddress, useEnsInfoOrDefaults } from "@/hooks/useEnsInfoOrDefaults";
 import WarningDisclaimer from "@/components/WarningDisclaimer";
+import FAQ from "@/components/FAQ";
 
 function PayRequest({ request }: { request: Request }) {
     const [payTokenAddress, setPayTokenAddress] = useState<Address | undefined>(undefined);
@@ -158,7 +159,8 @@ function PayRequest({ request }: { request: Request }) {
     );
 
     return (
-        <Flex direction="column" gap="12px" justifyContent="space-between" height="100%" alignItems="center">
+        <Flex direction="column" gap="8px" justifyContent="space-between" height="100%" alignItems="center">
+            <WarningDisclaimer />
             {isOwner && (
                 <Flex
                     width="100%"
@@ -273,7 +275,7 @@ function PayRequest({ request }: { request: Request }) {
                     activeViewIndex={activeViewIndex}
                 />
             </PrimaryCard>
-            <WarningDisclaimer />
+            <FAQ />
         </Flex>
     );
 }
