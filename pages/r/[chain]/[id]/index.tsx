@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useAccount, Address } from "wagmi";
+import va from "@vercel/analytics";
 
 import { useChain } from "@/hooks/useChain";
 import { fetchRequest, Request } from "@/hooks/useRequest";
@@ -224,7 +225,10 @@ function PayRequest({ request }: { request: Request }) {
                                     quoteStatus={payRequestResponse.swapQuote?.quoteStatus}
                                     payTokenQuoteAmount={payRequestResponse.swapQuote?.quoteAmount}
                                     setPayTokenAddress={setPayTokenAddress}
-                                    submit={() => setPaymentFlowActive(true)}
+                                    submit={() => {
+                                        va.track("Initiated Pay", { requestId: request?.requestId.toString() });
+                                        setPaymentFlowActive(true);
+                                    }}
                                     key={0}
                                 />
                             )}
@@ -232,7 +236,13 @@ function PayRequest({ request }: { request: Request }) {
                         <ApproveTokenView
                             token={payToken}
                             chain={requestChain}
-                            approveCallback={approveTransactionResponse.send}
+                            approveCallback={() => {
+                                va.track("Approve", {
+                                    requestId: request?.requestId.toString(),
+                                    token: payToken?.symbol ?? "",
+                                });
+                                approveTransactionResponse.send;
+                            }}
                             backButtonCallback={() => setPaymentFlowActive(false)}
                             key={1}
                         />,
