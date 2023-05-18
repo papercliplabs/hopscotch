@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Text, Flex } from "@chakra-ui/react";
 import { Address } from "wagmi";
+import va from "@vercel/analytics";
 
 import { formatNumber, parseTokenAmount } from "@/common/utils";
 import PrimaryCard from "@/layouts/PrimaryCard";
@@ -13,6 +14,7 @@ import TransactionFlow from "@/components/transactions/TransactionFlow";
 import Carousel from "@/components/Carousel";
 import { useToken } from "@/hooks/useTokenList";
 import WarningDisclaimer from "@/components/WarningDisclaimer";
+import FAQ from "@/components/FAQ";
 
 enum CreateRequestView {
     InputForm = 0,
@@ -50,7 +52,10 @@ function CreateRequest() {
                 requestTokenAmountHumanReadable={requestTokenAmountHumanReadable}
                 setRequestTokenAddress={setRequestTokenAddress}
                 setRequestTokenAmountHumanReadable={setRequestTokenAmountHumanReadable}
-                submit={createTransactionResponse.send}
+                submit={() => {
+                    va.track("Initiated Create");
+                    createTransactionResponse.send?.();
+                }}
                 key={0}
             />,
             <TransactionFlow
@@ -89,17 +94,18 @@ function CreateRequest() {
     }, [createTransactionResponse]);
 
     return (
-        <Flex flexDirection="column" alignItems="center" justifyContent="space-between" gap={4}>
+        <Flex flexDirection="column" alignItems="center" justifyContent="space-between" gap={2}>
             <Flex direction="column" justifyContent="center" alignItems="center" pb={4}>
                 <Text textStyle="headline">Create a request</Text>
                 <Text textStyle="bodyLg" variant="secondary">
                     You{"'"}ll send this link to get paid.
                 </Text>
             </Flex>
+            <WarningDisclaimer />
             <PrimaryCard>
                 <Carousel views={views} activeViewIndex={viewIndex} />
             </PrimaryCard>
-            <WarningDisclaimer />
+            <FAQ />
         </Flex>
     );
 }

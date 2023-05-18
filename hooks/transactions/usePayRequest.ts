@@ -99,7 +99,7 @@ export default function usePayRequest(
 
                     const options: SwapOptionsSwapRouter02 = {
                         recipient: HOPSCOTCH_ADDRESS,
-                        slippageTolerance: new Percent(50, 10_000), // 0.5%,
+                        slippageTolerance: new Percent(150, 10_000), // 1.5%
                         deadline: Math.floor(Date.now() / 1000 + 1800),
                         type: SwapType.SWAP_ROUTER_02,
                     };

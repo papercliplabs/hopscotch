@@ -38,7 +38,7 @@ export default function TokenSelectButton({ selectedToken, onClickCallback }: To
                 onClick={() => onClickCallback()}
                 borderRadius="md"
                 height="48px"
-                size={["sm", "lg"]}
+                size={"md"}
                 maxWidth="175px"
                 minHeight="50px"
                 pr="16px"

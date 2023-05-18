@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useAccount, Address } from "wagmi";
+import va from "@vercel/analytics";
 
 import { useChain } from "@/hooks/useChain";
 import { fetchRequest, Request } from "@/hooks/useRequest";
@@ -28,6 +29,7 @@ import Spinner from "@/components/Spinner";
 import Toast from "@/components/Toast";
 import { fetchEnsInfo, getDefaultLinearGradientForAddress, useEnsInfoOrDefaults } from "@/hooks/useEnsInfoOrDefaults";
 import WarningDisclaimer from "@/components/WarningDisclaimer";
+import FAQ from "@/components/FAQ";
 
 function PayRequest({ request }: { request: Request }) {
     const [payTokenAddress, setPayTokenAddress] = useState<Address | undefined>(undefined);
@@ -157,7 +159,8 @@ function PayRequest({ request }: { request: Request }) {
     );
 
     return (
-        <Flex direction="column" gap="12px" justifyContent="space-between" height="100%" alignItems="center">
+        <Flex direction="column" gap="8px" justifyContent="space-between" height="100%" alignItems="center">
+            <WarningDisclaimer />
             {isOwner && (
                 <Flex
                     width="100%"
@@ -224,7 +227,10 @@ function PayRequest({ request }: { request: Request }) {
                                     quoteStatus={payRequestResponse.swapQuote?.quoteStatus}
                                     payTokenQuoteAmount={payRequestResponse.swapQuote?.quoteAmount}
                                     setPayTokenAddress={setPayTokenAddress}
-                                    submit={() => setPaymentFlowActive(true)}
+                                    submit={() => {
+                                        va.track("Initiated Pay", { requestId: request?.requestId.toString() });
+                                        setPaymentFlowActive(true);
+                                    }}
                                     key={0}
                                 />
                             )}
@@ -232,7 +238,13 @@ function PayRequest({ request }: { request: Request }) {
                         <ApproveTokenView
                             token={payToken}
                             chain={requestChain}
-                            approveCallback={approveTransactionResponse.send}
+                            approveCallback={() => {
+                                va.track("Approve", {
+                                    requestId: request?.requestId.toString(),
+                                    token: payToken?.symbol ?? "",
+                                });
+                                approveTransactionResponse.send;
+                            }}
                             backButtonCallback={() => setPaymentFlowActive(false)}
                             key={1}
                         />,
@@ -263,7 +275,7 @@ function PayRequest({ request }: { request: Request }) {
                     activeViewIndex={activeViewIndex}
                 />
             </PrimaryCard>
-            <WarningDisclaimer />
+            <FAQ />
         </Flex>
     );
 }

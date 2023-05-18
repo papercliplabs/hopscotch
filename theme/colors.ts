@@ -141,7 +141,7 @@ export const colors = {
 
     success: "#3CCF4E",
     critical: "#FF4949",
-    warning: "#FF7F3F",
+    warning: "#F9F5DB",
 };
 
 // Not nessesary until we have dark mode

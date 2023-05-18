@@ -218,7 +218,7 @@ export default function PayRequestForm({
                                 <Text textStyle="titleSm" variant="secondary">
                                     They receive
                                 </Text>
-                                <Text textStyle={["titleMd", "headline"]}>{requestTokenAmountHumanReadable}</Text>
+                                <Text textStyle={"titleMd"}>{requestTokenAmountHumanReadable}</Text>
                                 <Text textStyle="bodyMd" variant="secondary">
                                     {requestTokenAmountHumanReadableUsd}
                                 </Text>

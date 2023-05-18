@@ -7,6 +7,7 @@ import { createClient, configureChains, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { ChakraProvider } from "@chakra-ui/react";
 import { publicProvider } from "wagmi/providers/public";
+import { Analytics } from "@vercel/analytics/react";
 
 import { theme } from "@/theme";
 import { MainLayout } from "@/layouts/Main";
@@ -57,6 +58,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                         <ChakraProvider theme={theme}>
                             <MainLayout>
                                 <Component {...pageProps} />
+                                <Analytics />
                             </MainLayout>
                         </ChakraProvider>
                     </TokenListProvider>
