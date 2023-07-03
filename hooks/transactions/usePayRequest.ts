@@ -1,25 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAccount, useProvider, useSigner, Address } from "wagmi";
+import { useAccount, usePublicClient, Address } from "wagmi";
 import { CurrencyAmount, TradeType, Percent, Token as UniswapToken } from "@uniswap/sdk-core";
 import { JSBI } from "@uniswap/sdk";
 import { AlphaRouter, SwapRoute, SwapOptionsSwapRouter02, SwapType } from "@uniswap/smart-order-router";
-import { BigNumber } from "@ethersproject/bignumber";
-import { Contract } from "@ethersproject/contracts";
-import { BaseProvider } from "@ethersproject/providers";
 
 import useSendTransaction, { SendTransactionResponse } from "@/hooks/transactions/useSendTransaction";
 import { HOPSCOTCH_ADDRESS, V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
 import { LoadingStatus } from "@/common/types";
 import { useToken } from "@/hooks/useTokenList";
-import { AddressZero, Zero } from "@ethersproject/constants";
+import { encodeFunctionData, zeroAddress } from "viem";
 import { getNativeTokenAddress, getWrappedTokenAddress } from "@/common/utils";
 import HopscotchAbi from "@/abis/hopscotch.json";
 import { useRequest } from "@/hooks/useRequest";
+import { useEthersProvider } from "../useEthersProvider";
 
 export interface SwapQuote {
     quoteStatus: LoadingStatus;
-    quoteAmount?: BigNumber;
-    estimatedGas?: BigNumber;
+    quoteAmount?: bigint;
+    estimatedGas?: bigint;
     tokenAddressRoute?: string[];
     poolAddressRoute?: string[];
 }
@@ -35,14 +33,15 @@ export interface SwapQuote {
  */
 export default function usePayRequest(
     chainId?: number,
-    requestId?: BigNumber,
+    requestId?: bigint,
     inputTokenAddress?: Address
 ): SendTransactionResponse & { swapQuote: SwapQuote } {
     const [swapRoute, setSwapRoute] = useState<SwapRoute | undefined>(undefined);
 
     const [quoteStatus, setQuoteStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
 
-    const provider = useProvider({ chainId: chainId });
+    const publicClient = usePublicClient({ chainId: chainId });
+    const ethersProvider = useEthersProvider({ chainId: chainId });
     const { address } = useAccount();
 
     const request = useRequest(chainId, requestId);
@@ -53,13 +52,13 @@ export default function usePayRequest(
 
     const inputTokenAddressInternal = useMemo(() => {
         const nativeTokenAddress = getNativeTokenAddress(chainId);
-        return nativeTokenAddress == inputTokenAddress ? AddressZero : inputTokenAddress;
+        return nativeTokenAddress == inputTokenAddress ? zeroAddress : inputTokenAddress;
     }, [inputTokenAddress, chainId]);
 
     const [inputIsNative, outputIsNative, erc20InputTokenAddress, erc20OutputTokenAddress] = useMemo(() => {
         const wrappedNativeTokenAddress = getWrappedTokenAddress(chainId);
-        const inputIsNative = inputTokenAddressInternal == AddressZero;
-        const outputIsNative = outputTokenAddress == AddressZero;
+        const inputIsNative = inputTokenAddressInternal == zeroAddress;
+        const outputIsNative = outputTokenAddress == zeroAddress;
         const erc20InputTokenAddress = inputIsNative ? wrappedNativeTokenAddress : inputTokenAddress;
         const erc20OutputTokenAddress = outputIsNative ? wrappedNativeTokenAddress : outputTokenAddress;
         return [inputIsNative, outputIsNative, erc20InputTokenAddress, erc20OutputTokenAddress];
@@ -81,7 +80,7 @@ export default function usePayRequest(
                           erc20OutputTokenAddress.toLowerCase()
                     : false;
 
-            if (erc20InputToken && erc20OutputToken && outputTokenAmount && chainId && provider && !sameQuote) {
+            if (erc20InputToken && erc20OutputToken && outputTokenAmount && chainId && publicClient && !sameQuote) {
                 // Set loading, and clear the last quote
                 setQuoteStatus(LoadingStatus.LOADING);
                 setSwapRoute(undefined);
@@ -90,11 +89,11 @@ export default function usePayRequest(
                     // Direct send or just wrap / unwrap
                     setQuoteStatus(LoadingStatus.SUCCESS);
                 } else {
-                    const router = new AlphaRouter({ chainId: chainId, provider: provider as BaseProvider });
+                    const router = new AlphaRouter({ chainId: chainId, provider: ethersProvider as any });
 
                     const outputCurrencyAmount = CurrencyAmount.fromRawAmount(
                         erc20OutputToken,
-                        JSBI.BigInt(outputTokenAmount)
+                        JSBI.BigInt(outputTokenAmount.toString())
                     );
 
                     const options: SwapOptionsSwapRouter02 = {
@@ -104,12 +103,17 @@ export default function usePayRequest(
                         type: SwapType.SWAP_ROUTER_02,
                     };
 
-                    const route = await router.route(
-                        outputCurrencyAmount,
-                        erc20InputToken,
-                        TradeType.EXACT_OUTPUT,
-                        options
-                    );
+                    let route = undefined;
+                    try {
+                        route = await router.route(
+                            outputCurrencyAmount,
+                            erc20InputToken,
+                            TradeType.EXACT_OUTPUT,
+                            options
+                        );
+                    } catch (error) {
+                        console.log("ERROR HERE", error);
+                    }
 
                     if (route) {
                         setSwapRoute(route);
@@ -122,7 +126,7 @@ export default function usePayRequest(
         }
 
         getRoute();
-    }, [provider, erc20InputToken, erc20OutputToken, outputTokenAmount, chainId]);
+    }, [publicClient, erc20InputToken, erc20OutputToken, outputTokenAmount, chainId]);
 
     ////
     // Compute transaction request
@@ -130,9 +134,8 @@ export default function usePayRequest(
     const transactionRequest = useMemo(() => {
         let request = undefined;
         if (erc20InputToken && erc20OutputToken && address && requestId) {
-            let swapContractAddress = AddressZero;
+            let swapContractAddress: any = zeroAddress;
             let swapContractCallData = "0x";
-            const contract = new Contract(HOPSCOTCH_ADDRESS, HopscotchAbi);
 
             let inputTokenAmount = outputTokenAmount; // If native, gets updated below if now
             if (erc20InputToken.address != erc20OutputToken.address) {
@@ -141,9 +144,7 @@ export default function usePayRequest(
 
                 swapContractCallData = swapRoute?.methodParameters?.calldata ?? "0x";
 
-                inputTokenAmount = swapRoute
-                    ? BigNumber.from(swapRoute.quote?.quotient?.toString())
-                    : outputTokenAmount;
+                inputTokenAmount = swapRoute ? BigInt(swapRoute.quote?.quotient?.toString()) : outputTokenAmount;
             }
 
             const data = {
@@ -157,9 +158,9 @@ export default function usePayRequest(
             request = {
                 to: HOPSCOTCH_ADDRESS,
                 from: address,
-                value: inputIsNative ? inputTokenAmount : Zero,
-                data: contract.interface.encodeFunctionData("payRequest", [data]),
-                gasLimit: BigNumber.from("500000"),
+                value: inputIsNative ? inputTokenAmount : BigInt(0),
+                data: encodeFunctionData({ abi: HopscotchAbi, functionName: "payRequest", args: [data] }),
+                // gas: BigInt("500000"),
             };
         }
         return request;
@@ -190,7 +191,7 @@ export default function usePayRequest(
         if (erc20InputToken?.address == erc20OutputToken?.address) {
             ret.quoteAmount = outputTokenAmount;
         } else if (LoadingStatus.SUCCESS == quoteStatus && swapRoute && swapRoute.quote && swapRoute.route) {
-            ret.quoteAmount = BigNumber.from(swapRoute.quote.quotient.toString());
+            ret.quoteAmount = BigInt(swapRoute.quote.quotient.toString());
             ret.tokenAddressRoute = swapRoute.route[0].tokenPath.map((uniswapToken) => uniswapToken.address);
             ret.poolAddressRoute = swapRoute.route[0].poolAddresses;
         }

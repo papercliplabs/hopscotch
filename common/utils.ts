@@ -1,8 +1,7 @@
 import { Length, Optional } from "./types";
 import { NATIVE_TOKENS, NO_AMOUNT_DISPLAY, SUPPORTED_CHAINS } from "./constants";
-import { formatUnits, parseUnits } from "@ethersproject/units";
 import { Address } from "wagmi";
-import { BigNumber } from "ethers";
+import { formatUnits, parseUnits } from "viem";
 
 /**
  * Format a number so it can nicely be rendered
@@ -58,11 +57,11 @@ export function formatNumber(num: number | string | undefined, decimals: number 
  * @param decimalPrecision nunber of decimals to keep
  */
 export function formatTokenAmount(
-    tokenAmount: Optional<BigNumber>,
+    tokenAmount: Optional<bigint>,
     tokenDecimals: Optional<number>,
     decimalPrecision: number
 ): string {
-    const tokens = tokenAmount && tokenDecimals ? formatUnits(tokenAmount, tokenDecimals) : undefined;
+    const tokens = tokenAmount && tokenDecimals ? formatUnits(tokenAmount as bigint, tokenDecimals) : undefined;
 
     return formatNumber(tokens, decimalPrecision);
 }
@@ -73,7 +72,7 @@ export function formatTokenAmount(
  * @param tokenDecimals
  * @returns
  */
-export function parseTokenAmount(value: Optional<string>, tokenDecimals: Optional<number>): BigNumber | undefined {
+export function parseTokenAmount(value: Optional<string>, tokenDecimals: Optional<number>): bigint | undefined {
     const tokens = value && tokenDecimals ? parseUnits(value, tokenDecimals) : undefined;
     return tokens;
 }
@@ -145,14 +144,18 @@ export function stringToNumber(s: string | undefined): number | undefined {
     return isNaN(parsedFloat) ? undefined : parsedFloat;
 }
 
-// Parse JSON serialized BigNumber back to BigNumber
-export function parseJsonWithBigNumber(key: any, value: any) {
+// Parse JSON serialized BigInt back to BigInt
+export function parseJsonWithBigInt(key: any, value: any) {
     let result = value;
     if (typeof value === "object" && value !== null && value.hasOwnProperty("type")) {
         switch (value.type) {
-            case "BigNumber":
-                result = BigNumber.from(value.hex);
+            case "bigint":
+                result = BigInt(value.hex);
         }
     }
     return result;
 }
+
+(BigInt.prototype as any).toJSON = function () {
+    return this.toString();
+};

@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { useAccount, Address, useSwitchNetwork } from "wagmi";
-import { BigNumber } from "@ethersproject/bignumber";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Avatar, AvatarBadge, Button, Flex, Slide, Text, Tooltip } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
@@ -18,7 +17,7 @@ import HowItWorks from "@/components/HowItWorks";
 import TokenSelectView from "@/components/TokenSelectView";
 import SummaryTable from "./SummaryTable";
 import Spinner from "./Spinner";
-import { formatUnits } from "@ethersproject/units";
+import { formatUnits } from "viem";
 import { Question } from "@phosphor-icons/react";
 import { Request } from "@/hooks/useRequest";
 
@@ -26,7 +25,7 @@ interface PayRequestFormProps {
     request?: Request;
     payToken?: Token;
     quoteStatus?: LoadingStatus;
-    payTokenQuoteAmount?: BigNumber;
+    payTokenQuoteAmount?: bigint;
     setPayTokenAddress: (address?: Address) => void;
     submit: () => void;
 }
@@ -57,7 +56,7 @@ export default function PayRequestForm({
         let ret = false;
 
         if (payToken && payToken.balance && payTokenQuoteAmount) {
-            ret = payToken.balance.gte(payTokenQuoteAmount);
+            ret = payToken.balance >= payTokenQuoteAmount;
         }
 
         return ret;

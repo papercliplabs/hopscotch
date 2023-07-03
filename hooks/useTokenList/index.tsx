@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { Token } from "@/common/types";
 import { useTokenListContext } from "./provider";
 import { useChain } from "@/hooks/useChain";
-import { AddressZero } from "@ethersproject/constants";
+import { zeroAddress } from "viem";
 import { getNativeTokenAddress } from "@/common/utils";
 
 /**
@@ -38,7 +38,7 @@ export function useToken(address?: string, chainId?: number): Token | undefined 
 
     const token = useMemo(() => {
         const addressInternal =
-            address == AddressZero
+            address == zeroAddress
                 ? getNativeTokenAddress(chainId ?? activeChainId == 1337 ? 137 : chainId ?? activeChainId)
                 : address;
         return addressInternal

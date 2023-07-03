@@ -1,7 +1,6 @@
 import { useContext, createContext, ReactNode, useEffect, useState, useMemo } from "react";
-import { BigNumber } from "@ethersproject/bignumber";
-import { formatUnits } from "@ethersproject/units";
-import { Address, erc20ABI, useAccount, useContractReads } from "wagmi";
+import { formatUnits } from "viem";
+import { Address, erc20ABI, useAccount, useContractReads, usePublicClient } from "wagmi";
 
 import { BaseToken, Token } from "@/common/types";
 import {
@@ -11,7 +10,7 @@ import {
     URLS,
     SUPPORTED_NATIVE_TOKENS,
 } from "@/common/constants";
-import { wagmiClient } from "@/pages/_app";
+import { wagmiConfig } from "@/pages/_app";
 import { getSupportedChainIds } from "@/common/utils";
 import { mapValues, merge, isEmpty } from "lodash/fp";
 
@@ -72,7 +71,9 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     const [tokens, setTokens] = useState<Token[]>([]);
     const [baseTokens, setBaseTokens] = useState<BaseToken[]>([]);
     const [prices, setPrices] = useState<TokenPriceDict>({});
-    const [nativeTokenBalances, setNativeTokenBalances] = useState<BigNumber[]>([]);
+    const [nativeTokenBalances, setNativeTokenBalances] = useState<bigint[]>([]);
+
+    const publicClient = usePublicClient();
 
     const { address } = useAccount();
 
@@ -194,8 +195,8 @@ export default function TokenListProvider({ children }: { children: ReactNode })
         let ret = undefined;
 
         if (balanceResults) {
-            ret = balanceResults.map((result) => {
-                return result as unknown as BigNumber;
+            ret = balanceResults.map((res) => {
+                return res.result as unknown as bigint;
             });
         }
 
@@ -207,11 +208,10 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     ////
     useEffect(() => {
         async function getNativeTokenBalances() {
-            if (address && typeof wagmiClient.config.provider === "function") {
-                let nativeBalances: BigNumber[] = [];
+            if (address && publicClient) {
+                let nativeBalances: bigint[] = [];
                 for (const chain of SUPPORTED_CHAINS) {
-                    const provider = wagmiClient.config.provider({ chainId: chain.id });
-                    const bal = await provider.getBalance(address);
+                    const bal = await publicClient.getBalance({ address });
                     nativeBalances.push(bal);
                 }
                 setNativeTokenBalances(nativeBalances);
@@ -219,7 +219,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
         }
 
         getNativeTokenBalances();
-    }, [setNativeTokenBalances, address, wagmiClient.config.provider]);
+    }, [setNativeTokenBalances, address, publicClient]);
 
     ////
     // Construct tokens
@@ -240,7 +240,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
             const balance = balancesExtended ? balancesExtended[i] : undefined;
             const balanceUsd =
                 balance != undefined && price != undefined
-                    ? Number(formatUnits(balance, baseToken.decimals)) * price
+                    ? Number(formatUnits(balance as bigint, baseToken.decimals)) * price
                     : undefined;
 
             tokensWithPrice.push({
