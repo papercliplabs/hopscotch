@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAccount, usePublicClient, Address } from "wagmi";
+import { useAccount, Address } from "wagmi";
 import { CurrencyAmount, TradeType, Percent, Token as UniswapToken } from "@uniswap/sdk-core";
 import { JSBI } from "@uniswap/sdk";
-import { AlphaRouter, SwapRoute, SwapOptionsSwapRouter02, SwapType } from "@uniswap/smart-order-router";
+import { AlphaRouter, SwapOptionsSwapRouter02, SwapType } from "@uniswap/smart-order-router";
 
 import useSendTransaction, { SendTransactionResponse } from "@/hooks/transactions/useSendTransaction";
-import { HOPSCOTCH_ADDRESS, V3_SWAP_ROUTER_ADDRESS } from "@/common/constants";
+import { HOPSCOTCH_ADDRESS, V3_SWAP_ROUTER_ADDRESS, ZERO_X_SWAP_API_BASE_URI } from "@/common/constants";
 import { LoadingStatus } from "@/common/types";
 import { useToken } from "@/hooks/useTokenList";
 import { encodeFunctionData, zeroAddress } from "viem";
@@ -15,11 +15,195 @@ import { useRequest } from "@/hooks/useRequest";
 import { useEthersProvider } from "../useEthersProvider";
 
 export interface SwapQuote {
-    quoteStatus: LoadingStatus;
-    quoteAmount?: bigint;
-    estimatedGas?: bigint;
-    tokenAddressRoute?: string[];
-    poolAddressRoute?: string[];
+    quoteAmount: bigint;
+    swapContact: Address;
+    swapCalldata: string;
+    estimatedGas: bigint;
+}
+
+interface SwapQuoteInput {
+    erc20InputTokenAddress?: Address;
+    erc20OutputTokenAddress?: Address;
+    chainId?: number;
+    outputTokenAmount?: bigint;
+}
+
+// Helper to get uniswap token for alpha router
+function useUniswapToken(address?: Address, chainId?: number): UniswapToken | undefined {
+    const token = useToken(address, chainId);
+
+    return useMemo(() => {
+        if (!token || !chainId) {
+            return undefined;
+        }
+
+        const uniswapToken = new UniswapToken(chainId, token.address, token.decimals, token.symbol);
+        return uniswapToken;
+    }, [token, chainId]);
+}
+
+function useUniswapSwapQuote(input?: SwapQuoteInput): { quote: SwapQuote | undefined; loadingStatus: LoadingStatus } {
+    const [quote, setQuote] = useState<SwapQuote | undefined>(undefined);
+    const [loadingStatus, setLoadingStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
+
+    const erc20InputToken = useUniswapToken(input?.erc20InputTokenAddress, input?.chainId);
+    const erc20OutputToken = useUniswapToken(input?.erc20OutputTokenAddress, input?.chainId);
+    const ethersProvider = useEthersProvider({ chainId: input?.chainId });
+
+    // Get quote
+    useEffect(() => {
+        async function getQuote() {
+            if (
+                input?.chainId != undefined &&
+                erc20InputToken != undefined &&
+                erc20OutputToken != undefined &&
+                ethersProvider != undefined &&
+                input.outputTokenAmount != undefined &&
+                erc20InputToken != erc20OutputToken
+            ) {
+                const requiresSwap =
+                    input?.erc20InputTokenAddress?.toLowerCase() != input?.erc20OutputTokenAddress?.toLowerCase();
+
+                setLoadingStatus(LoadingStatus.LOADING);
+                setQuote(undefined);
+
+                if (requiresSwap) {
+                    const options: SwapOptionsSwapRouter02 = {
+                        recipient: HOPSCOTCH_ADDRESS,
+                        slippageTolerance: new Percent(150, 10_000), // 1.5%
+                        deadline: Math.floor(Date.now() / 1000 + 1800),
+                        type: SwapType.SWAP_ROUTER_02,
+                    };
+
+                    const router = new AlphaRouter({ chainId: input?.chainId, provider: ethersProvider as any });
+
+                    const outputCurrencyAmount = CurrencyAmount.fromRawAmount(
+                        erc20OutputToken,
+                        JSBI.BigInt(input.outputTokenAmount.toString())
+                    );
+
+                    let route = undefined;
+                    try {
+                        route = await router.route(
+                            outputCurrencyAmount,
+                            erc20InputToken,
+                            TradeType.EXACT_OUTPUT,
+                            options
+                        );
+                    } catch (error) {
+                        setLoadingStatus(LoadingStatus.ERROR);
+                        console.log("UNISWAP QUOTE ERROR", error);
+                    }
+
+                    if (route) {
+                        setQuote({
+                            quoteAmount: BigInt(route.quote?.quotient?.toString()),
+                            swapContact: V3_SWAP_ROUTER_ADDRESS,
+                            swapCalldata: route.methodParameters?.calldata ?? "0x",
+                            estimatedGas: BigInt(route.estimatedGasUsed.toString()),
+                        });
+                        setLoadingStatus(LoadingStatus.SUCCESS);
+                    } else {
+                        setLoadingStatus(LoadingStatus.ERROR);
+                    }
+                } else {
+                    // No swap needed
+                    setQuote({
+                        quoteAmount: input.outputTokenAmount,
+                        swapContact: zeroAddress,
+                        swapCalldata: "0x",
+                        estimatedGas: BigInt(0),
+                    });
+                    setLoadingStatus(LoadingStatus.SUCCESS);
+                }
+            }
+        }
+
+        getQuote();
+    }, [input?.chainId, erc20InputToken, erc20OutputToken, ethersProvider, input?.outputTokenAmount]);
+
+    return { quote, loadingStatus };
+}
+
+function use0xSwapQuote(input?: SwapQuoteInput): { quote: SwapQuote | undefined; loadingStatus: LoadingStatus } {
+    const [quote, setQuote] = useState<SwapQuote | undefined>(undefined);
+    const [loadingStatus, setLoadingStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
+
+    const erc20InputToken = useToken(input?.erc20InputTokenAddress, input?.chainId);
+    const erc20OutputToken = useToken(input?.erc20OutputTokenAddress, input?.chainId);
+
+    useEffect(() => {
+        async function getQuote() {
+            if (input?.outputTokenAmount && input?.chainId && erc20InputToken && erc20OutputToken) {
+                setLoadingStatus(LoadingStatus.LOADING);
+                setQuote(undefined);
+
+                const requiresSwap = erc20InputToken.address.toLowerCase() != erc20OutputToken.address.toLowerCase();
+
+                if (requiresSwap) {
+                    const params = {
+                        buyToken: erc20OutputToken.address,
+                        sellToken: erc20InputToken.address,
+                        buyAmount: input.outputTokenAmount,
+                        slippagePercentage: 0.02, // 2%
+                    };
+
+                    const resRaw = await fetch(
+                        ZERO_X_SWAP_API_BASE_URI.filter((d) => d.chainId == input.chainId)[0]?.uri +
+                            "?" +
+                            new URLSearchParams(params as any)
+                    );
+
+                    const res = await resRaw.json();
+                    console.log("0X quote", res);
+                    if (res && res.sellAmount && res.estimatedGas && res.to) {
+                        setQuote({
+                            quoteAmount: (BigInt(res.sellAmount) * BigInt(103)) / BigInt(100), // Add in slippage margin, slightly over slippage percent
+                            swapContact: res.to,
+                            swapCalldata: res.data,
+                            estimatedGas: BigInt(res.estimatedGas),
+                        });
+                        setLoadingStatus(LoadingStatus.SUCCESS);
+                    } else {
+                        setLoadingStatus(LoadingStatus.ERROR);
+                    }
+                } else {
+                    // No swap needed
+                    setQuote({
+                        quoteAmount: input.outputTokenAmount,
+                        swapContact: zeroAddress,
+                        swapCalldata: "0x",
+                        estimatedGas: BigInt(0),
+                    });
+                    setLoadingStatus(LoadingStatus.SUCCESS);
+                }
+            }
+        }
+
+        getQuote();
+    }, [input?.outputTokenAmount, input?.chainId, erc20InputToken, erc20OutputToken]);
+
+    return { quote, loadingStatus };
+}
+
+enum SwapDex {
+    UNISWAP = 0,
+    ZERO_X,
+}
+
+function useSwapQuote(
+    dex: SwapDex,
+    input?: SwapQuoteInput
+): { quote: SwapQuote | undefined; loadingStatus: LoadingStatus } {
+    const uniswapQuote = useUniswapSwapQuote(input);
+    const zeroXSwapQuote = use0xSwapQuote(input);
+
+    switch (dex) {
+        case SwapDex.UNISWAP:
+            return uniswapQuote;
+        case SwapDex.ZERO_X:
+            return zeroXSwapQuote;
+    }
 }
 
 /**
@@ -35,13 +219,7 @@ export default function usePayRequest(
     chainId?: number,
     requestId?: bigint,
     inputTokenAddress?: Address
-): SendTransactionResponse & { swapQuote: SwapQuote } {
-    const [swapRoute, setSwapRoute] = useState<SwapRoute | undefined>(undefined);
-
-    const [quoteStatus, setQuoteStatus] = useState<LoadingStatus>(LoadingStatus.IDLE);
-
-    const publicClient = usePublicClient({ chainId: chainId });
-    const ethersProvider = useEthersProvider({ chainId: chainId });
+): SendTransactionResponse & { swapQuote?: SwapQuote; loadingStatus: LoadingStatus } {
     const { address } = useAccount();
 
     const request = useRequest(chainId, requestId);
@@ -64,110 +242,54 @@ export default function usePayRequest(
         return [inputIsNative, outputIsNative, erc20InputTokenAddress, erc20OutputTokenAddress];
     }, [inputTokenAddressInternal, outputTokenAddress, chainId]);
 
-    const erc20InputToken = useUniswapToken(erc20InputTokenAddress, chainId);
-    const erc20OutputToken = useUniswapToken(erc20OutputTokenAddress, chainId);
-
     ////
     // Get route quote
     ////
-    useEffect(() => {
-        async function getRoute() {
-            // Prevent re-fetching the same quote
-            const sameQuote =
-                swapQuote.tokenAddressRoute && erc20InputTokenAddress && erc20OutputTokenAddress
-                    ? swapQuote.tokenAddressRoute[0].toLowerCase() == erc20InputTokenAddress.toLowerCase() &&
-                      swapQuote.tokenAddressRoute[swapQuote.tokenAddressRoute.length - 1].toLowerCase() ==
-                          erc20OutputTokenAddress.toLowerCase()
-                    : false;
-
-            if (erc20InputToken && erc20OutputToken && outputTokenAmount && chainId && publicClient && !sameQuote) {
-                // Set loading, and clear the last quote
-                setQuoteStatus(LoadingStatus.LOADING);
-                setSwapRoute(undefined);
-
-                if (erc20InputToken.address == erc20OutputToken.address) {
-                    // Direct send or just wrap / unwrap
-                    setQuoteStatus(LoadingStatus.SUCCESS);
-                } else {
-                    const router = new AlphaRouter({ chainId: chainId, provider: ethersProvider as any });
-
-                    const outputCurrencyAmount = CurrencyAmount.fromRawAmount(
-                        erc20OutputToken,
-                        JSBI.BigInt(outputTokenAmount.toString())
-                    );
-
-                    const options: SwapOptionsSwapRouter02 = {
-                        recipient: HOPSCOTCH_ADDRESS,
-                        slippageTolerance: new Percent(150, 10_000), // 1.5%
-                        deadline: Math.floor(Date.now() / 1000 + 1800),
-                        type: SwapType.SWAP_ROUTER_02,
-                    };
-
-                    let route = undefined;
-                    try {
-                        route = await router.route(
-                            outputCurrencyAmount,
-                            erc20InputToken,
-                            TradeType.EXACT_OUTPUT,
-                            options
-                        );
-                    } catch (error) {
-                        console.log("ERROR HERE", error);
-                    }
-
-                    if (route) {
-                        setSwapRoute(route);
-                        setQuoteStatus(LoadingStatus.SUCCESS);
-                    } else {
-                        setQuoteStatus(LoadingStatus.ERROR);
-                    }
-                }
-            }
-        }
-
-        getRoute();
-    }, [publicClient, erc20InputToken, erc20OutputToken, outputTokenAmount, chainId]);
+    const { quote: swapQuote, loadingStatus } = useSwapQuote(SwapDex.ZERO_X, {
+        erc20InputTokenAddress,
+        erc20OutputTokenAddress,
+        chainId,
+        outputTokenAmount: request?.recipientTokenAmount,
+    });
 
     ////
     // Compute transaction request
     ////
     const transactionRequest = useMemo(() => {
-        let request = undefined;
-        if (erc20InputToken && erc20OutputToken && address && requestId) {
-            let swapContractAddress: any = zeroAddress;
-            let swapContractCallData = "0x";
-
-            let inputTokenAmount = outputTokenAmount; // If native, gets updated below if now
-            if (erc20InputToken.address != erc20OutputToken.address) {
-                // Swap
-                swapContractAddress = V3_SWAP_ROUTER_ADDRESS;
-
-                swapContractCallData = swapRoute?.methodParameters?.calldata ?? "0x";
-
-                inputTokenAmount = swapRoute ? BigInt(swapRoute.quote?.quotient?.toString()) : outputTokenAmount;
-            }
-
+        let txRequest = undefined;
+        if (
+            erc20InputTokenAddress &&
+            erc20OutputTokenAddress &&
+            address &&
+            requestId &&
+            loadingStatus == LoadingStatus.SUCCESS &&
+            swapQuote?.quoteAmount != undefined &&
+            request
+        ) {
             const data = {
                 requestId: requestId,
                 inputToken: inputTokenAddressInternal,
-                inputTokenAmount: inputTokenAmount,
-                swapContractAddress: swapContractAddress,
-                swapContractCallData: swapContractCallData,
+                inputTokenAmount: swapQuote?.quoteAmount,
+                swapContractAddress: swapQuote?.swapContact,
+                swapContractCallData: swapQuote?.swapCalldata,
             };
 
-            request = {
+            txRequest = {
                 to: HOPSCOTCH_ADDRESS,
                 from: address,
-                value: inputIsNative ? inputTokenAmount : BigInt(0),
+                value: inputIsNative ? swapQuote.quoteAmount : BigInt(0),
                 data: encodeFunctionData({ abi: HopscotchAbi, functionName: "payRequest", args: [data] }),
-                // gas: BigInt("500000"),
+                // gas: swapQuote.estimatedGas ? swapQuote.estimatedGas + BigInt(50000) : BigInt("800000"),
+                // gas: BigInt("800000"),
             };
+
+            console.log("PAY TXN REQ", txRequest, data);
         }
-        return request;
+        return txRequest;
     }, [
-        swapRoute,
-        erc20InputToken,
-        erc20OutputToken,
+        swapQuote,
+        erc20InputTokenAddress,
+        erc20OutputTokenAddress,
         outputTokenAmount,
         address,
         requestId,
@@ -180,38 +302,5 @@ export default function usePayRequest(
         "Pay request"
     );
 
-    ////
-    // Construct quote that works for direct transfer or swap
-    ////
-    const swapQuote = useMemo(() => {
-        let ret: SwapQuote = {
-            quoteStatus: quoteStatus,
-        };
-
-        if (erc20InputToken?.address == erc20OutputToken?.address) {
-            ret.quoteAmount = outputTokenAmount;
-        } else if (LoadingStatus.SUCCESS == quoteStatus && swapRoute && swapRoute.quote && swapRoute.route) {
-            ret.quoteAmount = BigInt(swapRoute.quote.quotient.toString());
-            ret.tokenAddressRoute = swapRoute.route[0].tokenPath.map((uniswapToken) => uniswapToken.address);
-            ret.poolAddressRoute = swapRoute.route[0].poolAddresses;
-        }
-
-        return ret;
-    }, [quoteStatus, swapRoute, erc20InputToken, erc20OutputToken]);
-
-    return { ...response, swapQuote };
-}
-
-// Helper to get uniswap token for alpha router
-function useUniswapToken(address?: Address, chainId?: number): UniswapToken | undefined {
-    const token = useToken(address, chainId);
-
-    return useMemo(() => {
-        if (!token || !chainId) {
-            return undefined;
-        }
-
-        const uniswapToken = new UniswapToken(chainId, token.address, token.decimals, token.symbol);
-        return uniswapToken;
-    }, [token, chainId]);
+    return { ...response, swapQuote, loadingStatus };
 }

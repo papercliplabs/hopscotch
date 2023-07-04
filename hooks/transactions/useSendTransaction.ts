@@ -27,9 +27,15 @@ export default function useSendTransaction(
     const activeChain = useChain();
     const addRecentTransaction = useAddRecentTransaction();
 
-    const { config: prepareConfig } = usePrepareSendTransaction({
+    const { config: prepareConfig, refetch: refetchPrepare } = usePrepareSendTransaction({
         ...transactionRequest,
         enabled: enableEagerFetch,
+        onError: (error) => {
+            console.log("PREPARE ERROR", error);
+            if (enableEagerFetch) {
+                setInterval(refetchPrepare, 5000); // Try again every 5 sec, makes sure we pick up any new allowances in pay req
+            }
+        },
     });
 
     const {
@@ -46,6 +52,7 @@ export default function useSendTransaction(
     const { data: receipt } = useWaitForTransaction({
         hash: sendData?.hash,
         chainId: txChain?.id,
+        onError: (error) => console.log("ERROR", error),
     });
 
     const reset = useCallback(() => {
@@ -56,14 +63,12 @@ export default function useSendTransaction(
     const sendTxn = useCallback(() => {
         reset();
 
-        console.log("SEND", sendData?.hash, receipt, txChain?.id);
+        console.log("SEND", sendTransaction, sendData?.hash, receipt, txChain?.id);
         if (sendTransaction) {
             setTxChain(activeChain);
             sendTransaction();
         }
     }, [reset, sendTransaction, setTxChain, activeChain]);
-
-    console.log("SEND", transactionRequest, enableEagerFetch, prepareConfig);
 
     return {
         pendingWalletSignature: isLoading,
