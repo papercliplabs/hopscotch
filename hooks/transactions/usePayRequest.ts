@@ -151,7 +151,12 @@ function use0xSwapQuote(input?: SwapQuoteInput): { quote: SwapQuote | undefined;
                     const resRaw = await fetch(
                         ZERO_X_SWAP_API_BASE_URI.filter((d) => d.chainId == input.chainId)[0]?.uri +
                             "?" +
-                            new URLSearchParams(params as any)
+                            new URLSearchParams(params as any),
+                        {
+                            headers: {
+                                "0x-api-key": process.env.NEXT_PUBLIC_ZERO_X_API_KEY,
+                            },
+                        }
                     );
 
                     const res = await resRaw.json();
