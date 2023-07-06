@@ -18,7 +18,7 @@ export const SUPPORTED_CHAINS = [
     // goerli,
     // sepolia,
     // mainnet,
-    // optimism,
+    optimism,
     // optimismGoerli,
     // arbitrum,
 ];
@@ -28,8 +28,8 @@ export const COIN_GECKO_API_PLATFORM_ID = {
     [polygon.id]: "polygon-pos",
     // [polygonMumbai.id]: undefined,
     // [sepolia.id]: undefined,
-    [mainnet.id]: "ethereum",
-    // [optimism.id]: "optimistic-ethereum",
+    // [mainnet.id]: "ethereum",
+    [optimism.id]: "optimistic-ethereum",
     // [arbitrum.id]: "arbitrum-one",
 };
 
@@ -89,7 +89,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         symbol: "ETH",
         decimals: 18,
         logoURI:
-            "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+            "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/optimism/assets/0x4200000000000000000000000000000000000042/logo.png",
         wrappedAddress: "0x4200000000000000000000000000000000000006",
     },
     {
@@ -114,10 +114,19 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
     },
 ];
 
-export const FEE_BIPS = 0; // No fee for now
-
-export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45" as Address;
+// TODO: clean this all up, we can bundle these all with chain info
+export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
 export const HOPSCOTCH_ADDRESS = "0x92Ef06DBcCf841194437AfAc61BbcD5E3530fAdB" as Address;
+export const ZERO_X_SWAP_API_BASE_URI = [
+    {
+        chainId: polygon.id,
+        uri: "https://polygon.api.0x.org/swap/v1/quote",
+    },
+    {
+        chainId: optimism.id,
+        uri: "https://optimism.api.0x.org//swap/v1/quote",
+    },
+];
 
 export const SUPPORTED_NATIVE_TOKENS = NATIVE_TOKENS.filter((token) =>
     SUPPORTED_CHAINS.map((chain) => chain.id).find((id) => id == token.chainId)

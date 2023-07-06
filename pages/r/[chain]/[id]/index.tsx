@@ -70,7 +70,7 @@ function PayRequest({ request }: { request: Request }) {
 
     const payRequestResponse = usePayRequest(requestChain.id, request?.requestId, payToken?.address);
 
-    const approveTransactionResponse = useApproveErc20(payToken?.address, payRequestResponse.swapQuote.quoteAmount);
+    const approveTransactionResponse = useApproveErc20(payToken?.address, payRequestResponse.swapQuote?.quoteAmount);
 
     // Derived
 
@@ -223,7 +223,7 @@ function PayRequest({ request }: { request: Request }) {
                                 <PayRequestForm
                                     request={request}
                                     payToken={payToken}
-                                    quoteStatus={payRequestResponse.swapQuote?.quoteStatus}
+                                    quoteStatus={payRequestResponse.loadingStatus}
                                     payTokenQuoteAmount={payRequestResponse.swapQuote?.quoteAmount}
                                     setPayTokenAddress={setPayTokenAddress}
                                     submit={() => {
@@ -242,7 +242,7 @@ function PayRequest({ request }: { request: Request }) {
                                     requestId: request?.requestId.toString(),
                                     token: payToken?.symbol ?? "",
                                 });
-                                approveTransactionResponse.send;
+                                approveTransactionResponse.send?.();
                             }}
                             backButtonCallback={() => setPaymentFlowActive(false)}
                             key={1}

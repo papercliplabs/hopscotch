@@ -45,7 +45,5 @@ export default function useCreateRequest(
         }
     }, [response]);
 
-    console.log("CREATE", transactionRequest, enableEagerFetch, response);
-
     return { ...response, requestId };
 }

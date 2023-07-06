@@ -11,13 +11,8 @@ import { getNativeTokenAddress } from "@/common/utils";
  * @param chainIdOverride chain id to explicitly use, if not passed active chain id will be used
  * @returns list of all supported tokens for chainId
  */
-export function useTokenList(chainIdOverride?: number): Token[] {
+export function useTokenList(chainId?: number): Token[] {
     const { tokens } = useTokenListContext();
-    const { id: activeChainId } = useChain();
-
-    const chainId = useMemo(() => {
-        return chainIdOverride ?? activeChainId == 1337 ? 137 : chainIdOverride ?? activeChainId;
-    }, [activeChainId, chainIdOverride]);
 
     const filteredTokens = useMemo(() => {
         return tokens.filter((token) => token.chainId == chainId);
@@ -34,13 +29,9 @@ export function useTokenList(chainIdOverride?: number): Token[] {
  */
 export function useToken(address?: string, chainId?: number): Token | undefined {
     const tokens = useTokenList(chainId);
-    const { id: activeChainId } = useChain();
 
     const token = useMemo(() => {
-        const addressInternal =
-            address == zeroAddress
-                ? getNativeTokenAddress(chainId ?? activeChainId == 1337 ? 137 : chainId ?? activeChainId)
-                : address;
+        const addressInternal = address == zeroAddress ? getNativeTokenAddress(chainId) : address;
         return addressInternal
             ? tokens.find((token) => token.address.toLowerCase() == addressInternal.toLowerCase())
             : undefined;

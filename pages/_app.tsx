@@ -23,7 +23,7 @@ import { CustomAvatar } from "@/components/WalletAvatar";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(SUPPORTED_CHAINS, [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
-    publicProvider(),
+    // publicProvider(),
 ]);
 
 const { connectors } = getDefaultWallets({

@@ -61,7 +61,8 @@ export function formatTokenAmount(
     tokenDecimals: Optional<number>,
     decimalPrecision: number
 ): string {
-    const tokens = tokenAmount && tokenDecimals ? formatUnits(tokenAmount as bigint, tokenDecimals) : undefined;
+    const tokens =
+        tokenAmount != undefined && tokenDecimals ? formatUnits(tokenAmount as bigint, tokenDecimals) : undefined;
 
     return formatNumber(tokens, decimalPrecision);
 }

@@ -2,9 +2,9 @@ import { useEffect, useMemo } from "react";
 import { Address, useAccount, useContractRead } from "wagmi";
 
 import Erc20Abi from "@/abis/erc20.json";
-import { HOPSCOTCH_ADDRESS } from "@/common/constants";
 import useSendTransaction, { SendTransactionResponse } from "@/hooks/transactions/useSendTransaction";
 import { encodeFunctionData } from "viem";
+import { HOPSCOTCH_ADDRESS } from "@/common/constants";
 
 export default function useApproveErc20(
     token?: Address,
@@ -29,12 +29,13 @@ export default function useApproveErc20(
                 data: encodeFunctionData({
                     abi: Erc20Abi,
                     functionName: "approve",
-                    args: [HOPSCOTCH_ADDRESS, 250], // TODO: want max approve..
+                    args: [HOPSCOTCH_ADDRESS, (BigInt(1) << BigInt(256)) - BigInt(1)],
                 }),
             };
         }
 
-        const requiresApproval = allowance ? (allowance as bigint) < (minAmount ?? BigInt("0")) : false;
+        const requiresApproval =
+            allowance != undefined && minAmount != undefined ? (allowance as bigint) < minAmount : false;
 
         return [request, token != undefined && address != undefined, requiresApproval];
     }, [address, token, allowance, minAmount]);

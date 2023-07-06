@@ -50,7 +50,7 @@ export default function PayRequestForm({
 
     const onExpectedChain = useIsOnExpectedChain(request?.chainId);
 
-    const requestToken = useToken(request?.recipientTokenAddress);
+    const requestToken = useToken(request?.recipientTokenAddress, request?.chainId);
 
     const hasSufficentFunds = useMemo(() => {
         let ret = false;

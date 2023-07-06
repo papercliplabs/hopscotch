@@ -97,14 +97,16 @@ export default function ReviewPayRequest({
             <ReviewRequestRow
                 leftIcon={<WalletAvatar address={recipientAddress} size={40} />}
                 topEntry={
-                    <Text textStyle="titleSm" variant="secondary">
+                    <span>
                         <Text textStyle="titleSm" textColor="primary" display="inline">
                             <Link href={recipientExplorerLink} isExternal>
                                 {shortAddress(recipientAddress, Length.MEDIUM)}
                             </Link>
                         </Text>{" "}
-                        receives
-                    </Text>
+                        <Text textStyle="titleSm" variant="secondary" display="inline">
+                            receives
+                        </Text>
+                    </span>
                 }
                 bottomText={`${requestTokenAmountHumanReadable} ${requestToken?.symbol}`}
                 rightIcon={<TokenWithChainIcon token={requestToken} chain={chain} size={32} />}

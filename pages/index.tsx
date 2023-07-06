@@ -27,8 +27,9 @@ function CreateRequest() {
     const [requestTokenAmountHumanReadable, setRequestTokenAmountHumanReadable] = useState<string | undefined>(
         undefined
     );
+    const chain = useChain();
 
-    const requestToken = useToken(requestTokenAddress);
+    const requestToken = useToken(requestTokenAddress, chain.id);
 
     const requestTokenAmount = useMemo(() => {
         return requestTokenAmountHumanReadable && requestToken
@@ -84,7 +85,7 @@ function CreateRequest() {
     ]);
 
     const viewIndex = useMemo(() => {
-        if (createTransactionResponse.requestId) {
+        if (createTransactionResponse.requestId != undefined) {
             return CreateRequestView.CopyLink;
         } else if (createTransactionResponse.hash != undefined || createTransactionResponse.pendingWalletSignature) {
             return CreateRequestView.Transaction;
