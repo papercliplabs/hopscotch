@@ -35,7 +35,7 @@ export default function TokenSelectView({ closeCallback, token, setTokenAddress,
         let filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
         filteredTokenList.sort((a, b) => {
             if (a?.balance != undefined && b.balance != undefined) {
-                return a.balance.gt(b.balance) ? -1 : 1;
+                return a.balance > b.balance ? -1 : 1;
             } else {
                 return 0;
             }

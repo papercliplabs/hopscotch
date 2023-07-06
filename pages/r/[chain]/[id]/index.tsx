@@ -9,7 +9,7 @@ import { Length } from "@/common/types";
 import usePayRequest from "@/hooks/transactions/usePayRequest";
 import useApproveErc20 from "@/hooks/transactions/useApproveErc20";
 import { Box, Button, Flex, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { formatTokenAmount, openLink, parseJsonWithBigNumber, shortAddress, stringToNumber } from "@/common/utils";
+import { formatTokenAmount, openLink, parseJsonWithBigInt, shortAddress, stringToNumber } from "@/common/utils";
 import { WalletAvatar } from "@/components/WalletAvatar";
 import PrimaryCard from "@/layouts/PrimaryCard";
 import Image from "next/image";
@@ -17,7 +17,6 @@ import { LinkIcon } from "@chakra-ui/icons";
 import { colors } from "@/theme/colors";
 import { ExplorerLinkType, useExplorerLink } from "@/hooks/useExplorerLink";
 import ApproveTokenView from "@/components/ApproveTokenView";
-import { BigNumber } from "ethers";
 import Head from "next/head";
 import SummaryTable from "@/components/SummaryTable";
 import PayRequestForm from "@/components/PayRequestForm";
@@ -293,8 +292,8 @@ export default function RequestPage({ requestJsonObject, walletName, walletBackg
         walletName
     )}&background=${encodeURIComponent(walletBackgroundImg)}`;
 
-    // Parse data so we have correct BigNumber types
-    const request = JSON.parse(JSON.stringify(requestJsonObject), parseJsonWithBigNumber) as Request;
+    // Parse data so we have correct BigInt types
+    const request = JSON.parse(JSON.stringify(requestJsonObject), parseJsonWithBigInt) as Request;
 
     return (
         <>
@@ -322,7 +321,7 @@ export default function RequestPage({ requestJsonObject, walletName, walletBackg
 
 export async function getServerSideProps(context: any) {
     const requestChainId = stringToNumber(context.query?.chain);
-    const requestId = BigNumber.from(context.query?.id ?? "0");
+    const requestId = BigInt(context.query?.id ?? "0");
     const request = await fetchRequest(requestId, requestChainId);
 
     const { name: ensName, backgroundImg: ensBackgroundImg } = await fetchEnsInfo(request?.recipientAddress);

@@ -1,4 +1,4 @@
-import { TransactionRequest, TransactionReceipt } from "@ethersproject/providers";
+import { TransactionRequest, TransactionReceipt } from "viem";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { useCallback, useState } from "react";
 import { usePrepareSendTransaction, useSendTransaction as useSendTransactionWagmi, useWaitForTransaction } from "wagmi";
@@ -6,11 +6,6 @@ import { useChain } from "@/hooks/useChain";
 
 import { Chain } from "@/hooks/useChain";
 import { ExplorerLinkType, getExplorerLink } from "@/hooks/useExplorerLink";
-
-export enum TransactionStatus {
-    Failed = 0,
-    Successful = 1,
-}
 
 export interface SendTransactionResponse {
     pendingWalletSignature: boolean;
@@ -23,7 +18,7 @@ export interface SendTransactionResponse {
 }
 
 export default function useSendTransaction(
-    transactionRequest?: TransactionRequest & { to: string },
+    transactionRequest?: TransactionRequest,
     enableEagerFetch?: boolean,
     description?: string
 ): SendTransactionResponse {
@@ -33,7 +28,7 @@ export default function useSendTransaction(
     const addRecentTransaction = useAddRecentTransaction();
 
     const { config: prepareConfig } = usePrepareSendTransaction({
-        request: transactionRequest,
+        ...transactionRequest,
         enabled: enableEagerFetch,
     });
 

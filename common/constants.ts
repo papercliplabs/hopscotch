@@ -1,15 +1,5 @@
-import { AddressZero } from "@ethersproject/constants";
-import {
-    localhost,
-    mainnet,
-    goerli,
-    polygon,
-    optimism,
-    arbitrum,
-    sepolia,
-    polygonMumbai,
-    optimismGoerli,
-} from "wagmi/chains";
+import { Address, zeroAddress } from "viem";
+import { localhost, mainnet, polygon, optimism, arbitrum, sepolia, polygonMumbai, optimismGoerli } from "wagmi/chains";
 
 import { NativeBaseToken } from "./types";
 
@@ -37,7 +27,6 @@ export const COIN_GECKO_API_PLATFORM_ID = {
     [localhost.id]: undefined,
     [polygon.id]: "polygon-pos",
     // [polygonMumbai.id]: undefined,
-    [goerli.id]: undefined,
     // [sepolia.id]: undefined,
     [mainnet.id]: "ethereum",
     // [optimism.id]: "optimistic-ethereum",
@@ -74,17 +63,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         wrappedAddress: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
     },
     {
-        address: AddressZero,
-        chainId: goerli.id,
-        name: "Ether",
-        symbol: "ETH",
-        decimals: 18,
-        logoURI:
-            "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
-        wrappedAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
-    },
-    {
-        address: AddressZero,
+        address: zeroAddress,
         chainId: sepolia.id,
         name: "Ether",
         symbol: "ETH",
@@ -94,7 +73,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         wrappedAddress: "0xb16F35c0Ae2912430DAc15764477E179D9B9EbEa",
     },
     {
-        address: AddressZero,
+        address: zeroAddress,
         chainId: mainnet.id,
         name: "Ether",
         symbol: "ETH",
@@ -104,7 +83,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         wrappedAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     },
     {
-        address: AddressZero,
+        address: zeroAddress,
         chainId: optimism.id,
         name: "Ether",
         symbol: "ETH",
@@ -114,7 +93,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         wrappedAddress: "0x4200000000000000000000000000000000000006",
     },
     {
-        address: AddressZero,
+        address: zeroAddress,
         chainId: optimismGoerli.id,
         name: "Ether",
         symbol: "ETH",
@@ -124,7 +103,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         wrappedAddress: "0x4200000000000000000000000000000000000006",
     },
     {
-        address: AddressZero,
+        address: zeroAddress,
         chainId: arbitrum.id,
         name: "Ether",
         symbol: "ETH",
@@ -137,8 +116,8 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
 
 export const FEE_BIPS = 0; // No fee for now
 
-export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
-export const HOPSCOTCH_ADDRESS = "0x92Ef06DBcCf841194437AfAc61BbcD5E3530fAdB";
+export const V3_SWAP_ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45" as Address;
+export const HOPSCOTCH_ADDRESS = "0x92Ef06DBcCf841194437AfAc61BbcD5E3530fAdB" as Address;
 
 export const SUPPORTED_NATIVE_TOKENS = NATIVE_TOKENS.filter((token) =>
     SUPPORTED_CHAINS.map((chain) => chain.id).find((id) => id == token.chainId)
