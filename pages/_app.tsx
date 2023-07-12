@@ -6,6 +6,7 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { alchemyProvider } from "wagmi/providers/alchemy";
+import { useRouter } from "next/router";
 
 import { ChakraProvider } from "@chakra-ui/react";
 import { Analytics } from "@vercel/analytics/react";
@@ -20,6 +21,7 @@ import TokenListProvider from "@/hooks/useTokenList/provider";
 
 import "@/styles/fonts.css";
 import { CustomAvatar } from "@/components/WalletAvatar";
+import { stringToNumber } from "@/common/utils";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(SUPPORTED_CHAINS, [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
@@ -53,10 +55,20 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         wagmiConfig.autoConnect();
     }, []);
 
+    // Default initial chain to request chain if it is a request
+    const router = useRouter();
+    const parsedChainId = Array.isArray(router.query?.chain) ? undefined : router.query?.chain;
+    const chainId = stringToNumber(parsedChainId) ?? SUPPORTED_CHAINS[0].id;
+
     return (
         <>
             <WagmiConfig config={wagmiConfig}>
-                <RainbowKitProvider chains={chains} showRecentTransactions={true} avatar={CustomAvatar}>
+                <RainbowKitProvider
+                    chains={chains}
+                    showRecentTransactions={true}
+                    avatar={CustomAvatar}
+                    initialChain={chainId}
+                >
                     <TokenListProvider>
                         <ChakraProvider theme={theme}>
                             <MainLayout>
