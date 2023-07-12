@@ -12,6 +12,7 @@ export interface BaseToken {
 
 export interface NativeBaseToken extends BaseToken {
     readonly wrappedAddress: Address;
+    readonly chainUri: string;
 }
 
 export interface Token extends BaseToken {
