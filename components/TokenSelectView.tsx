@@ -34,10 +34,12 @@ export default function TokenSelectView({ closeCallback, token, setTokenAddress,
     const filteredTokenList = useMemo(() => {
         let filteredTokenList = tokenList.filter((token) => token.symbol.toLowerCase().includes(search.toLowerCase()));
         filteredTokenList.sort((a, b) => {
-            if (a?.balance != undefined && b.balance != undefined) {
-                return a.balance.gt(b.balance) ? -1 : 1;
+            if (b?.balanceUsd == undefined) {
+                return -1; // A
+            } else if (a?.balanceUsd == undefined) {
+                return 1; // B
             } else {
-                return 0;
+                return a.balanceUsd > b.balanceUsd ? -1 : 1;
             }
         });
 
@@ -45,7 +47,6 @@ export default function TokenSelectView({ closeCallback, token, setTokenAddress,
     }, [tokenList, search]);
 
     const buttonItems = useMemo(() => {
-        console.log("RECOMPUTED");
         return filteredTokenList.map((tokenDetails, index) => {
             const { name, address, symbol, balance, balanceUsd, decimals, logoURI } = tokenDetails;
             const isSelected = address === token?.address;
@@ -76,7 +77,8 @@ export default function TokenSelectView({ closeCallback, token, setTokenAddress,
                     </Flex>
                     <Flex direction="column" align="end">
                         <Text textStyle="bodyLg" textAlign="end">
-                            {balance ? formatTokenAmount(balance, decimals, 4) : NO_AMOUNT_DISPLAY} {symbol}
+                            {balance != undefined ? formatTokenAmount(balance, decimals, 4) : NO_AMOUNT_DISPLAY}{" "}
+                            {symbol}
                         </Text>
                         <Text textStyle="bodyMd" variant="secondary">
                             {balanceUsd != undefined ? formatNumber(balanceUsd, 2, "$") : NO_AMOUNT_DISPLAY}

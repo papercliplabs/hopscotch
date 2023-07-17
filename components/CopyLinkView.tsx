@@ -4,14 +4,13 @@ import FlowStepView from "@/layouts/FlowStepView";
 import Image from "next/image";
 import { Box, Text, useToast, Button, Flex } from "@chakra-ui/react";
 import Link from "next/link";
-import { BigNumber } from "@ethersproject/bignumber";
 import { ArrowSquareOut, CheckCircle } from "@phosphor-icons/react";
 import { colors } from "@/theme/colors";
 import Toast from "@/components/Toast";
 
 interface CopyLinkViewProps {
     requestSummary?: string;
-    requestId?: BigNumber;
+    requestId?: bigint;
     chainId?: number;
     transactionLink?: string;
 }

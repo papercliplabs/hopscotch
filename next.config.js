@@ -4,7 +4,7 @@ module.exports = {
   // compress: false,
   // productionBrowserSourceMaps: true,
   images: {
-    domains: ['assets.coingecko.com'],
+    domains: ['assets.coingecko.com', "raw.githubusercontent.com", "cloudflare-ipfs.com"],
   },
   async redirects() {
     return [
@@ -14,5 +14,9 @@ module.exports = {
         permanent: true,
       },
     ]
+  },
+  webpack: config => {
+    config.resolve.fallback = { fs: false, net: false, tls: false };
+    return config;
   },
 };

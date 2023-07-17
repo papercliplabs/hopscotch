@@ -1,7 +1,6 @@
 import { useMemo } from "react";
-import { BigNumber, Contract } from "ethers";
 import { Address, useAccount } from "wagmi";
-import { AddressZero } from "@ethersproject/constants";
+import { encodeFunctionData, zeroAddress } from "viem";
 
 import HopscotchAbi from "@/abis/hopscotch.json";
 import { HOPSCOTCH_ADDRESS } from "@/common/constants";
@@ -11,8 +10,8 @@ import { useChain } from "@/hooks/useChain";
 
 export default function useCreateRequest(
     token?: Address,
-    amount?: BigNumber
-): SendTransactionResponse & { requestId: BigNumber | undefined } {
+    amount?: bigint
+): SendTransactionResponse & { requestId: bigint | undefined } {
     const { address } = useAccount();
 
     const activeChain = useChain();
@@ -21,16 +20,16 @@ export default function useCreateRequest(
     }, [activeChain.id]);
 
     const [transactionRequest, enableEagerFetch] = useMemo(() => {
-        const contract = new Contract(HOPSCOTCH_ADDRESS, HopscotchAbi);
-        const tokenInternal = nativeTokenAddress == token || token == undefined ? AddressZero : token;
+        const tokenInternal = nativeTokenAddress == token || token == undefined ? zeroAddress : token;
         return [
             {
-                to: contract.address,
-                from: address ?? AddressZero,
-                data: contract.interface.encodeFunctionData("createRequest", [
-                    tokenInternal,
-                    amount ?? BigNumber.from("0"),
-                ]),
+                to: HOPSCOTCH_ADDRESS,
+                from: address ?? zeroAddress,
+                data: encodeFunctionData({
+                    abi: HopscotchAbi,
+                    functionName: "createRequest",
+                    args: [tokenInternal, amount ?? BigInt("0")],
+                }),
             },
             token != undefined && amount != undefined,
         ];
@@ -39,14 +38,12 @@ export default function useCreateRequest(
     const response = useSendTransaction(transactionRequest, enableEagerFetch, "Create request");
 
     const requestId = useMemo(() => {
-        if (response?.receipt?.logs[0]?.topics[0]) {
-            return BigNumber.from(response.receipt.logs[0].topics[1]);
+        if (response?.receipt?.logs[0]?.topics[1]) {
+            return BigInt(response.receipt.logs[0].topics[1]);
         } else {
             return undefined;
         }
     }, [response]);
-
-    console.log("CREATE", transactionRequest, enableEagerFetch, response);
 
     return { ...response, requestId };
 }

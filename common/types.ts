@@ -1,5 +1,4 @@
 import { Address } from "wagmi";
-import { BigNumber } from "@ethersproject/bignumber";
 
 export interface BaseToken {
     readonly address: Address;
@@ -13,11 +12,12 @@ export interface BaseToken {
 
 export interface NativeBaseToken extends BaseToken {
     readonly wrappedAddress: Address;
+    readonly chainUri: string;
 }
 
 export interface Token extends BaseToken {
     priceUsd?: number;
-    balance?: BigNumber;
+    balance?: bigint;
     balanceUsd?: number;
 }
 

@@ -1,21 +1,21 @@
 import { HOPSCOTCH_ADDRESS } from "@/common/constants";
 import { useContractRead, Address } from "wagmi";
-import { BigNumber } from "ethers/lib/ethers";
+import { readContract } from "wagmi/actions";
 
 import HopscotchAbi from "@/abis/hopscotch.json";
 import { useMemo } from "react";
-import { readContract } from "@wagmi/core";
+import { createPublicClient } from "viem";
 
 export interface Request {
     chainId: number;
-    requestId: BigNumber;
+    requestId: bigint;
     recipientAddress: Address;
     recipientTokenAddress: Address;
-    recipientTokenAmount: BigNumber;
+    recipientTokenAmount: bigint;
     paid: boolean;
 }
 
-export async function fetchRequest(requestId?: BigNumber, chainId?: number): Promise<Request | undefined> {
+export async function fetchRequest(requestId?: bigint, chainId?: number): Promise<Request | undefined> {
     if (requestId && chainId) {
         const data = (await readContract({
             address: HOPSCOTCH_ADDRESS,
@@ -46,7 +46,7 @@ export async function fetchRequest(requestId?: BigNumber, chainId?: number): Pro
  *      allowance: allowance tokens for the spender
  *      refetch: callback to refetch the allowance
  */
-export function useRequest(chainId?: number, requestId?: BigNumber): Request | undefined {
+export function useRequest(chainId?: number, requestId?: bigint): Request | undefined {
     const { data, refetch } = useContractRead({
         address: HOPSCOTCH_ADDRESS,
         abi: HopscotchAbi,

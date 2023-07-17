@@ -1,4 +1,4 @@
-import { TransactionRequest, TransactionReceipt } from "@ethersproject/providers";
+import { TransactionRequest, TransactionReceipt } from "viem";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { useCallback, useState } from "react";
 import { usePrepareSendTransaction, useSendTransaction as useSendTransactionWagmi, useWaitForTransaction } from "wagmi";
@@ -6,11 +6,6 @@ import { useChain } from "@/hooks/useChain";
 
 import { Chain } from "@/hooks/useChain";
 import { ExplorerLinkType, getExplorerLink } from "@/hooks/useExplorerLink";
-
-export enum TransactionStatus {
-    Failed = 0,
-    Successful = 1,
-}
 
 export interface SendTransactionResponse {
     pendingWalletSignature: boolean;
@@ -23,7 +18,7 @@ export interface SendTransactionResponse {
 }
 
 export default function useSendTransaction(
-    transactionRequest?: TransactionRequest & { to: string },
+    transactionRequest?: TransactionRequest,
     enableEagerFetch?: boolean,
     description?: string
 ): SendTransactionResponse {
@@ -32,9 +27,15 @@ export default function useSendTransaction(
     const activeChain = useChain();
     const addRecentTransaction = useAddRecentTransaction();
 
-    const { config: prepareConfig } = usePrepareSendTransaction({
-        request: transactionRequest,
+    const { config: prepareConfig, refetch: refetchPrepare } = usePrepareSendTransaction({
+        ...transactionRequest,
         enabled: enableEagerFetch,
+        onError: (error) => {
+            console.log("PREPARE ERROR", error);
+            if (enableEagerFetch) {
+                setInterval(refetchPrepare, 5000); // Try again every 5 sec, makes sure we pick up any new allowances in pay req
+            }
+        },
     });
 
     const {
@@ -51,6 +52,7 @@ export default function useSendTransaction(
     const { data: receipt } = useWaitForTransaction({
         hash: sendData?.hash,
         chainId: txChain?.id,
+        onError: (error) => console.log("ERROR", error),
     });
 
     const reset = useCallback(() => {
@@ -61,14 +63,12 @@ export default function useSendTransaction(
     const sendTxn = useCallback(() => {
         reset();
 
-        console.log("SEND", sendData?.hash, receipt, txChain?.id);
+        console.log("SEND", sendTransaction, sendData?.hash, receipt, txChain?.id);
         if (sendTransaction) {
             setTxChain(activeChain);
             sendTransaction();
         }
     }, [reset, sendTransaction, setTxChain, activeChain]);
-
-    console.log("SEND", transactionRequest, enableEagerFetch, prepareConfig);
 
     return {
         pendingWalletSignature: isLoading,

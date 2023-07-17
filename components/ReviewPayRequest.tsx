@@ -1,5 +1,4 @@
 import { ReactElement, useMemo, useState } from "react";
-import { BigNumber } from "@ethersproject/bignumber";
 import { Address, useSwitchNetwork } from "wagmi";
 import { Box, Flex, Link, Text, Tooltip } from "@chakra-ui/react";
 import Image from "next/image";
@@ -41,10 +40,10 @@ function ReviewRequestRow({ leftIcon, topEntry, bottomText, rightIcon }: ReviewR
 
 interface RequestReviewProps {
     payToken?: Token;
-    payTokenAmount?: BigNumber;
+    payTokenAmount?: bigint;
     senderAddress?: Address;
     requestToken?: Token;
-    requestTokenAmount?: BigNumber;
+    requestTokenAmount?: bigint;
     recipientAddress?: Address;
     chain?: Chain;
     backButtonCallback: () => void;
@@ -98,14 +97,16 @@ export default function ReviewPayRequest({
             <ReviewRequestRow
                 leftIcon={<WalletAvatar address={recipientAddress} size={40} />}
                 topEntry={
-                    <Text textStyle="titleSm" variant="secondary">
+                    <span>
                         <Text textStyle="titleSm" textColor="primary" display="inline">
                             <Link href={recipientExplorerLink} isExternal>
                                 {shortAddress(recipientAddress, Length.MEDIUM)}
                             </Link>
                         </Text>{" "}
-                        receives
-                    </Text>
+                        <Text textStyle="titleSm" variant="secondary" display="inline">
+                            receives
+                        </Text>
+                    </span>
                 }
                 bottomText={`${requestTokenAmountHumanReadable} ${requestToken?.symbol}`}
                 rightIcon={<TokenWithChainIcon token={requestToken} chain={chain} size={32} />}

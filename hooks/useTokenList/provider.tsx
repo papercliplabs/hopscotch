@@ -1,7 +1,6 @@
 import { useContext, createContext, ReactNode, useEffect, useState, useMemo } from "react";
-import { BigNumber } from "@ethersproject/bignumber";
-import { formatUnits } from "@ethersproject/units";
-import { Address, erc20ABI, useAccount, useContractReads } from "wagmi";
+import { formatUnits } from "viem";
+import { Address, erc20ABI, useAccount, useContractReads, usePublicClient } from "wagmi";
 
 import { BaseToken, Token } from "@/common/types";
 import {
@@ -11,9 +10,9 @@ import {
     URLS,
     SUPPORTED_NATIVE_TOKENS,
 } from "@/common/constants";
-import { wagmiClient } from "@/pages/_app";
 import { getSupportedChainIds } from "@/common/utils";
 import { mapValues, merge, isEmpty } from "lodash/fp";
+import { fetchBalance } from "wagmi/actions";
 
 const PAGE_SIZE = 150;
 
@@ -72,7 +71,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     const [tokens, setTokens] = useState<Token[]>([]);
     const [baseTokens, setBaseTokens] = useState<BaseToken[]>([]);
     const [prices, setPrices] = useState<TokenPriceDict>({});
-    const [nativeTokenBalances, setNativeTokenBalances] = useState<BigNumber[]>([]);
+    const [nativeTokenBalances, setNativeTokenBalances] = useState<bigint[]>([]);
 
     const { address } = useAccount();
 
@@ -82,49 +81,47 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     useEffect(() => {
         async function checkForBaseList() {
             // Fetch the data if it hasn't been fetched already
-            if (baseTokens.length == 0) {
-                fetch(URLS.UNISWAP_TOKEN_LIST)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        let tokens = data.tokens as Array<BaseToken>;
+            fetch(URLS.UNISWAP_TOKEN_LIST)
+                .then((response) => response.json())
+                .then((data) => {
+                    let tokens = data.tokens as Array<BaseToken>;
 
-                        // Filter for only chains we are on, remove duplicates, and remove native tokens
-                        const supportedChainIds = getSupportedChainIds();
+                    // Filter for only chains we are on, remove duplicates, and remove native tokens
+                    const supportedChainIds = getSupportedChainIds();
 
-                        // Weird bug with useContractReads putting lower chains first, so just order by chainId
-                        supportedChainIds.sort((a, b) => (a < b ? -1 : 1));
+                    // Weird bug with useContractReads putting lower chains first, so just order by chainId
+                    supportedChainIds.sort((a, b) => (a < b ? -1 : 1));
 
-                        const supportedTokens: BaseToken[] = [];
-                        for (let id of supportedChainIds) {
-                            let addresses: Address[] = [];
-                            const isTestNet = id == 1337;
-                            const tokensForChain = tokens.filter(
-                                (token) => token.chainId == id || (isTestNet && token.chainId == 137)
-                            );
-                            const nativeToken = NATIVE_TOKENS.find((token) => token.chainId == id);
+                    const supportedTokens: BaseToken[] = [];
+                    for (let id of supportedChainIds) {
+                        let addresses: Address[] = [];
+                        const isTestNet = id == 1337;
+                        const tokensForChain = tokens.filter(
+                            (token) => token.chainId == id || (isTestNet && token.chainId == 137)
+                        );
+                        const nativeToken = NATIVE_TOKENS.find((token) => token.chainId == id);
 
-                            for (let token of tokensForChain) {
-                                // Filter duplicates, and also native token
-                                if (!addresses.includes(token.address) && !(nativeToken?.address == token.address)) {
-                                    supportedTokens.push({
-                                        address: token.address.toLowerCase() as Address,
-                                        chainId: token.chainId,
-                                        decimals: token.decimals,
-                                        logoURI: token.logoURI.replace("thumb", "small"), // Use higher resolution images from coin gecko
-                                        name: token.name,
-                                        symbol: token.symbol,
-                                    });
-                                }
+                        for (let token of tokensForChain) {
+                            // Filter duplicates, and also native token
+                            if (!addresses.includes(token.address) && !(nativeToken?.address == token.address)) {
+                                supportedTokens.push({
+                                    address: token.address.toLowerCase() as Address,
+                                    chainId: token.chainId,
+                                    decimals: token.decimals,
+                                    logoURI: token.logoURI.replace("thumb", "small"), // Use higher resolution images from coin gecko
+                                    name: token.name,
+                                    symbol: token.symbol,
+                                });
                             }
                         }
+                    }
 
-                        setBaseTokens(supportedTokens);
-                    });
-            }
+                    setBaseTokens(supportedTokens);
+                });
         }
 
         checkForBaseList();
-    }, [baseTokens, setBaseTokens]);
+    }, []);
 
     ////
     // Fetch token Usd prices (best effort)
@@ -133,7 +130,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
         async function checkForPrices() {
             // Fetch the data if it hasn't been fetched already
 
-            if (baseTokens.length != 0 && isEmpty(prices)) {
+            if (baseTokens.length != 0) {
                 let priceData = {};
                 for (let chain of SUPPORTED_CHAINS) {
                     const nativeTokenWrappedAddresses = NATIVE_TOKENS.filter((token) => token.chainId == chain.id).map(
@@ -163,13 +160,13 @@ export default function TokenListProvider({ children }: { children: ReactNode })
         }
 
         checkForPrices();
-    }, [baseTokens, prices, setPrices]);
+    }, [baseTokens, setPrices]);
 
     ////
     // Fetch token balances
     ////
     const readBalanceContractData = useMemo(() => {
-        if (address != undefined && baseTokens != undefined && baseTokens.length > 0) {
+        if (address != undefined && baseTokens?.length > 0) {
             return baseTokens.map((token) => {
                 return {
                     address: token.address,
@@ -185,41 +182,33 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     }, [baseTokens, address]);
 
     // Weird bug where this will reorder by chainId
-    const { data: balanceResults, error } = useContractReads({
+    const { data: balances, error } = useContractReads({
+        // scopeKey: "wagmi",
         contracts: readBalanceContractData,
         enabled: readBalanceContractData.length != 0 && address != undefined,
+        structuralSharing: (oldData, newData) => {
+            return JSON.stringify(oldData) == JSON.stringify(newData) ? oldData : (newData as any); // Prevent unnecessary re-render
+        },
+        select: (data) => data.map((d) => d.result as bigint),
     });
-
-    const balances = useMemo(() => {
-        let ret = undefined;
-
-        if (balanceResults) {
-            ret = balanceResults.map((result) => {
-                return result as unknown as BigNumber;
-            });
-        }
-
-        return ret;
-    }, [balanceResults]);
 
     ////
     // Fetch balances of native tokens (a bit ugly)
     ////
     useEffect(() => {
         async function getNativeTokenBalances() {
-            if (address && typeof wagmiClient.config.provider === "function") {
-                let nativeBalances: BigNumber[] = [];
+            let nativeBalances: bigint[] = [];
+            if (address != undefined) {
                 for (const chain of SUPPORTED_CHAINS) {
-                    const provider = wagmiClient.config.provider({ chainId: chain.id });
-                    const bal = await provider.getBalance(address);
-                    nativeBalances.push(bal);
+                    const bal = await fetchBalance({ address, chainId: chain.id });
+                    nativeBalances.push(bal.value);
                 }
-                setNativeTokenBalances(nativeBalances);
             }
+            setNativeTokenBalances(nativeBalances);
         }
 
         getNativeTokenBalances();
-    }, [setNativeTokenBalances, address, wagmiClient.config.provider]);
+    }, [setNativeTokenBalances, address]);
 
     ////
     // Construct tokens
@@ -240,7 +229,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
             const balance = balancesExtended ? balancesExtended[i] : undefined;
             const balanceUsd =
                 balance != undefined && price != undefined
-                    ? Number(formatUnits(balance, baseToken.decimals)) * price
+                    ? Number(formatUnits(balance as bigint, baseToken.decimals)) * price
                     : undefined;
 
             tokensWithPrice.push({
@@ -251,7 +240,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
             });
         }
         setTokens(tokensWithPrice);
-    }, [baseTokens, balances, prices, nativeTokenBalances]);
+    }, [baseTokens, prices, nativeTokenBalances]);
 
     return <TokenListContext.Provider value={{ tokens }}>{children}</TokenListContext.Provider>;
 }

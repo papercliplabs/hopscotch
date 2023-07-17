@@ -5,7 +5,6 @@ import { Fade } from "@chakra-ui/react";
 import FailedTransactionView from "@/components/transactions/FailedTransactionView";
 
 import Carousel from "../Carousel";
-import { TransactionStatus } from "@/hooks/transactions/useSendTransaction";
 import { SendTransactionResponse } from "@/hooks/transactions/useSendTransaction";
 
 interface TransactionFlowProps {
@@ -35,17 +34,14 @@ export default function TransactionFlow({
                 </>,
                 <>
                     <Fade
-                        in={
-                            transactionResponse.receipt?.status == TransactionStatus.Successful &&
-                            successfulTransactionView != undefined
-                        }
+                        in={transactionResponse.receipt?.status == "success" && successfulTransactionView != undefined}
                         unmountOnExit={true}
                         style={{ padding: "inherit" }}
                     >
                         {successfulTransactionView}
                     </Fade>
                     <Fade
-                        in={transactionResponse.receipt?.status == TransactionStatus.Failed}
+                        in={transactionResponse.receipt?.status == "reverted"}
                         unmountOnExit={true}
                         style={{ padding: "inherit" }}
                     >
@@ -59,8 +55,8 @@ export default function TransactionFlow({
                 </>,
             ]}
             activeViewIndex={
-                (transactionResponse.receipt?.status == TransactionStatus.Successful && successfulTransactionView) ||
-                transactionResponse.receipt?.status == TransactionStatus.Failed
+                (transactionResponse.receipt?.status == "success" && successfulTransactionView) ||
+                transactionResponse.receipt?.status == "reverted"
                     ? 1
                     : 0
             }

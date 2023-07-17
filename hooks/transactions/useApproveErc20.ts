@@ -1,18 +1,14 @@
 import { useEffect, useMemo } from "react";
-import { BigNumber, Contract } from "ethers";
 import { Address, useAccount, useContractRead } from "wagmi";
-import { MaxUint256 } from "@ethersproject/constants";
 
 import Erc20Abi from "@/abis/erc20.json";
+import useSendTransaction, { SendTransactionResponse } from "@/hooks/transactions/useSendTransaction";
+import { encodeFunctionData } from "viem";
 import { HOPSCOTCH_ADDRESS } from "@/common/constants";
-import useSendTransaction, {
-    SendTransactionResponse,
-    TransactionStatus,
-} from "@/hooks/transactions/useSendTransaction";
 
 export default function useApproveErc20(
     token?: Address,
-    minAmount?: BigNumber
+    minAmount?: bigint
 ): SendTransactionResponse & { requiresApproval: boolean } {
     const { address } = useAccount();
 
@@ -26,16 +22,20 @@ export default function useApproveErc20(
 
     const [transactionRequest, enableEagerFetch, requiresApproval] = useMemo(() => {
         let request = undefined;
-        if (token) {
-            const contract = new Contract(token, Erc20Abi);
+        if (token && address) {
             request = {
-                to: contract.address,
+                to: token,
                 from: address,
-                data: contract.interface.encodeFunctionData("approve", [HOPSCOTCH_ADDRESS, MaxUint256]),
+                data: encodeFunctionData({
+                    abi: Erc20Abi,
+                    functionName: "approve",
+                    args: [HOPSCOTCH_ADDRESS, (BigInt(1) << BigInt(256)) - BigInt(1)],
+                }),
             };
         }
 
-        const requiresApproval = allowance ? (allowance as BigNumber).lt(minAmount ?? BigNumber.from("0")) : false;
+        const requiresApproval =
+            allowance != undefined && minAmount != undefined ? (allowance as bigint) < minAmount : false;
 
         return [request, token != undefined && address != undefined, requiresApproval];
     }, [address, token, allowance, minAmount]);
@@ -44,7 +44,7 @@ export default function useApproveErc20(
 
     // Refetch allowance once transaction is confirmed
     useEffect(() => {
-        if (response?.receipt?.status == TransactionStatus.Successful && refetchAllowance) {
+        if (response?.receipt?.status == "success" && refetchAllowance) {
             refetchAllowance();
         }
     }, [response?.receipt?.status, refetchAllowance]);

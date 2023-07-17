@@ -1,7 +1,7 @@
 import { useNetwork, Chain as WagmiChain } from "wagmi";
 
 import { SUPPORTED_CHAINS } from "@/common/constants";
-import { getNativeTokenLogoUri } from "@/common/utils";
+import { getChainLogoUri } from "@/common/utils";
 
 export interface Chain extends WagmiChain {
     iconUri: string;
@@ -17,12 +17,12 @@ export interface Chain extends WagmiChain {
 export function useChain(chainId: number | undefined = undefined): Chain {
     const { chain: connectedChain, chains } = useNetwork();
     const chainIdInternal = chainId ?? connectedChain?.id;
-    const chain = chains.filter((chain) => chain.id == chainIdInternal)[0] ?? SUPPORTED_CHAINS[0];
+    const chain = SUPPORTED_CHAINS.filter((chain) => chain.id == chainIdInternal)[0] ?? SUPPORTED_CHAINS[0];
 
     return {
         ...chain,
         connected: chain?.id == connectedChain?.id,
         unsupported: connectedChain?.unsupported ?? false,
-        iconUri: getNativeTokenLogoUri(chain?.id) ?? "",
+        iconUri: getChainLogoUri(chain?.id) ?? "",
     };
 }
