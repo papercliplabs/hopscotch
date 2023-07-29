@@ -291,6 +291,7 @@ export default function RequestPage({ requestJsonObject, walletName, walletBackg
     const ogImgContent = `http://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?name=${encodeURIComponent(
         walletName
     )}&background=${encodeURIComponent(walletBackgroundImg)}`;
+    const ogImgDescription = "One transaction, any token. Pay anyone, anywhere, anytime.";
 
     // Parse data so we have correct BigInt types
     const request = JSON.parse(JSON.stringify(requestJsonObject), parseJsonWithBigInt) as Request;
@@ -310,9 +311,13 @@ export default function RequestPage({ requestJsonObject, walletName, walletBackg
                 <meta property="og:title" content={ogImgTitle} />
                 <meta property="og:site_name" content={ogImgName} />
                 <meta property="og:image" content={ogImgContent} />
-
+                <meta property="og:description" content={ogImgDescription} />
                 <meta name="twitter:title" content={ogImgTitle} />
                 <meta property="twitter:image" content={ogImgContent} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:site" content="@hopscotchcash" />
+                <meta name="twitter:creator" content="@hopscotchcash" />
+                <meta name="twitter:description" content={ogImgDescription} />
             </Head>
             <PayRequest request={request} />
         </>
