@@ -1,6 +1,6 @@
 import { ReactElement, useMemo, useState } from "react";
 import { Address, useSwitchNetwork } from "wagmi";
-import { Box, Flex, Link, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Flex, Link, Text, Tooltip, Img } from "@chakra-ui/react";
 import Image from "next/image";
 
 import { Length, Token } from "@/common/types";
@@ -154,7 +154,7 @@ export default function ReviewPayRequest({
                 {
                     title: "Network",
                     value: chain?.name,
-                    valueIcon: chain ? <Image src={chain?.iconUri} alt={chain?.name} width={16} height={16} /> : <></>,
+                    valueIcon: chain ? <Img src={chain?.iconUri ?? ""} alt={chain?.name} boxSize="16px" /> : <></>,
                 },
             ]}
             rowGap="8px"

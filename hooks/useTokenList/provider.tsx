@@ -11,7 +11,7 @@ import {
     SUPPORTED_NATIVE_TOKENS,
 } from "@/common/constants";
 import { getSupportedChainIds } from "@/common/utils";
-import { mapValues, merge, isEmpty } from "lodash/fp";
+import { mapValues, merge } from "lodash/fp";
 import { fetchBalance } from "wagmi/actions";
 
 const PAGE_SIZE = 150;
@@ -80,44 +80,57 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     ////
     useEffect(() => {
         async function checkForBaseList() {
-            // Fetch the data if it hasn't been fetched already
-            fetch(URLS.UNISWAP_TOKEN_LIST)
-                .then((response) => response.json())
-                .then((data) => {
-                    let tokens = data.tokens as Array<BaseToken>;
+            const urls = SUPPORTED_CHAINS.map((chain) => {
+                return URLS.COIN_GECKO_TOKENS_BASE + "/" + COIN_GECKO_API_PLATFORM_ID[chain.id] + "/all.json";
+            });
 
-                    // Filter for only chains we are on, remove duplicates, and remove native tokens
-                    const supportedChainIds = getSupportedChainIds();
+            async function fetchTokensFromUrl(url: string): Promise<Array<BaseToken>> {
+                return fetch(url)
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        const rawTokens = data.tokens as Array<BaseToken>;
+                        return rawTokens;
+                    });
+            }
 
-                    // Weird bug with useContractReads putting lower chains first, so just order by chainId
-                    supportedChainIds.sort((a, b) => (a < b ? -1 : 1));
+            const tokens = (await Promise.all(urls.map((url: string) => fetchTokensFromUrl(url)))).flat();
 
-                    const supportedTokens: BaseToken[] = [];
-                    for (let id of supportedChainIds) {
-                        let addresses: Address[] = [];
-                        const isTestNet = id == 1337;
-                        const tokensForChain = tokens.filter(
-                            (token) => token.chainId == id || (isTestNet && token.chainId == 137)
-                        );
-                        const nativeToken = NATIVE_TOKENS.find((token) => token.chainId == id);
+            // Below is left over, not very efficient but gets the job done for now
+            const supportedChainIds = getSupportedChainIds();
+            supportedChainIds.sort((a, b) => (a < b ? -1 : 1));
+            const supportedTokens: BaseToken[] = [];
+            for (let id of supportedChainIds) {
+                let addresses: Address[] = [];
+                const isTestNet = id == 1337;
+                const tokensForChain = tokens.filter(
+                    (token) => token.chainId == id || (isTestNet && token.chainId == 137)
+                );
+                const nativeToken = NATIVE_TOKENS.find((token) => token.chainId == id);
 
-                        for (let token of tokensForChain) {
-                            // Filter duplicates, and also native token
-                            if (!addresses.includes(token.address) && !(nativeToken?.address == token.address)) {
-                                supportedTokens.push({
-                                    address: token.address.toLowerCase() as Address,
-                                    chainId: token.chainId,
-                                    decimals: token.decimals,
-                                    logoURI: token.logoURI.replace("thumb", "small"), // Use higher resolution images from coin gecko
-                                    name: token.name,
-                                    symbol: token.symbol,
-                                });
-                            }
-                        }
+                for (let token of tokensForChain) {
+                    // Filter duplicates, and also native token
+                    if (
+                        !addresses.includes(token.address) &&
+                        !(nativeToken?.address == token.address) &&
+                        token.logoURI
+                    ) {
+                        supportedTokens.push({
+                            address: token.address.toLowerCase() as Address,
+                            chainId: token.chainId,
+                            decimals: token.decimals,
+                            logoURI: token.logoURI
+                                .replace("thumb", "small")
+                                .replace("ipfs://", "https://ipfs.io/ipfs/"), // Use higher resolution images from coin gecko, also use correct ipfs link
+                            name: token.name,
+                            symbol: token.symbol,
+                        });
                     }
+                }
+            }
 
-                    setBaseTokens(supportedTokens);
-                });
+            setBaseTokens(supportedTokens);
         }
 
         checkForBaseList();
@@ -165,8 +178,10 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     ////
     // Fetch token balances
     ////
+    let first_only = true;
     const readBalanceContractData = useMemo(() => {
         if (address != undefined && baseTokens?.length > 0) {
+            first_only = false;
             return baseTokens.map((token) => {
                 return {
                     address: token.address,
@@ -185,7 +200,7 @@ export default function TokenListProvider({ children }: { children: ReactNode })
     const { data: balances, error } = useContractReads({
         // scopeKey: "wagmi",
         contracts: readBalanceContractData,
-        enabled: readBalanceContractData.length != 0 && address != undefined,
+        enabled: readBalanceContractData.length != 0 && address != undefined && first_only,
         structuralSharing: (oldData, newData) => {
             return JSON.stringify(oldData) == JSON.stringify(newData) ? oldData : (newData as any); // Prevent unnecessary re-render
         },

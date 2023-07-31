@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Button, Flex, Grid, GridItem, Input, InputGroup, InputLeftElement, Stack, Text } from "@chakra-ui/react";
 
 import { Token } from "@/common/types";
@@ -12,6 +12,62 @@ import { NO_AMOUNT_DISPLAY } from "@/common/constants";
 import PrimaryCardView from "@/layouts/PrimaryCardView";
 import { X } from "@phosphor-icons/react";
 import { Address } from "wagmi";
+import useIsOnScreen from "@/hooks/useIsOnScreen";
+
+interface TokenViewListItemProps {
+    token: Token;
+    selected: boolean;
+    selectCallback: () => void;
+}
+
+function TokenViewListItem({ token, selected, selectCallback }: TokenViewListItemProps) {
+    const { name, address, symbol, balance, balanceUsd, decimals, logoURI, chainId } = token;
+
+    const chain = useChain(chainId);
+    const ref = useRef<HTMLInputElement>(null);
+    const isVisible = useIsOnScreen(ref);
+
+    return (
+        <Flex
+            flexDirection="row"
+            alignItems="center"
+            boxSizing="border-box"
+            justifyContent="space-between"
+            width="100%"
+            cursor="pointer"
+            paddingY={2}
+            paddingX={2}
+            borderRadius="xs"
+            backgroundColor={selected ? "blackAlpha.50" : "transparent"}
+            _hover={{
+                backgroundColor: "blackAlpha.50",
+            }}
+            onClick={() => {
+                selectCallback();
+            }}
+            minHeight="60px"
+            ref={ref}
+        >
+            {isVisible && (
+                <>
+                    <Flex align="center">
+                        <TokenWithChainIcon token={token} chain={chain} size={32} mr={4} />
+                        <Text textStyle="titleMd">{name}</Text>
+                    </Flex>
+                    <Flex direction="column" align="end">
+                        <Text textStyle="bodyLg" textAlign="end">
+                            {balance != undefined ? formatTokenAmount(balance, decimals, 4) : NO_AMOUNT_DISPLAY}{" "}
+                            {symbol}
+                        </Text>
+                        <Text textStyle="bodyMd" variant="secondary">
+                            {balanceUsd != undefined ? formatNumber(balanceUsd, 2, "$") : NO_AMOUNT_DISPLAY}
+                        </Text>
+                    </Flex>
+                </>
+            )}
+        </Flex>
+    );
+}
 
 interface TokenSelectViewProps {
     closeCallback: () => void;
@@ -48,46 +104,20 @@ export default function TokenSelectView({ closeCallback, token, setTokenAddress,
 
     const buttonItems = useMemo(() => {
         return filteredTokenList.map((tokenDetails, index) => {
-            const { name, address, symbol, balance, balanceUsd, decimals, logoURI } = tokenDetails;
-            const isSelected = address === token?.address;
+            const isSelected = tokenDetails.address === token?.address;
             return (
-                <Flex
-                    key={index}
-                    flexDirection="row"
-                    alignItems="center"
-                    boxSizing="border-box"
-                    justifyContent="space-between"
-                    width="100%"
-                    cursor="pointer"
-                    paddingY={2}
-                    paddingX={2}
-                    borderRadius="xs"
-                    backgroundColor={isSelected ? "blackAlpha.50" : "transparent"}
-                    _hover={{
-                        backgroundColor: "blackAlpha.50",
-                    }}
-                    onClick={() => {
-                        setTokenAddress(address);
+                <TokenViewListItem
+                    token={tokenDetails}
+                    selected={isSelected}
+                    selectCallback={() => {
+                        setTokenAddress(tokenDetails.address);
                         closeCallback();
                     }}
-                >
-                    <Flex align="center">
-                        <TokenWithChainIcon token={tokenDetails} chain={chain} size={32} mr={4} />
-                        <Text textStyle="titleMd">{name}</Text>
-                    </Flex>
-                    <Flex direction="column" align="end">
-                        <Text textStyle="bodyLg" textAlign="end">
-                            {balance != undefined ? formatTokenAmount(balance, decimals, 4) : NO_AMOUNT_DISPLAY}{" "}
-                            {symbol}
-                        </Text>
-                        <Text textStyle="bodyMd" variant="secondary">
-                            {balanceUsd != undefined ? formatNumber(balanceUsd, 2, "$") : NO_AMOUNT_DISPLAY}
-                        </Text>
-                    </Flex>
-                </Flex>
+                    key={index}
+                />
             );
         });
-    }, [filteredTokenList, setTokenAddress, closeCallback, chain, token]);
+    }, [filteredTokenList, setTokenAddress, closeCallback, token]);
 
     return (
         <PrimaryCardView>

@@ -1,8 +1,7 @@
 import { ReactElement, useMemo, useState } from "react";
-import { Flex, NumberInputField, Text, NumberInput, Button, Fade, Slide, Avatar } from "@chakra-ui/react";
+import { Flex, NumberInputField, Text, NumberInput, Button, Fade, Slide, Avatar, Img } from "@chakra-ui/react";
 import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount, Address } from "wagmi";
-import Image from "next/image";
 import ConnectWalletAvatar from "@/public/static/ConnectWalletAvatar.svg";
 
 import PrimaryCardView from "@/layouts/PrimaryCardView";
@@ -178,12 +177,7 @@ export default function CreateRequestForm({
                                     title: "Network",
                                     value: activeChain?.name,
                                     valueIcon: (
-                                        <Image
-                                            src={activeChain?.iconUri ?? ""}
-                                            alt={activeChain?.name}
-                                            width={16}
-                                            height={16}
-                                        />
+                                        <Img src={activeChain?.iconUri ?? ""} alt={activeChain?.name} boxSize="16px" />
                                     ),
                                 },
                             ]}

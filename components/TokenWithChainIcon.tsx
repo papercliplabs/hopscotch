@@ -11,10 +11,6 @@ interface TokenWithChainIconProps {
     mr?: number;
 }
 
-const convertIpfsUrl = (url: string | undefined) => {
-    return (url || "").replace("ipfs://", "https://ipfs.io/ipfs/");
-};
-
 export default function TokenWithChainIcon({ token, chain, size, mr }: TokenWithChainIconProps) {
     const ref = useRef<HTMLInputElement>(null);
     const isVisible = useIsOnScreen(ref);
@@ -25,11 +21,11 @@ export default function TokenWithChainIcon({ token, chain, size, mr }: TokenWith
             height={`${size}px`}
             width={`${size}px`}
             mr={mr}
-            src={isVisible ? convertIpfsUrl(token?.logoURI) : undefined}
+            src={isVisible ? token?.logoURI : undefined}
             boxShadow="defaultSm"
         >
-            <AvatarBadge borderWidth={2}>
-                <Img src={isVisible ? chain?.iconUri || "" : undefined} alt={""} boxSize={`${size * 0.4}px`} />
+            <AvatarBadge borderWidth={2} backgroundColor="white">
+                <Img src={isVisible ? chain?.iconUri || "" : undefined} alt={""} boxSize={`${size * 0.5}px`} />
             </AvatarBadge>
         </Avatar>
     );

@@ -4,7 +4,7 @@ module.exports = {
   // compress: false,
   // productionBrowserSourceMaps: true,
   images: {
-    domains: ['assets.coingecko.com', "raw.githubusercontent.com", "cloudflare-ipfs.com"],
+    domains: ['assets.coingecko.com', "raw.githubusercontent.com", "cloudflare-ipfs.com", "github.com"],
   },
   async redirects() {
     return [

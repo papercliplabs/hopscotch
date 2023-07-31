@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useAccount, Address, useSwitchNetwork } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { Avatar, AvatarBadge, Button, Flex, Slide, Text, Tooltip } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Button, Flex, Slide, Text, Tooltip, Img } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
 import Image from "next/image";
 
@@ -281,12 +281,7 @@ export default function PayRequestForm({
                                 title: "Network",
                                 value: requestChain?.name,
                                 valueIcon: (
-                                    <Image
-                                        src={requestChain?.iconUri}
-                                        alt={requestChain?.name}
-                                        width={16}
-                                        height={16}
-                                    />
+                                    <Img src={requestChain?.iconUri ?? ""} alt={requestChain?.name} boxSize="16px" />
                                 ),
                             },
                         ]}
