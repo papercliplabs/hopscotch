@@ -1,12 +1,13 @@
 import { Address, zeroAddress } from "viem";
 import { localhost, mainnet, polygon, optimism, arbitrum, sepolia, polygonMumbai, optimismGoerli } from "wagmi/chains";
+import OptimismPng from "@/public/static/optimism.png";
 
 import { NativeBaseToken } from "./types";
 
 export const NO_AMOUNT_DISPLAY = "--";
 
 export const URLS = {
-    UNISWAP_TOKEN_LIST: "https://tokens.uniswap.org",
+    COIN_GECKO_TOKENS_BASE: "https://tokens.coingecko.com",
     COIN_GECKO_API: "https://api.coingecko.com/api/v3",
 };
 
@@ -92,8 +93,7 @@ export const NATIVE_TOKENS: NativeBaseToken[] = [
         logoURI:
             "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
         wrappedAddress: "0x4200000000000000000000000000000000000006",
-        chainUri:
-            "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/optimism/assets/0x4200000000000000000000000000000000000042/logo.png",
+        chainUri: OptimismPng.src,
     },
     // {
     //     address: zeroAddress,

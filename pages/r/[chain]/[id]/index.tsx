@@ -8,11 +8,10 @@ import { useToken } from "@/hooks/useTokenList";
 import { Length } from "@/common/types";
 import usePayRequest from "@/hooks/transactions/usePayRequest";
 import useApproveErc20 from "@/hooks/transactions/useApproveErc20";
-import { Box, Button, Flex, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Link, Text, Tooltip, useToast, Img } from "@chakra-ui/react";
 import { formatTokenAmount, openLink, parseJsonWithBigInt, shortAddress, stringToNumber } from "@/common/utils";
 import { WalletAvatar } from "@/components/WalletAvatar";
 import PrimaryCard from "@/layouts/PrimaryCard";
-import Image from "next/image";
 import { LinkIcon } from "@chakra-ui/icons";
 import { colors } from "@/theme/colors";
 import { ExplorerLinkType, useExplorerLink } from "@/hooks/useExplorerLink";
@@ -134,7 +133,7 @@ function PayRequest({ request }: { request: Request }) {
                             title: "Network",
                             value: requestChain?.name,
                             valueIcon: (
-                                <Image src={requestChain?.iconUri} alt={requestChain?.name} width={16} height={16} />
+                                <Img src={requestChain?.iconUri ?? ""} alt={requestChain?.name} boxSize="16px" />
                             ),
                         },
                     ]}

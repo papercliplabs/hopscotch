@@ -25,9 +25,9 @@ export default function SummaryTable({ entries, rowGap }: SummaryTableProps) {
                             </Text>
                             {entry.titleIcon}
                         </Flex>
-                        <Flex align="center">
+                        <Flex align="center" gap={1}>
                             {entry.valueIcon}
-                            <Text pl="4px" textStyle="label" variant="primary">
+                            <Text textStyle="label" variant="primary">
                                 {entry.value}
                             </Text>
                         </Flex>
