@@ -286,12 +286,12 @@ interface RequestPageProps {
 }
 
 export default function RequestPage({ requestJsonObject, walletName, walletBackgroundImg }: RequestPageProps) {
-    const ogImgTitle = "Pay me on Hopscotch";
+    const ogImgTitle = "Pay me with Hopscotch";
     const ogImgName = "hopscotch.cash";
     const ogImgContent = `http://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?name=${encodeURIComponent(
         walletName
     )}&background=${encodeURIComponent(walletBackgroundImg)}`;
-    const ogImgDescription = "Pay or get paid easily in Web3. Set your preferred Token/Amount/Network and your recipient is free to settle in any token they desire. Saving time, token risk, and gas fees.";
+    const ogImgDescription = "An onchain payment link you can pay with any token, instantly.";
 
     // Parse data so we have correct BigInt types
     const request = JSON.parse(JSON.stringify(requestJsonObject), parseJsonWithBigInt) as Request;
