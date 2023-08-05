@@ -291,7 +291,7 @@ export default function RequestPage({ requestJsonObject, walletName, walletBackg
     const ogImgContent = `http://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?name=${encodeURIComponent(
         walletName
     )}&background=${encodeURIComponent(walletBackgroundImg)}`;
-    const ogImgDescription = "One transaction, any token. Pay anyone, anywhere, anytime.";
+    const ogImgDescription = "Pay or get paid easily in Web3. On Hopscotch you set your preferred Token, Amount, and Network, and share your link freely. Enjoy unparalleled flexibility and no token risk as the recipient is free to settle in any token they desire.";
 
     // Parse data so we have correct BigInt types
     const request = JSON.parse(JSON.stringify(requestJsonObject), parseJsonWithBigInt) as Request;

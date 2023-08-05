@@ -43,7 +43,7 @@ export default async function handler(req: NextRequest) {
                             padding: "48px",
                             display: "flex",
                             width: "100%",
-                            justifyContent: "flex-start",
+                            justifyContent: "center",
                             alignItems: "center",
                         }}
                     >
@@ -64,7 +64,7 @@ export default async function handler(req: NextRequest) {
                                     fill="#FFFFFF"
                                 />
                             </svg>
-                            <div style={{ paddingLeft: "10px", fontSize: "60px", margin: "auto" }}>Hopscotch</div>
+                            <div style={{ paddingLeft: "10px", paddingRight: "40px", fontSize: "60px", margin: "auto" }}>Hopscotch</div>
                         </div>
                     </div>
                     <div
